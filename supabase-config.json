@@ -1,0 +1,6 @@
+{
+  "ativo": true,
+  "url": "https://ssuescpqyhuqkphauwde.supabase.co",
+  "anonKey": "sb_publishable_oNNwLRRXJmqDzBqQPlf9jw_N0L29FjV",
+  "nota": "Chave PUBLICÁVEL (pública por natureza, como o ID de cliente Google). A proteção é feita pelas regras RLS. Nunca colocar aqui a chave secreta/service_role."
+}

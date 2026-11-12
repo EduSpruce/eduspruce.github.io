@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#0e6a93">
+<title>Autoavaliação · EduSpruce</title>
+<link rel="icon" href="favicon.png">
+<style>
+:root{--acc:#0e6a93;--acc2:#e6f3f9;--ink:#14212b;--mut:#5b6b77;--line:#d6e0e6;--bg:#f3f6f8;--panel:#fff;--ok:#15803d;--bad:#b91c1c;--r:16px;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--acc:#5cc0ec;--acc2:#12303f;--ink:#e8eef2;--mut:#9fb0bc;--line:#2b3a45;--bg:#0d1419;--panel:#152029;--ok:#4ade80;--bad:#f87171;color-scheme:dark}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-text-size-adjust:100%}
+body{min-height:100vh;min-height:100dvh;padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+main{max-width:620px;margin:0 auto}
+header.top{display:flex;align-items:center;gap:10px;margin:2px 0 16px}
+header.top .logo{width:34px;height:34px;border-radius:9px;background:var(--acc);color:#fff;display:grid;place-items:center;font-weight:800;font-size:17px;flex:none}
+header.top b{font-size:17px;letter-spacing:-.01em}header.top b em{font-style:normal;color:var(--acc)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px 18px;margin:0 0 14px}
+h1{font-size:22px;margin:0 0 6px;letter-spacing:-.01em}h2{font-size:17px;margin:0 0 4px}
+p{margin:0 0 10px}.mut{color:var(--mut)}.peq{font-size:14px}
+label{display:block;font-weight:650;margin:14px 0 6px}
+input,textarea{width:100%;font:inherit;font-size:17px;color:var(--ink);background:var(--panel);border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;min-height:48px}
+textarea{min-height:84px;resize:vertical}
+input:focus,textarea:focus,button:focus-visible,.al:focus-within{outline:3px solid color-mix(in srgb,var(--acc) 55%,transparent);outline-offset:2px;border-color:var(--acc)}
+#cod,.pc{font-size:26px;letter-spacing:.18em;text-transform:uppercase;text-align:center;font-weight:700;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+button{font:inherit}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:52px;border-radius:14px;border:0;background:var(--acc);color:#fff;font-weight:700;font-size:17px;cursor:pointer;margin-top:16px}
+.btn.sec{background:transparent;color:var(--acc);border:1.5px solid var(--line)}
+.btn[disabled]{opacity:.6;cursor:progress}
+.err{color:var(--bad);font-weight:600;margin:10px 0 0;min-height:1em}.err:empty{display:none}
+.tit{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline}.tag{display:inline-block;background:var(--acc2);color:var(--acc);border-radius:999px;padding:3px 10px;font-size:13px;font-weight:700}
+.als{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:8px}
+.al{position:relative;margin:0!important;font-weight:600}.al input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.al span{display:flex;gap:8px;align-items:center;min-height:52px;padding:10px 12px;border:1.5px solid var(--line);border-radius:12px;background:var(--panel)}
+.al span b{min-width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:var(--bg);font-size:14px}
+.al input:checked+span{border-color:var(--acc);background:var(--acc2)}.al input:checked+span b{background:var(--acc);color:#fff}
+.dom{border-top:1px solid var(--line);padding:14px 0 4px}.dom:first-of-type{border-top:0}
+.dom h3{margin:0 0 8px;font-size:16px}
+.niv{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.niv label{margin:0;font-weight:600}
+.niv input{position:absolute;opacity:0;width:1px;height:1px}
+.niv span{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center;min-height:76px;padding:8px 4px;border:1.5px solid var(--line);border-radius:12px;font-size:12.5px;line-height:1.2;cursor:pointer;background:var(--panel)}
+.niv span b{font-size:20px;color:var(--c)}
+.niv input:checked+span{border-color:var(--c);background:color-mix(in srgb,var(--c) 12%,var(--panel));box-shadow:inset 0 0 0 1px var(--c)}
+.niv input:focus-visible+span{outline:3px solid color-mix(in srgb,var(--acc) 55%,transparent);outline-offset:2px}
+.ok{text-align:center;padding:30px 18px}.ok .ico{width:64px;height:64px;border-radius:50%;margin:0 auto 12px;display:grid;place-items:center;background:color-mix(in srgb,var(--ok) 16%,var(--panel));color:var(--ok)}
+.rod{font-size:12.5px;color:var(--mut);text-align:center;margin-top:18px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.spin{width:18px;height:18px;border-radius:50%;border:2.5px solid currentColor;border-right-color:transparent;animation:g .8s linear infinite}@keyframes g{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation:none}}
+@media (max-width:380px){.niv{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<main>
+  <header class="top"><span class="logo" aria-hidden="true">S</span><b>Edu<em>Spruce</em> · Autoavaliação</b></header>
+  <div id="app" aria-live="polite"></div>
+  <p class="rod">Só o teu professor vê a tua resposta. Esta página não guarda nada no telemóvel.</p>
+</main>
+<noscript><p class="card">Para fazer a autoavaliação é preciso ativar o JavaScript no navegador.</p></noscript>
+<script>
+'use strict';
+(()=>{
+const $=s=>document.querySelector(s);const app=$('#app');
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ALF='23456789ABCDEFGHJKMNPQRSTUVWXYZ';
+const norm=c=>String(c||'').toUpperCase().replace(/[^0-9A-Z]/g,'');
+const te=new TextEncoder(),td=new TextDecoder();
+const hex=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
+const b64=u=>{let s='';const a=new Uint8Array(u);for(let i=0;i<a.length;i+=32768)s+=String.fromCharCode.apply(null,a.subarray(i,i+32768));return btoa(s)};
+const unb64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function chaves(code){const id=hex(await crypto.subtle.digest('SHA-256',te.encode('es-aa-id:'+code))).slice(0,40);
+  const base=await crypto.subtle.importKey('raw',te.encode(code),'PBKDF2',false,['deriveKey']);
+  const k=await crypto.subtle.deriveKey({name:'PBKDF2',salt:te.encode('es-aa-k:'+id),iterations:150000,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);return {id,k}}
+async function cifrar(o,k){const iv=crypto.getRandomValues(new Uint8Array(12));const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},k,te.encode(JSON.stringify(o)));return 'A1.'+b64(iv)+'.'+b64(ct)}
+async function decifrar(s,k){const p=String(s).split('.');if(p[0]!=='A1')throw new Error('formato');const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(p[1])},k,unb64(p[2]));return JSON.parse(td.decode(pt))}
+let CFG=null;
+async function cfg(){if(CFG)return CFG;const r=await fetch('supabase-config.json',{cache:'no-store'});if(!r.ok)throw new Error('config');CFG=await r.json();return CFG}
+async function rpc(fn,args){const c=await cfg();const r=await fetch(c.url+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'Content-Type':'application/json',apikey:c.anonKey,Authorization:'Bearer '+c.anonKey},body:JSON.stringify(args)});
+  if(!r.ok){const t=await r.text().catch(()=>'');const e=new Error(t||('HTTP '+r.status));e.status=r.status;throw e}return r.json()}
+const espera=t=>`<span class="spin" aria-hidden="true"></span> ${esc(t)}`;
+const NIV=[['1','Ainda não consigo','#dc2626'],['2','Consigo com ajuda','#d97706'],['3','Consigo sozinho(a)','#2563eb'],['4','Consigo e ajudo os outros','#16a34a']];
+let S={code:'',id:'',k:null,D:null,aluno:null,chave:''};let PRE=null;
+
+/* 1. código */
+function ecraCodigo(msg,valor){app.innerHTML=`<section class="card"><h1>Autoavaliação</h1><p class="mut">Escreve o código que o professor mostrou (8 letras e números).</p>
+  <form id="f" autocomplete="off" novalidate><label for="cod">Código</label><input id="cod" inputmode="text" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="11" placeholder="XXXX-XXXX" value="${esc(valor||'')}" aria-describedby="e">
+  <p class="err" id="e" role="alert">${esc(msg||'')}</p><button class="btn" id="b">Continuar</button></form></section>`;
+  const i=$('#cod'),f=$('#f'),b=$('#b');
+  i.addEventListener('input',()=>{const v=norm(i.value).slice(0,8);i.value=v.length>4?v.slice(0,4)+'-'+v.slice(4):v});
+  f.onsubmit=async ev=>{ev.preventDefault();const c=norm(i.value);if(c.length!==8||[...c].some(x=>!ALF.includes(x))){$('#e').textContent='O código tem 8 letras e números (sem O, I, L, 0 nem 1). Confirma com o professor.';i.focus();return}
+    b.disabled=true;b.innerHTML=espera('A abrir…');await abrir(c);b.disabled=false;b.textContent='Continuar'};
+  if(!valor)setTimeout(()=>i.focus(),50)}
+async function abrir(code){try{const {id,k}=await chaves(code);let L;try{L=await rpc('eduspruce_autoav_ler',{p_id:id})}catch(e){if(e.status===404||/does not exist|PGRST202/.test(e.message))return ecraCodigo('A autoavaliação pelo telemóvel ainda não está ativa neste site. Avisa o professor.',code);throw e}
+    if(!Array.isArray(L)||!L.length){if(PRE)return ecraFechada();return ecraCodigo('A autoavaliação desta turma não está aberta neste momento (ou o código está errado). Confirma com o professor.',code.slice(0,4)+'-'+code.slice(4))}
+    let D;try{D=await decifrar(L[0].dados,k)}catch(_){return ecraCodigo('Não foi possível abrir com este código. Confirma-o com o professor.',code)}
+    S={code,id,k,D,aluno:null,chave:'',exp:L[0].expira};
+    if(PRE&&PRE.code===code){const a=D.al.find(x=>x.id===PRE.aid);if(a){S.aluno=a;S.chave=PRE.chave;return ecraForm()}return ecraQuem('Não encontrámos o teu nome nesta turma. Escolhe o teu número e escreve o código pessoal do teu papel.')}
+    try{history.replaceState(null,'',location.pathname+'#'+code)}catch(_){}ecraQuem()}
+  catch(e){console.warn(e);ecraCodigo(navigator.onLine?'Não foi possível ligar. Tenta outra vez dentro de momentos.':'Sem internet. Liga-te e tenta outra vez.',code)}}
+
+/* 2. quem és? */
+function cab(){const D=S.D;return `<div class="tit"><h1>${esc(D.t)} · ${esc(D.d)}</h1><span class="tag">${esc(D.pn)}</span></div>${D.prof?`<p class="mut peq">Professor(a): ${esc(D.prof)}</p>`:''}`}
+function ecraQuem(msg){const D=S.D;app.innerHTML=`<section class="card">${cab()}<form id="f" novalidate><fieldset style="border:0;padding:0;margin:0"><legend><h2 style="margin-top:8px">Quem és?</h2><span class="mut peq">Escolhe o teu número.</span></legend>
+  <div class="als">${D.al.map(a=>`<label class="al"><input type="radio" name="al" value="${esc(a.id)}"><span><b>${esc(a.n)}</b>${esc(a.nm)}</span></label>`).join('')}</div></fieldset>
+  ${D.pes?`<label for="pc">O teu código pessoal</label><p class="mut peq" style="margin-top:-2px">Está no teu papel (5 letras e números). Assim, só tu podes responder por ti.</p><input id="pc" class="pc" inputmode="text" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="5" placeholder="XXXXX" autocomplete="off">`:''}
+  <p class="err" id="e" role="alert">${esc(msg||'')}</p><button class="btn">Continuar</button></form></section>`;
+  const pc=$('#pc');if(pc)pc.addEventListener('input',()=>{pc.value=norm(pc.value).slice(0,5)});
+  $('#f').onsubmit=ev=>{ev.preventDefault();const r=document.querySelector('input[name=al]:checked');if(!r){$('#e').textContent='Escolhe o teu número.';return}
+    if(D.pes){const c=norm(pc.value);if(c.length!==5||[...c].some(x=>!ALF.includes(x))){$('#e').textContent='Escreve o código pessoal que está no teu papel (5 letras e números).';pc.focus();return}S.chave=c}
+    S.aluno=D.al.find(a=>a.id===r.value);ecraForm()}}
+/* papel lido mas a autoavaliação ainda não abriu */
+function ecraFechada(){app.innerHTML=`<section class="card ok"><div class="ico" aria-hidden="true" style="background:var(--acc2);color:var(--acc)"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+  <h1>Ainda não está aberta</h1><p class="mut">A autoavaliação da tua turma ainda não começou (ou já fechou). Quando o professor disser, volta a apontar a câmara ao teu papel.</p><button class="btn sec" id="rt">Tentar de novo</button></section>`;
+  $('#rt').onclick=()=>{app.innerHTML=`<section class="card"><p>${espera('A verificar…')}</p></section>`;abrir(PRE.code)}}
+
+/* 3. autoavaliação */
+function ecraForm(R){const D=S.D,q=D.q||{},a=S.aluno;R=R||{dom:{},plano:{}};
+  const campo=(id,l,ph,v,rows)=>`<label for="${id}">${esc(l)}</label><textarea id="${id}" rows="${rows||2}" maxlength="600" placeholder="${esc(ph)}">${esc(v||'')}</textarea>`;
+  app.innerHTML=`<section class="card">${cab()}<p class="peq" style="margin-top:6px"><b>N.º ${esc(a.n)} · ${esc(a.nm)}</b> · <button type="button" id="troca" style="background:none;border:0;color:var(--acc);font-weight:700;padding:6px 2px;cursor:pointer">não sou eu</button></p></section>
+  <form id="f" novalidate>
+  ${q.dom!==false&&D.dom.length?`<section class="card"><h2>Como te avalias em cada domínio?</h2><p class="mut peq">Toca no nível que mais se parece contigo neste ${esc(D.W||'período')}.</p>
+    ${D.dom.map(d=>`<fieldset class="dom" style="border:0;margin:0"><legend><h3>${esc(d.n)}</h3></legend><div class="niv">${NIV.map(([k,l,c])=>`<label style="--c:${c}"><input type="radio" name="d-${esc(d.id)}" value="${k}" ${String(R.dom[d.id])===k?'checked':''}><span><b>${k}</b>${esc(l)}</span></label>`).join('')}</div></fieldset>`).join('')}</section>`:''}
+  ${q.nota!==false||q.forte!==false||q.melhorar!==false?`<section class="card"><h2>A minha reflexão</h2>
+    ${q.nota!==false?`<label for="nota">Classificação que proponho</label><input id="nota" inputmode="decimal" maxlength="5" placeholder="${D.esc==='20'?'0 a 20':'1 a 5'}" value="${esc(R.nota||'')}">`:''}
+    ${q.forte!==false?campo('forte','O que fiz bem','ex.: participei mais nas aulas',R.forte):''}
+    ${q.melhorar!==false?campo('melhorar','O que posso melhorar','ex.: estudar com mais regularidade',R.melhorar):''}</section>`:''}
+  ${q.plano!==false?`<section class="card"><h2>Compromisso para o próximo ${esc((D.W||'período').toLowerCase())}</h2>
+    ${campo('meta','A minha meta','ex.: subir um nível em Produção Escrita',R.plano.meta)}${campo('estr','Como vou lá chegar','ex.: rever a matéria todas as semanas',R.plano.estr)}${campo('apoio','O que preciso do professor','ex.: feedback nos textos escritos',R.plano.apoio)}</section>`:''}
+  ${q.sug!==false?`<section class="card"><h2>Sugestões para as aulas</h2><p class="mut peq">O que podia tornar as aulas melhores para ti? O professor lê as sugestões <b>sem o teu nome</b>.</p>
+    <label for="sug" class="sr">Sugestões para as aulas</label><textarea id="sug" rows="3" maxlength="800" placeholder="ex.: mais trabalhos em grupo, mais exemplos antes dos exercícios…">${esc(R.sug||'')}</textarea></section>`:''}
+  <p class="err" id="e" role="alert"></p><button class="btn" id="b">Enviar ao professor</button></form>`;
+  $('#troca').onclick=()=>{S.chave='';ecraQuem()};
+  $('#f').onsubmit=async ev=>{ev.preventDefault();const e=$('#e'),b=$('#b');e.textContent='';
+    const r={v:2,aid:a.id,n:a.n,k:S.chave||'',p:D.p,dom:{},plano:{},q:Date.now()};
+    D.dom.forEach(d=>{const x=document.querySelector(`input[name="d-${CSS.escape(d.id)}"]:checked`);if(x)r.dom[d.id]=+x.value});
+    const v=id=>{const el=$('#'+id);return el?el.value.trim().slice(0,600):''};
+    r.nota=v('nota').replace(',','.');r.forte=v('forte');r.melhorar=v('melhorar');r.plano={meta:v('meta'),estr:v('estr'),apoio:v('apoio')};{const sg=$('#sug');r.sug=sg?sg.value.trim().slice(0,800):''}
+    if(r.nota){const n=+r.nota;const max=D.esc==='20'?20:5,min=D.esc==='20'?0:1;if(!isFinite(n)||n<min||n>max){e.textContent='A classificação tem de estar entre '+min+' e '+max+'.';$('#nota').focus();return}}
+    const falta=q.dom!==false?D.dom.filter(d=>!r.dom[d.id]):[];if(falta.length&&!confirm('Não escolheste o nível em '+falta.length+' domínio(s). Enviar assim mesmo?'))return;
+    b.disabled=true;b.innerHTML=espera('A enviar…');
+    try{const ok=await rpc('eduspruce_autoav_enviar',{p_id:S.id,p_conteudo:await cifrar(r,S.k)});if(ok!==true)throw Object.assign(new Error('fechada'),{fechada:true});ecraOk(r)}
+    catch(x){b.disabled=false;b.textContent='Enviar ao professor';e.textContent=x.fechada?'A autoavaliação já fechou. Fala com o professor.':navigator.onLine?'Não foi possível enviar. Tenta outra vez.':'Sem internet. Liga-te e tenta outra vez — o que escreveste continua aqui.'}}}
+
+/* 4. enviado */
+function ecraOk(r){app.innerHTML=`<section class="card ok"><div class="ico" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+  <h1>Obrigado, ${esc(S.aluno.nm.split(' ')[0])}!</h1><p class="mut">A tua autoavaliação foi enviada ao professor.</p><button class="btn sec" id="ed">Corrigir a minha resposta</button></section>`;
+  $('#ed').onclick=()=>ecraForm(r);try{$('.ok h1').focus()}catch(_){}}
+
+const raw=decodeURIComponent((location.hash||'').slice(1)).trim();const mP=raw.match(/^([0-9A-Za-z]{4}-?[0-9A-Za-z]{4})\.([a-z0-9]{6,32})\.([0-9A-Za-z]{5})$/);
+if(mP)PRE={code:norm(mP[1]),aid:mP[2],chave:norm(mP[3])};const h=PRE?PRE.code:norm(raw);
+if(!window.crypto||!crypto.subtle){app.innerHTML='<section class="card"><h1>Navegador antigo</h1><p>Abre esta página num navegador atualizado (Safari, Chrome, Firefox ou Edge).</p></section>'}
+else if(h.length===8){app.innerHTML=`<section class="card"><p>${espera('A abrir a autoavaliação…')}</p></section>`;abrir(h)}else ecraCodigo('',h?h:'')
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "microsoftClientId": "",
+  "googleClientId": "275856895734-48n60vhatvltml3t601o24cbak7ndjq2.apps.googleusercontent.com",
+  "acessoGoogle": "lista",
+  "modoNuvem": "obrigatorio",
+  "contasGoogle": [
+    { "h": "f311a15e184c53a993b13bf8062c72e985ae07fc1ecc4995e8fd28035d1f1d6a", "papel": "admin" }
+  ]
+}
