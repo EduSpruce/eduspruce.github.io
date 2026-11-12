@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0b1424">
+<meta name="robots" content="noindex">
+<title>EduSpruce Arena</title>
+<link rel="icon" href="favicon.png">
+<style>
+:root{--bg:#0b1424;--panel:rgba(255,255,255,.07);--line:rgba(255,255,255,.14);--ink:#f1f5f9;--mut:#9fb3c8;--acc:#22b8e0;--ok:#22c55e;--bad:#ef4444;--r:18px}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:radial-gradient(900px 600px at 10% -10%,#1d4f6e 0,transparent 60%),radial-gradient(700px 500px at 110% 110%,#3b1d5e 0,transparent 55%),var(--bg);background-attachment:fixed;color:var(--ink);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{padding:max(12px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));overscroll-behavior:none}
+#app{max-width:640px;margin:0 auto;min-height:calc(100dvh - 30px);display:flex;flex-direction:column}
+header.top{display:flex;align-items:center;gap:10px;margin:0 0 12px}
+header.top b{font-size:16px;letter-spacing:.01em}header.top b em{font-style:normal;color:#facc15}
+header.top .sp{flex:1}
+.ib{all:unset;cursor:pointer;width:40px;height:40px;border-radius:12px;background:var(--panel);display:grid;place-items:center;font-size:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin:0 0 12px}
+h1{font-size:26px;margin:0 0 6px;line-height:1.15}h2{font-size:20px;margin:0 0 6px}p{margin:0 0 10px}.mut{color:var(--mut)}
+label{display:block;font-weight:700;margin:14px 0 6px}
+input{width:100%;font:inherit;font-size:18px;color:#0b1424;background:#fff;border:0;border-radius:14px;padding:14px 16px;min-height:54px}
+input:focus{outline:4px solid rgba(34,184,224,.5)}
+#cod{font:800 30px/1 ui-monospace,Menlo,monospace;letter-spacing:.22em;text-transform:uppercase;text-align:center}
+.btn{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:56px;border-radius:16px;background:linear-gradient(180deg,#26c3ec,#1690b8);color:#fff;font-weight:800;font-size:18px;margin-top:14px;box-shadow:0 5px 0 #0e6f8f;text-align:center;padding:0 16px}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #0e6f8f}.btn[disabled]{opacity:.6;pointer-events:none}
+.btn.sec{background:rgba(255,255,255,.12);box-shadow:none}.btn.ouro{background:linear-gradient(180deg,#fbbf24,#d97706);box-shadow:0 5px 0 #92400e}
+.err{color:#fecaca;background:rgba(239,68,68,.18);border-radius:12px;padding:10px 12px;font-weight:600;margin:12px 0 0}.err:empty{display:none}
+.row{display:flex;gap:8px;align-items:center}
+.lista{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;max-height:52vh;overflow:auto;padding:2px}
+.lista button{all:unset;cursor:pointer;background:rgba(255,255,255,.1);border-radius:14px;padding:12px;font-weight:700;text-align:left}.lista button.on{background:var(--acc);color:#04202b}
+.avs{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:6px}
+.avs button{all:unset;cursor:pointer;border-radius:14px;padding:4px;display:grid;place-items:center;background:rgba(255,255,255,.06);position:relative}.avs button.on{background:rgba(250,204,21,.25);outline:3px solid #facc15}
+.avs button[disabled]{opacity:.22;filter:grayscale(1);cursor:default}.avs small{position:absolute;right:4px;bottom:2px;font-size:11px;font-weight:800}
+.lob{text-align:center;margin:auto 0;padding:20px 0}.lob .av{animation:salta 1.6s ease-in-out infinite}
+.lob h1{font-size:30px}.dots span{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--acc);margin:0 4px;animation:pt 1.2s infinite}.dots span:nth-child(2){animation-delay:.2s}.dots span:nth-child(3){animation-delay:.4s}
+.hud{display:flex;align-items:center;gap:8px;background:var(--panel);border-radius:16px;padding:6px 10px 6px 6px;margin-bottom:12px}
+.hud b{font-size:17px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}.hud .sp{display:none}.hud .sp{flex:1}.hud .pill{background:rgba(255,255,255,.12);border-radius:999px;padding:5px 11px;font-weight:800;font-size:15px;white-space:nowrap}
+.hud .pill.t{font-variant-numeric:tabular-nums}.hud .pill.t.pouco{background:rgba(239,68,68,.4)}
+.q{display:flex;flex-direction:column;flex:1;gap:12px}
+.qt{font-size:clamp(20px,5.4vw,28px);font-weight:800;text-align:center;line-height:1.25;background:#fff;color:#0b1424;border-radius:var(--r);padding:18px 14px}
+.qi{max-width:100%;max-height:30vh;object-fit:contain;border-radius:14px;align-self:center;background:#fff}
+.bar{height:7px;border-radius:4px;background:rgba(255,255,255,.12);overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,#22d3ee,#a78bfa);transition:width .25s linear}
+.ops{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:auto}
+.op{all:unset;box-sizing:border-box;cursor:pointer;background:var(--oc);border-radius:18px;min-height:clamp(90px,17vh,150px);padding:14px 12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;font-weight:800;font-size:clamp(15px,4.2vw,21px);box-shadow:0 6px 0 rgba(0,0,0,.28);color:#fff;word-break:break-word}
+.op span{font-size:24px;opacity:.9}.op:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,.28)}
+.op.esc{outline:5px solid #fff}.op.sombra{opacity:.35}.op.certa{outline:5px solid #fff;animation:pulso .6s}
+.fb{margin:auto 0;text-align:center;padding:24px 0}.fb .ic{font-size:76px;line-height:1;animation:pop .5s cubic-bezier(.2,1.4,.3,1)}
+.fb h1{font-size:34px;margin-top:10px}.fb.ok h1{color:#86efac}.fb.no h1{color:#fca5a5}
+.fb .pts{font-size:28px;font-weight:900;color:#facc15}
+.pinhas3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}
+.pinhas3 button{all:unset;cursor:pointer;border-radius:20px;background:rgba(255,255,255,.08);padding:12px 4px;display:grid;place-items:center;transition:transform .2s}
+.pinhas3 button:hover,.pinhas3 button:focus-visible{transform:translateY(-6px) rotate(-3deg);background:rgba(250,204,21,.18)}
+.pinhas3 button.abre{animation:abre .7s forwards}.pinhas3 .res{font-weight:800;font-size:14px;text-align:center;padding:4px}
+.efeito{font-size:30px;font-weight:900;text-align:center;animation:pop .5s cubic-bezier(.2,1.4,.3,1)}
+.flo{display:grid;place-items:center;margin:8px 0}.flo svg{width:min(70vw,300px);height:auto}.arbro{animation:cresce .9s cubic-bezier(.2,1.3,.3,1);transform-box:fill-box;transform-origin:50% 100%}
+.top5{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.top5 div{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border-radius:12px;padding:4px 10px 4px 4px}.top5 div.eu{background:rgba(34,184,224,.25)}
+.top5 b{width:22px;text-align:center;color:#facc15}.top5 span{flex:1;text-align:left;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.top5 em{font-style:normal;font-weight:800}
+.fim{text-align:center}.fim .pos{font-size:64px;font-weight:900;color:#facc15;line-height:1}
+.sacos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.sacos button{all:unset;cursor:pointer;border-radius:16px;padding:12px 6px;text-align:center;background:var(--sc);box-shadow:0 5px 0 rgba(0,0,0,.3)}.sacos button[disabled]{opacity:.4}
+.sacos b{display:block;font-size:15px}.sacos span{font-size:13px;font-weight:700}.sacos i{font-style:normal;font-size:30px;display:block}
+.novo{text-align:center;padding:10px 0}.novo .nm{font-size:24px;font-weight:900}.novo svg{animation:gira 1s cubic-bezier(.2,1.3,.3,1)}
+.rar{display:inline-block;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:900;color:#fff}
+.pausa{position:fixed;inset:0;background:rgba(11,20,36,.82);display:grid;place-items:center;font-size:32px;font-weight:900;z-index:5;backdrop-filter:blur(4px)}
+.arcf{position:fixed;top:-10px;width:9px;height:14px;border-radius:2px;animation:arcai linear forwards;pointer-events:none;z-index:9}
+.peq{font-size:13px}.centro{text-align:center}
+.lig{position:fixed;left:50%;transform:translateX(-50%);bottom:max(10px,env(safe-area-inset-bottom));background:#7f1d1d;color:#fff;border-radius:999px;padding:6px 14px;font-weight:700;font-size:13px;z-index:8}
+@keyframes arcai{to{top:110%;transform:translateX(40px) rotate(720deg)}}
+@keyframes salta{50%{transform:translateY(-10px) rotate(3deg)}}
+@keyframes pt{50%{opacity:.25;transform:scale(.7)}}
+@keyframes pop{from{transform:scale(.3);opacity:0}}
+@keyframes pulso{50%{transform:scale(1.04)}}
+@keyframes abre{40%{transform:scale(1.15) rotate(8deg)}100%{transform:scale(1)}}
+@keyframes cresce{from{transform:scale(0)}}
+@keyframes gira{from{transform:rotateY(540deg) scale(.3)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="app"><div class="lob"><p class="mut">A abrir…</p></div></div>
+<script>window.__ES_SB={"ativo":true,"url":"https://ssuescpqyhuqkphauwde.supabase.co","anonKey":"sb_publishable_oNNwLRRXJmqDzBqQPlf9jw_N0L29FjV"};</script>
+<script>
+/* ===================== EduSpruce Arena · código comum (app do professor e página do aluno) =====================
+   Pinhas (personagens originais em SVG), modos de jogo, sons sintetizados, filtro de alcunhas e cifra da lista da turma.
+   Tudo original: nomes, desenhos, textos e sons. */
+(function(){
+const AR={};
+AR.ALF='23456789ABCDEFGHJKMNPQRSTUVWXYZ';
+AR.codigo=()=>{const o=[];while(o.length<6){const b=crypto.getRandomValues(new Uint8Array(12));for(const x of b){if(x<248&&o.length<6)o.push(AR.ALF[x%31])}}return o.join('')};
+AR.fmt=c=>String(c||'').replace(/[^0-9A-Z]/gi,'').toUpperCase().replace(/^(.{3})(.+)$/,'$1-$2');
+AR.limpaCod=c=>String(c||'').toUpperCase().replace(/[^0-9A-Z]/g,'').slice(0,6);
+const hex=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
+AR.sha=async t=>hex(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t)));
+AR.salaId=async code=>(await AR.sha('es-arena:'+AR.limpaCod(code))).slice(0,40);
+const b64=u=>{let s='';const a=new Uint8Array(u);for(let i=0;i<a.length;i+=0x8000)s+=String.fromCharCode.apply(null,a.subarray(i,i+0x8000));return btoa(s)};
+const unb64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function chave(code){const te=new TextEncoder();const base=await crypto.subtle.importKey('raw',te.encode(AR.limpaCod(code)),'PBKDF2',false,['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2',salt:te.encode('es-arena-lista'),iterations:120000,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+AR.cifrar=async(o,code)=>{const k=await chave(code);const iv=crypto.getRandomValues(new Uint8Array(12));const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},k,new TextEncoder().encode(JSON.stringify(o)));return 'R1.'+b64(iv)+'.'+b64(ct)};
+AR.decifrar=async(s,code)=>{const p=String(s).split('.');const k=await chave(code);const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(p[1])},k,unb64(p[2]));return JSON.parse(new TextDecoder().decode(pt))};
+AR.token=()=>hex(crypto.getRandomValues(new Uint8Array(20)));
+
+/* ---------- alcunhas: filtro de palavras impróprias (o servidor volta a verificar) ---------- */
+AR.impropria=t=>{const s=String(t||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/0/g,'o').replace(/1/g,'i').replace(/3/g,'e').replace(/4/g,'a').replace(/5/g,'s').replace(/7/g,'t').replace(/@/g,'a').replace(/\$/g,'s');
+  return /(merd|caralh|fod[aei]|foder|puta|put[oa]s|cabr[aã]o|cabrona|paneleir|panasc|conas?$|^cona|pica|picha|piroca|rabeta|maric|bich[ao]n|corno|otario|idiota|estupid|burr[oa]|atrasad|mongol|retardad|fuck|shit|bitch|dick|cock|pussy|cunt|nigg|whore|slut|bastard|asshole|porn|sex|nazi|hitler|vagin|penis|anus|cuzao|^cu[sz]?$|bost|^pila|tesao|mamas$|broch|chupa|punhet|siririca)/.test(s)};
+AR.alcunhaOk=t=>{const s=String(t||'').trim().replace(/\s+/g,' ');if(s.length<2)return 'A alcunha precisa de pelo menos 2 letras.';if(s.length>24)return 'A alcunha pode ter até 24 carateres.';if(AR.impropria(s))return 'Essa alcunha não pode ser usada. Escolhe outra.';return ''};
+AR.SUGESTOES=['Pinha Veloz','Raposa Azul','Coruja Sábia','Lince Atento','Esquilo Rápido','Falcão Calmo','Lontra Feliz','Gaivota Livre','Abelha Curiosa','Texugo Valente','Golfinho Ágil','Mocho Sereno','Melro Cantor','Cometa','Trovão','Nuvem','Faísca','Âncora','Bússola','Farol'];
+
+/* ---------- modos de jogo (cada modo é um «plugin»: novos modos só precisam de uma entrada aqui, no servidor e nos ecrãs) ---------- */
+AR.MODOS={
+  classico:{nome:'Clássico',ic:'⚡',cor:'#127fa6',ritmo:'sinc',tempo:true,desc:'Todos respondem à mesma pergunta ao mesmo tempo. Quem acerta mais depressa ganha mais pontos.',obj:'',dur:false},
+  colheita:{nome:'Colheita',ic:'🌰',cor:'#c2410c',ritmo:'livre',desc:'Cada resposta certa deixa abrir uma de três pinhas: ganhar pontos, duplicar, perder uma parte… ou trocar com outro jogador!',obj:'pontos',dur:true},
+  floresta:{nome:'Floresta',ic:'🌲',cor:'#15803d',ritmo:'livre',desc:'Cada resposta certa faz crescer a árvore do aluno (3 seguidas dão um rebento extra). Ganha a maior floresta no fim do tempo.',obj:'árvores',dur:true}
+};
+AR.EFEITOS={ganha:['Pontos!','#16a34a'],mega:['Super colheita!','#ca8a04'],dobra:['Duplicaste!','#7c3aed'],perde:['Ai! Perdeste uma parte','#dc2626'],troca:['Troca de pontos!','#0891b2'],vazia:['Pinha vazia…','#64748b']};
+AR.arvores=u=>({inteiras:Math.floor((u||0)/4),fase:(u||0)%4});
+
+/* ---------- Pinhas: personagens originais ---------- */
+AR.RAR={c:['Comum','#64748b'],r:['Rara','#0284c7'],e:['Épica','#7c3aed'],l:['Lendária','#d97706'],m:['Mítica','#db2777']};
+AR.PINHAS=[
+ ['p01','Pinhó','c','#a0632f','#7a4520','redondo','sorriso','broto'],
+ ['p02','Rebento','c','#b7793b','#8a5426','feliz','aberta','folhas'],
+ ['p03','Bolotinha','c','#9a6a3c','#6f4825','redondo','o','gorro'],
+ ['p04','Musgo','c','#6b8e3d','#4c6a27','sono','sorriso','musgo'],
+ ['p05','Caruma','c','#c08a4a','#93652f','redondo','lingua','agulhas'],
+ ['p06','Seiva','c','#b5652d','#8a4a1e','feliz','sorriso','gota'],
+ ['p07','Orvalho','c','#8f7b5a','#6a5a40','redondo','o','orvalho'],
+ ['p08','Gravetinho','c','#a77d4f','#7d5b37','pisca','sorriso','graveto'],
+ ['p09','Resina','c','#c9873a','#9c6526','feliz','aberta','broto'],
+ ['p10','Pinhinha','c','#b0703c','#83512a','redondo','sorriso','laco'],
+ ['p11','Pinhão Sábio','r','#8b5a2b','#5f3c1b','oculos','sorriso','barrete'],
+ ['p12','Cogumelina','r','#a0632f','#7a4520','feliz','aberta','cogumelo'],
+ ['p13','Brisa','r','#7a8fb0','#55688a','redondo','sorriso','cachecol'],
+ ['p14','Ouriço','r','#7c5a3a','#553d26','zangado','o','espinhos'],
+ ['p15','Lanterna','r','#d08b2e','#a1661c','feliz','sorriso','lanterna'],
+ ['p16','Faísca','r','#e0a42a','#b57c14','estrela','aberta','raio'],
+ ['p17','Ventania','r','#6aa3a3','#467a7a','pisca','lingua','helice'],
+ ['p18','Astronauta','e','#9aa6b8','#6c7a90','redondo','sorriso','capacete'],
+ ['p19','Maestro','e','#3f3f46','#27272a','feliz','sorriso','laco_maestro'],
+ ['p20','Corsária','e','#8b4a2b','#5f301b','pala','aberta','tricornio'],
+ ['p21','Feiticeira','e','#5b3e8a','#3e2a63','estrela','sorriso','chapeu_magico'],
+ ['p22','Surfista','e','#d97a3a','#a85a25','sol','lingua','oculos_sol'],
+ ['p23','Rainha do Pinhal','l','#b8862b','#8a6418','feliz','sorriso','coroa'],
+ ['p24','Dragãozinho','l','#2f8a5a','#1e6040','zangado','dentes','chifres'],
+ ['p25','Guardiã Lunar','l','#3b4f8a','#283766','sono','sorriso','lua'],
+ ['p26','Arco-Íris','m','arco','#6b21a8','estrela','aberta','auréola'],
+ ['p27','Pinha Dourada','m','ouro','#a16207','feliz','sorriso','coroa_brilho']
+].map(([id,nome,rar,cor,cor2,olhos,boca,top])=>({id,nome,rar,cor,cor2,olhos,boca,top}));
+AR.pinha=id=>AR.PINHAS.find(p=>p.id===id)||AR.PINHAS[0];
+AR.COMUNS=AR.PINHAS.filter(p=>p.rar==='c').map(p=>p.id);
+let _gid=0;
+AR.svg=(id,sz)=>{const p=AR.pinha(id);sz=sz||64;const g='ap'+(++_gid);
+  const corpo=p.cor==='arco'?`url(#${g}a)`:p.cor==='ouro'?`url(#${g}o)`:p.cor;const esc=p.cor2;
+  const defs=`<defs><linearGradient id="${g}a" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f43f5e"/><stop offset=".3" stop-color="#f59e0b"/><stop offset=".55" stop-color="#22c55e"/><stop offset=".8" stop-color="#3b82f6"/><stop offset="1" stop-color="#a855f7"/></linearGradient><linearGradient id="${g}o" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fde68a"/><stop offset=".5" stop-color="#f59e0b"/><stop offset="1" stop-color="#b45309"/></linearGradient><radialGradient id="${g}b" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>`;
+  /* escamas da pinha */
+  let esca='';for(let r=0;r<5;r++){const y=44+r*9;const n=r%2?4:5;const w=r===0?9:r===4?7:10;for(let i=0;i<n;i++){const x=50+(i-(n-1)/2)*w*1.05;esca+=`<path d="M${x-w/2} ${y} q${w/2} ${7} ${w} 0" fill="none" stroke="${esc}" stroke-width="1.6" stroke-linecap="round" opacity=".55"/>`}}
+  const corpoP=`<path d="M50 20 C70 22 80 44 78 62 C76 80 63 90 50 90 C37 90 24 80 22 62 C20 44 30 22 50 20 Z" fill="${corpo}" stroke="${esc}" stroke-width="2.4"/>`;
+  /* olhos */
+  const O={redondo:`<circle cx="40" cy="52" r="5.2" fill="#1f160f"/><circle cx="60" cy="52" r="5.2" fill="#1f160f"/><circle cx="41.8" cy="50.2" r="1.8" fill="#fff"/><circle cx="61.8" cy="50.2" r="1.8" fill="#fff"/>`,
+    feliz:`<path d="M34.5 53 q5.5 -6 11 0" stroke="#1f160f" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M54.5 53 q5.5 -6 11 0" stroke="#1f160f" stroke-width="3" fill="none" stroke-linecap="round"/>`,
+    sono:`<path d="M34.5 52 q5.5 4 11 0" stroke="#1f160f" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M54.5 52 q5.5 4 11 0" stroke="#1f160f" stroke-width="3" fill="none" stroke-linecap="round"/>`,
+    pisca:`<circle cx="40" cy="52" r="5.2" fill="#1f160f"/><circle cx="41.8" cy="50.2" r="1.8" fill="#fff"/><path d="M54.5 53 q5.5 -6 11 0" stroke="#1f160f" stroke-width="3" fill="none" stroke-linecap="round"/>`,
+    oculos:`<circle cx="40" cy="52" r="8" fill="#fff" fill-opacity=".55" stroke="#1f160f" stroke-width="2.2"/><circle cx="60" cy="52" r="8" fill="#fff" fill-opacity=".55" stroke="#1f160f" stroke-width="2.2"/><path d="M48 52 h4" stroke="#1f160f" stroke-width="2.2"/><circle cx="40" cy="52" r="3.4" fill="#1f160f"/><circle cx="60" cy="52" r="3.4" fill="#1f160f"/>`,
+    zangado:`<path d="M33 45 l12 4" stroke="#1f160f" stroke-width="3" stroke-linecap="round"/><path d="M67 45 l-12 4" stroke="#1f160f" stroke-width="3" stroke-linecap="round"/><circle cx="40" cy="54" r="4.6" fill="#1f160f"/><circle cx="60" cy="54" r="4.6" fill="#1f160f"/><circle cx="41.4" cy="52.6" r="1.5" fill="#fff"/><circle cx="61.4" cy="52.6" r="1.5" fill="#fff"/>`,
+    estrela:`<path d="M40 45 l2 4.6 5 .5 -3.8 3.3 1.2 4.9 -4.4 -2.6 -4.4 2.6 1.2 -4.9 -3.8 -3.3 5 -.5z" fill="#fde047" stroke="#1f160f" stroke-width="1.2"/><path d="M60 45 l2 4.6 5 .5 -3.8 3.3 1.2 4.9 -4.4 -2.6 -4.4 2.6 1.2 -4.9 -3.8 -3.3 5 -.5z" fill="#fde047" stroke="#1f160f" stroke-width="1.2"/>`,
+    pala:`<circle cx="40" cy="52" r="5.2" fill="#1f160f"/><circle cx="41.8" cy="50.2" r="1.8" fill="#fff"/><path d="M53 47 h14 v9 q-7 5 -14 0z" fill="#111"/><path d="M28 42 L72 46" stroke="#111" stroke-width="1.6"/>`,
+    sol:''}[p.olhos]||'';
+  const B={sorriso:`<path d="M43 64 q7 7 14 0" stroke="#1f160f" stroke-width="2.8" fill="none" stroke-linecap="round"/>`,
+    aberta:`<path d="M42 63 q8 11 16 0 z" fill="#5b1d1d" stroke="#1f160f" stroke-width="2" stroke-linejoin="round"/><path d="M45.5 66.5 q4.5 3 9 0" fill="#f87171"/>`,
+    o:`<ellipse cx="50" cy="66" rx="4" ry="5" fill="#5b1d1d" stroke="#1f160f" stroke-width="2"/>`,
+    lingua:`<path d="M43 63 q7 7 14 0" stroke="#1f160f" stroke-width="2.8" fill="none" stroke-linecap="round"/><path d="M50 67 q4 0 3.5 4.5 q-3.5 2.5 -7 0 q-.5 -4.5 3.5 -4.5z" fill="#f87171" stroke="#1f160f" stroke-width="1.4"/>`,
+    dentes:`<path d="M41 63 q9 9 18 0 z" fill="#fff" stroke="#1f160f" stroke-width="2"/><path d="M44 63 l1.5 3 1.5 -3 M54 63 l1.5 3 1.5 -3" stroke="#1f160f" stroke-width="1.2" fill="none"/>`}[p.boca]||'';
+  const bochechas=`<ellipse cx="32" cy="61" rx="4.5" ry="2.8" fill="#fb7185" opacity=".45"/><ellipse cx="68" cy="61" rx="4.5" ry="2.8" fill="#fb7185" opacity=".45"/>`;
+  const folha=(x,y,r,c)=>`<path d="M${x} ${y} q-9 -10 -2 -19 q9 6 2 19z" fill="${c||'#4d7c0f'}" stroke="#365314" stroke-width="1.4" transform="rotate(${r} ${x} ${y})"/>`;
+  const T={broto:folha(50,21,-18)+folha(50,21,22,'#65a30d'),folhas:folha(50,21,-35)+folha(50,21,0,'#65a30d')+folha(50,21,35),
+    gorro:`<path d="M30 30 q20 -22 40 0 q-20 -6 -40 0z" fill="#dc2626" stroke="#7f1d1d" stroke-width="2"/><circle cx="50" cy="12" r="4.5" fill="#fff" stroke="#cbd5e1"/><path d="M29 30 q21 -7 42 0" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>`,
+    musgo:`<path d="M30 30 q5 -8 10 -2 q4 -8 10 -2 q5 -8 10 -2 q5 -6 10 3 q-20 -6 -40 3z" fill="#65a30d" stroke="#3f6212" stroke-width="1.6"/>`,
+    agulhas:`<path d="M50 21 l-10 -14 M50 21 l-4 -16 M50 21 l2 -16 M50 21 l8 -14 M50 21 l13 -10" stroke="#3f6212" stroke-width="2.2" stroke-linecap="round"/>`,
+    gota:folha(50,21,0)+`<path d="M70 32 q4 6 0 9 q-4 -3 0 -9z" fill="#fbbf24" stroke="#b45309" stroke-width="1"/>`,
+    orvalho:folha(50,21,-10)+`<circle cx="44" cy="10" r="3" fill="#bae6fd" stroke="#0284c7" stroke-width="1"/>`,
+    graveto:`<path d="M50 22 l-3 -14 M48 13 l-7 -4" stroke="#78350f" stroke-width="3" stroke-linecap="round"/>`+folha(41,9,-60,'#84cc16'),
+    laco:folha(50,21,10)+`<path d="M62 30 l8 -5 v10z M62 30 l-8 -5 v10z" fill="#ec4899" stroke="#9d174d" stroke-width="1.4"/><circle cx="62" cy="30" r="2.4" fill="#be185d"/>`,
+    barrete:`<path d="M30 28 h40 l-4 -6 h-32z" fill="#1e293b"/><path d="M36 22 L50 10 L64 22 z" fill="#334155" stroke="#0f172a" stroke-width="1.5"/><path d="M64 22 q6 4 4 12" stroke="#fbbf24" stroke-width="1.8" fill="none"/><circle cx="68" cy="35" r="2.4" fill="#fbbf24"/>`,
+    cogumelo:`<path d="M24 30 q26 -30 52 0z" fill="#dc2626" stroke="#7f1d1d" stroke-width="2"/><circle cx="38" cy="22" r="3.4" fill="#fff"/><circle cx="54" cy="16" r="3" fill="#fff"/><circle cx="64" cy="25" r="2.6" fill="#fff"/>`,
+    cachecol:folha(50,21,-15)+`<path d="M27 72 q23 10 46 0 l-1 7 q-22 9 -44 0z" fill="#38bdf8" stroke="#0369a1" stroke-width="1.6"/><path d="M62 78 l3 13 h7 l-4 -15z" fill="#38bdf8" stroke="#0369a1" stroke-width="1.6"/>`,
+    espinhos:`<path d="M28 34 l-8 -6 9 0 M36 25 l-4 -10 7 6 M50 20 l0 -11 4 9 M64 25 l4 -10 1 9 M72 34 l8 -6 -6 7" stroke="#44403c" stroke-width="2.4" stroke-linecap="round" fill="none"/>`,
+    lanterna:folha(50,21,8)+`<path d="M73 40 v-6 h6 v6" fill="none" stroke="#78350f" stroke-width="1.6"/><rect x="71" y="40" width="10" height="13" rx="3" fill="#fde047" stroke="#a16207" stroke-width="1.6"/><circle cx="76" cy="46" r="7" fill="#fde047" opacity=".3"/>`,
+    raio:`<path d="M53 3 L42 20 h7 l-5 13 13 -18 h-7z" fill="#facc15" stroke="#a16207" stroke-width="1.6" stroke-linejoin="round"/>`,
+    helice:`<path d="M50 20 v-7" stroke="#334155" stroke-width="2.4"/><ellipse cx="41" cy="12" rx="9" ry="3" fill="#ef4444"/><ellipse cx="59" cy="12" rx="9" ry="3" fill="#3b82f6"/><circle cx="50" cy="12" r="2.6" fill="#facc15"/>`,
+    capacete:`<path d="M18 60 C16 22 84 22 82 60" fill="#e0f2fe" fill-opacity=".38" stroke="#94a3b8" stroke-width="3"/><path d="M22 60 h56" stroke="#94a3b8" stroke-width="3"/><path d="M50 22 v-10" stroke="#64748b" stroke-width="2"/><circle cx="50" cy="10" r="3.4" fill="#ef4444"/>`,
+    laco_maestro:`<path d="M50 74 l-10 -5 v10z M50 74 l10 -5 v10z" fill="#ef4444" stroke="#7f1d1d" stroke-width="1.4"/><circle cx="50" cy="74" r="2.6" fill="#991b1b"/><path d="M78 56 l12 -16" stroke="#f8fafc" stroke-width="2.4" stroke-linecap="round"/><path d="M50 22 q-6 -12 6 -14" stroke="#111" stroke-width="3" fill="none" stroke-linecap="round"/>`,
+    tricornio:`<path d="M22 30 q28 -24 56 0 q-10 -4 -14 2 q-14 -10 -28 0 q-4 -6 -14 -2z" fill="#1c1917" stroke="#000" stroke-width="1.6"/><path d="M45 21 l5 -4 5 4 -5 4z" fill="#fef3c7"/>`,
+    chapeu_magico:`<path d="M24 31 q26 -9 52 0 q-26 6 -52 0z" fill="#4c1d95" stroke="#2e1065" stroke-width="1.6"/><path d="M33 29 L57 -2 L66 28 z" fill="#6d28d9" stroke="#2e1065" stroke-width="1.6"/><path d="M50 12 l1.4 3 3.2 .4 -2.4 2.2 .7 3.2 -2.9 -1.6 -2.9 1.6 .7 -3.2 -2.4 -2.2 3.2 -.4z" fill="#fde047"/>`,
+    oculos_sol:folha(50,21,-25)+folha(50,21,15,'#65a30d')+`<rect x="31" y="46" width="16" height="10" rx="4" fill="#111"/><rect x="53" y="46" width="16" height="10" rx="4" fill="#111"/><path d="M47 50 h6" stroke="#111" stroke-width="2.2"/><path d="M34 48 l4 0" stroke="#fff" stroke-width="1.4" opacity=".7"/>`,
+    coroa:`<path d="M32 27 l3 -15 8 9 7 -12 7 12 8 -9 3 15z" fill="#facc15" stroke="#a16207" stroke-width="1.8" stroke-linejoin="round"/><circle cx="50" cy="20" r="2.4" fill="#ef4444"/><circle cx="40" cy="22" r="1.8" fill="#3b82f6"/><circle cx="60" cy="22" r="1.8" fill="#22c55e"/>`,
+    chifres:`<path d="M36 26 q-10 -10 -6 -20 q4 10 12 14z M64 26 q10 -10 6 -20 q-4 10 -12 14z" fill="#fef3c7" stroke="#78350f" stroke-width="1.6"/><path d="M20 58 q-14 -10 -10 -26 q8 8 14 10z M80 58 q14 -10 10 -26 q-8 8 -14 10z" fill="#16a34a" stroke="#14532d" stroke-width="1.6"/>`,
+    lua:`<path d="M68 6 a13 13 0 1 0 10 20 a10 10 0 1 1 -10 -20z" fill="#fde68a" stroke="#ca8a04" stroke-width="1.4"/><circle cx="26" cy="14" r="1.6" fill="#fde68a"/><circle cx="34" cy="6" r="1.1" fill="#fde68a"/>`,
+    'auréola':`<ellipse cx="50" cy="10" rx="16" ry="4.5" fill="none" stroke="#fde047" stroke-width="3.2"/>`+folha(50,21,0,'#a3e635'),
+    coroa_brilho:`<path d="M32 27 l3 -15 8 9 7 -12 7 12 8 -9 3 15z" fill="#fef08a" stroke="#ca8a04" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 30 l2 -5 2 5 5 2 -5 2 -2 5 -2 -5 -5 -2z M84 18 l1.5 -4 1.5 4 4 1.5 -4 1.5 -1.5 4 -1.5 -4 -4 -1.5z" fill="#fde047"/>`}[p.top]||'';
+  const brilho=p.rar==='l'||p.rar==='m'?`<circle cx="50" cy="56" r="44" fill="none" stroke="${p.rar==='m'?'#f0abfc':'#fde68a'}" stroke-width="2" stroke-dasharray="2 6" opacity=".8"/>`:'';
+  const solOlhos=p.olhos==='sol'?'':'';
+  return `<svg class="pinha r-${p.rar}" viewBox="0 0 100 100" width="${sz}" height="${sz}" role="img" aria-label="${p.nome}">${defs}${brilho}<ellipse cx="50" cy="93" rx="22" ry="4" fill="#000" opacity=".15"/>${corpoP}${esca}<path d="M50 20 C70 22 80 44 78 62 C76 80 63 90 50 90 C37 90 24 80 22 62 C20 44 30 22 50 20 Z" fill="url(#${g}b)"/>${bochechas}${O}${solOlhos}${B}${T}</svg>`};
+
+/* ---------- sons originais (sintetizados no momento; nada é descarregado) ---------- */
+let ac=null;AR.som=true;
+const tom=(f,t,d,tipo,v)=>{try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.type=tipo||'sine';o.frequency.setValueAtTime(f,ac.currentTime+t);g.gain.setValueAtTime(0.0001,ac.currentTime+t);g.gain.exponentialRampToValueAtTime(v||.18,ac.currentTime+t+.015);g.gain.exponentialRampToValueAtTime(0.0001,ac.currentTime+t+d);o.connect(g);g.connect(ac.destination);o.start(ac.currentTime+t);o.stop(ac.currentTime+t+d+.05)}catch(_){}};
+AR.tocar=n=>{if(!AR.som)return;({
+  certo:()=>{tom(660,0,.12,'triangle');tom(880,.1,.12,'triangle');tom(1320,.2,.2,'triangle',.12)},
+  errado:()=>{tom(220,0,.18,'sawtooth',.08);tom(165,.14,.25,'sawtooth',.08)},
+  tic:()=>tom(1200,0,.04,'square',.05),
+  entra:()=>{tom(520,0,.08,'sine',.12);tom(780,.07,.1,'sine',.12)},
+  pinha:()=>{tom(300,0,.06,'square',.06);tom(450,.05,.06,'square',.06);tom(700,.1,.12,'triangle',.12)},
+  mau:()=>{tom(400,0,.1,'triangle',.1);tom(260,.1,.25,'triangle',.1)},
+  cresce:()=>{[392,494,587,784].forEach((f,i)=>tom(f,i*.06,.12,'sine',.12))},
+  fim:()=>{[523,659,784,1047,784,1047].forEach((f,i)=>tom(f,i*.12,.22,'triangle',.14))},
+  inicio:()=>{[392,392,392,784].forEach((f,i)=>tom(f,i*.28,i===3?.45:.14,'square',.07))}
+}[n]||(()=>{}))()};
+AR.vibrar=p=>{try{navigator.vibrate&&navigator.vibrate(p)}catch(_){}};
+AR.confetes=(el,n)=>{try{el=el||document.body;const c=['#f43f5e','#f59e0b','#22c55e','#3b82f6','#a855f7','#facc15'];for(let i=0;i<(n||60);i++){const d=document.createElement('i');d.className='arcf';d.style.cssText=`left:${Math.random()*100}%;background:${c[i%c.length]};animation-delay:${Math.random()*.6}s;animation-duration:${1.6+Math.random()*1.4}s;transform:rotate(${Math.random()*360}deg)`;el.appendChild(d);setTimeout(()=>d.remove(),3600)}}catch(_){}};
+
+/* ---------- floresta: desenho da floresta de cada aluno (4 unidades = 1 árvore) ---------- */
+AR.arvore=(u,sz)=>{const n=AR.arvores(u).inteiras,f=AR.arvores(u).fase;const k=Math.min(n,9);let s='';for(let i=0;i<k;i++){const x=12+((i*37)%76),h=26+((i*13)%14);s+=`<g transform="translate(${x} ${92-h})"><rect x="-1.5" y="${h-8}" width="3" height="8" fill="#7c4a1e"/><path d="M0 0 L9 ${h*.55} H-9Z M0 ${h*.25} L11 ${h-6} H-11Z" fill="${['#15803d','#16a34a','#166534','#22c55e'][i%4]}"/></g>`}
+  const gh=[0,10,18,28][f];if(f)s+=`<g class="arbro" transform="translate(50 ${92-gh})"><rect x="-2" y="${gh-6}" width="4" height="6" fill="#7c4a1e"/><path d="M0 0 L${gh*.32} ${gh*.6} H-${gh*.32}Z M0 ${gh*.3} L${gh*.4} ${gh-5} H-${gh*.4}Z" fill="#84cc16"/></g>`;
+  return `<svg viewBox="0 0 100 100" width="${sz||100}" height="${sz||100}" aria-hidden="true"><ellipse cx="50" cy="93" rx="46" ry="6" fill="#65a30d" opacity=".55"/>${s}</svg>`};
+/* pinha fechada da Colheita (três por escolha) */
+AR.pinhaFechada=(sz,cor)=>`<svg viewBox="0 0 100 100" width="${sz}" height="${sz}" aria-hidden="true"><path d="M50 8 C70 12 82 40 78 62 C74 84 62 94 50 94 C38 94 26 84 22 62 C18 40 30 12 50 8Z" fill="${cor||'#a0632f'}" stroke="#5c3a1c" stroke-width="3"/>${[30,44,58,72].map((y,r)=>[...Array(r%2?3:4)].map((_,i,A)=>{const x=50+(i-(A.length-1)/2)*14;return `<path d="M${x-7} ${y} q7 9 14 0" fill="none" stroke="#5c3a1c" stroke-width="2.4" stroke-linecap="round"/>`}).join('')).join('')}<path d="M50 8 q-4 -6 2 -8 q4 4 -2 8z" fill="#4d7c0f"/><text x="50" y="66" text-anchor="middle" font-size="26" font-weight="900" fill="#fff" opacity=".85">?</text></svg>`;
+/* ---------- pontuação por extenso ---------- */
+AR.nf=n=>Math.round(+n||0).toLocaleString('pt-PT');
+window.ARENA=AR;
+})();
+
+</script>
+<script>
+(()=>{const AR=window.ARENA;const $=s=>document.querySelector(s);const app=$('#app');
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const CORES=['#e2453c','#1f7fd0','#e9a400','#2f9e44'],FORMAS=['▲','◆','●','■'];
+let CFG=null;const st={};let tPoll=null,tRel=null,canal=null,ocupado=false,ecraAtual='';
+async function cfg(){if(CFG)return CFG;let c=window.__ES_SB;if(!c||typeof c!=='object'){try{c=await (await fetch('supabase-config.json',{cache:'no-store'})).json()}catch(_){c=null}}if(!c||!c.url)throw new Error('A Arena não está configurada.');CFG=c;return c}
+async function rpc(fn,args){const c=await cfg();let r;try{r=await fetch(c.url+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'Content-Type':'application/json',apikey:c.anonKey,Authorization:'Bearer '+c.anonKey},body:JSON.stringify(args)})}catch(e){const x=new Error('Sem ligação. A tentar de novo…');x.rede=true;throw x}
+  if(!r.ok){const t=await r.text();const x=new Error(r.status===404?'A Arena ainda não está disponível nesta escola.':'Erro do servidor ('+r.status+').');x.http=r.status;x.det=t;throw x}return r.json()}
+const MSG={sala:'Não encontrei essa sala, ou o jogo já terminou. Confirma o código.',limite:'O prazo deste trabalho de casa já passou.',alcunha:'A alcunha precisa de 2 a 24 carateres.',impropria:'Essa alcunha não pode ser usada. Escolhe outra.',
+  emuso:'Esse nome já está a ser usado por outro aparelho. Se és tu, espera uns segundos e tenta de novo.',tardia:'O jogo já começou e o professor não deixa entrar depois do início.',cheia:'A sala está cheia.',expulso:'O professor tirou-te deste jogo.',lista:'Escolhe o teu nome na lista.',pedido:'Pedido inválido.'};
+const guardar=()=>{try{localStorage.setItem('arena.'+st.id,JSON.stringify({j:st.j,tok:st.tok,alcunha:st.alcunha,ref:st.ref||null,code:st.code}))}catch(_){}};
+const lerG=id=>{try{return JSON.parse(localStorage.getItem('arena.'+id)||'null')}catch(_){return null}};
+const esquecer=()=>{try{localStorage.removeItem('arena.'+st.id)}catch(_){}};
+const topo=(extra)=>`<header class="top">${AR.svg('p16',34)}<b>EduSpruce <em>Arena</em></b><span class="sp"></span>${extra||''}<button class="ib" id="b-som" aria-label="Som">${AR.som?'🔔':'🔕'}</button></header>`;
+const ligarSom=()=>{const b=$('#b-som');if(b)b.onclick=()=>{AR.som=!AR.som;b.textContent=AR.som?'🔔':'🔕';try{localStorage.setItem('arena.som',AR.som?'1':'0')}catch(_){}}};
+try{AR.som=localStorage.getItem('arena.som')!=='0'}catch(_){}
+function ecra(nome,html){ecraAtual=nome;app.innerHTML=html;ligarSom();window.scrollTo(0,0)}
+let ligInd=null;const semRede=v=>{if(v&&!ligInd){ligInd=document.createElement('div');ligInd.className='lig';ligInd.textContent='Sem ligação · a tentar de novo…';document.body.appendChild(ligInd)}if(!v&&ligInd){ligInd.remove();ligInd=null}};
+
+/* ---------- 1. código ---------- */
+function ecraCodigo(msg,cod){paraTudo();ecra('codigo',`${topo()}<div class="card" style="margin-top:auto"><h1>Entra no jogo</h1><p class="mut">Escreve o código que está no quadro.</p><input id="cod" maxlength="7" autocomplete="off" autocapitalize="characters" spellcheck="false" inputmode="text" value="${esc(AR.fmt(cod||''))}" aria-label="Código da sala"><button class="btn" id="b-ok">Entrar</button><p class="err" id="e">${esc(msg||'')}</p></div><p class="mut centro peq" style="margin-bottom:auto">Não precisas de conta. Só guardamos a tua alcunha e as tuas respostas durante o jogo.</p>`);
+  const i=$('#cod');i.oninput=()=>{const p=i.selectionStart;i.value=AR.fmt(AR.limpaCod(i.value));};i.onkeydown=e=>{if(e.key==='Enter')$('#b-ok').click()};if(!cod)setTimeout(()=>i.focus(),100);
+  $('#b-ok').onclick=()=>abrir(AR.limpaCod(i.value))}
+async function abrir(code){const e=$('#e'),b=$('#b-ok');if(code.length!==6){if(e)e.textContent='O código tem 6 carateres.';return}if(b){b.disabled=true;b.textContent='A procurar…'}
+  try{st.code=code;st.id=await AR.salaId(code);history.replaceState(null,'','#'+code);
+    const g=lerG(st.id);if(g&&g.j&&g.tok){Object.assign(st,g);const r=await rpc('arena_estado',{p_id:st.id,p_j:st.j,p_tok:st.tok});if(r&&!r.erro&&!r.eu.expulso){st.alcunha=r.eu.alcunha;comecar(r);return}esquecer()}
+    const info=await rpc('arena_info',{p_id:st.id});if(!info){if(b){b.disabled=false;b.textContent='Entrar'}if(e)e.textContent=MSG.sala;return}st.info=info;ecraNome()}
+  catch(x){if(b){b.disabled=false;b.textContent='Entrar'}if(e)e.textContent=x.message}}
+
+/* ---------- 2. nome / alcunha + avatar ---------- */
+async function ecraNome(){const I=st.info;const lista=I.cfg&&I.cfg.nomes==='lista';st.avatar=st.avatar||AR.COMUNS[Math.floor(Math.random()*AR.COMUNS.length)];
+  let L=[];if(lista){try{L=await AR.decifrar(I.cfg.lista_c,st.code)}catch(_){return ecraCodigo('Não foi possível abrir a lista da turma. Confirma o código.',st.code)}}
+  ecra('nome',`${topo()}<div class="card"><p class="mut" style="margin:0">${esc(I.cfg.titulo||'Jogo')} · ${esc((AR.MODOS[I.modo]||{}).nome||'')}${I.tipo==='tpc'?' · trabalho de casa':''}</p><h1>${lista?'Quem és?':'Escolhe uma alcunha'}</h1>
+    ${lista?`<div class="lista" id="lst">${L.map((x,k)=>`<button type="button" data-k="${k}">${esc(x.n)}</button>`).join('')}</div>`:`<div class="row"><input id="alc" maxlength="24" autocomplete="off" placeholder="A tua alcunha" aria-label="Alcunha"><button class="ib" id="b-dado" type="button" aria-label="Sugerir alcunha" style="flex:none;width:54px;height:54px;font-size:24px">🎲</button></div><p class="mut peq" style="margin:6px 0 0">Não uses o teu nome verdadeiro se não quiseres. Palavras impróprias são recusadas.</p>`}
+    <label>A tua Pinha</label><div class="avs" id="avs">${AR.COMUNS.map(id=>`<button type="button" data-av="${id}" class="${st.avatar===id?'on':''}" aria-label="${esc(AR.pinha(id).nome)}">${AR.svg(id,56)}</button>`).join('')}</div>
+    <button class="btn" id="b-ent">Entrar no jogo</button><p class="err" id="e"></p></div>`);
+  let esc_=null;if(lista)document.querySelectorAll('#lst [data-k]').forEach(b=>b.onclick=()=>{esc_=L[+b.dataset.k];document.querySelectorAll('#lst [data-k]').forEach(z=>z.classList.toggle('on',z===b))});
+  else{const a=$('#alc');a.value=st.alcunha||'';$('#b-dado').onclick=()=>{a.value=AR.SUGESTOES[Math.floor(Math.random()*AR.SUGESTOES.length)]+' '+(10+Math.floor(Math.random()*90))};a.onkeydown=e=>{if(e.key==='Enter')$('#b-ent').click()}}
+  document.querySelectorAll('#avs [data-av]').forEach(b=>b.onclick=()=>{st.avatar=b.dataset.av;document.querySelectorAll('#avs [data-av]').forEach(z=>z.classList.toggle('on',z===b))});
+  $('#b-ent').onclick=async()=>{const e=$('#e'),b=$('#b-ent');let alc,ref=null;if(lista){if(!esc_){e.textContent=MSG.lista;return}{const w=esc_.n.replace(/^\d+\.\s*/,'').split(/\s+/);alc=w[0]+(w.length>1?' '+w[w.length-1][0]+'.':'')}ref=esc_.r}else{alc=$('#alc').value.trim().replace(/\s+/g,' ');const m=AR.alcunhaOk(alc);if(m){e.textContent=m;return}}
+    b.disabled=true;b.textContent='A entrar…';st.tok=st.tok||AR.token();
+    try{const r=await rpc('arena_entrar',{p_id:st.id,p_alcunha:alc,p_tok:st.tok,p_ref:ref,p_avatar:st.avatar});if(!r||r.erro){b.disabled=false;b.textContent='Entrar no jogo';e.textContent=MSG[r&&r.erro]||'Não foi possível entrar.';return}
+      st.j=r.j;st.alcunha=r.alcunha;st.ref=ref;guardar();AR.tocar('entra');AR.vibrar(30);const s=await rpc('arena_estado',{p_id:st.id,p_j:st.j,p_tok:st.tok});comecar(s)}
+    catch(x){b.disabled=false;b.textContent='Entrar no jogo';e.textContent=x.message}}}
+
+/* ---------- 3. ciclo do jogo ---------- */
+function paraTudo(){clearTimeout(tPoll);clearInterval(tRel);tPoll=tRel=null;try{canal&&canal.unsubscribe()}catch(_){}canal=null}
+async function ligarCanal(){try{const c=await cfg();const m=await import('./esm/supabase-2.117.3.min.js');const sb=m.createClient(c.url,c.anonKey,{auth:{persistSession:false,autoRefreshToken:false}});canal=sb.channel('arena-'+st.id,{config:{broadcast:{self:false}}});
+  canal.on('broadcast',{event:'s'},()=>{clearTimeout(st.tAviso);st.tAviso=setTimeout(atualizar,120+Math.random()*450)}).subscribe()}catch(_){}}
+function comecar(r){paraTudo();st.estado=r;st.livre=false;st.qAtual=null;ligarCanal();aplicar(r);agendar()}
+function agendar(){clearTimeout(tPoll);const s=st.estado&&st.estado.sala;const vivo=s&&s.tipo==='vivo';const ms=!s?4000:s.estado==='fim'?20000:s.estado==='espera'?3000:(vivo&&s.modo==='classico')?2500:6000;tPoll=setTimeout(async()=>{await atualizar();agendar()},ms)}
+async function atualizar(){if(!st.j)return;try{const r=await rpc('arena_estado',{p_id:st.id,p_j:st.j,p_tok:st.tok});semRede(false);if(r.erro==='jogador'){esquecer();return ecraCodigo('A tua ligação a esta sala terminou. Entra de novo.',st.code)}st.estado=r;aplicar(r)}catch(x){if(x.rede)semRede(true)}}
+const off=()=>{const s=st.estado&&st.estado.sala;return s?new Date(s.agora).getTime()-st.recebido:0};
+function aplicar(r){st.recebido=Date.now();const s=r.sala,eu=r.eu;st.off=new Date(s.agora).getTime()-Date.now();
+  if(eu.expulso){esquecer();paraTudo();return ecra('exp',`${topo()}<div class="fb no"><div class="ic">🚪</div><h1>Saíste do jogo</h1><p class="mut">${MSG.expulso}</p><button class="btn sec" onclick="location.reload()">Voltar ao início</button></div>`)}
+  let p=$('#pausa');if(s.estado==='pausa'&&!p){p=document.createElement('div');p.id='pausa';p.className='pausa';p.textContent='⏸ Em pausa';document.body.appendChild(p)}else if(s.estado!=='pausa'&&p)p.remove();
+  if(eu.estado&&eu.estado.trocado&&eu.estado.trocado.em!==st.trocadoVisto){st.trocadoVisto=eu.estado.trocado.em;aviso('🔁 '+eu.estado.trocado.por+' trocou de pontos contigo!')}
+  if(s.estado==='fim'||eu.terminou)return ecraFim(r);
+  if(s.estado==='espera'&&s.tipo==='vivo')return ecraEspera(r);
+  if(s.modo==='classico'&&s.tipo==='vivo')return classico(r);
+  /* modos ao ritmo do aluno: só atualiza o painel, não interrompe a pergunta */
+  if(!st.livre){st.livre=true;proxima()}else hud()}
+function aviso(t){const d=document.createElement('div');d.className='lig';d.style.background='#1e3a8a';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),3500)}
+function hud(){const r=st.estado;if(!r)return;const s=r.sala,eu=r.eu;const el=$('#hud');if(!el)return;const flo=s.modo==='floresta';
+  el.innerHTML=`${AR.svg(eu.avatar,40)}<b>${esc(eu.alcunha)}</b><span class="sp"></span><span class="pill">${flo?'🌲 '+AR.arvores((eu.estado||{}).arv).inteiras:'⭐ '+AR.nf(eu.pontos)}</span><span class="pill">${eu.pos}.º/${eu.total}</span><span class="pill t" id="rel" ${tempoFim()==null?'hidden':''}></span>`;relogio()}
+function tempoFim(){const s=st.estado.sala;if(s.tipo==='vivo'&&s.fim_em)return new Date(s.fim_em).getTime()-st.off;const ini=st.ini||(st.estado.eu.estado||{}).ini;const d=+((s.cfg||{}).duracao||0);if(s.tipo==='tpc'&&ini&&d&&s.modo!=='classico')return new Date(ini).getTime()+d*1000-st.off;return null}
+function relogio(){clearInterval(tRel);const f=tempoFim();const el=$('#rel');if(f==null||!el)return;const t=()=>{const r=Math.max(0,(f-Date.now())/1000);const e=$('#rel');if(!e)return clearInterval(tRel);e.textContent='⏱ '+Math.floor(r/60)+':'+String(Math.floor(r%60)).padStart(2,'0');e.classList.toggle('pouco',r<=30);if(r<=0){clearInterval(tRel);setTimeout(atualizar,1500)}};t();tRel=setInterval(t,500)}
+
+function ecraEspera(r){const eu=r.eu;if(ecraAtual==='espera'){const n=$('#njog');if(n)n.textContent=eu.total;return}
+  ecra('espera',`${topo()}<div class="lob"><div class="av">${AR.svg(eu.avatar,150)}</div><h1>Estás dentro, ${esc(eu.alcunha)}!</h1><p class="mut">Olha para o quadro. O jogo começa já a seguir.</p><div class="dots"><span></span><span></span><span></span></div><p class="mut peq" style="margin-top:14px"><span id="njog">${eu.total}</span> jogadores na sala</p>
+    <button class="btn sec" id="b-av" style="max-width:280px;margin:18px auto 0">Mudar de Pinha</button></div>`);
+  $('#b-av').onclick=()=>ecraAvatares(()=>{ecraAtual='';ecraEspera(st.estado)})}
+async function ecraAvatares(volta){let col=null;try{col=await rpc('arena_colecao',{p_id:st.id,p_j:st.j,p_tok:st.tok})}catch(_){}const tem=id=>AR.COMUNS.includes(id)||(col&&col.ativa&&col.pinhas&&col.pinhas[id]>0);
+  ecra('av',`${topo()}<div class="card"><h2>Escolhe a tua Pinha</h2>${col&&col.ativa?'':'<p class="mut peq">As Pinhas raras desbloqueiam-se com moedas quando o professor usa a lista da turma.</p>'}<div class="avs">${AR.PINHAS.map(p=>`<button type="button" data-av="${p.id}" ${tem(p.id)?'':'disabled'} class="${st.estado.eu.avatar===p.id?'on':''}" title="${esc(p.nome)}">${AR.svg(p.id,56)}${p.rar!=='c'?`<small style="color:${AR.RAR[p.rar][1]}">${AR.RAR[p.rar][0][0]}</small>`:''}</button>`).join('')}</div><button class="btn sec" id="b-v">Voltar</button></div>`);
+  document.querySelectorAll('[data-av]:not([disabled])').forEach(b=>b.onclick=async()=>{try{await rpc('arena_avatar',{p_id:st.id,p_j:st.j,p_tok:st.tok,p_avatar:b.dataset.av});st.estado.eu.avatar=b.dataset.av;AR.tocar('entra')}catch(_){}volta()});$('#b-v').onclick=volta}
+
+/* ---------- Clássico ao vivo ---------- */
+function classico(r){const s=r.sala,eu=r.eu,p=s.pergunta;if(!p)return ecraEspera(r);const chave='c'+s.atual+(s.revelada?'r':'')+(eu.resp?'x':'');
+  if(s.revelada){if(ecraAtual===chave)return;const minha=eu.resp;const ok=minha&&minha.certa;if(ok){AR.tocar('certo');AR.vibrar([30,40,30])}else{AR.tocar('errado');AR.vibrar(200)}
+    return ecra(chave,`${topo()}<div class="fb ${ok?'ok':'no'}"><div class="ic">${ok?'✅':minha?'❌':'⌛'}</div><h1>${ok?'Certo!':minha?'Não foi desta':'Não respondeste'}</h1>${ok?`<div class="pts">+${AR.nf(minha.pts)}</div>`:`<p class="mut">A certa era: <b>${esc((p.o||[])[s.certa]||'')}</b></p>`}<p style="margin-top:14px">Estás em <b>${eu.pos}.º lugar</b> de ${eu.total} · ${AR.nf(eu.pontos)} pontos</p>${top5(r)}</div>`)}
+  if(eu.resp){if(ecraAtual===chave)return;return ecra(chave,`${topo()}<div class="fb"><div class="ic">🌰</div><h1>Resposta enviada!</h1><p class="mut">Espera pelos outros…</p><div class="dots"><span></span><span></span><span></span></div></div>`)}
+  if(ecraAtual===chave)return;st.respAt=null;
+  const t=+p.s||20;const ini=new Date(s.atual_ini).getTime()-st.off;
+  ecra(chave,`${topo()}<div class="q"><div class="hud" id="hud"></div><div class="row"><span class="mut peq">Pergunta ${s.atual+1} de ${s.n_perg}</span><span class="sp" style="flex:1"></span><b id="cnt"></b></div><div class="bar"><i id="br"></i></div><div class="qt">${esc(p.t)}</div>${p.img?`<img class="qi" src="${p.img}" alt="">`:''}<div class="ops">${(p.o||[]).map((o,k)=>`<button type="button" class="op" style="--oc:${CORES[k]}" data-o="${k}"><span>${FORMAS[k]}</span>${esc(o)}</button>`).join('')}</div></div>`);hud();
+  const tick=()=>{const rr=Math.max(0,t-(Date.now()-ini)/1000);const c=$('#cnt'),b=$('#br');if(!c)return clearInterval(st.tq);c.textContent=Math.ceil(rr)+' s';b.style.width=(100*rr/t)+'%';if(rr<=0){clearInterval(st.tq);document.querySelectorAll('.op').forEach(x=>x.disabled=true)}};clearInterval(st.tq);tick();st.tq=setInterval(tick,200);
+  document.querySelectorAll('.op').forEach(b=>b.onclick=async()=>{if(ocupado)return;ocupado=true;const k=+b.dataset.o;document.querySelectorAll('.op').forEach(x=>{x.classList.toggle('esc',x===b);x.classList.toggle('sombra',x!==b)});AR.vibrar(20);
+    try{const x=await rpc('arena_responder',{p_id:st.id,p_j:st.j,p_tok:st.tok,p_perg:s.atual,p_opc:k});if(x&&x.erro&&x.erro!=='repetida'&&x.erro!=='depressa'){aviso(x.erro==='tempo'||x.erro==='fora'?'O tempo acabou.':'Não foi possível enviar.')}
+      st.estado.eu.resp={opc:k};clearInterval(st.tq);ecraAtual='';classico(st.estado)}catch(_){aviso('Sem ligação — tenta outra vez');document.querySelectorAll('.op').forEach(x=>x.classList.remove('esc','sombra'))}ocupado=false})}
+function top5(r){return `<div class="top5">${(r.top||[]).map((x,k)=>`<div class="${x.id===st.j?'eu':''}"><b>${k+1}</b>${AR.svg(x.avatar,30)}<span>${esc(x.alcunha)}</span><em>${r.sala.modo==='floresta'?AR.arvores(x.arv).inteiras+' 🌲':AR.nf(x.pontos)}</em></div>`).join('')}</div>`}
+
+/* ---------- modos ao ritmo de cada aluno (Colheita, Floresta, trabalho de casa) ---------- */
+async function proxima(){if(ocupado)return;ocupado=true;let q;try{q=await rpc('arena_pergunta',{p_id:st.id,p_j:st.j,p_tok:st.tok});semRede(false)}catch(x){ocupado=false;semRede(true);setTimeout(proxima,2500);return}ocupado=false;
+  if(q.erro){if(q.erro==='terminou'||q.erro==='fim'||q.erro==='limite'){st.livre=false;return atualizar()}if(q.erro==='espera'||q.erro==='pausa'){st.livre=false;return setTimeout(atualizar,1500)}if(q.erro==='jogador'){esquecer();return ecraCodigo('A tua ligação a esta sala terminou. Entra de novo.',st.code)}return setTimeout(proxima,2000)}
+  if(q.escolha)return colheitaEscolha();if(q.ini)st.ini=q.ini;
+  const p=q.pergunta,s=st.estado.sala;st.qAtual=q;
+  ecra('q'+q.i+'-'+q.n,`${topo()}<div class="q"><div class="hud" id="hud"></div>${s.modo==='classico'?`<div class="mut peq">Pergunta ${q.n} de ${s.n_perg}</div>`:''}<div class="qt">${esc(p.t)}</div>${p.img?`<img class="qi" src="${p.img}" alt="">`:''}<div class="ops">${(p.o||[]).map((o,k)=>`<button type="button" class="op" style="--oc:${CORES[k]}" data-o="${k}"><span>${FORMAS[k]}</span>${esc(o)}</button>`).join('')}</div></div>`);hud();
+  document.querySelectorAll('.op').forEach(b=>b.onclick=()=>responder(q,+b.dataset.o,b))}
+async function responder(q,k,b){if(ocupado)return;ocupado=true;document.querySelectorAll('.op').forEach(x=>{x.classList.toggle('esc',x===b);x.classList.toggle('sombra',x!==b)});let x;
+  try{x=await rpc('arena_responder',{p_id:st.id,p_j:st.j,p_tok:st.tok,p_perg:q.i,p_opc:k})}catch(_){ocupado=false;aviso('Sem ligação — tenta outra vez');document.querySelectorAll('.op').forEach(z=>z.classList.remove('esc','sombra'));return}ocupado=false;
+  if(x.erro){if(x.erro==='depressa')return;if(x.erro==='fora')return proxima();st.livre=false;return atualizar()}
+  const s=st.estado.sala;Object.assign(st.estado.eu,{pontos:x.pontos,moedas:x.moedas});if(x.arv!=null){st.estado.eu.estado=st.estado.eu.estado||{};st.estado.eu.estado.arv=x.arv}
+  document.querySelectorAll('.op').forEach(z=>{const o=+z.dataset.o;z.classList.remove('esc','sombra');if(o===x.ci)z.classList.add('certa');else z.classList.add('sombra')});
+  if(x.certa){AR.tocar('certo');AR.vibrar([30,40,30])}else{AR.tocar('errado');AR.vibrar(200)}
+  await new Promise(r=>setTimeout(r,x.certa?650:1300));
+  if(s.modo==='colheita'&&x.escolha)return colheitaEscolha();
+  if(s.modo==='floresta'){ecra('fb',`${topo()}<div class="q"><div class="hud" id="hud"></div><div class="fb ${x.certa?'ok':'no'}" style="padding:4px 0"><h1>${x.certa?(x.pts>10?'Rebento extra! 🌱':'A árvore cresceu!'):'Ups! A árvore não cresceu'}</h1><div class="flo">${AR.arvore(x.arv,260)}</div><p class="mut">${AR.arvores(x.arv).inteiras} ${AR.arvores(x.arv).inteiras===1?'árvore':'árvores'}${x.seq>=2&&x.certa?' · '+x.seq+' certas seguidas':''}</p></div></div>`);hud();if(x.certa)AR.tocar('cresce');await new Promise(r=>setTimeout(r,x.certa?1300:900))}
+  else if(s.modo==='colheita'&&!x.certa){ecra('fb',`${topo()}<div class="fb no"><div class="ic">❌</div><h1>Errado</h1><p class="mut">Sem pinha desta vez. A certa era: <b>${esc((q.pergunta.o||[])[x.ci]||'')}</b></p></div>`);await new Promise(r=>setTimeout(r,1200))}
+  else if(s.modo==='classico'){ecra('fb',`${topo()}<div class="fb ${x.certa?'ok':'no'}"><div class="ic">${x.certa?'✅':'❌'}</div><h1>${x.certa?'Certo!':'Errado'}</h1>${x.certa?`<div class="pts">+${AR.nf(x.pts)}</div>`:`<p class="mut">A certa era: <b>${esc((q.pergunta.o||[])[x.ci]||'')}</b></p>`}</div>`);await new Promise(r=>setTimeout(r,1100))}
+  if(x.fim){st.livre=false;return atualizar()}proxima()}
+function colheitaEscolha(){const cores=['#a0632f','#8b5a2b','#b7793b'];
+  ecra('colheita',`${topo()}<div class="q"><div class="hud" id="hud"></div><div class="centro"><h1>Escolhe uma pinha!</h1><p class="mut">Pode ter pontos, duplicar… ou uma surpresa menos boa.</p></div><div class="pinhas3">${[0,1,2].map(k=>`<button type="button" data-p="${k}" aria-label="Pinha ${k+1}">${AR.pinhaFechada(96,cores[k])}</button>`).join('')}</div><div id="efe"></div></div>`);hud();AR.tocar('pinha');
+  document.querySelectorAll('.pinhas3 [data-p]').forEach(b=>b.onclick=async()=>{if(ocupado)return;ocupado=true;b.classList.add('abre');let x;try{x=await rpc('arena_acao',{p_id:st.id,p_j:st.j,p_tok:st.tok,p_escolha:+b.dataset.p})}catch(_){ocupado=false;b.classList.remove('abre');return aviso('Sem ligação — tenta outra vez')}ocupado=false;
+    if(x.erro){return proxima()}const E=AR.EFEITOS[x.efeito]||['?','#fff'];const txt=x.efeito==='ganha'||x.efeito==='mega'?'+'+AR.nf(x.valor):x.efeito==='dobra'?'×2 (+'+AR.nf(x.valor)+')':x.efeito==='perde'?'−'+AR.nf(x.valor):x.efeito==='troca'?'com '+esc(x.com||''):'0';
+    const outros=[...x.outros];document.querySelectorAll('.pinhas3 [data-p]').forEach(z=>{const ef=z===b?x.efeito:outros.shift();const e2=AR.EFEITOS[ef]||['',''];z.disabled=true;z.style.opacity=z===b?1:.45;z.insertAdjacentHTML('beforeend',`<div class="res" style="color:${e2[1]}">${esc(e2[0])}</div>`)});
+    st.estado.eu.pontos=x.pontos;hud();$('#efe').innerHTML=`<div class="efeito" style="color:${E[1]}">${E[0]}<br>${txt}</div>`;
+    if(x.efeito==='perde'||x.efeito==='vazia')AR.tocar('mau');else{AR.tocar('certo');if(x.efeito==='mega'||x.efeito==='dobra')AR.confetes(document.body,40)}AR.vibrar(40);
+    setTimeout(proxima,1800)})}
+
+/* ---------- fim + coleção de Pinhas ---------- */
+async function ecraFim(r){if(ecraAtual==='fim')return;paraTudo();st.livre=false;const s=r.sala,eu=r.eu;AR.tocar('fim');let col=null;try{col=await rpc('arena_colecao',{p_id:st.id,p_j:st.j,p_tok:st.tok})}catch(_){}
+  ecra('fim',`${topo()}<div class="fim"><div style="margin:8px 0">${AR.svg(eu.avatar,120)}</div><div class="pos">${eu.pos}.º</div><p class="mut">de ${eu.total} jogadores</p><h1>${s.estado==='fim'?'Fim do jogo!':'Terminaste!'}</h1>
+    <p style="font-size:20px"><b>${s.modo==='floresta'?AR.arvores((eu.estado||{}).arv).inteiras+' árvores 🌲':AR.nf(eu.pontos)+' pontos'}</b> · ${eu.certas} certas · ${eu.erradas} erradas</p>${top5(r)}
+    ${col&&col.ativa?`<button class="btn ouro" id="b-col">🪙 ${col.moedas} moedas · Abrir a coleção</button>`:col&&col.moedas_jogo?`<p class="mut peq" style="margin-top:12px">Ganhaste ${col.moedas_jogo} moedas neste jogo.</p>`:''}<button class="btn sec" id="b-sai">Sair</button></div>`);
+  if(eu.pos<=3)AR.confetes(document.body,70);const bc=$('#b-col');if(bc)bc.onclick=()=>ecraColecao();$('#b-sai').onclick=()=>{esquecer();location.hash='';location.reload()}}
+async function ecraColecao(novo){let c;try{c=await rpc('arena_colecao',{p_id:st.id,p_j:st.j,p_tok:st.tok})}catch(x){return aviso(x.message)}const P=c.pinhas||{};const n=Object.keys(P).length;
+  const SAC=[['bosque','Saco do Bosque',20,'#15803d','🌲'],['serra','Saco da Serra',45,'#0369a1','⛰️'],['cume','Saco do Cume',90,'#7c3aed','🏔️']];
+  ecra('col',`${topo()}<div class="card"><div class="row"><h2 style="margin:0;flex:1">A tua coleção</h2><b style="font-size:20px">🪙 ${c.moedas}</b></div><p class="mut peq">${n} de ${AR.PINHAS.length} Pinhas · ganha moedas a jogar com a lista da turma</p>
+    ${novo?`<div class="novo">${AR.svg(novo.pinha,150)}<div class="nm">${esc(AR.pinha(novo.pinha).nome)}</div><span class="rar" style="background:${AR.RAR[novo.rar][1]}">${AR.RAR[novo.rar][0]}</span></div>`:''}
+    <div class="sacos">${SAC.map(([k,nm,pr,cor,ic])=>`<button type="button" data-s="${k}" style="--sc:${cor}" ${c.moedas<pr?'disabled':''}><i>${ic}</i><b>${nm}</b><span>🪙 ${pr}</span></button>`).join('')}</div>
+    <div class="avs">${AR.PINHAS.map(p=>`<button type="button" data-av="${p.id}" ${P[p.id]||p.rar==='c'?'':'disabled'} class="${st.estado&&st.estado.eu.avatar===p.id?'on':''}" title="${esc(p.nome)} · ${AR.RAR[p.rar][0]}">${AR.svg(p.id,56)}${P[p.id]?`<small>×${P[p.id]}</small>`:''}</button>`).join('')}</div><p class="mut peq">Toca numa Pinha que tenhas para a usares como avatar.</p><button class="btn sec" id="b-v">Voltar</button></div>`);
+  if(novo){AR.tocar('fim');AR.confetes(document.body,novo.rar==='l'||novo.rar==='m'?120:50)}
+  document.querySelectorAll('[data-s]').forEach(b=>b.onclick=async()=>{if(ocupado)return;ocupado=true;b.disabled=true;try{const x=await rpc('arena_saco',{p_id:st.id,p_j:st.j,p_tok:st.tok,p_saco:b.dataset.s});ocupado=false;if(x.erro)return aviso(x.erro==='moedas'?'Não tens moedas suficientes.':'Não foi possível abrir.');AR.tocar('pinha');ecraColecao(x)}catch(e){ocupado=false;aviso(e.message)}});
+  document.querySelectorAll('.avs [data-av]:not([disabled])').forEach(b=>b.onclick=async()=>{try{await rpc('arena_avatar',{p_id:st.id,p_j:st.j,p_tok:st.tok,p_avatar:b.dataset.av});if(st.estado)st.estado.eu.avatar=b.dataset.av;aviso('Nova Pinha escolhida!');ecraColecao()}catch(_){}});
+  $('#b-v').onclick=()=>{ecraAtual='';ecraFim(st.estado)}}
+
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&st.j){atualizar();if(st.livre&&!ocupado&&ecraAtual.startsWith('q')===false&&ecraAtual!=='colheita'&&ecraAtual!=='fb')proxima()}});
+addEventListener('online',()=>{semRede(false);if(st.j)atualizar()});
+const h=AR.limpaCod(decodeURIComponent(location.hash.slice(1)));ecraCodigo('',h);if(h.length===6)abrir(h);
+})();
+</script>
+</body>
+</html>

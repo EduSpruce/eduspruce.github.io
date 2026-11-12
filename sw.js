@@ -17,7 +17,7 @@ self.addEventListener('fetch',e=>{const r=e.request;if(r.method!=='GET')return;c
       const res=await fetch(r);if(res.ok){try{await c.put(r,res.clone());const K=await c.keys();await Promise.all(K.filter(k=>{const ku=new URL(k.url);return ku.pathname===u.pathname&&ku.search!==u.search}).map(k=>c.delete(k)))}catch(_){}}return res})());return}
   if(r.mode==='navigate'||APP.some(p=>u.pathname.endsWith(p.replace('./','/')))){
     /* v0.940 · primeiro a rede (versão mais recente); só sem internet (ou rede muito lenta, 6 s) usa a cópia guardada */
-    const chave=r.mode==='navigate'?'./':r;
+    const chave=r.mode==='navigate'&&/\/(index\.html)?$/.test(u.pathname)?'./':r;
     e.respondWith((async()=>{/* pedido novo, com um carimbo no endereço: nem o navegador nem a rede de distribuição devolvem uma página antiga */
       const fresco=()=>{if(r.mode!=='navigate'&&!/\/(index\.html)?$/.test(u.pathname))return fetch(r,{cache:'no-store'});const f=new URL(u.href);f.searchParams.set('_v',Date.now().toString(36));return fetch(f.href,{cache:'no-store',credentials:'same-origin',redirect:'follow'})};
       try{const res=await Promise.race([fresco(),new Promise((_,ko)=>setTimeout(()=>ko(new Error('lento')),8000))]);
