@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#0f6cbd">
+<title>Forms · EduSpruce</title>
+<link rel="icon" href="favicon.png">
+<style>
+
+:root{--acc:#0e6a93;--acc2:#e6f3f9;--ink:#14212b;--mut:#5b6b77;--line:#d6e0e6;--bg:#f3f6f8;--panel:#fff;--ok:#15803d;--bad:#b91c1c;--r:16px;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--acc:#5cc0ec;--acc2:#12303f;--ink:#e8eef2;--mut:#9fb0bc;--line:#2b3a45;--bg:#0d1419;--panel:#152029;--ok:#4ade80;--bad:#f87171;color-scheme:dark}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-text-size-adjust:100%}
+body{min-height:100vh;min-height:100dvh;padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+main{max-width:620px;margin:0 auto}
+header.top{display:flex;align-items:center;gap:10px;margin:2px 0 16px}
+header.top .logo{width:34px;height:34px;border-radius:9px;background:var(--acc);color:#fff;display:grid;place-items:center;font-weight:800;font-size:17px;flex:none}
+header.top b{font-size:17px;letter-spacing:-.01em}header.top b em{font-style:normal;color:var(--acc)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px 18px;margin:0 0 14px}
+h1{font-size:22px;margin:0 0 6px;letter-spacing:-.01em}h2{font-size:17px;margin:0 0 4px}
+p{margin:0 0 10px}.mut{color:var(--mut)}.peq{font-size:14px}
+label{display:block;font-weight:650;margin:14px 0 6px}
+input,textarea{width:100%;font:inherit;font-size:17px;color:var(--ink);background:var(--panel);border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;min-height:48px}
+textarea{min-height:84px;resize:vertical}
+input:focus,textarea:focus,button:focus-visible,.al:focus-within{outline:3px solid color-mix(in srgb,var(--acc) 55%,transparent);outline-offset:2px;border-color:var(--acc)}
+#cod,.pc{font-size:26px;letter-spacing:.18em;text-transform:uppercase;text-align:center;font-weight:700;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+button{font:inherit}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:52px;border-radius:14px;border:0;background:var(--acc);color:#fff;font-weight:700;font-size:17px;cursor:pointer;margin-top:16px}
+.btn.sec{background:transparent;color:var(--acc);border:1.5px solid var(--line)}
+.btn[disabled]{opacity:.6;cursor:progress}
+.err{color:var(--bad);font-weight:600;margin:10px 0 0;min-height:1em}.err:empty{display:none}
+.tit{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline}.tag{display:inline-block;background:var(--acc2);color:var(--acc);border-radius:999px;padding:3px 10px;font-size:13px;font-weight:700}
+.als{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:8px}
+.al{position:relative;margin:0!important;font-weight:600}.al input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.al span{display:flex;gap:8px;align-items:center;min-height:52px;padding:10px 12px;border:1.5px solid var(--line);border-radius:12px;background:var(--panel)}
+.al span b{min-width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:var(--bg);font-size:14px}
+.al input:checked+span{border-color:var(--acc);background:var(--acc2)}.al input:checked+span b{background:var(--acc);color:#fff}
+.dom{border-top:1px solid var(--line);padding:14px 0 4px}.dom:first-of-type{border-top:0}
+.dom h3{margin:0 0 8px;font-size:16px}
+.niv{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.niv label{margin:0;font-weight:600}
+.niv input{position:absolute;opacity:0;width:1px;height:1px}
+.niv span{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center;min-height:76px;padding:8px 4px;border:1.5px solid var(--line);border-radius:12px;font-size:12.5px;line-height:1.2;cursor:pointer;background:var(--panel)}
+.niv span b{font-size:20px;color:var(--c)}
+.niv input:checked+span{border-color:var(--c);background:color-mix(in srgb,var(--c) 12%,var(--panel));box-shadow:inset 0 0 0 1px var(--c)}
+.niv input:focus-visible+span{outline:3px solid color-mix(in srgb,var(--acc) 55%,transparent);outline-offset:2px}
+.ok{text-align:center;padding:30px 18px}.ok .ico{width:64px;height:64px;border-radius:50%;margin:0 auto 12px;display:grid;place-items:center;background:color-mix(in srgb,var(--ok) 16%,var(--panel));color:var(--ok)}
+.rod{font-size:12.5px;color:var(--mut);text-align:center;margin-top:18px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.spin{width:18px;height:18px;border-radius:50%;border:2.5px solid currentColor;border-right-color:transparent;animation:g .8s linear infinite}@keyframes g{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation:none}}
+@media (max-width:380px){.niv{grid-template-columns:repeat(2,1fr)}}
+
+:root{--fc:#0f6cbd}
+header.top .logo{background:var(--fc)}header.top b em{color:var(--fc)}
+.btn{background:var(--fc)}.btn.sec{color:var(--fc)}
+.fcab{border-top:10px solid var(--fc)}
+.fq{border-left:4px solid transparent}.fq.errq{border-left-color:var(--bad)}
+.fq h2{font-size:17px;margin:0 0 4px;display:flex;gap:6px;align-items:baseline}.fq h2 .n{color:var(--mut);font-weight:700}.ob{color:var(--bad)}
+.fq .sub{color:var(--mut);font-size:14px;margin:0 0 8px}.fq img.qi{max-width:100%;border-radius:10px;margin:6px 0 10px;display:block}
+.pts{margin-left:auto;font-size:12px;font-weight:700;color:var(--fc);background:color-mix(in srgb,var(--fc) 12%,var(--panel));border-radius:999px;padding:2px 8px;white-space:nowrap}
+.op{position:relative;display:block;margin:6px 0!important;font-weight:500}.op input[type=radio],.op input[type=checkbox]{position:absolute;opacity:0;width:1px;height:1px}
+.op>span{display:flex;gap:10px;align-items:center;min-height:50px;padding:10px 14px;border:1.5px solid var(--line);border-radius:12px;background:var(--panel);cursor:pointer}
+.op>span i{width:22px;height:22px;border:2px solid var(--mut);border-radius:50%;flex:none;display:grid;place-items:center}.op.m>span i{border-radius:6px}
+.op input:checked+span{border-color:var(--fc);background:color-mix(in srgb,var(--fc) 10%,var(--panel))}.op input:checked+span i{border-color:var(--fc);background:var(--fc);box-shadow:inset 0 0 0 3px var(--panel)}
+.op.m input:checked+span i{box-shadow:none}.op.m input:checked+span i::after{content:'✓';color:#fff;font-size:14px;font-weight:800}
+.op input:focus-visible+span{outline:3px solid color-mix(in srgb,var(--fc) 55%,transparent);outline-offset:2px}
+.outra{margin:4px 0 0 34px;width:calc(100% - 34px)}
+select{width:100%;font:inherit;font-size:17px;min-height:48px;border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--panel);color:var(--ink)}
+.cl{display:flex;gap:6px;flex-wrap:wrap}.cl label{margin:0;position:relative}.cl input{position:absolute;opacity:0;width:1px;height:1px}
+.cl span{display:grid;place-items:center;min-width:46px;height:46px;border:1.5px solid var(--line);border-radius:10px;font-weight:700;cursor:pointer;font-size:17px;padding:0 6px}
+.cl.est span{border:0;font-size:36px;color:var(--line);min-width:42px;height:46px}.cl.est span.on{color:#e3a800}
+.cl input:checked+span{background:var(--fc);color:#fff;border-color:var(--fc)}.cl.est input:checked+span{background:none;color:#e3a800}
+.cl input:focus-visible+span{outline:3px solid color-mix(in srgb,var(--fc) 55%,transparent)}
+.cll{display:flex;justify-content:space-between;font-size:13px;color:var(--mut);margin-top:4px}
+.nps span{min-width:0;flex:1 0 40px}
+.ord{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}.ord li{display:flex;gap:8px;align-items:center;min-height:50px;padding:6px 6px 6px 12px;border:1.5px solid var(--line);border-radius:12px;background:var(--panel)}
+.ord li b{color:var(--fc);min-width:20px}.ord li span{flex:1}.ord button{width:44px;height:44px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font-size:18px;cursor:pointer}.ord button[disabled]{opacity:.3}
+.lk{width:100%;border-collapse:collapse;font-size:14px}.lk th{font-weight:600;color:var(--mut);font-size:12px;padding:4px 2px;text-align:center}.lk td{padding:6px 2px;text-align:center;border-top:1px solid var(--line)}.lk td:first-child{text-align:left;font-weight:600}
+.lk input{width:22px;height:22px;min-height:0;accent-color:var(--fc)}
+.lkm{display:none}
+@media (max-width:560px){.lk{display:none}.lkm{display:block}.lkm fieldset{border:0;padding:0;margin:0 0 12px}.lkm legend{font-weight:700;margin-bottom:4px}}
+.prog{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:0 0 14px}.prog i{display:block;height:100%;background:var(--fc);transition:width .3s}
+.nav2{display:flex;gap:10px}.nav2 .btn{margin-top:6px}
+.tempo{position:sticky;top:8px;z-index:5;display:flex;justify-content:center;margin:-4px 0 10px}.tempo span{background:var(--panel);border:1.5px solid var(--line);border-radius:999px;padding:6px 14px;font-weight:800;font-variant-numeric:tabular-nums;box-shadow:0 4px 14px rgba(0,0,0,.08)}.tempo.fim span{color:var(--bad);border-color:var(--bad)}
+.res .tot{font-size:42px;font-weight:800;color:var(--fc);margin:4px 0}
+.rq{border-left:5px solid var(--line)}.rq.c{border-left-color:var(--ok)}.rq.e{border-left-color:var(--bad)}.rq.p{border-left-color:#ca8a04}
+.rq .ra{margin:6px 0;font-size:15px}.rq .rk{color:var(--ok);font-weight:600;font-size:14px}.rq .fb{background:var(--bg);border-radius:10px;padding:8px 10px;font-size:14px;margin-top:6px}
+.prevb{background:#fef3c7;color:#713f12;border-radius:12px;padding:8px 12px;font-size:14px;margin-bottom:12px;text-align:center}
+.tag{background:color-mix(in srgb,var(--fc) 12%,var(--panel));color:var(--fc)}
+
+</style>
+</head>
+<body>
+<main>
+  <header class="top"><span class="logo" aria-hidden="true">S</span><b>Edu<em>Spruce</em> · Forms</b></header>
+  <div id="app" aria-live="polite"></div>
+  <p class="rod">Só o teu professor vê as tuas respostas. Esta página não guarda nada no telemóvel.</p>
+</main>
+<noscript><p class="card">Para responder é preciso ativar o JavaScript no navegador.</p></noscript>
+<script>
+'use strict';
+(()=>{
+const $=s=>document.querySelector(s);const app=$('#app');
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ALF='23456789ABCDEFGHJKMNPQRSTUVWXYZ';
+const norm=c=>String(c||'').toUpperCase().replace(/[^0-9A-Z]/g,'');
+const te=new TextEncoder(),td=new TextDecoder();
+const hex=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
+const b64=u=>{let s='';const a=new Uint8Array(u);for(let i=0;i<a.length;i+=32768)s+=String.fromCharCode.apply(null,a.subarray(i,i+32768));return btoa(s)};
+const unb64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function chaves(code){const id=hex(await crypto.subtle.digest('SHA-256',te.encode('es-fm-id:'+code))).slice(0,40);
+  const base=await crypto.subtle.importKey('raw',te.encode(code),'PBKDF2',false,['deriveKey']);
+  const k=await crypto.subtle.deriveKey({name:'PBKDF2',salt:te.encode('es-fm-k:'+id),iterations:150000,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);return {id,k}}
+async function chaveRes(code,chave,aid){const base=await crypto.subtle.importKey('raw',te.encode(String(chave).toUpperCase()+':'+code),'PBKDF2',false,['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2',salt:te.encode('es-fm-r:'+aid),iterations:20000,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+async function cifrar(o,k){const iv=crypto.getRandomValues(new Uint8Array(12));const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},k,te.encode(JSON.stringify(o)));return 'A1.'+b64(iv)+'.'+b64(ct)}
+async function decifrar(s,k){const p=String(s).split('.');if(p[0]!=='A1')throw new Error('formato');const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(p[1])},k,unb64(p[2]));return JSON.parse(td.decode(pt))}
+let CFG=null;
+async function cfg(){if(CFG)return CFG;if(window.__ES_SB&&window.__ES_SB.url){CFG=window.__ES_SB;return CFG}const r=await fetch('supabase-config.json',{cache:'no-store'});if(!r.ok)throw new Error('config');CFG=await r.json();return CFG}
+async function rpc(fn,args){const c=await cfg();const r=await fetch(c.url+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'Content-Type':'application/json',apikey:c.anonKey,Authorization:'Bearer '+c.anonKey},body:JSON.stringify(args)});
+  if(!r.ok){const t=await r.text().catch(()=>'');const e=new Error(t||('HTTP '+r.status));e.status=r.status;throw e}return r.json()}
+const espera=t=>`<span class="spin" aria-hidden="true"></span> ${esc(t)}`;
+const nf=n=>String(Math.round(n*100)/100).replace('.',',');
+const baralhar=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const baralharDif=a=>{if(a.length<2)return a.slice();let b;do{b=baralhar(a)}while(b.every((x,i)=>x===a[i]));return b};
+const PERG=q=>!['secao','info'].includes(q.tipo);
+let S={code:'',id:'',k:null,D:null,aluno:null,chave:'',nome:'',prev:false};
+let R={resp:{},t0:0,pag:0,hist:[],fim:0,tm:null,ordem:{},ops:{}};
+
+function cor(){document.documentElement.style.setProperty('--fc',(S.D&&S.D.f.cor)||'#0f6cbd');const m=document.querySelector('meta[name=theme-color]');if(m&&S.D)m.content=S.D.f.cor||'#0f6cbd'}
+function ecraCodigo(msg,valor){app.innerHTML=`<section class="card"><h1>Forms</h1><p class="mut">Escreve o código que o professor mostrou (8 letras e números).</p>
+  <form id="f" autocomplete="off" novalidate><label for="cod">Código</label><input id="cod" inputmode="text" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="11" placeholder="XXXX-XXXX" value="${esc(valor||'')}" aria-describedby="e">
+  <p class="err" id="e" role="alert">${esc(msg||'')}</p><button class="btn" id="b">Continuar</button></form></section>`;
+  const i=$('#cod'),f=$('#f'),b=$('#b');
+  i.addEventListener('input',()=>{const v=norm(i.value).slice(0,8);i.value=v.length>4?v.slice(0,4)+'-'+v.slice(4):v});
+  f.onsubmit=async ev=>{ev.preventDefault();const c=norm(i.value);if(c.length!==8||[...c].some(x=>!ALF.includes(x))){$('#e').textContent='O código tem 8 letras e números (sem O, I, L, 0 nem 1). Confirma com o professor.';i.focus();return}
+    b.disabled=true;b.innerHTML=espera('A abrir…');await abrir(c);b.disabled=false;b.textContent='Continuar'};
+  if(!valor)setTimeout(()=>i.focus(),50)}
+async function abrir(code){try{const {id,k}=await chaves(code);let L;try{L=await rpc('eduspruce_autoav_ler',{p_id:id})}catch(e){if(e.status===404||/does not exist|PGRST202/.test(e.message))return ecraCodigo('Os formulários pelo telemóvel ainda não estão ativos neste site. Avisa o professor.',code);throw e}
+    if(!Array.isArray(L)||!L.length)return ecraCodigo('Este formulário não está aberto neste momento (ou o código está errado). Confirma com o professor.',code.slice(0,4)+'-'+code.slice(4));
+    let D;try{D=await decifrar(L[0].dados,k)}catch(_){return ecraCodigo('Não foi possível abrir com este código. Confirma-o com o professor.',code)}
+    S={code,id,k,D,aluno:null,chave:'',nome:'',prev:false};cor();try{history.replaceState(null,'',location.pathname+'#'+code)}catch(_){}
+    const ag=new Date();if(D.ini&&ag<new Date(D.ini))return ecraAviso('Ainda não começou','Este formulário abre a '+new Date(D.ini).toLocaleString('pt-PT',{day:'2-digit',month:'long',hour:'2-digit',minute:'2-digit'})+'.');
+    if(D.fim&&ag>new Date(D.fim)&&!D.res)return ecraAviso('Já terminou','Este formulário já não aceita respostas.');
+    ecraQuem()}
+  catch(e){console.warn(e);ecraCodigo(navigator.onLine?'Não foi possível ligar. Tenta outra vez dentro de momentos.':'Sem internet. Liga-te e tenta outra vez.',code)}}
+function ecraAviso(t,m){app.innerHTML=`<section class="card ok"><div class="ico" aria-hidden="true" style="background:var(--acc2);color:var(--fc)"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><h1>${esc(t)}</h1><p class="mut">${esc(m)}</p><button class="btn sec" id="rt">Tentar de novo</button></section>`;$('#rt').onclick=()=>{app.innerHTML=`<section class="card"><p>${espera('A verificar…')}</p></section>`;abrir(S.code)}}
+function cab(){const D=S.D,F=D.f;return `<section class="card fcab">${S.prev?'<p class="prevb">Pré-visualização · as respostas não são enviadas</p>':''}<div class="tit"><h1>${esc(F.titulo)}</h1>${F.quiz?'<span class="tag">Teste</span>':''}</div>${F.desc?`<p class="mut">${esc(F.desc).replace(/\n/g,'<br>')}</p>`:''}${D.t?`<p class="mut peq">${esc(D.t)}${D.d?' · '+esc(D.d):''}${D.prof?' · '+esc(D.prof):''}</p>`:''}
+  ${S.aluno?`<p class="peq"><b>N.º ${esc(S.aluno.n)} · ${esc(S.aluno.nm)}</b>${R.t0||S.prev?'':` · <button type="button" id="troca" style="background:none;border:0;color:var(--fc);font-weight:700;padding:6px 2px;cursor:pointer">não sou eu</button>`}</p>`:''}</section>`}
+/* quem és? */
+function ecraQuem(msg){const D=S.D;
+  if(!D.al.length){app.innerHTML=`${cab()}<section class="card"><form id="f" novalidate><label for="nm">O teu nome <span class="mut peq">(opcional)</span></label><input id="nm" maxlength="80" autocomplete="name" placeholder="Nome">${intro()}<p class="err" id="e" role="alert">${esc(msg||'')}</p><button class="btn">Começar</button></form></section>`;
+    $('#f').onsubmit=ev=>{ev.preventDefault();S.nome=$('#nm').value.trim();comecar()};return}
+  app.innerHTML=`${cab()}<section class="card"><form id="f" novalidate><fieldset style="border:0;padding:0;margin:0"><legend><h2 style="margin-top:4px">Quem és?</h2><span class="mut peq">Escolhe o teu número.</span></legend>
+  <div class="als">${D.al.map(a=>`<label class="al"><input type="radio" name="al" value="${esc(a.id)}"><span><b>${esc(a.n)}</b>${esc(a.nm)}</span></label>`).join('')}</div></fieldset>
+  ${D.pes?`<label for="pc">O teu código pessoal</label><p class="mut peq" style="margin-top:-2px">Está no teu papel (5 letras e números). Assim, só tu podes responder por ti.</p><input id="pc" class="pc" inputmode="text" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="5" placeholder="XXXXX" autocomplete="off">`:''}
+  ${intro()}<p class="err" id="e" role="alert">${esc(msg||'')}</p><button class="btn">Continuar</button></form></section>`;
+  const pc=$('#pc');if(pc)pc.addEventListener('input',()=>{pc.value=norm(pc.value).slice(0,5)});
+  $('#f').onsubmit=async ev=>{ev.preventDefault();const r=document.querySelector('input[name=al]:checked');if(!r){$('#e').textContent='Escolhe o teu número.';return}
+    if(D.pes){const c=norm(pc.value);if(c.length!==5||[...c].some(x=>!ALF.includes(x))){$('#e').textContent='Escreve o código pessoal que está no teu papel (5 letras e números).';pc.focus();return}S.chave=c}
+    S.aluno=D.al.find(a=>a.id===r.value);
+    if(D.res&&D.res[S.aluno.id]&&D.pes){try{const o=await decifrar(D.res[S.aluno.id],await chaveRes(S.code,S.chave,S.aluno.id));return ecraResultado(o.resp,o)}catch(_){$('#e').textContent='O código pessoal não está certo. Confirma no teu papel.';S.aluno=null;return}}
+    if(D.fim&&new Date()>new Date(D.fim))return ecraAviso('Já terminou','Este formulário já não aceita respostas.');
+    comecar()}}
+function intro(){const F=S.D.f;const n=F.itens.filter(PERG).length;const pts=F.quiz?F.itens.reduce((s,q)=>s+(+q.pts||0),0):0;
+  return `<p class="mut peq" style="margin-top:14px">${n} pergunta${n===1?'':'s'}${F.quiz?' · '+nf(pts)+' pontos':''}${+F.defs.tempo?` · <b>${+F.defs.tempo} minutos</b> (o tempo começa quando tocares em Começar e o formulário é enviado sozinho no fim)`:''}</p>`}
+/* páginas = secções */
+function paginas(){const F=S.D.f;const P=[{sec:null,itens:[]}];F.itens.forEach(q=>{if(q.tipo==='secao')P.push({sec:q,itens:[]});else P[P.length-1].itens.push(q)});
+  if(!P[0].itens.length&&P.length>1)P.shift();return P}
+function comecar(){R={resp:{},t0:Date.now(),pag:0,hist:[],fim:0,tm:null,ordem:{},ops:{},P:paginas()};const F=S.D.f;
+  R.P.forEach(p=>{if(F.defs.baralhar)p.itens=baralhar(p.itens)});
+  F.itens.forEach(q=>{if(q.tipo==='ordem'){R.ordem[q.id]=baralharDif(q.ops.map(x=>x.id))}if(q.tipo==='escolha')R.ops[q.id]=q.baralhar?baralhar(q.ops):q.ops});
+  if(+F.defs.tempo){R.fim=Date.now()+F.defs.tempo*60000;R.tm=setInterval(tique,1000)}
+  pagina()}
+function tique(){const el=$('#tempo');const r=Math.max(0,R.fim-Date.now());if(el){const m=Math.floor(r/60000),s=Math.floor(r%60000/1000);el.querySelector('span').textContent='⏱ '+m+':'+String(s).padStart(2,'0');el.classList.toggle('fim',r<60000)}
+  if(r<=0){clearInterval(R.tm);guardarPag();enviar(true)}}
+function num(q){if(S.D.f.defs.numerar===false)return '';let n=0;for(const p of R.P)for(const x of p.itens){if(PERG(x))n++;if(x===q)return n+'.'}return ''}
+function campo(q){const v=R.resp[q.id];const F=S.D.f;const nm='q-'+q.id;
+  if(q.tipo==='escolha'){const ops=R.ops[q.id]||q.ops;
+    if(q.lista&&!q.multi)return `<select name="${nm}" aria-label="${esc(q.titulo)}"><option value="">Escolhe uma opção</option>${ops.map(o=>`<option value="${esc(o.id)}" ${v===o.id?'selected':''}>${esc(o.t)}</option>`).join('')}${q.outra?`<option value="__outra" ${String(v||'').startsWith('outra:')?'selected':''}>Outra</option>`:''}</select>${q.outra?`<input class="outra" data-outra="${esc(q.id)}" placeholder="Outra" value="${esc(String(v||'').startsWith('outra:')?String(v).slice(6):'')}" ${String(v||'').startsWith('outra:')?'':'hidden'}>`:''}`;
+    const A=Array.isArray(v)?v:v?[v]:[];const t=q.multi?'checkbox':'radio';const ou=A.find(x=>String(x).startsWith('outra:'));
+    return `<div role="${q.multi?'group':'radiogroup'}" aria-label="${esc(q.titulo)}">${ops.map(o=>`<label class="op ${q.multi?'m':''}"><input type="${t}" name="${nm}" value="${esc(o.id)}" ${A.includes(o.id)?'checked':''}><span><i></i>${esc(o.t)}</span></label>`).join('')}
+      ${q.outra?`<label class="op ${q.multi?'m':''}"><input type="${t}" name="${nm}" value="__outra" ${ou?'checked':''}><span><i></i>Outra</span></label><input class="outra" data-outra="${esc(q.id)}" placeholder="Escreve aqui" maxlength="300" value="${esc(ou?String(ou).slice(6):'')}">`:''}</div>`}
+  if(q.tipo==='texto'){if(q.longo)return `<textarea name="${nm}" rows="4" maxlength="4000" aria-label="${esc(q.titulo)}" placeholder="Escreve a tua resposta">${esc(v||'')}</textarea>`;
+    return `<input name="${nm}" ${q.num?'inputmode="decimal"':''} maxlength="500" aria-label="${esc(q.titulo)}" placeholder="${q.num?'Escreve um número':'Escreve a tua resposta'}" value="${esc(v||'')}">`}
+  if(q.tipo==='classif'){const N=+q.n||5;const est=q.simb!=='numero';return `<div class="cl ${est?'est':''}" role="radiogroup" aria-label="${esc(q.titulo)}">${Array.from({length:N},(_,i)=>`<label><input type="radio" name="${nm}" value="${i+1}" ${+v===i+1?'checked':''} aria-label="${i+1} de ${N}"><span class="${est&&+v>i?'on':''}">${est?'★':i+1}</span></label>`).join('')}</div>${(q.lbl||[]).some(Boolean)?`<div class="cll"><span>${esc((q.lbl||[])[0]||'')}</span><span>${esc((q.lbl||[])[1]||'')}</span></div>`:''}`}
+  if(q.tipo==='nps')return `<div class="cl nps" role="radiogroup" aria-label="${esc(q.titulo)}">${Array.from({length:11},(_,i)=>`<label style="flex:1 0 40px"><input type="radio" name="${nm}" value="${i}" ${v!==undefined&&v!==''&&+v===i?'checked':''}><span>${i}</span></label>`).join('')}</div><div class="cll"><span>Nada provável</span><span>Extremamente provável</span></div>`;
+  if(q.tipo==='data')return `<input type="date" name="${nm}" value="${esc(v||'')}" aria-label="${esc(q.titulo)}">`;
+  if(q.tipo==='ordem'){const o=v||R.ordem[q.id];return `<p class="mut peq" style="margin-top:0">Usa as setas para pôr pela ordem certa.</p><ol class="ord" data-ord="${esc(q.id)}">${o.map((id,i)=>`<li><b>${i+1}</b><span>${esc((q.ops.find(x=>x.id===id)||{}).t||'')}</span><button type="button" data-mv="${i}|-1" ${i?'':'disabled'} aria-label="Subir">↑</button><button type="button" data-mv="${i}|1" ${i<o.length-1?'':'disabled'} aria-label="Descer">↓</button></li>`).join('')}</ol>`}
+  if(q.tipo==='likert'){const V=v||{};return `<table class="lk"><thead><tr><th></th>${q.ops.map(o=>`<th>${esc(o)}</th>`).join('')}</tr></thead><tbody>${q.linhas.map(L=>`<tr><td>${esc(L.t)}</td>${q.ops.map((o,k)=>`<td><input type="radio" name="${nm}-${esc(L.id)}" value="${k}" ${V[L.id]===k?'checked':''} aria-label="${esc(L.t)}: ${esc(o)}"></td>`).join('')}</tr>`).join('')}</tbody></table>
+    <div class="lkm">${q.linhas.map(L=>`<fieldset><legend>${esc(L.t)}</legend>${q.ops.map((o,k)=>`<label class="op"><input type="radio" name="m-${nm}-${esc(L.id)}" value="${k}" ${V[L.id]===k?'checked':''}><span><i></i>${esc(o)}</span></label>`).join('')}</fieldset>`).join('')}</div>`}
+  return ''}
+function pagina(){const p=R.P[R.pag];const ult=fimDaPag(true)==='fim';const F=S.D.f;
+  app.innerHTML=`${R.fim?'<div class="tempo" id="tempo"><span>⏱</span></div>':''}${cab()}${R.P.length>1?`<div class="prog" aria-hidden="true"><i style="width:${Math.round(R.pag/R.P.length*100)}%"></i></div>`:''}
+  ${p.sec?`<section class="card fcab"><h2>${esc(p.sec.titulo||'Secção')}</h2>${p.sec.sub?`<p class="mut">${esc(p.sec.sub)}</p>`:''}</section>`:''}
+  <form id="f" novalidate>${p.itens.map(q=>q.tipo==='info'?`<section class="card"><h2>${esc(q.titulo)}</h2>${q.img?`<img class="qi" src="${q.img}" alt="">`:''}${q.sub?`<p>${esc(q.sub).replace(/\n/g,'<br>')}</p>`:''}</section>`:
+    `<section class="card fq" id="c-${esc(q.id)}"><h2><span class="n">${num(q)}</span><span>${esc(q.titulo||'Pergunta')}${q.obrig?' <span class="ob" aria-label="obrigatória">*</span>':''}</span>${F.quiz&&+q.pts?`<span class="pts">${nf(+q.pts)} pt${+q.pts===1?'':'s'}</span>`:''}</h2>${q.sub?`<p class="sub">${esc(q.sub)}</p>`:''}${q.img?`<img class="qi" src="${q.img}" alt="">`:''}${campo(q)}<p class="err" id="e-${esc(q.id)}" role="alert"></p></section>`).join('')}
+  <p class="err" id="e" role="alert"></p><div class="nav2">${R.hist.length?'<button type="button" class="btn sec" id="ant">Anterior</button>':''}<button class="btn" id="b">${ult?'Enviar':'Seguinte'}</button></div></form>`;
+  if(R.fim)tique();const tr=$('#troca');if(tr)tr.onclick=()=>{S.aluno=null;S.chave='';ecraQuem()};
+  /* interações */
+  app.querySelectorAll('.cl.est input').forEach(i=>i.addEventListener('change',()=>{const c=i.closest('.cl');const n=+i.value;c.querySelectorAll('span').forEach((s,k)=>s.classList.toggle('on',k<n))}));
+  app.querySelectorAll('select').forEach(s=>s.addEventListener('change',()=>{const o=app.querySelector(`[data-outra="${CSS.escape(s.name.slice(2))}"]`);if(o){o.hidden=s.value!=='__outra';if(!o.hidden)o.focus()}}));
+  app.querySelectorAll('[data-outra]').forEach(o=>o.addEventListener('input',()=>{const r=app.querySelector(`input[name="q-${CSS.escape(o.dataset.outra)}"][value="__outra"]`);if(r&&o.value)r.checked=true}));
+  app.querySelectorAll('[data-mv]').forEach(b=>b.onclick=()=>{guardarPag();const ol=b.closest('[data-ord]');const id=ol.dataset.ord;const [i,d]=b.dataset.mv.split('|').map(Number);const o=(R.resp[id]||R.ordem[id]).slice();const j=i+d;[o[i],o[j]]=[o[j],o[i]];R.resp[id]=o;const y=scrollY;pagina();scrollTo(0,y);const nb=app.querySelector(`[data-ord="${CSS.escape(id)}"] [data-mv="${j}|${d}"]`)||app.querySelector(`[data-ord="${CSS.escape(id)}"] [data-mv="${j}|${-d}"]`);if(nb)nb.focus()});
+  app.querySelectorAll('.lkm input').forEach(i=>i.addEventListener('change',()=>{const n=i.name.slice(2);const t=app.querySelector(`input[name="${CSS.escape(n)}"][value="${i.value}"]`);if(t)t.checked=true}));
+  app.querySelectorAll('.lk input').forEach(i=>i.addEventListener('change',()=>{const t=app.querySelector(`input[name="m-${CSS.escape(i.name)}"][value="${i.value}"]`);if(t)t.checked=true}));
+  const an=$('#ant');if(an)an.onclick=()=>{guardarPag();R.pag=R.hist.pop();pagina();scrollTo(0,0)};
+  $('#f').onsubmit=ev=>{ev.preventDefault();guardarPag();if(!validar())return;const nx=fimDaPag();if(nx==='fim')return enviar();R.hist.push(R.pag);R.pag=nx;pagina();scrollTo(0,0)}}
+function ler(q){const nm='q-'+q.id;
+  if(q.tipo==='escolha'){if(q.lista&&!q.multi){const s=app.querySelector(`select[name="${CSS.escape(nm)}"]`);if(!s)return;if(s.value==='__outra'){const o=app.querySelector(`[data-outra="${CSS.escape(q.id)}"]`);return 'outra:'+(o?o.value.trim():'')}return s.value||undefined}
+    const A=[...app.querySelectorAll(`input[name="${CSS.escape(nm)}"]:checked`)].map(i=>i.value==='__outra'?'outra:'+((app.querySelector(`[data-outra="${CSS.escape(q.id)}"]`)||{}).value||'').trim():i.value);return q.multi?A:A[0]}
+  if(q.tipo==='ordem')return R.resp[q.id]||R.ordem[q.id];
+  if(q.tipo==='likert'){const o={};q.linhas.forEach(L=>{const i=app.querySelector(`input[name="${CSS.escape(nm+'-'+L.id)}"]:checked`);if(i)o[L.id]=+i.value});return Object.keys(o).length?o:undefined}
+  if(['classif','nps'].includes(q.tipo)){const i=app.querySelector(`input[name="${CSS.escape(nm)}"]:checked`);return i?+i.value:undefined}
+  const el=app.querySelector(`[name="${CSS.escape(nm)}"]`);return el?el.value.trim()||undefined:undefined}
+function guardarPag(){const p=R.P&&R.P[R.pag];if(!p)return;p.itens.filter(PERG).forEach(q=>{const v=ler(q);if(v===undefined||(Array.isArray(v)&&!v.length))delete R.resp[q.id];else R.resp[q.id]=v})}
+function validar(){let pri=null;R.P[R.pag].itens.filter(PERG).forEach(q=>{const e=$('#e-'+CSS.escape(q.id));const c=$('#c-'+CSS.escape(q.id));let m='';const v=R.resp[q.id];
+    if(q.obrig&&q.tipo!=='ordem'&&(v===undefined||(q.tipo==='likert'&&Object.keys(v).length<q.linhas.length)))m='Esta pergunta é obrigatória.';
+    else if(q.tipo==='texto'&&q.num&&v!==undefined){const n=parseFloat(String(v).replace(',','.'));if(!isFinite(n)||!/^-?\d+([.,]\d+)?$/.test(String(v)))m='Escreve um número.';else{const mi=q.num.min!==undefined&&q.num.min!==''?parseFloat(String(q.num.min).replace(',','.')):null,ma=q.num.max!==undefined&&q.num.max!==''?parseFloat(String(q.num.max).replace(',','.')):null;if(mi!=null&&n<mi||ma!=null&&n>ma)m='O número tem de estar '+(mi!=null&&ma!=null?'entre '+nf(mi)+' e '+nf(ma):mi!=null?'acima de '+nf(mi):'abaixo de '+nf(ma))+'.'}}
+    else if(q.tipo==='escolha'&&v!==undefined&&(Array.isArray(v)?v:[v]).some(x=>x==='outra:'))m='Escreve a opção «Outra».';
+    if(e)e.textContent=m;if(c)c.classList.toggle('errq',!!m);if(m&&!pri)pri=c});
+  if(pri){pri.scrollIntoView({block:'center',behavior:'smooth'});const i=pri.querySelector('input,textarea,select,button');if(i)setTimeout(()=>i.focus({preventScroll:true}),300);return false}return true}
+/* para onde vai a seguir: salto da opção escolhida, salto da secção ou a seguinte */
+function fimDaPag(teste){const p=R.P[R.pag];let salto='';p.itens.forEach(q=>{if(q.tipo!=='escolha'||q.multi)return;const v=R.resp[q.id];const o=q.ops.find(x=>x.id===v);if(o&&o.salto)salto=o.salto});
+  if(!salto&&p.sec&&p.sec.salto)salto=p.sec.salto;if(salto==='fim')return 'fim';if(salto){const i=R.P.findIndex(x=>x.sec&&x.sec.id===salto);if(i>=0&&i!==R.pag)return i}
+  return R.pag+1<R.P.length?R.pag+1:'fim'}
+/* enviar */
+async function enviar(auto){const b=$('#b'),e=$('#e');if(b){b.disabled=true;b.innerHTML=espera('A enviar…')}clearInterval(R.tm);
+  const o={fm:1,aid:S.aluno?S.aluno.id:'',chave:S.chave||'',nome:S.aluno?'':S.nome,t0:R.t0,t1:Date.now(),resp:R.resp};
+  if(S.prev)return ecraOk(o,auto);
+  try{let c=await cifrar(o,S.k);if(c.length>40000){Object.keys(o.resp).forEach(k=>{if(typeof o.resp[k]==='string')o.resp[k]=o.resp[k].slice(0,1500)});c=await cifrar(o,S.k)}
+    await rpc('eduspruce_autoav_enviar',{p_id:S.id,p_conteudo:c});ecraOk(o,auto)}
+  catch(x){console.warn(x);if(b){b.disabled=false;b.textContent='Enviar'}const m=/fechad|closed|expir|não está aberta|limite/i.test(x.message||'')?'O formulário já fechou ou atingiu o limite de respostas. Fala com o professor.':navigator.onLine?'Não foi possível enviar. Tenta outra vez.':'Sem internet. Liga-te e toca outra vez em Enviar (as tuas respostas continuam aqui).';
+    if(e)e.textContent=m;else app.insertAdjacentHTML('beforeend',`<section class="card"><p class="err">${esc(m)}</p><button class="btn" id="re">Tentar de novo</button></section>`);const re=$('#re');if(re)re.onclick=()=>enviar(auto)}}
+function ecraOk(o,auto){const D=S.D,F=D.f;const nome=S.aluno?S.aluno.nm.split(' ')[0]:(S.nome||'').split(' ')[0];
+  app.innerHTML=`${S.prev?'<p class="prevb">Pré-visualização · nada foi enviado</p>':''}<section class="card ok"><div class="ico" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+  <h1 tabindex="-1">${auto?'O tempo acabou':'Obrigado'}${nome?', '+esc(nome):''}!</h1><p class="mut">${esc(F.defs.agradecimento||'A tua resposta foi enviada.')}</p>
+  ${F.quiz&&D.chave?'<button class="btn" id="vr">Ver os resultados</button>':F.quiz&&F.defs.mostrar==='publicar'?'<p class="mut peq">O professor vai publicar os resultados. Depois, volta a abrir com o mesmo código.</p>':''}
+  ${!F.defs.umaResp||!S.aluno?'<button class="btn sec" id="nv">Enviar outra resposta</button>':''}</section>`;
+  const vr=$('#vr');if(vr)vr.onclick=()=>ecraResultado(o.resp);const nv=$('#nv');if(nv)nv.onclick=()=>comecar();try{$('.ok h1').focus()}catch(_){}}
+/* correção (igual à do professor) */
+const nrm=s=>String(s==null?'':s).trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,' ');
+function corrigir(q,v){if(!(+q.pts))return null;const P=+q.pts;
+  if(q.tipo==='escolha'){const c=q.ops.filter(o=>o.certa).map(o=>o.id);if(!c.length)return null;const e=(Array.isArray(v)?v:[v]).filter(Boolean);if(!q.multi)return e.length===1&&c.includes(e[0])?P:0;return e.length===c.length&&e.every(x=>c.includes(x))?P:0}
+  if(q.tipo==='texto'){if(q.longo)return null;const R_=(q.resp||[]).filter(x=>String(x).trim()!=='');if(!R_.length)return null;if(q.num){const n=parseFloat(String(v).replace(',','.'));return R_.some(r=>Math.abs(parseFloat(String(r).replace(',','.'))-n)<1e-9)?P:0}return R_.some(r=>nrm(r)===nrm(v))?P:0}
+  if(q.tipo==='ordem'){if(!Array.isArray(v))return 0;return v.join('|')===q.ops.map(o=>o.id).join('|')?P:0}return null}
+function ecraResultado(resp,pub){const F=S.D.f;const Q=F.itens.filter(PERG);const max=Q.reduce((s,q)=>s+(+q.pts||0),0);resp=resp||{};
+  const pq={};let tot=0;Q.forEach(q=>{const a=pub&&pub.pq&&q.id in pub.pq?pub.pq[q.id]:corrigir(q,resp[q.id]);pq[q.id]=a;if(a!=null)tot+=a});if(pub&&pub.tot!=null)tot=pub.tot;
+  const txt=(q,v)=>{if(v==null||v===''||(Array.isArray(v)&&!v.length))return '<span class="mut">sem resposta</span>';if(q.tipo==='escolha')return (Array.isArray(v)?v:[v]).map(x=>String(x).startsWith('outra:')?'Outra: '+esc(String(x).slice(6)):esc((q.ops.find(o=>o.id===x)||{}).t||'')).join(', ');
+    if(q.tipo==='ordem')return v.map(x=>esc((q.ops.find(o=>o.id===x)||{}).t||'')).join(' → ');if(q.tipo==='likert')return q.linhas.map(L=>esc(L.t)+': '+esc(q.ops[v[L.id]]||'—')).join('<br>');if(q.tipo==='data')return esc(String(v).split('-').reverse().join('/'));return esc(String(v)).replace(/\n/g,'<br>')};
+  const certa=q=>{if(q.tipo==='escolha'){const c=q.ops.filter(o=>o.certa);return c.length?c.map(o=>esc(o.t)).join(', '):''}if(q.tipo==='texto'&&!q.longo)return (q.resp||[]).filter(Boolean).map(esc).join(' / ');if(q.tipo==='ordem')return q.ops.map(o=>esc(o.t)).join(' → ');return ''};
+  const fbs=(q,v)=>q.tipo==='escolha'?(Array.isArray(v)?v:[v]).map(x=>(q.ops.find(o=>o.id===x)||{}).fb).filter(Boolean):[];
+  app.innerHTML=`${cab()}<section class="card res ok"><h2>${pub?'Classificação publicada':'Resultado'}</h2><p class="tot">${nf(tot)} / ${nf(max)}</p><p class="mut">${max?Math.round(tot/max*100):0}%${Q.some(q=>pq[q.id]==null&&+q.pts)?' · algumas respostas são corrigidas pelo professor':''}</p></section>
+  ${Q.map((q,i)=>{const a=pq[q.id];const cls=!(+q.pts)?'':a==null?'p':a>=+q.pts?'c':a>0?'p':'e';const k=certa(q);const fb=fbs(q,resp[q.id]);const cp=pub&&pub.c&&pub.c[q.id];
+    return `<section class="card fq rq ${cls}"><h2><span class="n">${i+1}.</span><span>${esc(q.titulo||'Pergunta')}</span>${+q.pts?`<span class="pts">${a==null?'?':nf(a)} / ${nf(q.pts)}</span>`:''}</h2><div class="ra">${txt(q,resp[q.id])}</div>${k&&cls!=='c'?`<div class="rk">Resposta certa: ${k}</div>`:''}${fb.map(x=>`<div class="fb">${esc(x)}</div>`).join('')}${cp?`<div class="fb"><b>Professor:</b> ${esc(cp)}</div>`:''}</section>`}).join('')}`;scrollTo(0,0)}
+/* arranque */
+const raw=decodeURIComponent((location.hash||'').slice(1)).trim();
+if(!window.crypto||!crypto.subtle){app.innerHTML='<section class="card"><h1>Navegador antigo</h1><p>Abre esta página num navegador atualizado (Safari, Chrome, Firefox ou Edge).</p></section>'}
+else if(raw==='previsualizar'){app.innerHTML=`<section class="card"><p>${espera('A preparar a pré-visualização…')}</p></section>`;
+  addEventListener('message',ev=>{if(ev.origin!==location.origin||!ev.data||!ev.data.fmPrev)return;S={code:'',id:'',k:null,D:ev.data.fmPrev,aluno:null,chave:'',nome:'',prev:true};cor();comecar()})}
+else{const h=norm(raw);if(h.length===8){app.innerHTML=`<section class="card"><p>${espera('A abrir…')}</p></section>`;abrir(h)}else ecraCodigo('',h)}
+})();
+
+</script>
+</body>
+</html>
