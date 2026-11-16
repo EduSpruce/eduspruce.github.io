@@ -31,7 +31,7 @@ export async function criarProvSupabase({url,anonKey,tabela='eduspruce_partes'})
       if(/email not confirmed/i.test(m))throw new Error('O e-mail desta conta ainda não foi confirmado.');if(/rate limit|too many/i.test(m))throw new Error('Demasiadas tentativas. Espere um pouco e tente de novo.');throw msg(error)},
     async definirSenha(senha){const {error}=await sb.auth.updateUser({password:String(senha||'')});if(!error)return;const m=error.message||'';
       if(/reauth|recent/i.test(m))throw new Error('Por segurança, termine a sessão, entre de novo com Google e defina logo a palavra-passe.');
-      if(/weak|at least|should be|characters|pwned/i.test(m))throw new Error('Palavra-passe fraca: '+m);if(/same.*password|different from the old/i.test(m))throw new Error('Essa já é a palavra-passe atual.');throw msg(error)},
+      if(/same.*password|different from the old/i.test(m))throw new Error('Essa já é a palavra-passe atual. Escolha uma diferente.');if(/pwned|leaked|compromis/i.test(m))throw new Error('Palavra-passe fraca: aparece em listas de palavras-passe divulgadas. Escolha outra.');if(/weak|at least|should be|characters|contain/i.test(m)){const n=(m.match(/at least (\d+)/i)||[])[1];throw new Error('Palavra-passe fraca: '+(n?'tem de ter pelo menos '+n+' caracteres':'use letras maiúsculas e minúsculas, números e símbolos')+'.')}throw msg(error)},
     async autorizado(){
       /* pede a verificação com o testemunho da sessão posto explicitamente no pedido (não depende do cliente) */
       const tok=async()=>{const {data}=await sb.auth.getSession();return data&&data.session&&data.session.access_token};
