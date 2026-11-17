@@ -81,6 +81,14 @@ select{width:100%;font:inherit;font-size:17px;min-height:48px;border:1.5px solid
 .ord li b{color:var(--fc);min-width:20px}.ord li span{flex:1}.ord button{width:44px;height:44px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font-size:18px;cursor:pointer}.ord button[disabled]{opacity:.3}
 .lk{width:100%;border-collapse:collapse;font-size:14px}.lk th{font-weight:600;color:var(--mut);font-size:12px;padding:4px 2px;text-align:center}.lk td{padding:6px 2px;text-align:center;border-top:1px solid var(--line)}.lk td:first-child{text-align:left;font-weight:600}
 .lk input{width:22px;height:22px;min-height:0;accent-color:var(--fc)}
+.vf{display:flex;flex-direction:column;gap:8px}.vf .vfl{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:8px 10px;border:1.5px solid var(--line);border-radius:12px}.vf .vfl>span{flex:1 1 220px}.vf .vfb{display:flex;gap:6px}
+.vf .vfb label{position:relative}.vf .vfb input{position:absolute;opacity:0;width:1px;height:1px}.vf .vfb span{display:inline-flex;align-items:center;justify-content:center;min-width:96px;min-height:44px;border:1.5px solid var(--line);border-radius:10px;font-weight:700;cursor:pointer;background:var(--panel)}
+.vf .vfb input:checked+span{border-color:var(--fc);background:color-mix(in srgb,var(--fc) 14%,var(--panel));color:var(--fc)}.vf .vfb input:focus-visible+span{outline:3px solid color-mix(in srgb,var(--fc) 55%,transparent)}
+.lac{line-height:2.6;font-size:17px}.lac input{display:inline-block;width:8.5em!important;min-width:0;max-width:60vw;min-height:40px;padding:4px 10px;margin:0 4px;font-size:16px}
+.lig{display:flex;flex-direction:column;gap:8px}.lig .lgl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:8px;align-items:center;padding:6px 8px;border:1.5px solid var(--line);border-radius:12px}.lig .lgl b{font-weight:600}
+@media (max-width:520px){.lig .lgl{grid-template-columns:1fr}}
+.exb{position:sticky;top:0;z-index:6;background:#7c2d12;color:#fff;text-align:center;font-weight:700;padding:8px 12px;border-radius:0 0 12px 12px;margin:-8px 0 10px;font-size:14px}.exb.av{background:#b91c1c}
+.exov{position:fixed;inset:0;z-index:50;background:rgba(15,23,42,.92);color:#fff;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center}.exov div{max-width:460px}.exov h2{margin:0 0 8px}.exov button{margin-top:16px}
 .lkm{display:none}
 @media (max-width:560px){.lk{display:none}.lkm{display:block}.lkm fieldset{border:0;padding:0;margin:0 0 12px}.lkm legend{font-weight:700;margin-bottom:4px}}
 .prog{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:0 0 14px}.prog i{display:block;height:100%;background:var(--fc);transition:width .3s}
@@ -167,18 +175,33 @@ function ecraQuem(msg){const D=S.D;
     if(D.fim&&new Date()>new Date(D.fim))return ecraAviso('Já terminou','Este formulário já não aceita respostas.');
     comecar()}}
 function intro(){const F=S.D.f;const n=F.itens.filter(PERG).length;const pts=F.quiz?F.itens.reduce((s,q)=>s+(+q.pts||0),0):0;
-  return `<p class="mut peq" style="margin-top:14px">${n} pergunta${n===1?'':'s'}${F.quiz?' · '+nf(pts)+' pontos':''}${+F.defs.tempo?` · <b>${+F.defs.tempo} minutos</b> (o tempo começa quando tocares em Começar e o formulário é enviado sozinho no fim)`:''}</p>`}
+  return `<p class="mut peq" style="margin-top:14px">${n} pergunta${n===1?'':'s'}${F.quiz?' · '+nf(pts)+' pontos':''}${+F.defs.tempo?` · <b>${+F.defs.tempo} minutos</b> (o tempo começa quando tocares em Começar e o formulário é enviado sozinho no fim)`:''}</p>${F.defs.exame?`<p class="peq" style="background:#fff7ed;border:1px solid #fdba74;border-radius:10px;padding:10px 12px;color:#7c2d12"><b>Modo exame:</b> o teste abre em ecrã inteiro. Se mudares de separador, de aplicação ou saíres do ecrã inteiro, fica registado e o professor vê.</p>`:''}`}
 /* páginas = secções */
 function paginas(){const F=S.D.f;const P=[{sec:null,itens:[]}];F.itens.forEach(q=>{if(q.tipo==='secao')P.push({sec:q,itens:[]});else P[P.length-1].itens.push(q)});
   if(!P[0].itens.length&&P.length>1)P.shift();return P}
-function comecar(){R={resp:{},t0:Date.now(),pag:0,hist:[],fim:0,tm:null,ordem:{},ops:{},P:paginas()};const F=S.D.f;
+function comecar(){R={resp:{},t0:Date.now(),pag:0,hist:[],fim:0,tm:null,ordem:{},ops:{},dir:{},P:paginas()};const F=S.D.f;
   R.P.forEach(p=>{if(F.defs.baralhar)p.itens=baralhar(p.itens)});
   F.itens.forEach(q=>{if(q.tipo==='ordem'){R.ordem[q.id]=baralharDif(q.ops.map(x=>x.id))}if(q.tipo==='escolha')R.ops[q.id]=q.baralhar?baralhar(q.ops):q.ops});
+  F.itens.forEach(q=>{if(q.tipo==='ligar')R.dir[q.id]=q.dir||baralhar((q.pares||[]).map(x=>({id:x.bid,t:x.b})))});
   if(+F.defs.tempo){R.fim=Date.now()+F.defs.tempo*60000;R.tm=setInterval(tique,1000)}
+  if(F.defs.exame&&!S.prev)exameLigar();
   pagina()}
+/* modo exame: ecrã inteiro + registo de saídas (mudar de separador/aplicação, sair do ecrã inteiro) */
+function exameLigar(){R.sai=0;R.ecra=0;let ult=0;const conta=k=>{if(!R.t0||R.enviado)return;const t=Date.now();if(t-ult<1500)return;ult=t;R[k]++;exameAviso()};
+  const fs=()=>{try{const d=document.documentElement;(d.requestFullscreen||d.webkitRequestFullscreen||function(){}).call(d)}catch(_){}};fs();
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)conta('sai')});addEventListener('blur',()=>conta('sai'));
+  document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement&&!R.enviado){conta('ecra')}});
+  document.addEventListener('copy',e=>{if(R.t0&&!R.enviado)e.preventDefault()});document.addEventListener('contextmenu',e=>{if(R.t0&&!R.enviado&&!e.target.closest('input,textarea'))e.preventDefault()});
+  R.fsFn=fs}
+function exameAviso(){exameBarra();let o=document.getElementById('exov');if(o)o.remove();o=document.createElement('div');o.id='exov';o.className='exov';o.setAttribute('role','alertdialog');
+  o.innerHTML=`<div><h2>Saíste do teste</h2><p>Ficou registado (${(R.sai||0)+(R.ecra||0)} vez${(R.sai||0)+(R.ecra||0)===1?'':'es'}). O professor vai ver.</p><button type="button" class="btn" id="exok">Voltar ao teste</button></div>`;document.body.appendChild(o);
+  document.getElementById('exok').onclick=()=>{o.remove();if(R.fsFn)R.fsFn()};document.getElementById('exok').focus()}
+function exameBarra(){const b=document.getElementById('exb');const n=(R.sai||0)+(R.ecra||0);if(b){b.textContent='Modo exame'+(n?' · saídas registadas: '+n:' · não saias desta página');b.classList.toggle('av',n>0)}}
 function tique(){const el=$('#tempo');const r=Math.max(0,R.fim-Date.now());if(el){const m=Math.floor(r/60000),s=Math.floor(r%60000/1000);el.querySelector('span').textContent='⏱ '+m+':'+String(s).padStart(2,'0');el.classList.toggle('fim',r<60000)}
   if(r<=0){clearInterval(R.tm);guardarPag();enviar(true)}}
 function num(q){if(S.D.f.defs.numerar===false)return '';let n=0;for(const p of R.P)for(const x of p.itens){if(PERG(x))n++;if(x===q)return n+'.'}return ''}
+function lacPartes(q){const s=String(q.texto||'');const P=[];let u=0;s.replace(/\[([^\]]*)\]/g,(m,g,i)=>{P.push(s.slice(u,i));u=i+m.length;return m});P.push(s.slice(u));return P}
+function lacGaps(q){const G=[];String(q.texto||'').replace(/\[([^\]]*)\]/g,(m,g)=>{G.push(g.split('|').map(x=>x.trim()).filter(Boolean));return m});return G}
 function campo(q){const v=R.resp[q.id];const F=S.D.f;const nm='q-'+q.id;
   if(q.tipo==='escolha'){const ops=R.ops[q.id]||q.ops;
     if(q.lista&&!q.multi)return `<select name="${nm}" aria-label="${esc(q.titulo)}"><option value="">Escolhe uma opção</option>${ops.map(o=>`<option value="${esc(o.id)}" ${v===o.id?'selected':''}>${esc(o.t)}</option>`).join('')}${q.outra?`<option value="__outra" ${String(v||'').startsWith('outra:')?'selected':''}>Outra</option>`:''}</select>${q.outra?`<input class="outra" data-outra="${esc(q.id)}" placeholder="Outra" value="${esc(String(v||'').startsWith('outra:')?String(v).slice(6):'')}" ${String(v||'').startsWith('outra:')?'':'hidden'}>`:''}`;
@@ -191,16 +214,19 @@ function campo(q){const v=R.resp[q.id];const F=S.D.f;const nm='q-'+q.id;
   if(q.tipo==='nps')return `<div class="cl nps" role="radiogroup" aria-label="${esc(q.titulo)}">${Array.from({length:11},(_,i)=>`<label style="flex:1 0 40px"><input type="radio" name="${nm}" value="${i}" ${v!==undefined&&v!==''&&+v===i?'checked':''}><span>${i}</span></label>`).join('')}</div><div class="cll"><span>Nada provável</span><span>Extremamente provável</span></div>`;
   if(q.tipo==='data')return `<input type="date" name="${nm}" value="${esc(v||'')}" aria-label="${esc(q.titulo)}">`;
   if(q.tipo==='ordem'){const o=v||R.ordem[q.id];return `<p class="mut peq" style="margin-top:0">Usa as setas para pôr pela ordem certa.</p><ol class="ord" data-ord="${esc(q.id)}">${o.map((id,i)=>`<li><b>${i+1}</b><span>${esc((q.ops.find(x=>x.id===id)||{}).t||'')}</span><button type="button" data-mv="${i}|-1" ${i?'':'disabled'} aria-label="Subir">↑</button><button type="button" data-mv="${i}|1" ${i<o.length-1?'':'disabled'} aria-label="Descer">↓</button></li>`).join('')}</ol>`}
+  if(q.tipo==='vf'){const V=v||{};return `<div class="vf" role="group" aria-label="${esc(q.titulo)}">${(q.linhas||[]).map(L=>`<div class="vfl"><span>${esc(L.t)}</span><span class="vfb"><label><input type="radio" name="${nm}-${esc(L.id)}" value="1" ${V[L.id]===true?'checked':''} aria-label="${esc(L.t)}: verdadeira"><span>Verdadeira</span></label><label><input type="radio" name="${nm}-${esc(L.id)}" value="0" ${V[L.id]===false?'checked':''} aria-label="${esc(L.t)}: falsa"><span>Falsa</span></label></span></div>`).join('')}</div>`}
+  if(q.tipo==='lacunas'){const P=q.partes||lacPartes(q);const V=Array.isArray(v)?v:[];return `<p class="lac">${P.map((x,k)=>esc(x)+(k<P.length-1?`<input name="${nm}-${k}" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Espaço ${k+1}" value="${esc(V[k]||'')}">`:'')).join('')}</p>`}
+  if(q.tipo==='ligar'){const V=v||{};const E=q.esq||(q.pares||[]).map(x=>({id:x.id,t:x.a}));const D=R.dir[q.id]||q.dir||[];return `<div class="lig">${E.map(e=>`<div class="lgl"><b>${esc(e.t)}</b><select name="${nm}-${esc(e.id)}" aria-label="${esc(e.t)}"><option value="">Escolhe…</option>${D.map(d=>`<option value="${esc(d.id)}" ${V[e.id]===d.id?'selected':''}>${esc(d.t)}</option>`).join('')}</select></div>`).join('')}</div>`}
   if(q.tipo==='likert'){const V=v||{};return `<table class="lk"><thead><tr><th></th>${q.ops.map(o=>`<th>${esc(o)}</th>`).join('')}</tr></thead><tbody>${q.linhas.map(L=>`<tr><td>${esc(L.t)}</td>${q.ops.map((o,k)=>`<td><input type="radio" name="${nm}-${esc(L.id)}" value="${k}" ${V[L.id]===k?'checked':''} aria-label="${esc(L.t)}: ${esc(o)}"></td>`).join('')}</tr>`).join('')}</tbody></table>
     <div class="lkm">${q.linhas.map(L=>`<fieldset><legend>${esc(L.t)}</legend>${q.ops.map((o,k)=>`<label class="op"><input type="radio" name="m-${nm}-${esc(L.id)}" value="${k}" ${V[L.id]===k?'checked':''}><span><i></i>${esc(o)}</span></label>`).join('')}</fieldset>`).join('')}</div>`}
   return ''}
 function pagina(){const p=R.P[R.pag];const ult=fimDaPag(true)==='fim';const F=S.D.f;
-  app.innerHTML=`${R.fim?'<div class="tempo" id="tempo"><span>⏱</span></div>':''}${cab()}${R.P.length>1?`<div class="prog" aria-hidden="true"><i style="width:${Math.round(R.pag/R.P.length*100)}%"></i></div>`:''}
+  app.innerHTML=`${F.defs.exame&&!S.prev?'<div class="exb" id="exb"></div>':''}${R.fim?'<div class="tempo" id="tempo"><span>⏱</span></div>':''}${cab()}${R.P.length>1?`<div class="prog" aria-hidden="true"><i style="width:${Math.round(R.pag/R.P.length*100)}%"></i></div>`:''}
   ${p.sec?`<section class="card fcab"><h2>${esc(p.sec.titulo||'Secção')}</h2>${p.sec.sub?`<p class="mut">${esc(p.sec.sub)}</p>`:''}</section>`:''}
   <form id="f" novalidate>${p.itens.map(q=>q.tipo==='info'?`<section class="card"><h2>${esc(q.titulo)}</h2>${q.img?`<img class="qi" src="${q.img}" alt="">`:''}${q.sub?`<p>${esc(q.sub).replace(/\n/g,'<br>')}</p>`:''}</section>`:
     `<section class="card fq" id="c-${esc(q.id)}"><h2><span class="n">${num(q)}</span><span>${esc(q.titulo||'Pergunta')}${q.obrig?' <span class="ob" aria-label="obrigatória">*</span>':''}</span>${F.quiz&&+q.pts?`<span class="pts">${nf(+q.pts)} pt${+q.pts===1?'':'s'}</span>`:''}</h2>${q.sub?`<p class="sub">${esc(q.sub)}</p>`:''}${q.img?`<img class="qi" src="${q.img}" alt="">`:''}${campo(q)}<p class="err" id="e-${esc(q.id)}" role="alert"></p></section>`).join('')}
   <p class="err" id="e" role="alert"></p><div class="nav2">${R.hist.length?'<button type="button" class="btn sec" id="ant">Anterior</button>':''}<button class="btn" id="b">${ult?'Enviar':'Seguinte'}</button></div></form>`;
-  if(R.fim)tique();const tr=$('#troca');if(tr)tr.onclick=()=>{S.aluno=null;S.chave='';ecraQuem()};
+  if(R.fim)tique();if(F.defs.exame)exameBarra();const tr=$('#troca');if(tr)tr.onclick=()=>{S.aluno=null;S.chave='';ecraQuem()};
   /* interações */
   app.querySelectorAll('.cl.est input').forEach(i=>i.addEventListener('change',()=>{const c=i.closest('.cl');const n=+i.value;c.querySelectorAll('span').forEach((s,k)=>s.classList.toggle('on',k<n))}));
   app.querySelectorAll('select').forEach(s=>s.addEventListener('change',()=>{const o=app.querySelector(`[data-outra="${CSS.escape(s.name.slice(2))}"]`);if(o){o.hidden=s.value!=='__outra';if(!o.hidden)o.focus()}}));
@@ -215,11 +241,14 @@ function ler(q){const nm='q-'+q.id;
     const A=[...app.querySelectorAll(`input[name="${CSS.escape(nm)}"]:checked`)].map(i=>i.value==='__outra'?'outra:'+((app.querySelector(`[data-outra="${CSS.escape(q.id)}"]`)||{}).value||'').trim():i.value);return q.multi?A:A[0]}
   if(q.tipo==='ordem')return R.resp[q.id]||R.ordem[q.id];
   if(q.tipo==='likert'){const o={};q.linhas.forEach(L=>{const i=app.querySelector(`input[name="${CSS.escape(nm+'-'+L.id)}"]:checked`);if(i)o[L.id]=+i.value});return Object.keys(o).length?o:undefined}
+  if(q.tipo==='vf'){const o={};(q.linhas||[]).forEach(L=>{const i=app.querySelector(`input[name="${CSS.escape(nm+'-'+L.id)}"]:checked`);if(i)o[L.id]=i.value==='1'});return Object.keys(o).length?o:undefined}
+  if(q.tipo==='lacunas'){const n=(q.partes||lacPartes(q)).length-1;const a=[];for(let k=0;k<n;k++){const i=app.querySelector(`input[name="${CSS.escape(nm+'-'+k)}"]`);a.push(i?i.value.trim().slice(0,200):'')}return a.some(Boolean)?a:undefined}
+  if(q.tipo==='ligar'){const o={};(q.esq||(q.pares||[]).map(x=>({id:x.id}))).forEach(e=>{const sel=app.querySelector(`select[name="${CSS.escape(nm+'-'+e.id)}"]`);if(sel&&sel.value)o[e.id]=sel.value});return Object.keys(o).length?o:undefined}
   if(['classif','nps'].includes(q.tipo)){const i=app.querySelector(`input[name="${CSS.escape(nm)}"]:checked`);return i?+i.value:undefined}
   const el=app.querySelector(`[name="${CSS.escape(nm)}"]`);return el?el.value.trim()||undefined:undefined}
 function guardarPag(){const p=R.P&&R.P[R.pag];if(!p)return;p.itens.filter(PERG).forEach(q=>{const v=ler(q);if(v===undefined||(Array.isArray(v)&&!v.length))delete R.resp[q.id];else R.resp[q.id]=v})}
 function validar(){let pri=null;R.P[R.pag].itens.filter(PERG).forEach(q=>{const e=$('#e-'+CSS.escape(q.id));const c=$('#c-'+CSS.escape(q.id));let m='';const v=R.resp[q.id];
-    if(q.obrig&&q.tipo!=='ordem'&&(v===undefined||(q.tipo==='likert'&&Object.keys(v).length<q.linhas.length)))m='Esta pergunta é obrigatória.';
+    if(q.obrig&&q.tipo!=='ordem'&&(v===undefined||((q.tipo==='likert'||q.tipo==='vf')&&Object.keys(v).length<(q.linhas||[]).length)||(q.tipo==='ligar'&&Object.keys(v).length<(q.esq||q.pares||[]).length)))m='Esta pergunta é obrigatória.';
     else if(q.tipo==='texto'&&q.num&&v!==undefined){const n=parseFloat(String(v).replace(',','.'));if(!isFinite(n)||!/^-?\d+([.,]\d+)?$/.test(String(v)))m='Escreve um número.';else{const mi=q.num.min!==undefined&&q.num.min!==''?parseFloat(String(q.num.min).replace(',','.')):null,ma=q.num.max!==undefined&&q.num.max!==''?parseFloat(String(q.num.max).replace(',','.')):null;if(mi!=null&&n<mi||ma!=null&&n>ma)m='O número tem de estar '+(mi!=null&&ma!=null?'entre '+nf(mi)+' e '+nf(ma):mi!=null?'acima de '+nf(mi):'abaixo de '+nf(ma))+'.'}}
     else if(q.tipo==='escolha'&&v!==undefined&&(Array.isArray(v)?v:[v]).some(x=>x==='outra:'))m='Escreve a opção «Outra».';
     if(e)e.textContent=m;if(c)c.classList.toggle('errq',!!m);if(m&&!pri)pri=c});
@@ -230,7 +259,8 @@ function fimDaPag(teste){const p=R.P[R.pag];let salto='';p.itens.forEach(q=>{if(
   return R.pag+1<R.P.length?R.pag+1:'fim'}
 /* enviar */
 async function enviar(auto){const b=$('#b'),e=$('#e');if(b){b.disabled=true;b.innerHTML=espera('A enviar…')}clearInterval(R.tm);
-  const o={fm:1,aid:S.aluno?S.aluno.id:'',chave:S.chave||'',nome:S.aluno?'':S.nome,t0:R.t0,t1:Date.now(),resp:R.resp};
+  R.enviado=true;try{if(document.fullscreenElement)document.exitFullscreen()}catch(_){}const ex=document.getElementById('exov');if(ex)ex.remove();
+  const o={fm:1,aid:S.aluno?S.aluno.id:'',chave:S.chave||'',nome:S.aluno?'':S.nome,t0:R.t0,t1:Date.now(),resp:R.resp,sai:R.sai||0,ecra:R.ecra||0};
   if(S.prev)return ecraOk(o,auto);
   try{let c=await cifrar(o,S.k);if(c.length>40000){Object.keys(o.resp).forEach(k=>{if(typeof o.resp[k]==='string')o.resp[k]=o.resp[k].slice(0,1500)});c=await cifrar(o,S.k)}
     await rpc('eduspruce_autoav_enviar',{p_id:S.id,p_conteudo:c});ecraOk(o,auto)}
@@ -247,11 +277,20 @@ const nrm=s=>String(s==null?'':s).trim().toLowerCase().normalize('NFD').replace(
 function corrigir(q,v){if(!(+q.pts))return null;const P=+q.pts;
   if(q.tipo==='escolha'){const c=q.ops.filter(o=>o.certa).map(o=>o.id);if(!c.length)return null;const e=(Array.isArray(v)?v:[v]).filter(Boolean);if(!q.multi)return e.length===1&&c.includes(e[0])?P:0;return e.length===c.length&&e.every(x=>c.includes(x))?P:0}
   if(q.tipo==='texto'){if(q.longo)return null;const R_=(q.resp||[]).filter(x=>String(x).trim()!=='');if(!R_.length)return null;if(q.num){const n=parseFloat(String(v).replace(',','.'));return R_.some(r=>Math.abs(parseFloat(String(r).replace(',','.'))-n)<1e-9)?P:0}return R_.some(r=>nrm(r)===nrm(v))?P:0}
-  if(q.tipo==='ordem'){if(!Array.isArray(v))return 0;return v.join('|')===q.ops.map(o=>o.id).join('|')?P:0}return null}
+  if(q.tipo==='ordem'){if(!Array.isArray(v))return 0;return v.join('|')===q.ops.map(o=>o.id).join('|')?P:0}
+  const nrm=x=>String(x==null?'':x).trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ');
+  if(q.tipo==='vf'){const L=q.linhas||[];if(!L.length||L.some(l=>l.v===undefined))return null;const ok=L.filter(l=>v&&v[l.id]===!!l.v).length;return Math.round(P*ok/L.length*100)/100}
+  if(q.tipo==='lacunas'){if(q.texto==null)return null;const G=lacGaps(q);if(!G.length)return null;const a=Array.isArray(v)?v:[];const ok=G.filter((al,k)=>al.some(x=>nrm(x)===nrm(a[k]))).length;return Math.round(P*ok/G.length*100)/100}
+  if(q.tipo==='ligar'){if(!q.pares)return null;const L=q.pares;const ok=L.filter(pp=>v&&v[pp.id]===pp.bid).length;return Math.round(P*ok/L.length*100)/100}
+  return null}
 function ecraResultado(resp,pub){const F=S.D.f;const Q=F.itens.filter(PERG);const max=Q.reduce((s,q)=>s+(+q.pts||0),0);resp=resp||{};
   const pq={};let tot=0;Q.forEach(q=>{const a=pub&&pub.pq&&q.id in pub.pq?pub.pq[q.id]:corrigir(q,resp[q.id]);pq[q.id]=a;if(a!=null)tot+=a});if(pub&&pub.tot!=null)tot=pub.tot;
   const txt=(q,v)=>{if(v==null||v===''||(Array.isArray(v)&&!v.length))return '<span class="mut">sem resposta</span>';if(q.tipo==='escolha')return (Array.isArray(v)?v:[v]).map(x=>String(x).startsWith('outra:')?'Outra: '+esc(String(x).slice(6)):esc((q.ops.find(o=>o.id===x)||{}).t||'')).join(', ');
-    if(q.tipo==='ordem')return v.map(x=>esc((q.ops.find(o=>o.id===x)||{}).t||'')).join(' → ');if(q.tipo==='likert')return q.linhas.map(L=>esc(L.t)+': '+esc(q.ops[v[L.id]]||'—')).join('<br>');if(q.tipo==='data')return esc(String(v).split('-').reverse().join('/'));return esc(String(v)).replace(/\n/g,'<br>')};
+    if(q.tipo==='ordem')return v.map(x=>esc((q.ops.find(o=>o.id===x)||{}).t||'')).join(' → ');if(q.tipo==='likert')return q.linhas.map(L=>esc(L.t)+': '+esc(q.ops[v[L.id]]||'—')).join('<br>');if(q.tipo==='data')return esc(String(v).split('-').reverse().join('/'));
+    if(q.tipo==='vf')return (q.linhas||[]).map(L=>esc(L.t)+': <b>'+(v[L.id]===true?'Verdadeira':v[L.id]===false?'Falsa':'—')+'</b>').join('<br>');
+    if(q.tipo==='lacunas'){const P=q.partes||lacPartes(q);return P.map((x,k)=>esc(x)+(k<P.length-1?'<b>['+esc((v||[])[k]||'—')+']</b>':'')).join('')}
+    if(q.tipo==='ligar'){const D=R.dir&&R.dir[q.id]||q.dir||[];return (q.esq||[]).map(e=>esc(e.t)+' → <b>'+esc((D.find(d=>d.id===v[e.id])||{}).t||'—')+'</b>').join('<br>')}
+    return esc(String(v)).replace(/\n/g,'<br>')};
   const certa=q=>{if(q.tipo==='escolha'){const c=q.ops.filter(o=>o.certa);return c.length?c.map(o=>esc(o.t)).join(', '):''}if(q.tipo==='texto'&&!q.longo)return (q.resp||[]).filter(Boolean).map(esc).join(' / ');if(q.tipo==='ordem')return q.ops.map(o=>esc(o.t)).join(' → ');return ''};
   const fbs=(q,v)=>q.tipo==='escolha'?(Array.isArray(v)?v:[v]).map(x=>(q.ops.find(o=>o.id===x)||{}).fb).filter(Boolean):[];
   app.innerHTML=`${cab()}<section class="card res ok"><h2>${pub?'Classificação publicada':'Resultado'}</h2><p class="tot">${nf(tot)} / ${nf(max)}</p><p class="mut">${max?Math.round(tot/max*100):0}%${Q.some(q=>pq[q.id]==null&&+q.pts)?' · algumas respostas são corrigidas pelo professor':''}</p></section>
