@@ -296,6 +296,57 @@ AR.svg=(id,sz)=>{const p=AR.pinha(id);return p&&p.bicho?AR.svgB(p,sz):_svgP(id,s
   escudo:()=>{tom(440,0,.2,'sine',.1);tom(660,.05,.25,'sine',.08)},
   mel:()=>{[392,523,659].forEach((f,i)=>tom(f,i*.06,.1,'triangle',.1))}
 }[n];if(x)return x();return _t(n)}}
+/* ===================== v1.054 · aspeto novo (4 temas), mascote, emblemas e 6 modos novos — tudo original ===================== */
+AR.NOVOS=['cume','cofre','mare','duelo','expedicao','estafeta'];
+Object.assign(AR.MODOS,{
+  cume:{nome:'Corrida ao Cume',ic:'⛰️',cor:'#b84a1b',cv:'--a1',ritmo:'livre',dur:true,obj:'m',v2:true,tag:'Individual · velocidade',jog:'até 60',min:7,desc:'Cada resposta certa faz-te subir a montanha. Quem responde depressa sobe mais.'},
+  cofre:{nome:'Cofre Partilhado',ic:'🔐',cor:'#2456c9',cv:'--a2',ritmo:'livre',dur:true,obj:'pontos',v2:true,eq:true,soVivo:true,tag:'Equipas · estratégia',jog:'4–40',min:10,desc:'As equipas enchem um cofre comum — e podem arriscar o que juntaram.'},
+  mare:{nome:'Maré Viva',ic:'🌊',cor:'#17804d',cv:'--a3',ritmo:'livre',dur:true,obj:'',v2:true,tag:'Individual · sobrevivência',jog:'até 60',min:8,desc:'A água sobe a cada erro. O último em terra firme ganha.'},
+  duelo:{nome:'Duelo Relâmpago',ic:'⚔️',cor:'#8a3fb0',cv:'--a4',ritmo:'livre',dur:true,obj:'',v2:true,soVivo:true,tag:'1 contra 1 · rápido',jog:'2–30',min:5,desc:'Pares sorteados, três perguntas; quem perde passa a apoiar o vencedor.'},
+  expedicao:{nome:'Expedição',ic:'🧭',cor:'#1f6b4a',cv:'--primary',ink:'--on-primary',ritmo:'livre',dur:false,obj:'',v2:true,tag:'Ao teu ritmo',jog:'até 60',min:15,desc:'Sem relógio. Avança no mapa ao teu ritmo — ideal para TPC.'},
+  estafeta:{nome:'Estafeta',ic:'🏃',cor:'#b8841c',cv:'--accent',ink:'--on-accent',ritmo:'livre',dur:true,obj:'etapas',v2:true,eq:true,soVivo:true,tag:'Equipas · colaboração',jog:'6–40',min:10,desc:'Cada colega responde à sua vez. Um erro devolve o testemunho.'}
+});
+{const _m=AR.metrica;AR.metrica=(modo,pts,arv)=>modo==='cume'?AR.nf(pts)+' m':modo==='expedicao'?AR.nf(pts)+(+pts===1?' etapa':' etapas'):_m(modo,pts,arv)}
+AR.EQUIPAS=[['Pinheiros','#1f6b4a'],['Carvalhos','#b84a1b'],['Sobreiros','#2456c9'],['Castanheiros','#8a3fb0'],['Medronheiros','#c2410c'],['Azevinhos','#0e7490']];
+AR.equipa=k=>AR.EQUIPAS[(+k||0)%AR.EQUIPAS.length];
+/* temas (tokens do design): spruce (omissão), arena, papel, neon */
+AR.TEMAS={
+  spruce:{nome:'Spruce',v:{'--bg':'#f5efe2','--surface':'#fffaf0','--ink':'#1d2b24','--muted':'#5d6b62','--line':'#d9cfb8','--primary':'#1f6b4a','--on-primary':'#fff','--accent':'#f2b233','--on-accent':'#1d2b24','--hero':'#1f6b4a','--hero-ink':'#fffaf0','--hero-line':'transparent','--radius':'18px','--bw':'2px','--display':"'Baloo 2'",'--dw':'800','--case':'none','--track':'0','--shadow':'0 4px 0 #154a33','--shadow-a':'0 4px 0 #b8841c','--a1':'#b84a1b','--a2':'#2456c9','--a3':'#17804d','--a4':'#8a3fb0','--on-a':'#fff'}},
+  arena:{nome:'Arena',v:{'--bg':'#0f1b3d','--surface':'#18295a','--ink':'#f3f6ff','--muted':'#b3bfe2','--line':'#34488a','--primary':'#ff6a45','--on-primary':'#1a0a05','--accent':'#ffd23f','--on-accent':'#0f1b3d','--hero':'#091230','--hero-ink':'#f3f6ff','--hero-line':'#ffd23f','--radius':'6px','--bw':'2px','--display':"'Barlow Condensed'",'--dw':'700','--case':'uppercase','--track':'.01em','--shadow':'4px 4px 0 #000','--shadow-a':'4px 4px 0 #000','--a1':'#ff8a3d','--a2':'#5aa9ff','--a3':'#4be08a','--a4':'#d58bff','--on-a':'#0a1028'}},
+  papel:{nome:'Papel',v:{'--bg':'#f4f1ea','--surface':'#fff','--ink':'#141414','--muted':'#555','--line':'#141414','--primary':'#2a3fe0','--on-primary':'#fff','--accent':'#ff6a45','--on-accent':'#141414','--hero':'#ffd84a','--hero-ink':'#141414','--hero-line':'#141414','--radius':'0px','--bw':'2px','--display':"'Bricolage Grotesque'",'--dw':'800','--case':'none','--track':'-.02em','--shadow':'none','--shadow-a':'none','--a1':'#b84a1b','--a2':'#2a3fe0','--a3':'#17804d','--a4':'#8a3fb0','--on-a':'#fff'}},
+  neon:{nome:'Néon',v:{'--bg':'#0b0c10','--surface':'#15171e','--ink':'#eef2f5','--muted':'#a3acb6','--line':'#2f3440','--primary':'#3dffa2','--on-primary':'#04140c','--accent':'#ff4fd8','--on-accent':'#14020f','--hero':'#101219','--hero-ink':'#eef2f5','--hero-line':'#3dffa2','--radius':'10px','--bw':'1px','--display':"'Chakra Petch'",'--dw':'700','--case':'uppercase','--track':'.02em','--shadow':'0 0 18px rgba(61,255,162,.45)','--shadow-a':'0 0 18px rgba(255,79,216,.45)','--a1':'#ffb02e','--a2':'#4cc9ff','--a3':'#3dffa2','--a4':'#ff4fd8','--on-a':'#0b0c10'}}
+};
+AR.temaOk=k=>AR.TEMAS[k]?k:'spruce';
+AR.temaCss=k=>Object.entries(AR.TEMAS[AR.temaOk(k)].v).map(([a,b])=>a+':'+b).join(';');
+AR.temaEscuro=k=>k==='arena'||k==='neon';
+/* formas geométricas: emblemas dos modos (caixa 110×70) e mascote Pinho (caixa 240×270) */
+{const R='50%',TRI='polygon(50% 0,100% 100%,0 100%)';
+ const cssOf=o=>Object.entries(o).map(([k,v])=>k.replace(/[A-Z]/g,m=>'-'+m.toLowerCase())+':'+(typeof v==='number'&&k!=='opacity'?v+'px':v)).join(';');
+ const caixa=(L,w,h,fill)=>`<div class="es-formas" aria-hidden="true" style="position:relative;flex:none;width:${w}px;height:${h}px">${L.map(o=>`<i style="position:absolute;display:block;box-sizing:border-box;background:${fill};${cssOf(o)}"></i>`).join('')}</div>`;
+ const EMB={
+  cume:()=>[{left:55,bottom:0,width:50,height:40,clipPath:TRI,opacity:.55},{left:5,bottom:0,width:70,height:58,clipPath:TRI},{left:39,top:0,width:3,height:14},{left:42,top:0,width:14,height:8}],
+  cofre:bg=>[{left:22,top:3,width:66,height:64,borderRadius:10},{left:37,top:17,width:36,height:36,borderRadius:R,background:'transparent',border:'6px solid '+bg},{left:51,top:31,width:8,height:8,borderRadius:R,background:bg},{left:28,top:63,width:10,height:7},{left:72,top:63,width:10,height:7}],
+  mare:()=>[{left:35,top:8,width:40,height:22,borderRadius:'40px 40px 0 0'},{left:53,top:0,width:4,height:10},{left:8,top:36,width:94,height:9,borderRadius:9},{left:20,top:50,width:70,height:9,borderRadius:9,opacity:.6},{left:34,top:63,width:42,height:7,borderRadius:7,opacity:.35}],
+  duelo:()=>[{left:35,top:0,width:40,height:70,clipPath:'polygon(55% 0,10% 55%,45% 55%,30% 100%,90% 40%,55% 40%,75% 0)'},{left:2,top:24,width:22,height:22,borderRadius:R,opacity:.6},{left:86,top:24,width:22,height:22,borderRadius:R,opacity:.6}],
+  expedicao:()=>[{left:6,top:56,width:10,height:10,borderRadius:R},{left:26,top:44,width:10,height:10,borderRadius:R,opacity:.8},{left:46,top:48,width:10,height:10,borderRadius:R,opacity:.65},{left:64,top:32,width:10,height:10,borderRadius:R,opacity:.5},{left:80,top:6,width:22,height:22,transform:'rotate(45deg)'}],
+  estafeta:()=>[{left:14,top:32,width:82,height:6},{left:2,top:22,width:26,height:26,borderRadius:R},{left:42,top:22,width:26,height:26,borderRadius:R,opacity:.7},{left:82,top:22,width:26,height:26,borderRadius:R,opacity:.45}]
+ };
+ /* emblema do modo: formas nos 6 modos novos, ícone nos restantes */
+ AR.emblema=(k,ink,bg)=>EMB[k]?caixa(EMB[k](bg||'transparent'),110,70,ink||'#fff'):`<span class="es-embic" aria-hidden="true" style="font-size:52px;line-height:70px;height:70px;display:block">${(AR.MODOS[k]||{}).ic||'❔'}</span>`;
+ const A='var(--accent)',HI='var(--hero-ink)',W1='rgba(255,255,255,.3)',W2='rgba(255,255,255,.16)';
+ const face=(y,sm)=>[{left:76,top:y,width:36,height:36,borderRadius:R,background:'#fff'},{left:128,top:y,width:36,height:36,borderRadius:R,background:'#fff'},{left:92,top:y+10,width:15,height:15,borderRadius:R,background:'#1d2b24'},{left:133,top:y+10,width:15,height:15,borderRadius:R,background:'#1d2b24'},{left:106,top:sm,width:28,height:14,borderRadius:'0 0 28px 28px',background:'var(--on-accent)'}];
+ const PINHO=[{left:50,top:252,width:140,height:14,borderRadius:R,background:'rgba(0,0,0,.22)'},{left:105,top:218,width:30,height:38,background:HI,borderRadius:4},{left:4,top:176,width:44,height:14,borderRadius:14,transform:'rotate(-32deg)'},{left:192,top:176,width:44,height:14,borderRadius:14,transform:'rotate(32deg)'},{left:20,top:110,width:200,height:118,clipPath:TRI},{left:45,top:52,width:150,height:96,clipPath:TRI},{left:45,top:52,width:150,height:96,clipPath:TRI,background:W2},{left:70,top:4,width:100,height:80,clipPath:TRI},{left:70,top:4,width:100,height:80,clipPath:TRI,background:W1},{left:111,top:-10,width:18,height:18,transform:'rotate(45deg)',background:HI,borderRadius:3}].concat(face(150,192));
+ /* mascote Pinho (escala: 1 = 240×270) */
+ AR.mascote=(esc)=>{esc=esc||1;return `<div class="es-mascote" style="width:${240*esc}px;height:${270*esc}px;flex:none"><div style="transform:scale(${esc});transform-origin:0 0;width:240px;height:270px">${caixa(PINHO,240,270,A)}</div></div>`};
+}
+/* sons dos modos novos */
+{const _t=AR.tocar;AR.tocar=n=>{if(!AR.som)return;const x={
+  sobe:()=>{[392,494,587,784].forEach((f,i)=>tom(f,i*.05,.1,'triangle',.1))},
+  onda:()=>{tom(220,0,.35,'sine',.1);tom(180,.1,.4,'sine',.08)},
+  cofre:()=>{tom(180,0,.08,'square',.08);[660,880].forEach((f,i)=>tom(f,.08+i*.07,.12,'triangle',.1))},
+  duelo:()=>{tom(880,0,.06,'sawtooth',.07);tom(660,.07,.06,'sawtooth',.07);tom(990,.14,.15,'sawtooth',.07)},
+  testemunho:()=>{[523,784].forEach((f,i)=>tom(f,i*.08,.12,'triangle',.1))}
+}[n];if(x)return x();return _t(n)}}
 /*ARENA-EXTRA-FIM*/
 window.ARENA=AR;
 })();
