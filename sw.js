@@ -1,4 +1,5 @@
 /* EduSpruce · service worker
+   - avisos push com a app fechada (1.035)
    - notificações (obrigatório no iPhone/iPad: só um service worker pode mostrá-las)
    - abre a secção certa ao tocar numa notificação
    - abre sempre a versão mais recente da app quando há internet; a cópia guardada só serve sem rede (nunca corre uma versão antiga com internet)
@@ -23,6 +24,9 @@ self.addEventListener('fetch',e=>{const r=e.request;if(r.method!=='GET')return;c
       try{const res=await Promise.race([fresco(),new Promise((_,ko)=>setTimeout(()=>ko(new Error('lento')),8000))]);
         if(res&&res.ok){const cp=res.clone();caches.open(CACHE).then(c=>c.put(chave,cp)).catch(()=>{})}return res}
       catch(_){const x=await caches.match(chave);if(x)return x;return fetch(r)}})())}});
+/* 1.035 · avisos com a app fechada: chegam da base de dados (função «eduspruce-avisos» do Supabase) */
+self.addEventListener('push',e=>{let d={};try{d=e.data?e.data.json():{}}catch(_){try{d={corpo:e.data.text()}}catch(__){}}
+  e.waitUntil(self.registration.showNotification(d.titulo||'EduSpruce',{body:d.corpo||'',tag:d.tag||('es-'+Date.now()),renotify:!!d.tag,icon:'icons/icon-192.png',badge:'icons/icon-192.png',data:{v:d.v||'inicio',t:d.t||''}}))});
 self.addEventListener('notificationclick',e=>{e.notification.close();const d=e.notification.data||{};const v=d.v||'inicio',t=d.t||'';
   e.waitUntil((async()=>{const L=await self.clients.matchAll({type:'window',includeUncontrolled:true});for(const c of L){try{await c.focus();c.postMessage({es:'ir',v,t});return}catch(_){}}
     await self.clients.openWindow('./?ir='+encodeURIComponent(v)+(t?'&t='+encodeURIComponent(t):''))})())});
