@@ -2,6 +2,7 @@
 <html lang="pt-PT">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-ZfEP6UbKYKYM6YFao/L/vW7Z5CJ7l0pKMb533OI9DQg='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
@@ -111,6 +112,7 @@ select{width:100%;font:inherit;font-size:17px;min-height:48px;border:1.5px solid
 <noscript><p class="card">Para responder é preciso ativar o JavaScript no navegador.</p></noscript>
 <script>
 'use strict';
+/* nunca dentro de uma página de outro sítio (proteção contra cliques enganados) */try{if(top!==self){let m=false;try{m=top.location.origin===location.origin}catch(_){}if(!m)document.documentElement.style.display='none'}}catch(_){}
 (()=>{
 const $=s=>document.querySelector(s);const app=$('#app');
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -223,8 +225,8 @@ function campo(q){const v=R.resp[q.id];const F=S.D.f;const nm='q-'+q.id;
 function pagina(){const p=R.P[R.pag];const ult=fimDaPag(true)==='fim';const F=S.D.f;
   app.innerHTML=`${F.defs.exame&&!S.prev?'<div class="exb" id="exb"></div>':''}${R.fim?'<div class="tempo" id="tempo"><span>⏱</span></div>':''}${cab()}${R.P.length>1?`<div class="prog" aria-hidden="true"><i style="width:${Math.round(R.pag/R.P.length*100)}%"></i></div>`:''}
   ${p.sec?`<section class="card fcab"><h2>${esc(p.sec.titulo||'Secção')}</h2>${p.sec.sub?`<p class="mut">${esc(p.sec.sub)}</p>`:''}</section>`:''}
-  <form id="f" novalidate>${p.itens.map(q=>q.tipo==='info'?`<section class="card"><h2>${esc(q.titulo)}</h2>${q.img?`<img class="qi" src="${q.img}" alt="">`:''}${q.sub?`<p>${esc(q.sub).replace(/\n/g,'<br>')}</p>`:''}</section>`:
-    `<section class="card fq" id="c-${esc(q.id)}"><h2><span class="n">${num(q)}</span><span>${esc(q.titulo||'Pergunta')}${q.obrig?' <span class="ob" aria-label="obrigatória">*</span>':''}</span>${F.quiz&&+q.pts?`<span class="pts">${nf(+q.pts)} pt${+q.pts===1?'':'s'}</span>`:''}</h2>${q.sub?`<p class="sub">${esc(q.sub)}</p>`:''}${q.img?`<img class="qi" src="${q.img}" alt="">`:''}${campo(q)}<p class="err" id="e-${esc(q.id)}" role="alert"></p></section>`).join('')}
+  <form id="f" novalidate>${p.itens.map(q=>q.tipo==='info'?`<section class="card"><h2>${esc(q.titulo)}</h2>${q.img?`<img class="qi" src="${esc(q.img)}" alt="">`:''}${q.sub?`<p>${esc(q.sub).replace(/\n/g,'<br>')}</p>`:''}</section>`:
+    `<section class="card fq" id="c-${esc(q.id)}"><h2><span class="n">${num(q)}</span><span>${esc(q.titulo||'Pergunta')}${q.obrig?' <span class="ob" aria-label="obrigatória">*</span>':''}</span>${F.quiz&&+q.pts?`<span class="pts">${nf(+q.pts)} pt${+q.pts===1?'':'s'}</span>`:''}</h2>${q.sub?`<p class="sub">${esc(q.sub)}</p>`:''}${q.img?`<img class="qi" src="${esc(q.img)}" alt="">`:''}${campo(q)}<p class="err" id="e-${esc(q.id)}" role="alert"></p></section>`).join('')}
   <p class="err" id="e" role="alert"></p><div class="nav2">${R.hist.length?'<button type="button" class="btn sec" id="ant">Anterior</button>':''}<button class="btn" id="b">${ult?'Enviar':'Seguinte'}</button></div></form>`;
   if(R.fim)tique();if(F.defs.exame)exameBarra();const tr=$('#troca');if(tr)tr.onclick=()=>{S.aluno=null;S.chave='';ecraQuem()};
   /* interações */

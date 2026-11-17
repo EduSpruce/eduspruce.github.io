@@ -2,6 +2,7 @@
 <html lang="pt-PT">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-SCnTV443XH+1c8juFqDCuNLMnUIWunmPeFAXhacAN60=' 'sha256-9kXk6U4GCnFoWEn4qxJTtsGr+n3A/+GYheTlKWrzLQs=' 'sha256-W9B4mmTUOFg1oGEZfn+vYS15olqtcCDoeCN4aoeCQjk='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#f5efe2">
 <meta name="robots" content="noindex">
@@ -124,7 +125,8 @@ input:focus{border-color:var(--primary)}
 </head>
 <body>
 <div id="app"><div class="lob"><p class="mut">A abrir…</p></div></div>
-<script>window.__ES_SB={"ativo":true,"url":"https://ssuescpqyhuqkphauwde.supabase.co","anonKey":"sb_publishable_oNNwLRRXJmqDzBqQPlf9jw_N0L29FjV"};</script>
+<script>/* nunca dentro de uma página de outro sítio (proteção contra cliques enganados) */try{if(top!==self){let m=false;try{m=top.location.origin===location.origin}catch(_){}if(!m)document.documentElement.style.display='none'}}catch(_){}
+window.__ES_SB={"ativo":true,"url":"https://ssuescpqyhuqkphauwde.supabase.co","anonKey":"sb_publishable_oNNwLRRXJmqDzBqQPlf9jw_N0L29FjV"};</script>
 <script>
 /* ===================== Arena · código comum (app do professor e página do aluno) =====================
    Pinhas (personagens originais em SVG), modos de jogo, sons sintetizados, filtro de alcunhas e cifra da lista da turma.
@@ -429,7 +431,7 @@ let tPoll=null,tRel=null,canal=null,ocupado=false,ecraAtual='';
 async function cfg(){if(CFG)return CFG;let c=window.__ES_SB;if(!c||typeof c!=='object'){try{c=await (await fetch('supabase-config.json',{cache:'no-store'})).json()}catch(_){c=null}}if(!c||!c.url)throw new Error('O Spruce It não está configurado.');CFG=c;return c}
 async function rpc(fn,args){const c=await cfg();let r;try{r=await fetch(c.url+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'Content-Type':'application/json',apikey:c.anonKey,Authorization:'Bearer '+c.anonKey},body:JSON.stringify(args)})}catch(e){const x=new Error('Sem ligação. A tentar de novo…');x.rede=true;throw x}
   if(!r.ok){const t=await r.text();const x=new Error(r.status===404?'O Spruce It ainda não está disponível nesta escola.':'Erro do servidor ('+r.status+').');x.http=r.status;x.det=t;throw x}return r.json()}
-const MSG={sala:'Não encontrei essa sala, ou o jogo já terminou. Confirma o código.',limite:'O prazo deste trabalho de casa já passou.',alcunha:'A alcunha precisa de 2 a 24 carateres.',impropria:'Essa alcunha não pode ser usada. Escolhe outra.',
+const MSG={espere:'Demasiadas tentativas falhadas a partir desta rede. Espera uns minutos e tenta de novo.',sala:'Não encontrei essa sala, ou o jogo já terminou. Confirma o código.',limite:'O prazo deste trabalho de casa já passou.',alcunha:'A alcunha precisa de 2 a 24 carateres.',impropria:'Essa alcunha não pode ser usada. Escolhe outra.',
   emuso:'Esse nome já está a ser usado por outro aparelho. Se és tu, espera uns segundos e tenta de novo.',tardia:'O jogo já começou e o professor não deixa entrar depois do início.',cheia:'A sala está cheia.',expulso:'O professor tirou-te deste jogo.',lista:'Escolhe o teu nome na lista.',pedido:'Pedido inválido.'};
 const guardar=()=>{try{localStorage.setItem('arena.'+st.id,JSON.stringify({j:st.j,tok:st.tok,alcunha:st.alcunha,ref:st.ref||null,code:st.code}))}catch(_){}};
 const lerG=id=>{try{return JSON.parse(localStorage.getItem('arena.'+id)||'null')}catch(_){return null}};
@@ -477,7 +479,7 @@ const off=()=>{const s=st.estado&&st.estado.sala;return s?new Date(s.agora).getT
 function aplicar(r){st.recebido=Date.now();const s=r.sala,eu=r.eu;st.off=new Date(s.agora).getTime()-Date.now();tema(s.cfg&&s.cfg.tema);
   if(s.cfg&&s.cfg.silencio&&!st.somDef){st.somDef=1;let p=null;try{p=localStorage.getItem('arena.som')}catch(_){}if(p==null)AR.som=false}
   if((AR.MODOS[s.modo]||{}).eq&&Date.now()-(st.eqsT||0)>2500){st.eqsT=Date.now();eqsAtual()}
-  if(eu.expulso){esquecer();paraTudo();return ecra('exp',`${topo()}<div class="fb no"><div class="ic">🚪</div><h1>Saíste do jogo</h1><p class="mut">${MSG.expulso}</p><button class="btn sec" onclick="location.reload()">Voltar ao início</button></div>`)}
+  if(eu.expulso){esquecer();paraTudo();return ecra('exp',`${topo()}<div class="fb no"><div class="ic">🚪</div><h1>Saíste do jogo</h1><p class="mut">${MSG.expulso}</p><button class="btn sec" data-recarregar>Voltar ao início</button></div>`)}
   let p=$('#pausa');if(s.estado==='pausa'&&!p){p=document.createElement('div');p.id='pausa';p.className='pausa';p.textContent='⏸ Em pausa';document.body.appendChild(p)}else if(s.estado!=='pausa'&&p)p.remove();
   if(eu.estado&&eu.estado.trocado&&eu.estado.trocado.em!==st.trocadoVisto){st.trocadoVisto=eu.estado.trocado.em;aviso('🔁 '+eu.estado.trocado.por+' trocou de pontos contigo!')}
   if(eu.estado&&eu.estado.atingido&&eu.estado.atingido.em!==st.atingidoVisto){const a=eu.estado.atingido;if(st.atingidoVisto!==undefined||Date.now()-new Date(a.em).getTime()<15000)aviso(a.como==='escudo'?'🛡️ O teu escudo travou o laser de '+a.por+'!':(a.como==='pirata'?'🏴‍☠️ ':a.como==='meteoro'?'☄️ ':'🎯 ')+a.por+' tirou-te '+AR.nf(a.v)+' pontos!');st.atingidoVisto=a.em}
@@ -509,7 +511,7 @@ function classico(r){const s=r.sala,eu=r.eu,p=s.pergunta;if(!p)return ecraEspera
   if(eu.resp){if(ecraAtual===chave)return;return ecra(chave,`${topo()}<div class="fb"><div class="ic">🌰</div><h1>Resposta enviada!</h1><p class="mut">Espera pelos outros…</p><div class="dots"><span></span><span></span><span></span></div></div>`)}
   if(ecraAtual===chave)return;st.respAt=null;
   const t=+p.s||20;const ini=new Date(s.atual_ini).getTime()-st.off;
-  ecra(chave,`${topo()}<div class="q"><div class="hud" id="hud"></div><div class="qtop"><span>Pergunta ${s.atual+1}/${s.n_perg}</span><span class="mut">${esc((AR.MODOS[s.modo]||{}).nome||'')}</span><span class="sp" style="flex:1"></span><b id="cnt"></b></div><div class="bar"><i id="br"></i></div><div class="qt">${esc(p.t)}</div>${p.img?`<img class="qi" src="${p.img}" alt="">`:''}<div class="ops">${(p.o||[]).map((o,k)=>`<button type="button" class="op" style="--oc:${CORES[k]}" data-o="${k}"><span>${FORMAS[k]}</span>${esc(o)}</button>`).join('')}</div></div>`);hud();
+  ecra(chave,`${topo()}<div class="q"><div class="hud" id="hud"></div><div class="qtop"><span>Pergunta ${s.atual+1}/${s.n_perg}</span><span class="mut">${esc((AR.MODOS[s.modo]||{}).nome||'')}</span><span class="sp" style="flex:1"></span><b id="cnt"></b></div><div class="bar"><i id="br"></i></div><div class="qt">${esc(p.t)}</div>${p.img?`<img class="qi" src="${esc(p.img)}" alt="">`:''}<div class="ops">${(p.o||[]).map((o,k)=>`<button type="button" class="op" style="--oc:${CORES[k]}" data-o="${k}"><span>${FORMAS[k]}</span>${esc(o)}</button>`).join('')}</div></div>`);hud();
   const tick=()=>{const rr=Math.max(0,t-(Date.now()-ini)/1000);const c=$('#cnt'),b=$('#br');if(!c)return clearInterval(st.tq);c.textContent=Math.ceil(rr)+' s';b.style.width=(100*rr/t)+'%';b.classList.toggle('pouco',rr<=3);if(rr<=0){clearInterval(st.tq);document.querySelectorAll('.op').forEach(x=>x.disabled=true)}};clearInterval(st.tq);tick();st.tq=setInterval(tick,200);
   document.querySelectorAll('.op').forEach(b=>b.onclick=async()=>{if(ocupado)return;ocupado=true;const k=+b.dataset.o;document.querySelectorAll('.op').forEach(x=>{x.classList.toggle('esc',x===b);x.classList.toggle('sombra',x!==b)});AR.vibrar(20);
     try{const x=await rpc('arena_responder',{p_id:st.id,p_j:st.j,p_tok:st.tok,p_perg:s.atual,p_opc:k});if(x&&x.erro&&x.erro!=='repetida'&&x.erro!=='depressa'){aviso(x.erro==='tempo'||x.erro==='fora'?'O tempo acabou.':'Não foi possível enviar.')}
@@ -521,7 +523,7 @@ async function proxima(){if(ocupado)return;clearTimeout(st.tEsp);clearInterval(s
   if(q.erro){if(q.erro==='terminou'||q.erro==='fim'||q.erro==='limite'){st.livre=false;return atualizar()}if(q.erro==='espera'||q.erro==='pausa'){st.livre=false;return setTimeout(atualizar,1500)}if(q.erro==='jogador'){esquecer();return ecraCodigo('A tua ligação a esta sala terminou. Entra de novo.',st.code)}return setTimeout(proxima,2000)}
   if(q.escolha)return escolher();if(q.vez===false)return ecraVez(q);if(q.duelo_espera)return ecraDueloEspera(q);if(q.ini)st.ini=q.ini;
   const p=q.pergunta,s=st.estado.sala;st.qAtual=q;if(novo&&(AR.MODOS[s.modo]||{}).eq)await eqsAtual();
-  ecra('q'+q.i+'-'+q.n,`${topo()}<div class="q"><div class="hud" id="hud"></div>${novo?painel(q):''}${s.modo==='classico'?`<div class="qtop"><span>Pergunta ${q.n}/${s.n_perg}</span><span class="mut">${esc((AR.MODOS[s.modo]||{}).nome||'')}</span></div>`:''}${s.modo==='cume'?'<div class="bar"><i id="br"></i></div>':''}<div class="qt">${esc(p.t)}${novo?'<span class="fbl" id="fbl" aria-live="assertive"></span>':''}</div>${p.img?`<img class="qi" src="${p.img}" alt="">`:''}<div class="ops">${(p.o||[]).map((o,k)=>`<button type="button" class="op" style="--oc:${CORES[k]}" data-o="${k}"><span>${FORMAS[k]}</span>${esc(o)}</button>`).join('')}</div></div>`);hud();
+  ecra('q'+q.i+'-'+q.n,`${topo()}<div class="q"><div class="hud" id="hud"></div>${novo?painel(q):''}${s.modo==='classico'?`<div class="qtop"><span>Pergunta ${q.n}/${s.n_perg}</span><span class="mut">${esc((AR.MODOS[s.modo]||{}).nome||'')}</span></div>`:''}${s.modo==='cume'?'<div class="bar"><i id="br"></i></div>':''}<div class="qt">${esc(p.t)}${novo?'<span class="fbl" id="fbl" aria-live="assertive"></span>':''}</div>${p.img?`<img class="qi" src="${esc(p.img)}" alt="">`:''}<div class="ops">${(p.o||[]).map((o,k)=>`<button type="button" class="op" style="--oc:${CORES[k]}" data-o="${k}"><span>${FORMAS[k]}</span>${esc(o)}</button>`).join('')}</div></div>`);hud();
   document.querySelectorAll('.op').forEach(b=>b.onclick=()=>responder(q,+b.dataset.o,b));if(s.modo==='cume')barra(+p.s||20)}
 function barra(t){const ini=Date.now();clearInterval(st.tq);const f=()=>{const b=$('#br');if(!b)return clearInterval(st.tq);const r=Math.max(0,t-(Date.now()-ini)/1000);b.style.width=(100*r/t)+'%';b.classList.toggle('pouco',r<=3);if(r<=0)clearInterval(st.tq)};f();st.tq=setInterval(f,200)}
 async function responder(q,k,b){if(ocupado)return;ocupado=true;document.querySelectorAll('.op').forEach(x=>{x.classList.toggle('esc',x===b);x.classList.toggle('sombra',x!==b)});let x;
@@ -672,6 +674,7 @@ async function ecraColecao(novo){let c;try{c=await rpc('arena_colecao',{p_id:st.
 
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&st.j){atualizar();if(st.livre&&!ocupado&&ecraAtual.startsWith('q')===false&&ecraAtual!=='colheita'&&ecraAtual!=='fb')proxima()}});
 addEventListener('online',()=>{semRede(false);if(st.j)atualizar()});
+document.addEventListener('click',e=>{if(e.target&&e.target.closest&&e.target.closest('[data-recarregar]'))location.reload()});
 const h=AR.limpaCod(decodeURIComponent(location.hash.slice(1)));ecraCodigo('',h);if(h.length===6)abrir(h);
 })();
 </script>

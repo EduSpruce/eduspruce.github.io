@@ -2,6 +2,7 @@
 <html lang="pt-PT">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-SCnTV443XH+1c8juFqDCuNLMnUIWunmPeFAXhacAN60=' 'sha256-9kXk6U4GCnFoWEn4qxJTtsGr+n3A/+GYheTlKWrzLQs=' 'sha256-u1j8U43667TYVhGMh2CtC8wPwo9O7GHLqiRGBT3cVsQ='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0f6f96">
 <meta name="robots" content="noindex">
@@ -58,7 +59,8 @@ textarea{min-height:110px;resize:vertical}input:focus,textarea:focus{outline:3px
 </head>
 <body>
 <div id="app"><div class="esp"><p class="mut">A abrir…</p></div></div>
-<script>window.__ES_SB={"ativo":true,"url":"https://ssuescpqyhuqkphauwde.supabase.co","anonKey":"sb_publishable_oNNwLRRXJmqDzBqQPlf9jw_N0L29FjV"};</script>
+<script>/* nunca dentro de uma página de outro sítio (proteção contra cliques enganados) */try{if(top!==self){let m=false;try{m=top.location.origin===location.origin}catch(_){}if(!m)document.documentElement.style.display='none'}}catch(_){}
+window.__ES_SB={"ativo":true,"url":"https://ssuescpqyhuqkphauwde.supabase.co","anonKey":"sb_publishable_oNNwLRRXJmqDzBqQPlf9jw_N0L29FjV"};</script>
 <script>
 /* ===================== Arena · código comum (app do professor e página do aluno) =====================
    Pinhas (personagens originais em SVG), modos de jogo, sons sintetizados, filtro de alcunhas e cifra da lista da turma.
@@ -360,7 +362,7 @@ let CFG=null;const st={};let tPoll=null,canal=null,ocup=false,ecraK='';
 async function cfg(){if(CFG)return CFG;let c=window.__ES_SB;if(!c||typeof c!=='object'){try{c=await (await fetch('supabase-config.json',{cache:'no-store'})).json()}catch(_){c=null}}if(!c||!c.url)throw new Error('O Pulso não está configurado.');CFG=c;return c}
 async function rpc(fn,args){const c=await cfg();let r;try{r=await fetch(c.url+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'Content-Type':'application/json',apikey:c.anonKey,Authorization:'Bearer '+c.anonKey},body:JSON.stringify(args)})}catch(e){const x=new Error('Sem ligação. A tentar de novo…');x.rede=true;throw x}
   if(!r.ok){const x=new Error(r.status===404?'O Pulso ainda não está disponível nesta escola.':'Erro do servidor ('+r.status+').');x.http=r.status;throw x}return r.json()}
-const MSG={sala:'Não encontrei essa sala. Confirma o código.',ativ:'A atividade já terminou.',lista:'Escolhe o teu nome.',codigo:'O código pessoal não está certo. Confirma com o professor.',nome:'Escreve o teu nome (2 a 40 letras).',emuso:'Esse nome está a ser usado noutro aparelho. Espera uns segundos e tenta de novo.',cheia:'A sala está cheia.',pedido:'Pedido inválido.'};
+const MSG={espere:'Demasiadas tentativas falhadas a partir desta rede. Espera uns minutos e tenta de novo.',sala:'Não encontrei essa sala. Confirma o código.',ativ:'A atividade já terminou.',lista:'Escolhe o teu nome.',codigo:'O código pessoal não está certo. Confirma com o professor.',nome:'Escreve o teu nome (2 a 40 letras).',emuso:'Esse nome está a ser usado noutro aparelho. Espera uns segundos e tenta de novo.',cheia:'A sala está cheia.',pedido:'Pedido inválido.'};
 const ls=(k,v)=>{try{if(v===undefined)return JSON.parse(localStorage.getItem(k)||'null');if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,JSON.stringify(v))}catch(_){return null}};
 const topo=()=>`<header class="top"><span class="lg">P</span><b>EduSpruce <em>Pulso</em></b><span class="sp"></span>${st.info?`<small>${esc(st.info.nome)}${st.eu?'<br>'+esc(st.eu.nome):''}</small>`:''}</header>`;
 function ecra(k,h){ecraK=k;app.innerHTML=topo()+h;maoBtn();window.scrollTo(0,0)}
@@ -410,7 +412,7 @@ function desenhar(doPoll){const r=st.r,t=r.ativ;if(t.estado==='fim')return fimAt
   if(t.modo==='prof')return quizProf(r,doPoll);if(t.modo==='livre')return quizLivre(r,doPoll);return quizSeq(r,doPoll)}
 const minha=(r,i)=>(r.resp||[]).find(x=>x.p===i);
 function pergHTML(t,p,i,sel,dis,sol){const ord=ordem((p.o||[]).length,t.cfg.baralharO,st.a+':'+i);const tp=p.tp;
-  let h=`<div class="qt">${esc(p.t||'Responde à pergunta do professor.')}</div>${p.img?`<img class="qi" src="${p.img}" alt="">`:''}`;
+  let h=`<div class="qt">${esc(p.t||'Responde à pergunta do professor.')}</div>${p.img?`<img class="qi" src="${esc(p.img)}" alt="">`:''}`;
   if(tp==='rc'||tp==='txt')h+=`<textarea id="rt" maxlength="2000" placeholder="A tua resposta" ${dis?'disabled':''}>${esc(sel&&sel.texto||'')}</textarea>`;
   else{const so=sol&&sol.c?(sol.c.c||[]):null;h+=`<div class="ops">${ord.map(k=>{const on=sel&&(sel.opc||[]).includes(k);const cls=so?(so.includes(k)?'ok':on?'no':''):on?'on':'';return `<button type="button" class="op ${cls}" data-k="${k}" ${dis?'disabled':''}><span class="lt">${tp==='vf'||tp==='escala'?(tp==='vf'?(k?'F':'V'):k+1):LT[t.cfg.baralharO?ord.indexOf(k):k]}</span><span>${esc(tp==='em'&&/^[A-E]$/.test(p.o[k])?'':p.o[k])}</span></button>`}).join('')}</div>${tp==='ev'&&!dis?'<p class="mut peq" style="margin-top:6px">Podes escolher mais do que uma.</p>':''}`}
   return h}
