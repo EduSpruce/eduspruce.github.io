@@ -2,12 +2,12 @@
 <html lang="pt-PT">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-ZfEP6UbKYKYM6YFao/L/vW7Z5CJ7l0pKMb533OI9DQg='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-VnfM+ddce/1VKQ8PZzhAu8C6czMvayBM+cf4ZmR+lVI='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#0f6cbd">
-<title>Forms · EduSpruce</title>
+<title>Formulários · EduSpruce</title>
 <link rel="icon" href="favicon.png">
 <style>
 
@@ -105,9 +105,9 @@ select{width:100%;font:inherit;font-size:17px;min-height:48px;border:1.5px solid
 </head>
 <body>
 <main>
-  <header class="top"><span class="logo" aria-hidden="true">S</span><b>Edu<em>Spruce</em> · Forms</b></header>
+  <header class="top"><span class="logo" aria-hidden="true">S</span><b>Edu<em>Spruce</em> · Formulários</b></header>
   <div id="app" aria-live="polite"></div>
-  <p class="rod">Só o teu professor vê as tuas respostas. Esta página não guarda nada no telemóvel.</p>
+  <p class="rod">Só o teu professor vê as tuas respostas. Esta página não guarda nada no telemóvel. <a href="privacidade.html#alunos" target="_blank" rel="noopener" style="color:inherit">Privacidade</a></p>
 </main>
 <noscript><p class="card">Para responder é preciso ativar o JavaScript no navegador.</p></noscript>
 <script>
@@ -142,7 +142,7 @@ let S={code:'',id:'',k:null,D:null,aluno:null,chave:'',nome:'',prev:false};
 let R={resp:{},t0:0,pag:0,hist:[],fim:0,tm:null,ordem:{},ops:{}};
 
 function cor(){document.documentElement.style.setProperty('--fc',(S.D&&S.D.f.cor)||'#0f6cbd');const m=document.querySelector('meta[name=theme-color]');if(m&&S.D)m.content=S.D.f.cor||'#0f6cbd'}
-function ecraCodigo(msg,valor){app.innerHTML=`<section class="card"><h1>Forms</h1><p class="mut">Escreve o código que o professor mostrou (8 letras e números).</p>
+function ecraCodigo(msg,valor){app.innerHTML=`<section class="card"><h1>Formulários</h1><p class="mut">Escreve o código que o professor mostrou (8 letras e números).</p>
   <form id="f" autocomplete="off" novalidate><label for="cod">Código</label><input id="cod" inputmode="text" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="11" placeholder="XXXX-XXXX" value="${esc(valor||'')}" aria-describedby="e">
   <p class="err" id="e" role="alert">${esc(msg||'')}</p><button class="btn" id="b">Continuar</button></form></section>`;
   const i=$('#cod'),f=$('#f'),b=$('#b');

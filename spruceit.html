@@ -2,14 +2,15 @@
 <html lang="pt-PT">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-SCnTV443XH+1c8juFqDCuNLMnUIWunmPeFAXhacAN60=' 'sha256-9kXk6U4GCnFoWEn4qxJTtsGr+n3A/+GYheTlKWrzLQs=' 'sha256-W9B4mmTUOFg1oGEZfn+vYS15olqtcCDoeCN4aoeCQjk='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-SCnTV443XH+1c8juFqDCuNLMnUIWunmPeFAXhacAN60=' 'sha256-9kXk6U4GCnFoWEn4qxJTtsGr+n3A/+GYheTlKWrzLQs=' 'sha256-NMe3qt6wltaGllB268Rq2Gm7E5ZOBlQa2Mr6UPYJ+7o='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5efe2">
 <meta name="robots" content="noindex">
 <title>Spruce It</title>
 <link rel="icon" href="favicon.png">
 <link rel="stylesheet" href="fontes/fontes.css">
 <style>
+/* 1.086: pode ampliar-se a página (acessibilidade); o toque duplo rápido durante o jogo não amplia */html,body,button,input{touch-action:manipulation}
 :root{--bg:#f5efe2;--surface:#fffaf0;--ink:#1d2b24;--muted:#5d6b62;--line:#d9cfb8;--primary:#1f6b4a;--on-primary:#fff;--accent:#f2b233;--on-accent:#1d2b24;--hero:#1f6b4a;--hero-ink:#fffaf0;--hero-line:transparent;--radius:18px;--bw:2px;--display:'Baloo 2';--dw:800;--case:none;--track:0;--shadow:0 4px 0 #154a33;--shadow-a:0 4px 0 #b8841c;--a1:#b84a1b;--a2:#2456c9;--a3:#17804d;--a4:#8a3fb0;--on-a:#fff}
 :root{--panel:var(--surface);--mut:var(--muted);--acc:var(--primary);--r:var(--radius);--ok:var(--a3);--bad:var(--a1);--soft:color-mix(in srgb,var(--ink) 7%,transparent);--soft2:color-mix(in srgb,var(--ink) 12%,transparent)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -443,7 +444,7 @@ function ecra(nome,html){ecraAtual=nome;document.body.classList.toggle('herofund
 let ligInd=null;const semRede=v=>{if(v&&!ligInd){ligInd=document.createElement('div');ligInd.className='lig';ligInd.textContent='Sem ligação · a tentar de novo…';document.body.appendChild(ligInd)}if(!v&&ligInd){ligInd.remove();ligInd=null}};
 
 /* ---------- 1. código ---------- */
-function ecraCodigo(msg,cod){paraTudo();ecra('codigo',`${topo()}<div class="card" style="margin-top:auto;max-width:400px;width:100%;align-self:center"><span class="logo" style="font-size:20px">Spruce<em>It</em></span><h1 style="margin-top:10px">Entra no jogo</h1><label for="cod">Código da sala</label><input id="cod" maxlength="7" autocomplete="off" autocapitalize="characters" spellcheck="false" inputmode="text" value="${esc(AR.fmt(cod||''))}" placeholder="ABC-123"><button class="btn" id="b-ok">Entrar</button><p class="err" id="e">${esc(msg||'')}</p></div><p class="centro peq" style="margin-bottom:auto;color:var(--hero-ink);opacity:.85;max-width:400px;align-self:center">Não precisas de conta. Só guardamos a tua alcunha e as tuas respostas durante o jogo.</p>`);
+function ecraCodigo(msg,cod){paraTudo();ecra('codigo',`${topo()}<div class="card" style="margin-top:auto;max-width:400px;width:100%;align-self:center"><span class="logo" style="font-size:20px">Spruce<em>It</em></span><h1 style="margin-top:10px">Entra no jogo</h1><label for="cod">Código da sala</label><input id="cod" maxlength="7" autocomplete="off" autocapitalize="characters" spellcheck="false" inputmode="text" value="${esc(AR.fmt(cod||''))}" placeholder="ABC-123"><button class="btn" id="b-ok">Entrar</button><p class="err" id="e">${esc(msg||'')}</p></div><p class="centro peq" style="margin-bottom:auto;color:var(--hero-ink);opacity:.85;max-width:400px;align-self:center">Não precisas de conta. Só guardamos a tua alcunha e as tuas respostas durante o jogo. <a href="privacidade.html#alunos" target="_blank" rel="noopener" style="color:inherit">Privacidade</a></p>`);
   const i=$('#cod');i.oninput=()=>{const p=i.selectionStart;i.value=AR.fmt(AR.limpaCod(i.value));};i.onkeydown=e=>{if(e.key==='Enter')$('#b-ok').click()};if(!cod)setTimeout(()=>i.focus(),100);
   $('#b-ok').onclick=()=>abrir(AR.limpaCod(i.value))}
 async function abrir(code){const e=$('#e'),b=$('#b-ok');if(code.length!==6){if(e)e.textContent='O código tem 6 carateres.';return}if(b){b.disabled=true;b.textContent='A procurar…'}

@@ -2,7 +2,7 @@
 <html lang="pt-PT">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-SCnTV443XH+1c8juFqDCuNLMnUIWunmPeFAXhacAN60=' 'sha256-9kXk6U4GCnFoWEn4qxJTtsGr+n3A/+GYheTlKWrzLQs=' 'sha256-u1j8U43667TYVhGMh2CtC8wPwo9O7GHLqiRGBT3cVsQ='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-SCnTV443XH+1c8juFqDCuNLMnUIWunmPeFAXhacAN60=' 'sha256-9kXk6U4GCnFoWEn4qxJTtsGr+n3A/+GYheTlKWrzLQs=' 'sha256-mJK726h3qDlogKSG35tNfhSwxZqloSJ1lwrmTXV/OPY='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0f6f96">
 <meta name="robots" content="noindex">
@@ -372,7 +372,7 @@ const rng=s=>{let h=2166136261;for(const ch of String(s)){h^=ch.charCodeAt(0);h=
 const ordem=(n,on,seed)=>{const o=[...Array(n).keys()];if(!on)return o;const r=rng(seed);for(let i=n-1;i>0;i--){const j=Math.floor(r()*(i+1));[o[i],o[j]]=[o[j],o[i]]}return o};
 
 /* ---------- entrar ---------- */
-function ecraCodigo(msg,cod){parar();st.info=null;st.eu=null;ecra('cod',`<div class="card"><h1>Entra na sala</h1><p class="mut">Escreve o código da sala que o professor te deu.</p><input id="cod" maxlength="7" autocomplete="off" autocapitalize="characters" spellcheck="false" value="${esc(U.fmt(cod||''))}" aria-label="Código da sala"><button class="btn" id="b-ok">Entrar</button><p class="err" id="e">${esc(msg||'')}</p></div><p class="mut peq" style="text-align:center">Sem contas. Só guardamos o teu nome e as tuas respostas.</p>`);
+function ecraCodigo(msg,cod){parar();st.info=null;st.eu=null;ecra('cod',`<div class="card"><h1>Entra na sala</h1><p class="mut">Escreve o código da sala que o professor te deu.</p><input id="cod" maxlength="7" autocomplete="off" autocapitalize="characters" spellcheck="false" value="${esc(U.fmt(cod||''))}" aria-label="Código da sala"><button class="btn" id="b-ok">Entrar</button><p class="err" id="e">${esc(msg||'')}</p></div><p class="mut peq" style="text-align:center">Sem contas. Só guardamos o teu nome e as tuas respostas. <a href="privacidade.html#alunos" target="_blank" rel="noopener" style="color:inherit">Privacidade</a></p>`);
   const i=$('#cod');i.oninput=()=>{i.value=U.fmt(U.limpaCod(i.value))};i.onkeydown=e=>{if(e.key==='Enter')$('#b-ok').click()};$('#b-ok').onclick=()=>abrirSala(U.limpaCod(i.value))}
 async function abrirSala(code){const e=$('#e'),b=$('#b-ok');if(code.length!==6){if(e)e.textContent='O código tem 6 carateres.';return}if(b){b.disabled=true;b.textContent='A procurar…'}
   try{st.code=code;st.sala=(await U.sha('es-pulso:'+code)).slice(0,40);const info=await rpc('pulso_sala_info',{p_sala:st.sala});if(!info){if(b){b.disabled=false;b.textContent='Entrar'}if(e)e.textContent=MSG.sala;return}history.replaceState(null,'','#'+code);st.info=info;ligarCanal();salaPronta()}
