@@ -5,13 +5,18 @@
    - abre sempre a versão mais recente da app quando há internet; a cópia guardada só serve sem rede (nunca corre uma versão antiga com internet)
    - os módulos da ligação à base de dados (esm/) ficam guardados por versão: a app abre sem esperar pela rede
    Não guarda dados de alunos: esses estão na base de dados, na conta do professor. */
-const CACHE='eduspruce-app-v5';
+const CACHE='eduspruce-app-v5'; /* 1.041: app/ guardada por impressão digital */
 const APP=['./','./index.html','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png'];
 /* versao.json nunca é guardado: é por ele que a app sabe que há versão nova */
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(APP)).catch(()=>{}).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil((async()=>{const K=await caches.keys();await Promise.all(K.filter(k=>k!==CACHE).map(k=>caches.delete(k)));await self.clients.claim();})())});
 self.addEventListener('fetch',e=>{const r=e.request;if(r.method!=='GET')return;const u=new URL(r.url);if(u.origin!==location.origin)return;
   if(/eduspruce-config\.json$/.test(u.pathname))return; /* sempre da rede */
+  /* 1.041 · estilos, código e dados da app (app/nome.<impressão>.ext): cada nome nunca muda → serve o guardado; senão rede e guarda; arruma as impressões antigas */
+  if(/\/app\/[^/]+\.[0-9a-f]{12}\.(js|css|txt)$/.test(u.pathname)){
+    e.respondWith((async()=>{const c=await caches.open(CACHE);const x=await c.match(r,{ignoreSearch:true});if(x)return x;
+      const res=await fetch(r);if(res.ok){try{await c.put(r,res.clone());const base=u.pathname.replace(/\.[0-9a-f]{12}\.[a-z]+$/,'');const K=await c.keys();const mesmo=K.filter(k=>{const p=new URL(k.url).pathname;return p!==u.pathname&&p.replace(/\.[0-9a-f]{12}\.[a-z]+$/,'')===base});
+        /* fica a versão anterior de cada ficheiro (uma janela antiga ainda aberta pode precisar dela) */mesmo.slice(0,-1).forEach(k=>c.delete(k))}catch(_){}}return res})());return}
   if(/\/esm\/[^/]+\.m?js$/.test(u.pathname)){
     /* módulos: cada endereço (com a versão) nunca muda → serve o guardado; se não houver, vai à rede e guarda (e arruma as versões antigas do mesmo ficheiro) */
     e.respondWith((async()=>{const c=await caches.open(CACHE);const x=await c.match(r);if(x)return x;
