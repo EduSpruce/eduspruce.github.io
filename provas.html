@@ -109,6 +109,8 @@ body.pv main{max-width:900px}.enun{font-size:16.5px;line-height:1.55;margin:0 0 
 .banco{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px;padding:10px;border:1.5px dashed var(--line);border-radius:12px}.banco span{padding:6px 12px;border-radius:999px;background:color-mix(in srgb,var(--fc) 12%,var(--panel));color:var(--fc);font-weight:600}.banco span.us{opacity:.4;text-decoration:line-through}
 mark{background:#fde68a;color:#422006;border-radius:3px;padding:0 2px}.anc{display:block;margin:2px 0 6px;font-size:13px;color:#92400e;background:#fffbeb;border-left:3px solid #f59e0b;padding:3px 8px;border-radius:4px}
 .sgq{cursor:crosshair;touch-action:manipulation;user-select:none}.sgq img{pointer-events:none}.sgz{position:absolute;border:2.5px solid #16a34a;background:rgba(22,163,74,.15);border-radius:6px}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 2px;line-height:1.15}.fn{border-bottom:1.5px solid currentColor;padding:0 3px}.fd{padding:0 3px}.rd{border-top:1.5px solid currentColor;padding:0 2px}.enun audio{display:block;margin:8px 0;width:100%}.enun a{color:var(--fc);font-weight:600}
+body.quad *:not(.leg i):not(.legl b):not(.op i):not(.ico){border-radius:0!important}body.quad .fcab{border-top-width:6px}
 .lac select{display:inline-block;width:auto;min-width:7em;max-width:60vw;min-height:40px;margin:0 4px;font-size:16px}
 </style>
 </head>
@@ -116,7 +118,7 @@ mark{background:#fde68a;color:#422006;border-radius:3px;padding:0 2px}.anc{displ
 <main>
   <header class="top"><span class="logo" aria-hidden="true">S</span><b>Edu<em>Spruce</em> · <span id="modn">Provas</span></b></header>
   <div id="app" aria-live="polite"></div>
-  <p class="rod">Só o teu professor vê as tuas respostas. Esta página não guarda nada no telemóvel.</p>
+  <p class="rod">Só o teu professor vê as tuas respostas. Esta página não guarda nada neste aparelho.</p>
 </main>
 <noscript><p class="card">Para responder é preciso ativar o JavaScript no navegador.</p></noscript>
 <script>
@@ -149,7 +151,7 @@ const PERG=q=>!['secao','info'].includes(q.tipo);
 let S={code:'',id:'',k:null,D:null,aluno:null,chave:'',nome:'',prev:false};
 let R={resp:{},t0:0,pag:0,hist:[],fim:0,tm:null,ordem:{},ops:{}};
 
-function cor(){if(S.D&&S.D.mod==='provas'){document.body.classList.add('pv');const n=document.getElementById('modn');if(n)n.textContent='Provas';document.title='Provas · EduSpruce'}document.documentElement.style.setProperty('--fc',(S.D&&S.D.f.cor)||'#1f7a5a');const m=document.querySelector('meta[name=theme-color]');if(m&&S.D)m.content=S.D.f.cor||'#1f7a5a'}
+function cor(){if(S.D&&S.D.quad)document.body.classList.add('quad');if(S.D&&S.D.mod==='provas'){document.body.classList.add('pv');const n=document.getElementById('modn');if(n)n.textContent='Provas';document.title='Provas · EduSpruce'}document.documentElement.style.setProperty('--fc',(S.D&&S.D.f.cor)||'#1f7a5a');const m=document.querySelector('meta[name=theme-color]');if(m&&S.D)m.content=S.D.f.cor||'#1f7a5a'}
 function ecraCodigo(msg,valor){app.innerHTML=`<section class="card"><h1>Provas</h1><p class="mut">Escreve o código que o professor mostrou (8 letras e números).</p>
   <form id="f" autocomplete="off" novalidate><label for="cod">Código</label><input id="cod" inputmode="text" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="11" placeholder="XXXX-XXXX" value="${esc(valor||'')}" aria-describedby="e">
   <p class="err" id="e" role="alert">${esc(msg||'')}</p><button class="btn" id="b">Continuar</button></form></section>`;
@@ -195,6 +197,7 @@ function comecar(){R={resp:{},t0:Date.now(),pag:0,hist:[],fim:0,tm:null,ordem:{}
   F.itens.forEach(q=>{if(q.tipo==='ligar')R.dir[q.id]=q.dir||baralhar((q.pares||[]).map(x=>({id:x.bid,t:x.b})))});
   if(+F.defs.tempo){R.fim=Date.now()+F.defs.tempo*60000;R.tm=setInterval(tique,1000)}
   if(F.defs.exame&&!S.prev)exameLigar();
+  if(!S.prev&&S.D.mod==='provas'&&S.k)(async()=>{try{await rpc('eduspruce_autoav_enviar',{p_id:S.id,p_conteudo:await cifrar({pv:1,ini:1,aid:S.aluno?S.aluno.id:'',nome:S.aluno?'':S.nome,t0:R.t0},S.k)})}catch(_){}})();
   pagina()}
 /* modo exame: ecrã inteiro + registo de saídas (mudar de separador/aplicação, sair do ecrã inteiro) */
 function exameLigar(){R.sai=0;R.ecra=0;let ult=0;const conta=k=>{if(!R.t0||R.enviado)return;const t=Date.now();if(t-ult<1500)return;ult=t;R[k]++;exameAviso()};
@@ -211,9 +214,10 @@ function tique(){const el=$('#tempo');const r=Math.max(0,R.fim-Date.now());if(el
   if(r<=0){clearInterval(R.tm);guardarPag();enviar(true)}}
 function num(q){if(S.D.f.defs.numerar===false)return '';let n=0;for(const p of R.P)for(const x of p.itens){if(PERG(x))n++;if(x===q)return n+'.'}return ''}
 /* enunciados com formatação (Provas): só etiquetas simples e imagens embutidas */
-function limpa(h){const d=new DOMParser().parseFromString('<div>'+String(h||'')+'</div>','text/html');const OK=['B','STRONG','I','EM','U','SUB','SUP','BR','P','DIV','UL','OL','LI','H3','SPAN','IMG','TABLE','TBODY','TR','TD','TH','S'];
+function limpa(h){const d=new DOMParser().parseFromString('<div>'+String(h||'')+'</div>','text/html');const OK=['B','STRONG','I','EM','U','SUB','SUP','BR','P','DIV','UL','OL','LI','H3','SPAN','IMG','TABLE','TBODY','TR','TD','TH','S','AUDIO','A'];
   const vai=n=>{[...n.childNodes].forEach(c=>{if(c.nodeType===3)return;if(c.nodeType!==1||!OK.includes(c.tagName)){if(c.nodeType===1&&!['SCRIPT','STYLE','IFRAME','OBJECT'].includes(c.tagName)){vai(c);c.replaceWith(...c.childNodes)}else c.remove();return}
-    [...c.attributes].forEach(a=>{if(!(c.tagName==='IMG'&&a.name==='src'&&/^data:image\/(png|jpe?g|gif|webp);base64,/i.test(a.value)))c.removeAttribute(a.name)});if(c.tagName==='IMG'&&!c.getAttribute('src'))c.remove();else vai(c)})};
+    [...c.attributes].forEach(a=>{const ok=(c.tagName==='IMG'&&a.name==='src'&&/^data:image\/(png|jpe?g|gif|webp);base64,/i.test(a.value))||(c.tagName==='AUDIO'&&((a.name==='src'&&/^data:audio\/[a-z0-9.+-]+(;codecs=[a-z0-9.,]+)?;base64,/i.test(a.value))||a.name==='controls'))||(c.tagName==='A'&&a.name==='href'&&/^https?:\/\//i.test(a.value))||(c.tagName==='SPAN'&&a.name==='class'&&/^(fr|fn|fd|rd)$/.test(a.value));if(!ok)c.removeAttribute(a.name)});
+    if(c.tagName==='A'){c.setAttribute('target','_blank');c.setAttribute('rel','noopener')}if(c.tagName==='AUDIO')c.setAttribute('controls','');if((c.tagName==='IMG'||c.tagName==='AUDIO')&&!c.getAttribute('src'))c.remove();else vai(c)})};
   const r=d.body.firstChild;vai(r);return r.innerHTML}
 const MAT=['²','³','√','π','≤','≥','≠','±','×','÷','∞','½','°','∈','∉','∪','∩','⊂','→','α','β','Δ'];
 function contaP(t){return (String(t||'').trim().match(/\S+/g)||[]).length}
