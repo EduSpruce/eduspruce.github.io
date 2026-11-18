@@ -633,6 +633,28 @@ body.esch #subbar{display:none}
 .row>label:not(.chip)>input[type=date]{min-width:150px}
 
 main>section#esch{max-width:none}
+/* RoomCheck 0.9.6 — largura toda e adaptável a qualquer ecrã */
+main>section#rcMapa,main>section#rcLista,main>section#rcEsp{max-width:none}
+#rcMapa>.cols,#rcLista>.cols,#rcEsp>.cols{display:flex;flex-direction:column}
+#rcLista .col[data-col=b]:empty,#rcEsp .col[data-col=b]:empty{display:none}
+@media (min-width:1700px){#rcMapa>.cols{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:0 20px;align-items:start}
+  #rcMapa .col[data-col=b]{position:sticky;top:64px;max-height:calc(100vh - 72px);overflow:auto;padding:0;margin-top:0;scrollbar-width:thin}}
+.rc-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.rc-grid>.rc-cab:first-child,.rc-grid>.rc-horas{position:sticky;left:0;z-index:3;background:#fff}
+.rc-grid>.rc-cab:first-child{align-self:stretch}
+@media (min-width:1500px){.rc-grid.rc-3{grid-template-columns:52px repeat(var(--nd),minmax(150px,1fr));min-width:0}.rc-grid{min-width:0}}
+@media (max-width:1100px){.rc-grid.rc-3{grid-template-columns:46px repeat(var(--nd),minmax(150px,1fr));min-width:calc(46px + var(--nd)*156px)}}
+@media (max-width:700px){
+  .rc-top h2{font-size:19px}.rc-top>.b{width:100%}
+  .rc-bar{margin:12px 0 8px}.rc-esps{flex-wrap:nowrap;overflow-x:auto;width:100%;padding-bottom:2px}.rc-chip{flex:none}
+  .rc-nav b{min-width:0;font-size:13px}
+  .rc-grid{grid-template-columns:40px repeat(var(--nd),minmax(96px,1fr));min-width:calc(40px + var(--nd)*100px);gap:0 4px}
+  .rc-grid.rc-3{grid-template-columns:40px repeat(var(--nd),minmax(132px,1fr));min-width:calc(40px + var(--nd)*136px)}
+  .rc-horas span{font-size:10px;right:3px}
+  .rc-it{flex-wrap:wrap;font-size:13.5px}
+  #rcLista .rc-filt>label,#rcLista .rc-filt>label.grow{flex:1 1 140px}
+  #rcTab,#rcEspTab{overflow-x:auto}.rc-t{min-width:620px}
+}
 </style>
 </head>
 <body>
@@ -1383,7 +1405,7 @@ main>section#esch{max-width:none}
     <div id="rcMsg"></div>
     <div class="rc-scroll"><div id="rcGrid"></div></div>
   </div>
-  <div class="card"><h3 style="margin-top:0">Próximas reservas</h3><div id="rcProx"></div></div>
+  <div class="card" data-col="b"><h3 style="margin-top:0">Próximas reservas</h3><div id="rcProx"></div></div>
 </section>
 
 <!-- ROOMCHECK: LISTA -->
@@ -1423,7 +1445,7 @@ main>section#esch{max-width:none}
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.5"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.6"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo BoxCheck
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
