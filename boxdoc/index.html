@@ -222,6 +222,9 @@ button.gopen:hover{border-color:var(--line);color:var(--brand);background:var(--
 .gsubr{display:grid;grid-template-columns:minmax(200px,1fr) minmax(220px,340px);gap:10px;align-items:center;font-size:13.5px}.gsubr.exc>span{color:#7a4f00;font-weight:600}
 .snq{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;background:#fff}.snqh{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.snqh select{width:auto;max-width:320px}
 .snqi{display:flex;flex-direction:column;gap:2px;font-size:13px;margin:6px 0 2px 4px}
+.cpc{border-top:1px solid var(--line);margin-top:8px;padding-top:6px}.cpc>summary{cursor:pointer;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:14px}
+.cpg{margin:8px 0 4px 14px}.cpgn{font-size:12.5px;font-weight:600;color:var(--muted);text-transform:none}
+.cpo{display:flex;gap:8px;align-items:center;cursor:pointer;font-weight:400}.cpo input{width:auto;margin:0}
 .grow2 .n{color:var(--muted);font-size:13px}
 .grow2 .exc{font-size:12.5px;color:#7a4f00}
 .tag.exc{background:var(--warnbg);color:#7a4f00}
@@ -1460,7 +1463,7 @@ body.temfundos nav.side{padding-bottom:16px}
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.11"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.12"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo BoxCheck
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -1905,13 +1908,38 @@ async function snqProcura(nome){const out=[],vistos=new Set();
 function snqScore(curso,c){const a=semTecnico(curso),b=semTecnico(c.nome);if(a===b)return 100+(c.nivel==="4"?5:0);
   const A=new Set(a.split(" ").filter(w=>w.length>2)),B=new Set(b.split(" ").filter(w=>w.length>2));let k=0;for(const w of A)if(B.has(w))k++;
   return Math.round(k/Math.max(1,new Set([...A,...B]).size)*80)+(c.nivel==="4"?5:0)}
-async function snqReferencial(id,tipo){
+// componente tecnológica: UFCD/UC obrigatórias e opcionais (por bolsa) + horas de opcionais exigidas
+const snqTxt=x=>String(x||"").replace(/\s+/g," ").trim();
+async function snqTec(id,tipo){
   const t=await fetch(`${SNQ_REP}?preview=true&id=${id}&faq=false&tipo=${encodeURIComponent(tipo||"PP")}&tipoReport=FORMACAO`).then(r=>{if(!r.ok)throw new Error("referencial: "+r.status);return r.text()});
-  const d=new DOMParser().parseFromString(t,"text/html"),out=[],vistos=new Set();
-  for(const tr of d.querySelectorAll("tr")){const c=[...tr.cells].map(x=>x.textContent.replace(/\s+/g," ").trim());if(c.length<3)continue;
-    if(!/^(UC\d{3,6}|\d{4,5})$/i.test(c[0])||vistos.has(c[0]))continue;vistos.add(c[0]);
-    out.push({cod:c[0].toUpperCase(),nome:c[2],h:/^\d+$/.test(c[3]||"")?+c[3]:null})}
-  return out}
+  const d=new DOMParser().parseFromString(t,"text/html"),out=[],vistos=new Set();let opc=false,bolsa="";
+  for(const tb of d.querySelectorAll("table")){
+    const hs=[...tb.querySelectorAll(":scope > thead th[colspan]")].map(x=>snqTxt(x.textContent)).filter(Boolean);
+    if(hs.some(h=>/opcion/i.test(h)))opc=true;
+    const b=hs.filter(h=>!/opcionais$|^forma[cç][aã]o tecnol/i.test(h));if(opc&&b.length)bolsa=b[b.length-1];
+    for(const tr of tb.querySelectorAll(":scope > tbody > tr")){const c=[...tr.cells].map(x=>snqTxt(x.textContent));if(c.length<3)continue;
+      if(!/^(UC\d{3,6}|\d{4,5})$/i.test(c[0])||vistos.has(c[0]))continue;vistos.add(c[0]);
+      const it={cod:c[0].toUpperCase(),nome:c[2],h:/^\d+$/.test(c[3]||"")?+c[3]:null};if(opc){it.opc=true;if(bolsa&&!/^bolsa$/i.test(bolsa))it.bolsa=bolsa}out.push(it)}}
+  const m=snqTxt(d.body&&d.body.textContent).match(/realizadas\s+(\d+)\s+horas\s+d[aeo]s?\s+(?:UFCD|UC)\s+opcionais/i);
+  return{itens:out,opcH:m?+m[1]:null}}
+async function snqReferencial(id,tipo){return(await snqTec(id,tipo)).itens}
+// componentes sociocultural e científica (Cursos Profissionais), ou de base (Aprendizagem, EFA)
+const SNQ_MOD={Profissional:"CP",Aprendizagem:"CA",EFA:"EFA"};
+async function snqEscolar(id,mod){
+  const t=await fetch(`https://bocatalogo.snq.gov.pt/reports//EscolarHtml?id=${id}&modalidade=${mod}&preview=true&diplomaId=3&dateVersionNivel2=null`).then(r=>{if(!r.ok)throw new Error("referencial escolar: "+r.status);return r.text()});
+  const d=new DOMParser().parseFromString(t,"text/html"),comps=[];let C=null,G=null;
+  for(const tr of d.querySelectorAll("tr")){if(tr.closest("table.footer"))continue;
+    const sub=tr.querySelector("th.report-subtitle");
+    if(sub){if(!C){C={nome:"Formação",grupos:[]};comps.push(C)}G={nome:snqTxt(sub.textContent),discs:[]};C.grupos.push(G);continue}
+    const th=tr.querySelector("th[colspan]");
+    if(th&&tr.parentElement&&tr.parentElement.tagName==="THEAD"){const n=snqTxt(th.textContent);if(n){C={nome:n,grupos:[]};comps.push(C);G=null}continue}
+    if(tr.classList.contains("header")||!C)continue;
+    const c=[...tr.cells].map(x=>snqTxt(x.textContent));if(c.length<3||!c[0]||/\s/.test(c[0])||!c[1]||/^c[oó]digo$/i.test(c[0]))continue;
+    if(!G){G={nome:"",discs:[]};C.grupos.push(G)}
+    G.discs.push({cod:c[0],nome:c[1],h:/^\d+$/.test(c[2])?+c[2]:null})}
+  comps.forEach(c=>c.grupos=c.grupos.filter(g=>g.discs.length));
+  const L=comps.filter(c=>c.grupos.length),k=n=>/sociocultural|de base/i.test(n)?0:/cient/i.test(n)?1:2;
+  return L.sort((a,b)=>k(a.nome)-k(b.nome))}
 // escolhe a versão do referencial em vigor no início da turma (setembro do ano inicial)
 async function snqVersao(cands,ano){const lim=(ano||new Date().getFullYear())+"-09-01",vs=[];
   for(const c of cands){const d=await fetch(`${SNQ}/qualificacoes/qualificacoesVersoes/${c.id}/false`).then(r=>r.json());
@@ -1924,20 +1952,22 @@ async function snqTurma(turma,forcar){const k=norm(turma),curso=cursoDe(turma),a
   let esc=forcar?cands.filter(c=>c.cod===forcar):[];
   if(!esc.length&&cands.length){const top=cands[0],nb=semTecnico(top.nome);esc=cands.filter(c=>semTecnico(c.nome)===nb&&c.nivel===top.nivel);if(!esc.length)esc=[top]}
   const r={curso,ano,cands:cands.slice(0,12).map(({cod,nivel,id,nome,conceito})=>({cod,nivel,id,nome,conceito})),t:Date.now(),forcar:forcar||""};
-  if(esc.length){const v=await snqVersao(esc,ano);if(v){r.qual={cod:v.qual.cod,nome:v.qual.nome,nivel:v.qual.nivel,id:v.id,data:v.data,conceito:v.conceito};r.itens=await snqReferencial(v.id,v.conceito)}}
+  if(esc.length){const v=await snqVersao(esc,ano);if(v){r.qual={cod:v.qual.cod,nome:v.qual.nome,nivel:v.qual.nivel,id:v.id,data:v.data,conceito:v.conceito};const T=await snqTec(v.id,v.conceito);r.itens=T.itens;r.opcH=T.opcH}}
   (cfg.snq=cfg.snq||{})[k]=r;return r}
 function turmasSNQ(){return [...new Set(ativos().map(m=>m.turma).filter(isTurma))].sort((a,b)=>a.localeCompare(b,"pt",{numeric:true}))}
 function renderSNQ(){const el=$("#snqList");if(!el)return;const T=turmasSNQ();
   if(!T.length){el.innerHTML=`<p class="hint">Ainda não há turmas no formato <code>A01 - Nome do curso (25/28)</code> nesta análise.</p>`;return}
   el.innerHTML=T.map(t=>{const r=(cfg.snq||{})[norm(t)],mods=ativos().filter(m=>m.turma===t);
     if(!r)return `<div class="snq"><div class="snqh"><b>${esc(t)}</b><span class="hint" style="margin:0">ainda não cruzado</span></div></div>`;
-    const it=r.itens||[],tem=new Set(mods.map(m=>modKey(m.cod))),na=it.filter(i=>tem.has(modKey(i.cod))),sem=it.filter(i=>!tem.has(modKey(i.cod)));
-    const fora=mods.filter(m=>/^(uc)?\d{4,}$/.test(modKey(m.cod))&&!it.some(i=>modKey(i.cod)===modKey(m.cod)));
+    const tem=new Set(mods.map(m=>modKey(m.cod))),todos=r.itens||[],cu=cursoDaTurma(t),escO=cu&&Array.isArray(cu.opcEsc)&&cu.opcEsc.length?new Set(cu.opcEsc):null;
+    // as opcionais só contam como em falta se a escola as escolheu (Escola › Cursos); sem escolha, contam só as que já têm pasta
+    const it=todos.filter(i=>!i.opc||(escO?escO.has(i.cod):tem.has(modKey(i.cod)))),na=it.filter(i=>tem.has(modKey(i.cod))),sem=it.filter(i=>!tem.has(modKey(i.cod))),nOpc=todos.filter(i=>i.opc).length;
+    const fora=mods.filter(m=>/^(uc)?\d{4,}$/.test(modKey(m.cod))&&!todos.some(i=>modKey(i.cod)===modKey(m.cod)));
     return `<div class="snq" data-snq="${esc(t)}"><div class="snqh"><b>${esc(t)}</b>
       ${r.qual?`<a href="https://catalogo.snq.gov.pt/qualificacoesDetalhe/${r.qual.id}" target="_blank" rel="noopener">${esc(r.qual.nome)}</a><span class="tag" style="background:#eef1f5;color:#4a5260">${esc(r.qual.cod)} · nível ${esc(r.qual.nivel||"?")} · ${r.qual.conceito==="RA"?"UC":"UFCD"} · referencial de ${esc(r.qual.data)}</span>`:`<span class="tag bad">não encontrado no catálogo</span>`}
       <span class="grow"></span>${r.cands&&r.cands.length>1?`<select data-snqpick><option value="">outra qualificação…</option>${r.cands.map(c=>`<option value="${esc(c.cod)}">${esc(c.nome)} (${esc(c.cod)}, nível ${esc(c.nivel)})</option>`).join("")}</select>`:""}</div>
-      ${r.qual?`<p class="hint" style="margin:6px 0 0"><b>${it.length}</b> ${r.qual.conceito==="RA"?"UC":"UFCD"} no referencial · <b>${na.length}</b> com pasta na Box · <b>${sem.length}</b> sem pasta${fora.length?` · <b>${fora.length}</b> pasta(s) na Box fora do referencial`:""}</p>
-      ${sem.length?`<details><summary class="hint" style="cursor:pointer;margin:4px 0 0">Ver as ${sem.length} sem pasta na Box</summary><div class="snqi">${sem.map(i=>`<span><b>${esc(i.cod)}</b> ${esc(i.nome)}${i.h?` · ${i.h} h`:""}</span>`).join("")}</div></details>`:""}
+      ${r.qual?`<p class="hint" style="margin:6px 0 0"><b>${it.length}</b> ${r.qual.conceito==="RA"?"UC":"UFCD"} no referencial · <b>${na.length}</b> com pasta na Box · <b>${sem.length}</b> sem pasta${fora.length?` · <b>${fora.length}</b> pasta(s) na Box fora do referencial`:""}${nOpc?` · ${escO?`opcionais escolhidas pela escola: <b>${escO.size}</b>`:`opcionais ainda por escolher em Escola › Cursos (${nOpc} na bolsa)`}`:""}</p>
+      ${sem.length?`<details><summary class="hint" style="cursor:pointer;margin:4px 0 0">Ver as ${sem.length} sem pasta na Box</summary><div class="snqi">${sem.map(i=>`<span><b>${esc(i.cod)}</b> ${esc(i.nome)}${i.h?` · ${i.h} h`:""}${i.opc?` <span class="tag" style="background:#eef1f5;color:#4a5260">opcional</span>`:""}</span>`).join("")}</div></details>`:""}
       ${fora.length?`<details><summary class="hint" style="cursor:pointer;margin:4px 0 0">Ver as ${fora.length} fora do referencial</summary><div class="snqi">${fora.map(m=>`<span>${esc(discShort(m.disc))} · <b>${esc(codCurto(m.cod))}</b></span>`).join("")}</div></details>`:""}`:""}</div>`}).join("")}
 async function cruzarSNQ(soTurma,forcar){const T=soTurma?[soTurma]:turmasSNQ();if(!T.length){renderSNQ();return}
   const b=$("#snqGo");b.disabled=true;let n=0,f=[];ponto("Antes de cruzar com o catálogo");
@@ -3896,6 +3926,7 @@ function anosOrd(){return escData().anos.slice().sort((a,b)=>a.ini-b.ini)}
 function turmaNoAno(t,a){if(!a)return false;if(t.anoIni&&t.anoFim)return a.ini>=t.anoIni&&a.ini<t.anoFim;if(t.anoIni)return a.ini===t.anoIni;return true}
 function turmasDoAno(a){a=a||anoAtivo();return escData().turmas.filter(t=>turmaNoAno(t,a)).sort((x,y)=>String(x.cod).localeCompare(String(y.cod),"pt",{numeric:true}))}
 function cursoById(id){return escData().cursos.find(c=>c.id===id)||null}
+function cursoDaTurma(nome){try{const t=escData().turmas.find(x=>norm(x.nome||"")===norm(nome));return t?cursoById(t.cursoId):null}catch(e){return null}}
 function turmaNome(t){if(t.nome)return t.nome;const c=cursoById(t.cursoId),yy=n=>String(n).slice(-2);
   return t.cod+(c?" - "+c.nome:"")+(t.anoIni&&t.anoFim?` (${yy(t.anoIni)}/${yy(t.anoFim)})`:"")}
 function anoCurricular(t,a){a=a||anoAtivo();if(!t.anoIni||!turmaNoAno(t,a))return"";return(a.ini-t.anoIni+1)+".º ano"}
@@ -3977,7 +4008,33 @@ $("#tbFer").addEventListener("click",e=>{if(!e.target.hasAttribute("data-del"))r
 $("#ferAdd").onclick=()=>{const a=escData().anos.find(x=>x.id===$("#ferAno").value);a.ferias.push({nome:"Interrupção letiva",de:"",ate:""});save();renderFerias()};
 
 /* ---------- cursos (com o Catálogo Nacional de Qualificações) ---------- */
+const hSoma=a=>a.reduce((s,i)=>s+(i.h||0),0);
+function grupoEsc(c,g){const ch=(c.gEsc||{})[g.nome];return g.discs.find(d=>d.cod===ch)||g.discs.find(d=>d.h)||g.discs[0]}
+function cursoPlanoHTML(c){const it=c.itens||[],U=c.qual&&c.qual.conceito==="RA"?"UC":"UFCD",ab=k=>CUR_ABERTOS.has(c.id+"|"+k)?" open":"";
+  if(!it.length&&!(c.escolar||[]).length)return "";
+  const li=(cod,nome,h,extra)=>`<span><b>${esc(cod)}</b> ${esc(nome)}${h?` · ${h} h`:""}${extra||""}</span>`;let out="";
+  for(const [ci,comp] of (c.escolar||[]).entries()){let hc=0;
+    const gs=comp.grupos.map((g,gi)=>{const d0=grupoEsc(c,g);hc+=d0&&d0.h||0;
+      if(g.discs.length>1&&/\sou\s/i.test(g.nome)){ // a escola escolhe (ex.: TIC ou Oferta de Escola)
+        const oe=/oferta de escola/i.test(d0.nome);
+        return `<div class="cpg"><div class="cpgn">${esc(g.nome)} <span class="tag" style="background:var(--brandbg);color:var(--brand)">escolha da escola</span></div>
+          <div class="snqh"><select data-gesc="${esc(g.nome)}" style="max-width:420px">${g.discs.map(d=>`<option value="${esc(d.cod)}" ${d===d0?"selected":""}>${esc(d.nome)}${d.h?` · ${d.h} h`:""}</option>`).join("")}</select>
+          ${oe?`<input type="text" data-oesc="${esc(g.nome)}" value="${esc((c.ofertaEsc||{})[g.nome]||"")}" placeholder="Designação da oferta de escola" style="flex:1;min-width:200px">`:""}</div></div>`}
+      const alt=g.discs.filter(d=>d!==d0);
+      return `<div class="cpg"><div class="cpgn">${esc(g.nome||comp.nome)}</div><div class="snqi">${li(d0.cod,d0.nome,d0.h)}${alt.length?`<span class="hint" style="margin:0">Alternativas: ${alt.map(d=>esc(d.nome)).join(" · ")}</span>`:""}</div></div>`}).join("");
+    out+=`<details class="cpc" data-dk="e${ci}"${ab("e"+ci)}><summary><b>${esc(comp.nome)}</b><span class="hint" style="margin:0">${hc?hc+" h":""}</span></summary>${gs}</details>`}
+  if(it.length){const ob=it.filter(i=>!i.opc),op=it.filter(i=>i.opc),es=new Set(c.opcEsc||[]),hE=hSoma(op.filter(i=>es.has(i.cod))),req=c.opcH||0;
+    const st=!op.length?"":req?(hE===req?`<span class="tag" style="background:var(--okbg);color:var(--ok)">${hE} de ${req} h escolhidas</span>`:`<span class="tag ${hE>req?"bad":"exc"}">${hE} de ${req} h escolhidas</span>`):`<span class="tag" style="background:#eef1f5;color:#4a5260">${hE} h escolhidas</span>`;
+    const bol=[...new Set(op.map(i=>i.bolsa||""))];
+    out+=`<details class="cpc" data-dk="tec"${ab("tec")}><summary><b>Formação Tecnológica</b><span class="hint" style="margin:0">${hSoma(ob)} h obrigatórias${op.length?` + ${req?req+" h":""} opcionais`:""}</span>${st}</summary>
+      <div class="cpg"><div class="cpgn">${U} obrigatórias (${ob.length} · ${hSoma(ob)} h)</div><div class="snqi">${ob.map(i=>li(i.cod,i.nome,i.h)).join("")}</div></div>
+      ${op.length?`<div class="cpg"><div class="cpgn">${U} opcionais — a escola escolhe${req?` <b>${req} h</b>`:""} (${op.length} na bolsa)</div>
+        ${bol.map(b=>`${b?`<div class="hint" style="margin:6px 0 2px">${esc(b)}</div>`:""}<div class="snqi">${op.filter(i=>(i.bolsa||"")===b).map(i=>`<label class="cpo"><input type="checkbox" data-opc="${esc(i.cod)}" ${es.has(i.cod)?"checked":""}> ${li(i.cod,i.nome,i.h)}</label>`).join("")}</div>`).join("")}</div>`:""}</details>`}
+  const nota=c.qual&&(c.escolar===undefined||!it.some(i=>"opc" in i)&&c.opcH===undefined)?`<p class="hint" style="margin:6px 0 0">Carregue em <b>Atualizar do catálogo</b> para ver as componentes sociocultural e científica e separar as ${U} obrigatórias das opcionais.</p>`:"";
+  return nota+out}
+let CUR_ABERTOS=new Set();
 function renderCursos(){const e=escData(),q=norm($("#curFilter").value||"");
+  CUR_ABERTOS=new Set([...document.querySelectorAll("#curList [data-cur] details[open][data-dk]")].map(x=>x.closest("[data-cur]").dataset.cur+"|"+x.dataset.dk));
   const L=e.cursos.filter(c=>!q||norm(c.nome+" "+(c.sigla||"")+" "+(c.qual?c.qual.cod+" "+c.qual.nome:"")).includes(q));
   $("#curList").innerHTML=L.map(c=>{const nT=e.turmas.filter(t=>t.cursoId===c.id).length,nA=turmasDoAno().filter(t=>t.cursoId===c.id).length,it=c.itens||[];
     return `<div class="snq" data-cur="${c.id}"><div class="snqh">
@@ -3989,7 +4046,7 @@ function renderCursos(){const e=escData(),q=norm($("#curFilter").value||"");
       <div class="snqh" style="margin-top:8px">${c.qual?`<a href="https://catalogo.snq.gov.pt/qualificacoesDetalhe/${c.qual.id}" target="_blank" rel="noopener">${esc(c.qual.nome)}</a><span class="tag" style="background:#eef1f5;color:#4a5260">${esc(c.qual.cod)} · nível ${esc(c.qual.nivel||"?")} · ${c.qual.conceito==="RA"?"UC":"UFCD"} · referencial de ${esc(c.qual.data||"?")}</span>`:`<span class="tag bad">sem ligação ao catálogo</span>`}
       <span class="grow"></span>${c.cands&&c.cands.length>1?`<select data-pick style="max-width:320px"><option value="">outra qualificação…</option>${c.cands.map(x=>`<option value="${esc(x.cod)}">${esc(x.nome)} (${esc(x.cod)}, nível ${esc(x.nivel)})</option>`).join("")}</select>`:""}
       <button class="b s" data-cnq>${c.qual?"Atualizar do catálogo":"Procurar no catálogo"}</button></div>
-      ${it.length?`<details><summary class="hint" style="cursor:pointer;margin:6px 0 0">Ver as ${it.length} ${c.qual&&c.qual.conceito==="RA"?"UC":"UFCD"} do referencial (${it.reduce((s,i)=>s+(i.h||0),0)} h)</summary><div class="snqi">${it.map(i=>`<span><b>${esc(i.cod)}</b> ${esc(i.nome)}${i.h?` · ${i.h} h`:""}</span>`).join("")}</div></details>`:""}</div>`}).join("")
+      ${cursoPlanoHTML(c)}</div>`}).join("")
     ||`<p class="hint">${e.cursos.length?"Nenhum curso corresponde à procura.":"Ainda sem cursos — crie um acima ou importe as turmas da Box."}</p>`}
 $("#curFilter").addEventListener("input",renderCursos);
 $("#curForm").addEventListener("submit",e=>{e.preventDefault();const nome=$("#cNome").value.trim();if(!nome)return;const E=escData();
@@ -3998,7 +4055,10 @@ $("#curForm").addEventListener("submit",e=>{e.preventDefault();const nome=$("#cN
   if($("#cCnq").checked)cursoCnq(c.id)});
 $("#curList").addEventListener("change",e=>{const box=e.target.closest("[data-cur]");if(!box)return;const c=cursoById(box.dataset.cur);if(!c)return;
   if(e.target.matches("[data-pick]")){if(e.target.value)cursoCnq(c.id,e.target.value);return}
-  const k=e.target.dataset.k;if(!k)return;c[k]=e.target.value.trim();save();if(k==="nome"){renderTurmas();esRecarregar()}});
+  if(e.target.matches("[data-opc]")){const s=new Set(c.opcEsc||[]);e.target.checked?s.add(e.target.dataset.opc):s.delete(e.target.dataset.opc);c.opcEsc=[...s];save();renderCursos();return}
+  if(e.target.matches("[data-gesc]")){(c.gEsc=c.gEsc||{})[e.target.dataset.gesc]=e.target.value;save();renderCursos();return}
+  if(e.target.matches("[data-oesc]")){(c.ofertaEsc=c.ofertaEsc||{})[e.target.dataset.oesc]=e.target.value.trim();save();return}
+  const k=e.target.dataset.k;if(!k)return;c[k]=e.target.value.trim();save();if(k==="nome"){renderTurmas();esRecarregar()}if(k==="tipo"&&c.qual)cursoCnq(c.id,c.qual.cod)});
 $("#curList").addEventListener("click",e=>{const box=e.target.closest("[data-cur]");if(!box)return;const E=escData(),c=cursoById(box.dataset.cur);if(!c)return;
   if(e.target.hasAttribute("data-cnq")){cursoCnq(c.id);return}
   if(e.target.hasAttribute("data-del")){const nT=E.turmas.filter(t=>t.cursoId===c.id).length;if(nT&&!confirm(`O curso ${c.nome} tem ${nT} turma(s). Apagar na mesma? As turmas ficam sem curso.`))return;
@@ -4016,9 +4076,12 @@ async function cursoCnq(id,forcar,calado){const c=cursoById(id);if(!c)return;
     let es=forcar?cands.filter(x=>x.cod===forcar):[];
     if(!es.length&&cands.length){const top=cands[0],nb=semTecnico(top.nome);es=cands.filter(x=>semTecnico(x.nome)===nb&&x.nivel===top.nivel);if(!es.length)es=[top]}
     c.cands=cands.slice(0,12).map(({cod,nivel,id,nome,conceito})=>({cod,nivel,id,nome,conceito}));
-    if(es.length){const v=await snqVersao(es,ini);if(v){c.qual={cod:v.qual.cod,nome:v.qual.nome,nivel:v.qual.nivel,id:v.id,data:v.data,conceito:v.conceito};c.itens=await snqReferencial(v.id,v.conceito)}}
+    if(es.length){const v=await snqVersao(es,ini);if(v){c.qual={cod:v.qual.cod,nome:v.qual.nome,nivel:v.qual.nivel,id:v.id,data:v.data,conceito:v.conceito};
+      const T=await snqTec(v.id,v.conceito);c.itens=T.itens;c.opcH=T.opcH;
+      if(c.opcEsc)c.opcEsc=c.opcEsc.filter(k=>c.itens.some(i=>i.opc&&i.cod===k));
+      const mod=SNQ_MOD[c.tipo||"Profissional"];c.escolar=[];if(mod){try{c.escolar=await snqEscolar(v.id,mod)}catch(x){}}}}
     else c.qual=null;
-    save();if(!calado){$("#curMsg").textContent=c.qual?`${c.nome} → ${c.qual.nome} (${c.itens.length} ${c.qual.conceito==="RA"?"UC":"UFCD"}).`:`${c.nome}: não encontrado no catálogo.`}}
+    save();if(!calado){$("#curMsg").textContent=c.qual?`${c.nome} → ${c.qual.nome} (${c.itens.filter(i=>!i.opc).length} ${c.qual.conceito==="RA"?"UC":"UFCD"} obrigatórias${c.itens.some(i=>i.opc)?` + ${c.itens.filter(i=>i.opc).length} opcionais`:""}${(c.escolar||[]).length?" · "+c.escolar.map(x=>x.nome.replace(/^Formação /,"")).join(", "):""}).`:`${c.nome}: não encontrado no catálogo.`}}
   catch(err){$("#curMsg").textContent="Não foi possível consultar o catálogo: "+err.message}
   renderCursos()}
 
