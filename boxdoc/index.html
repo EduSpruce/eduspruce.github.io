@@ -187,6 +187,31 @@ button.big{width:100%;padding:13px 18px;font-size:16px}
   .bar{width:90px}
   #profForm label{width:100%!important}
 }
+
+.undo{display:flex;gap:4px;margin-right:12px}
+.undo button{font:inherit;font-size:12.5px;border:1px solid var(--line);background:#fff;color:#3d434b;border-radius:999px;padding:5px 10px;cursor:pointer;transition:background .15s}
+.undo button:hover:not(:disabled){background:var(--brandbg);color:var(--brand)}
+.undo button:disabled{opacity:.4;cursor:default}
+.gturma{margin:14px 0 6px;font-weight:700;font-size:14px;display:flex;gap:8px;align-items:center}
+.gturma:first-child{margin-top:0}
+.grow2{display:grid;grid-template-columns:minmax(200px,1.4fr) 90px minmax(220px,1.2fr) minmax(120px,.8fr);gap:10px;align-items:center;padding:6px 10px;border:1px solid var(--line);border-radius:8px;margin-bottom:6px;background:#fff}
+.grow2.vazio{border-left:3px solid #e0a100}
+.grow2 .n{color:var(--muted);font-size:13px}
+.grow2 .exc{font-size:12.5px;color:#7a4f00}
+.tag.exc{background:var(--warnbg);color:#7a4f00}
+.mcard.exc{border-left-color:#c77700}
+.rtab{width:100%;border-collapse:collapse;font-size:13.5px}
+.rtab th{font-size:11.5px}
+.rtab td{padding:7px 6px}
+.rtab tr.s-ok td{color:#4a5260}
+.rtab tr.s-missing td.f,.rtab tr.s-blank td.f{color:#8c1d16;font-weight:600}
+.rtab tr.s-warn td.f{color:#7a4f00;font-weight:600}
+.rtab td.o{font-size:12.5px;color:var(--muted)}
+.rtab td.o b{font-weight:600}
+.rp{display:flex;gap:10px;align-items:center;padding:8px 10px;border:1px solid var(--line);border-radius:8px;margin-bottom:6px}
+.rp .d{color:var(--muted);font-size:12.5px;width:130px;flex:none}
+.rp .l{flex:1}
+@media (max-width:760px){.grow2{grid-template-columns:1fr 1fr}.undo{display:none}}
 </style>
 </head>
 <body>
@@ -217,12 +242,12 @@ button.big{width:100%;padding:13px 18px;font-size:16px}
     <p class="gfoot">Só leitura: a app não altera, move nem apaga nada na Box.</p>
   </div>
 </div>
-<div class="top"><div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="2" width="28" height="28" rx="8" fill="#1a5fd0"/><path d="M10.5 8.5h7.5l4 4v11a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 9 23.5V10a1.5 1.5 0 0 1 1.5-1.5z" fill="#fff"/><path d="M12.5 18l2.3 2.3 4.7-4.7" stroke="#1a5fd0" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Box<b>Check</b></span><span class="ver" data-ver></span></div><span class="sub">Escola Profissional da Ilha de São Jorge</span><span class="grow"></span><span id="who" class="who" style="display:none"></span></div>
+<div class="top"><div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="2" width="28" height="28" rx="8" fill="#1a5fd0"/><path d="M10.5 8.5h7.5l4 4v11a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 9 23.5V10a1.5 1.5 0 0 1 1.5-1.5z" fill="#fff"/><path d="M12.5 18l2.3 2.3 4.7-4.7" stroke="#1a5fd0" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Box<b>Check</b></span><span class="ver" data-ver></span></div><span class="sub">Escola Profissional da Ilha de São Jorge</span><span class="grow"></span><span class="undo"><button id="undoBtn" title="Anular (Ctrl+Z)" disabled>↶ Anular</button><button id="redoBtn" title="Refazer (Ctrl+Shift+Z)" disabled>↷ Refazer</button></span><span id="who" class="who" style="display:none"></span></div>
 <div class="shell">
   <nav id="nav" class="side">
     <button data-t="box" class="on"><svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>Dados da Box</button>
     <button data-t="pas"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>Pastas</button>
-    <button data-t="prof"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>Professores</button>
+    <button data-t="prof"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>Formadores</button>
     <button data-t="config"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Atribuições</button>
     <button data-t="rel"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 15l2 2 4-4"/></svg>Relatório</button>
     <button data-t="env"><svg viewBox="0 0 24 24"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>Enviar</button>
@@ -231,67 +256,81 @@ button.big{width:100%;padding:13px 18px;font-size:16px}
   </nav>
 <main>
 
-<!-- PROFESSORES -->
+<!-- FORMADORES -->
 <section id="prof">
   <div class="card">
-    <h2>Professores</h2>
-    <p class="hint">Registe aqui os professores e os respetivos emails. Depois atribui-lhes os módulos em <b>Atribuições</b>, e o email é usado em <b>Enviar</b>.</p>
+    <h2>Formadores</h2>
+    <p class="hint">Registe aqui os formadores e os respetivos emails. Depois atribui-lhes as disciplinas de cada turma em <b>Atribuições</b>; o email é usado em <b>Enviar</b>.</p>
     <form id="profForm" class="row" style="background:#f6f8fb;border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:14px" autocomplete="off">
       <label style="width:130px">Código interno<input type="text" id="pCod" placeholder="ex.: 0123"></label>
-      <label class="grow">Nome<input type="text" id="pNome" placeholder="Nome do professor" required></label>
+      <label class="grow">Nome<input type="text" id="pNome" placeholder="Nome do formador" required></label>
       <label class="grow">Email<input type="email" id="pEmail" placeholder="nome@escola.pt"></label>
-      <button class="b" type="submit" style="align-self:flex-end">Adicionar professor</button>
+      <button class="b" type="submit" style="align-self:flex-end">Adicionar formador</button>
     </form>
     <div id="pFormMsg"></div>
     <div class="row" style="margin-bottom:10px">
       <label class="grow">Procurar<input type="text" id="profFilter" placeholder="código, nome ou email"></label>
     </div>
     <table class="rt">
-      <thead><tr><th style="width:130px">Código</th><th>Nome</th><th>Email</th><th class="hm">Módulos atribuídos</th><th></th></tr></thead>
+      <thead><tr><th style="width:130px">Código</th><th>Nome</th><th>Email</th><th class="hm">Módulos</th><th></th></tr></thead>
       <tbody id="tbProfs"></tbody>
     </table>
     <div id="profWarn"></div>
   </div>
   <div class="card">
-    <h2>Colar uma lista de professores</h2>
-    <p class="hint">Copie do Excel as colunas <b>código, nome e email</b> (ou só nome e email) e cole aqui, um professor por linha. Também serve <code>código;nome;email</code>. Quem já existir (mesmo código, email ou nome) é atualizado, não duplicado.</p>
+    <h2>Colar uma lista de formadores</h2>
+    <p class="hint">Copie do Excel as colunas <b>código, nome e email</b> (ou só nome e email) e cole aqui, um formador por linha. Também serve <code>código;nome;email</code>. Quem já existir (mesmo código, email ou nome) é atualizado, não duplicado.</p>
     <textarea id="profBulk" placeholder="0123&#9;Ana Silva&#9;ana.silva@escola.pt&#10;0456&#9;Bruno Medeiros&#9;bruno.medeiros@escola.pt"></textarea>
-    <div class="row" style="margin-top:8px"><button class="b" id="profImport">Adicionar professores</button><span id="profMsg" class="hint" style="margin:0"></span></div>
+    <div class="row" style="margin-top:8px"><button class="b" id="profImport">Adicionar formadores</button><span id="profMsg" class="hint" style="margin:0"></span></div>
   </div>
 </section>
 
 <!-- 1. CONFIG -->
 <section id="config">
   <div class="card">
-    <h2>Tipos de documento exigidos</h2>
-    <p class="hint">Cada linha é um documento que cada módulo deve ter. A app considera-o <b>entregue</b> se encontrar um ficheiro cujo caminho contenha as pastas do módulo <b>e</b> a secção do DTP indicada (ex.: <code>006</code> = “006 - Planificações”), cujo nome contenha uma das palavras-chave e tenha uma das extensões. Campos vazios aceitam qualquer valor. Maiúsculas e acentos são ignorados.</p>
+    <h2>Formador por turma e disciplina</h2>
+    <p class="hint">Escolha o formador de cada disciplina em cada turma — todos os módulos/UFCD dessa disciplina ficam dele. Se um módulo for de outro formador (mudança a meio do ano, Português 1 e 2 de um e 3 de outro…), mude-o na lista de <b>Módulos</b> abaixo: fica como <b>exceção</b> e a grelha não lhe toca.</p>
+    <div class="row" style="margin-bottom:10px">
+      <button class="b" id="detect">Detetar módulos e UFCD na listagem da Box</button>
+      <span id="detMsg" class="hint" style="margin:0"></span>
+    </div>
+    <div class="row" style="margin-bottom:10px">
+      <label class="grow">Procurar turma ou disciplina<input type="text" id="gFilter" placeholder="ex.: A01 ou Matemática"></label>
+      <label class="chip" style="align-self:flex-end"><input type="checkbox" id="gEmpty"> só sem formador</label>
+    </div>
+    <div id="grid"></div>
+  </div>
+
+  <div class="card">
+    <h2>Módulos e UFCD</h2>
+    <p class="hint">Cada módulo é identificado pelas pastas <code>turma / disciplina / módulo</code>. O formador vem da grelha acima; escolha outro aqui só quando for uma exceção — e “segue a grelha” para desfazer.</p>
+    <div class="row" style="margin-bottom:10px;background:#f6f8f6;padding:10px;border-radius:8px">
+      <label class="grow">Filtrar módulos<input type="text" id="modFilter" placeholder="ex.: A01 Matemática  ·  !prof = sem formador  ·  !exc = exceções"></label>
+      <label style="min-width:220px">Mudar o formador dos filtrados<select id="bulkProf"></select></label>
+      <button class="b s" id="bulkAssign" style="align-self:flex-end">Aplicar</button>
+    </div>
+    <div id="tbMods" class="mlist"></div>
+    <div class="row" style="margin-top:10px">
+      <button class="b s" id="addMod">+ Módulo</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Documentos exigidos em cada módulo</h2>
+    <p class="hint">Cada linha é um documento que cada módulo deve ter. É <b>entregue</b> se existir um ficheiro dentro das pastas do módulo <b>e</b> da secção/subpasta indicada (ex.: <code>008 / Matrizes</code> = “008 - Avaliação” › … › “Matrizes”). Palavras-chave e extensões são opcionais. Maiúsculas e acentos são ignorados.</p>
+    <div class="row" style="margin-bottom:10px"><button class="b s" id="dtpPreset">Usar o modelo DTP EPISJ (6 documentos)</button></div>
     <table class="rt">
-      <thead><tr><th>Documento</th><th>Secção / pasta</th><th>Palavras-chave (separadas por vírgula)</th><th class="hm">Extensões</th><th class="hm">Mín.</th><th></th></tr></thead>
+      <thead><tr><th>Documento</th><th>Secção / subpasta</th><th>Palavras-chave</th><th class="hm">Extensões</th><th class="hm">Mín.</th><th></th></tr></thead>
       <tbody id="tbDocs"></tbody>
     </table>
     <div class="row" style="margin-top:10px"><button class="b s" id="addDoc">+ Documento</button></div>
   </div>
 
   <div class="card">
-    <h2>Módulos e atribuição</h2>
-    <p class="hint">Cada módulo é identificado pelas pastas que o distinguem, separadas por <code>/</code>, em qualquer ordem — por exemplo <code>997 Mecatrónica Automóvel (23-26) / 1600 - Matemática / Módulo A07</code>. Basta o início do nome da pasta (<code>997 / 1600 / Módulo A07</code>). Depois de carregar a listagem da Box (em Dados da Box), use <b>Detetar módulos</b> para os criar todos de uma vez e atribua-os aos professores com o filtro.</p>
-    <div class="row" style="margin-bottom:10px">
-      <button class="b" id="detect">Detetar módulos na listagem da Box</button>
-      <span id="detMsg" class="hint" style="margin:0"></span>
-    </div>
-    <div class="row" style="margin-bottom:10px;background:#f6f8f6;padding:10px;border-radius:8px">
-      <label class="grow">Filtrar módulos<input type="text" id="modFilter" placeholder="ex.: 997 Matemática  ·  sem professor: escreva !prof"></label>
-      <label style="min-width:200px">Atribuir os filtrados a<select id="bulkProf"></select></label>
-      <button class="b s" id="bulkAssign" style="align-self:flex-end">Atribuir</button>
-    </div>
-    <div id="tbMods" class="mlist"></div>
-    <div class="row" style="margin-top:10px">
-      <button class="b s" id="addMod">+ Módulo</button>
-    </div>
-    <h3>Importar em lote</h3>
-    <p class="hint">Cole linhas de uma folha de cálculo no formato <code>Professor;Email;Módulo;Turma;Pasta</code> (separador <code>;</code>, <code>,</code> ou tabulação). Os professores são criados automaticamente e todos os documentos ficam marcados como exigidos.</p>
-    <textarea id="bulk" placeholder="Ana Silva;ana.silva@escola.pt;M1 - Textos dos media;10A;2025-26/Português/10A/M1&#10;Ana Silva;ana.silva@escola.pt;M2 - Poesia;10A;2025-26/Português/10A/M2"></textarea>
-    <div class="row" style="margin-top:8px"><button class="b" id="doBulk">Importar linhas</button><span id="bulkMsg" class="hint" style="margin:0"></span></div>
+    <h2>Designações dos módulos e UFCD</h2>
+    <p class="hint">O nome de cada módulo/UFCD (ex.: Módulo A07 = “Probabilidade”, UFCD 1544 = “Sistemas de injeção diesel”) aparece no relatório e nos emails. Cole do Excel <code>disciplina; módulo; designação</code> (ex.: <code>1600; Módulo A07; Probabilidade</code>) ou só <code>código; designação</code> para UFCD (ex.: <code>1544; Sistemas de injeção diesel</code>). Também pode escrever a designação diretamente em cada módulo.</p>
+    <textarea id="desBulk" placeholder="1600&#9;Módulo A07&#9;Probabilidade&#10;1544&#9;Sistemas de injeção diesel"></textarea>
+    <div class="row" style="margin-top:8px"><button class="b" id="desImport">Guardar designações</button><span id="desMsg" class="hint" style="margin:0"></span></div>
   </div>
 </section>
 
@@ -376,8 +415,8 @@ button.big{width:100%;padding:13px 18px;font-size:16px}
   <div class="tiles" id="tiles"></div>
   <div class="card">
     <div class="row">
-      <label class="grow">Professor<select id="fProf"></select></label>
-      <label class="grow">Mostrar<select id="fShow"><option value="falta">Só o que falta</option><option value="aviso">O que falta e o que é suspeito</option><option value="tudo">Tudo (entregue e em falta)</option></select></label>
+      <label class="grow">Formador<select id="fProf"></select></label>
+      <label class="grow">Mostrar<select id="fShow"><option value="falta">Só o que falta</option><option value="aviso">O que falta e o que é suspeito</option><option value="desde">Entregue desde o último envio</option><option value="tudo">Tudo (entregue e em falta)</option></select></label>
       <label class="grow">Procurar módulo/turma<input type="text" id="fTxt" placeholder="ex.: 10A"></label>
     </div>
     <div class="row" style="margin-top:10px">
@@ -402,10 +441,30 @@ button.big{width:100%;padding:13px 18px;font-size:16px}
 <!-- 4. ENVIAR -->
 <section id="env">
   <div class="card">
-    <h2>Relatório geral</h2>
-    <p class="hint">Copie o relatório completo de não entregues (texto para email/documento ou CSV para Excel).</p>
+    <h2>Emails aos formadores</h2>
+    <p class="hint">Campos do modelo: <code>{primeiro_nome}</code> <code>{nome}</code> <code>{ano}</code> <code>{prazo}</code> <code>{total}</code> <code>{lista}</code>.</p>
     <div class="row">
-      <button class="b" id="cpTxt">Copiar relatório (texto)</button>
+      <label class="grow">Assunto<input type="text" id="mSubj"></label>
+      <label style="width:150px">Ano letivo<input type="text" id="mAno" placeholder="2025/2026"></label>
+      <label style="width:150px">Prazo<input type="text" id="mPrazo" placeholder="27/11/2026"></label>
+    </div>
+    <label>Mensagem<textarea id="mBody" style="font-family:inherit;font-size:14px;min-height:220px"></textarea></label>
+    <div class="row" style="margin-top:8px"><button class="b s" id="mReset">Repor o texto EPISJ</button></div>
+  </div>
+  <div class="card">
+    <h2>Excel de emails e registo do envio</h2>
+    <p class="hint">Gera o ficheiro Excel no formato da escola: folha <b>Índice</b> com o número de itens por formador e uma folha por formador com o assunto, o email pronto a copiar e a tabela <i>Turma · Disciplina · Módulo/UFCD · Localização na Box · O que está em falta · Observações</i>.<br>Ao <b>registar o envio</b>, a app guarda o que estava em falta nesse dia: nas análises seguintes mostra o que foi <b>entregue desde o envio</b>, o que <b>continua em falta</b> e o que é <b>novo</b>.</p>
+    <div class="row">
+      <button class="b" id="xlsGo">Gerar Excel de emails</button>
+      <label class="chip" style="align-self:center"><input type="checkbox" id="xlsReg" checked> registar este envio</label>
+      <button class="b s" id="regGo">Só registar o envio</button>
+    </div>
+    <div id="envios" style="margin-top:12px"></div>
+  </div>
+  <div class="card">
+    <h2>Relatório geral</h2>
+    <div class="row">
+      <button class="b s" id="cpTxt">Copiar relatório (texto)</button>
       <button class="b s" id="cpCsv">Copiar relatório (CSV)</button>
       <button class="b s" id="dlCsv">Descarregar Excel (CSV)</button>
       <button class="b s" id="prRep">Imprimir / guardar PDF</button>
@@ -417,15 +476,9 @@ button.big{width:100%;padding:13px 18px;font-size:16px}
     <div class="mailbox" id="geralPrev" style="max-height:260px;overflow:auto"></div>
   </div>
   <div class="card">
-    <h2>Mensagens aos professores</h2>
-    <p class="hint">Uma mensagem por professor com o que lhe falta. Pode editar o modelo: <code>{nome}</code>, <code>{lista}</code>, <code>{prazo}</code>, <code>{total}</code>.</p>
-    <div class="row">
-      <label class="grow">Assunto<input type="text" id="mSubj"></label>
-      <label style="width:200px">Prazo<input type="text" id="mPrazo" placeholder="ex.: 30 de junho"></label>
-    </div>
-    <label>Mensagem<textarea id="mBody" style="font-family:inherit;font-size:14px;min-height:150px"></textarea></label>
-    <p class="hint" style="margin-top:12px">“Abrir no email” abre o seu programa de email (Outlook, Mail, Gmail…) com a mensagem já escrita — só tem de carregar em Enviar.</p>
-    <div id="mails" style="margin-top:12px"></div>
+    <h2>Mensagens individuais</h2>
+    <p class="hint">“Abrir no email” abre o seu programa de email (Outlook, Mail, Gmail…) com a mensagem já escrita — só tem de carregar em Enviar.</p>
+    <div id="mails"></div>
   </div>
 </section>
 
@@ -439,6 +492,12 @@ button.big{width:100%;padding:13px 18px;font-size:16px}
     <div class="row" style="margin-top:8px"><button class="b s" id="loadCfg">Carregar o texto acima</button><button class="b s" id="resetAll" style="border-color:var(--bad);color:var(--bad)">Apagar tudo</button></div>
     <div id="cfgMsg"></div>
   </div>
+  <div class="card">
+    <h2>Pontos de restauro</h2>
+    <p class="hint">Antes de cada operação grande (deteção de módulos, modelo DTP, importações, registo de envio, atualização da app…) a configuração é guardada aqui automaticamente. Para voltar atrás, clique em <b>Restaurar</b>. Para pequenas alterações use <b>↶ Anular</b> no topo (ou Ctrl+Z).</p>
+    <div class="row" style="margin-bottom:10px"><button class="b s" id="rpNow">Criar ponto de restauro agora</button></div>
+    <div id="rpList"></div>
+  </div>
 </section>
 </main>
 </div>
@@ -447,7 +506,7 @@ button.big{width:100%;padding:13px 18px;font-size:16px}
 <script>
 (function(){
 "use strict";
-const VERSAO="0.3"; // versão do BoxCheck — sobe a cada alteração publicada
+const VERSAO="0.4"; // versão do BoxCheck — sobe a cada alteração publicada
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 const $=s=>document.querySelector(s);
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -457,37 +516,112 @@ const normPath=s=>norm(s).split("/").map(x=>x.trim()).filter(Boolean).join("/");
 const splitList=s=>String(s||"").split(/[,;]/).map(x=>norm(x).replace(/^\./,"")).filter(Boolean);
 
 const KEY="entregas_box_v1";
-const defaultCfg=()=>({
-  docTypes:[
-    {id:uid(),nome:"Planificação",subpasta:"006",palavras:"planificacao, plano",ext:"pdf, docx",min:1},
-    {id:uid(),nome:"Recursos didáticos / fichas",subpasta:"007",palavras:"",ext:"pdf",min:1},
-    {id:uid(),nome:"Teste / prova do módulo",subpasta:"",palavras:"teste, prova",ext:"pdf, docx",min:1}
-  ],
-  profs:[], mods:[],
-  mail:{subj:"Documentação em falta na Box",prazo:"",
-    body:"Caro(a) {nome},\n\nNa verificação das pastas da Box, constatei que ainda falta entregar a seguinte documentação ({total} documento(s)):\n\n{lista}\n\nPeço que a coloque nas pastas respetivas até {prazo}.\n\nObrigado,\nA Direção"}
-});
+/* ---------- modelos por omissão (EPISJ) ---------- */
+const DTP_TYPES=[["Planificação","006"],["Recursos Didáticos","007"],["Orientação Educativa","012"],
+  ["Enunciados e Prop. de Correção","008 / Enunciados"],["Matrizes","008 / Matrizes"],["Testes e Fichas de Avaliação","008 / Testes"]];
+const dtpTypes=()=>DTP_TYPES.map(([nome,subpasta])=>({id:uid(),nome,subpasta,palavras:"",ext:"",min:1}));
+const MAIL_SUBJ="Documentos em falta na Box — Ano letivo {ano}";
+const MAIL_BODY="Olá {primeiro_nome},\n\nRemeto a lista de materiais e documentos referentes ao ano letivo {ano} que ainda não foram submetidos na Box ({total} item(ns)):\n\n{lista}\n\nEsta solicitação já foi reiterada em diversas ocasiões nos últimos meses, sem que se tenha verificado a respetiva regularização. Tratando-se de documentação essencial para a organização pedagógica da Escola e para os processos de financiamento e certificação, solicito que a submissão seja concluída até ao dia {prazo}.\n\nSolicito ainda feedback escrito, confirmando a conclusão da submissão ou, na sua ausência, a devida justificação para a inexistência do documento.\n\nDada a necessidade de encerrar definitivamente o processo relativo ao ano letivo {ano}, agradeço que este pedido não necessite de ser novamente reiterado.\n\nCom os melhores cumprimentos,";
+const OLD_BODY="Caro(a) {nome},\n\nNa verificação das pastas da Box, constatei que ainda falta entregar a seguinte documentação ({total} documento(s)):\n\n{lista}\n\nPeço que a coloque nas pastas respetivas até {prazo}.\n\nObrigado,\nA Direção";
+const defaultCfg=()=>({schema:2,docTypes:dtpTypes(),profs:[],mods:[],grid:{},desig:{},envios:[],
+  mail:{subj:MAIL_SUBJ,prazo:"",ano:"",body:MAIL_BODY,relatorio_para:""},qual:{min:40,dup:true}});
 let cfg=load()||defaultCfg();
-let files=[]; // {path, rawDir, comps, name, nname, date}
-let folders=[]; // caminhos de pastas (para detetar módulos, incluindo pastas vazias)
+let files=[]; // {path, rawDir, comps, name, nname, date, fid, size, sha1}
+let folders=[]; // caminhos de pastas (para detetar módulos e saber se uma pasta existe)
 let rawRows=null, rawHead=null;
 
 function load(){try{const t=localStorage.getItem(KEY);return t?JSON.parse(t):null}catch(e){return null}}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(cfg))}catch(e){}}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(cfg))}catch(e){}}
+
+/* ---------- histórico: anular / refazer ---------- */
+let undoS=[],redoS=[],lastJSON=JSON.stringify(cfg),lastPush=0;
+function save(){
+  const cur=JSON.stringify(cfg);
+  if(cur!==lastJSON){
+    if(Date.now()-lastPush>1500||!undoS.length){undoS.push(lastJSON);if(undoS.length>80)undoS.shift()}
+    redoS=[];lastPush=Date.now();lastJSON=cur;
+  }
+  persist();undoUI();
+}
+function undoUI(){$("#undoBtn").disabled=!undoS.length;$("#redoBtn").disabled=!redoS.length}
+function goHist(from,to,msg){if(!from.length)return;to.push(lastJSON);lastJSON=from.pop();cfg=JSON.parse(lastJSON);lastPush=0;persist();undoUI();refreshAll();toast(msg)}
+const undo=()=>goHist(undoS,redoS,"Alteração anulada");
+const redo=()=>goHist(redoS,undoS,"Alteração refeita");
+$("#undoBtn").onclick=undo;$("#redoBtn").onclick=redo;
+document.addEventListener("keydown",e=>{
+  if(!(e.ctrlKey||e.metaKey)||/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName))return;
+  const k=e.key.toLowerCase();
+  if(k==="z"&&!e.shiftKey){e.preventDefault();undo()}else if((k==="z"&&e.shiftKey)||k==="y"){e.preventDefault();redo()}});
+
+/* ---------- pontos de restauro ---------- */
+const RPKEY="boxcheck_pontos";
+function rpList(){try{return JSON.parse(localStorage.getItem(RPKEY)||"[]")}catch(e){return[]}}
+function ponto(label){try{const l=rpList();l.unshift({t:Date.now(),label,cfg:JSON.stringify(cfg)});localStorage.setItem(RPKEY,JSON.stringify(l.slice(0,25)))}catch(e){}renderRP()}
+function renderRP(){const el=$("#rpList");if(!el)return;const l=rpList();
+  el.innerHTML=l.map((p,i)=>{let n="";try{const c=JSON.parse(p.cfg);n=`${c.profs.length} formadores · ${c.mods.length} módulos`}catch(e){}
+    return `<div class="rp"><span class="d">${new Date(p.t).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"})}</span><span class="l">${esc(p.label)} <span class="hint" style="margin:0">· ${n}</span></span><button class="b s" data-rp="${i}">Restaurar</button></div>`}).join("")||`<p class="hint">Ainda não há pontos de restauro.</p>`}
+$("#rpList").addEventListener("click",e=>{const b=e.target.closest("[data-rp]");if(!b)return;const p=rpList()[+b.dataset.rp];if(!p)return;
+  ponto("Antes de restaurar “"+p.label+"”");cfg=JSON.parse(p.cfg);migrate();save();refreshAll();toast("Configuração restaurada")});
+$("#rpNow").onclick=()=>{ponto("Ponto criado manualmente");toast("Ponto de restauro criado")};
+
+/* ---------- módulos: turma, disciplina, código, formador, designação ---------- */
+const isDisc=c=>/^\d{4}\s*-\s*\S/.test(String(c).trim());
+const isTurma=c=>/\(\d{2}\s*-\s*\d{2}\)/.test(c);
+const isModName=c=>/^(modulo|mod\.?|ufcd)\s*[a-z0-9]/.test(norm(c));
+const discCode=d=>(String(d||"").match(/^\s*(\d{3,5})/)||[])[1]||norm(d);
+const discShort=d=>String(d||"").replace(/^\s*\d+\s*-\s*/,"");
+const modKey=c=>norm(c).replace(/^(modulo|mod\.?|ufcd)\s*/,"").replace(/^0+(?=[a-z0-9])/,"");
+const gridKey=m=>norm(m.turma)+"|"+discCode(m.disc);
+function fillModFields(m){
+  if(m.disc&&m.cod)return;
+  const parts=String(m.pasta||"").split("/").map(x=>x.trim()).filter(Boolean);
+  if(!m.disc)m.disc=parts.find(isDisc)||(parts.length>=2?parts[parts.length-2]:"");
+  if(!m.cod)m.cod=parts.filter(p=>p!==m.disc&&p!==m.turma&&!isTurma(p)).pop()||m.nome||"";
+}
+const profOf=m=>m.profId||cfg.grid[gridKey(m)]||"";
+const isExc=m=>!!m.profId&&m.profId!==(cfg.grid[gridKey(m)]||"");
+const profName=id=>(cfg.profs.find(p=>p.id===id)||{}).nome||"";
+const desigOf=m=>cfg.desig[discCode(m.disc)+"|"+modKey(m.cod)]||cfg.desig["*|"+modKey(m.cod)]||"";
+const modTitle=m=>(m.cod||m.nome||"(módulo)")+(desigOf(m)?" — "+desigOf(m):"");
+const modLabel=m=>[discShort(m.disc),modTitle(m),m.turma].filter(Boolean).join(" · ");
+
+/* ---------- atualização da configuração antiga ---------- */
+function migrate(){
+  cfg.grid=cfg.grid||{};cfg.desig=cfg.desig||{};cfg.envios=cfg.envios||[];cfg.qual=cfg.qual||{min:40,dup:true};
+  cfg.mail=Object.assign({subj:MAIL_SUBJ,prazo:"",ano:"",body:MAIL_BODY,relatorio_para:""},cfg.mail||{});
+  cfg.mods.forEach(fillModFields);
+  if((cfg.schema||1)<2){
+    ponto("Antes da atualização para a v"+VERSAO);
+    const old=["Planificação","Recursos didáticos / fichas","Teste / prova do módulo"];
+    if(cfg.docTypes.length===3&&cfg.docTypes.every((d,i)=>d.nome===old[i])){cfg.docTypes=dtpTypes();cfg.mods.forEach(m=>m.docs=cfg.docTypes.map(d=>d.id))}
+    if(cfg.mail.body===OLD_BODY)cfg.mail.body=MAIL_BODY;
+    if(cfg.mail.subj==="Documentação em falta na Box")cfg.mail.subj=MAIL_SUBJ;
+    // atribuições feitas módulo a módulo → grelha (quando todos os módulos da turma/disciplina têm o mesmo formador)
+    const g=new Map();cfg.mods.forEach(m=>{const k=gridKey(m);if(!g.has(k))g.set(k,[]);g.get(k).push(m)});
+    for(const [k,list] of g){const ids=[...new Set(list.map(m=>m.profId||""))];
+      if(ids.length===1&&ids[0]&&!cfg.grid[k]){cfg.grid[k]=ids[0];list.forEach(m=>m.profId="")}}
+    cfg.schema=2;
+  }
+}
+migrate();persist();lastJSON=JSON.stringify(cfg);
+
 function download(name,text,type){
-  try{const b=new Blob([text],{type:type||"text/plain;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+  try{const b=text instanceof Blob?text:new Blob([text],{type:type||"text/plain;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
   catch(e){toast("Não foi possível descarregar — use Copiar")}}
 const hoje=()=>new Date().toISOString().slice(0,10);
+const dataPT=t=>new Date(t).toLocaleDateString("pt-PT");
 function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("on"),2200)}
 async function copy(txt){try{await navigator.clipboard.writeText(txt);toast("Copiado")}catch(e){toast("Não foi possível copiar — selecione o texto e use Ctrl+C")}}
 
 /* ---------- tabs ---------- */
+let curTab="box";
 $("#nav").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;show(b.dataset.t)});
-function show(t){document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
+function show(t){curTab=t;document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
   document.querySelectorAll("main>section").forEach(s=>s.classList.toggle("on",s.id===t));
-  if(t==="rel")renderReport(); if(t==="pas")renderTree(); if(t==="env")renderSend(); if(t==="cop")$("#cfgTxt").value=JSON.stringify(cfg,null,2);}
+  if(t==="rel")renderReport(); if(t==="pas")renderTree(); if(t==="env")renderSend(); if(t==="cop"){$("#cfgTxt").value=JSON.stringify(cfg,null,2);renderRP()}}
+function refreshAll(){renderAll();if(curTab==="rel")renderReport();if(curTab==="env")renderSend();if(curTab==="cop"){$("#cfgTxt").value=JSON.stringify(cfg,null,2);renderRP()}}
 
-/* ---------- config rendering ---------- */
+/* ---------- documentos exigidos ---------- */
 function renderDocs(){
   $("#tbDocs").innerHTML=cfg.docTypes.map(d=>`<tr data-id="${d.id}">
    <td><input type="text" data-k="nome" value="${esc(d.nome)}"></td>
@@ -500,40 +634,44 @@ function renderDocs(){
 $("#tbDocs").addEventListener("input",e=>{const tr=e.target.closest("tr");const d=cfg.docTypes.find(x=>x.id===tr.dataset.id);const k=e.target.dataset.k;d[k]=k==="min"?Math.max(1,parseInt(e.target.value)||1):e.target.value;save();if(k==="nome")renderMods()});
 $("#tbDocs").addEventListener("click",e=>{if(!e.target.hasAttribute("data-del"))return;const id=e.target.closest("tr").dataset.id;cfg.docTypes=cfg.docTypes.filter(x=>x.id!==id);cfg.mods.forEach(m=>m.docs=m.docs.filter(x=>x!==id));save();renderAll()});
 $("#addDoc").onclick=()=>{const d={id:uid(),nome:"Novo documento",subpasta:"",palavras:"",ext:"",min:1};cfg.docTypes.push(d);cfg.mods.forEach(m=>m.docs.push(d.id));save();renderAll()};
+$("#dtpPreset").onclick=()=>{ponto("Antes de aplicar o modelo DTP EPISJ");cfg.docTypes=dtpTypes();cfg.mods.forEach(m=>m.docs=cfg.docTypes.map(d=>d.id));save();renderAll();toast("Modelo DTP EPISJ aplicado (pode anular)")};
 
+/* ---------- formadores ---------- */
 function renderProfs(){
   const q=norm(($("#profFilter")||{}).value||"");
   const list=cfg.profs.filter(p=>!q||norm((p.cod||"")+" "+p.nome+" "+p.email).includes(q));
   const semMail=cfg.profs.filter(p=>!/\S+@\S+\.\S+/.test(p.email||"")).length;
-  const wEl=$("#profWarn");if(wEl)wEl.innerHTML=cfg.profs.length?(semMail?`<div class="msg bad">${semMail} professor(es) sem email válido — não vão receber mensagens.</div>`:`<div class="msg ok">${cfg.profs.length} professor(es), todos com email.</div>`):"";
+  const cnt={};cfg.mods.forEach(m=>{const p=profOf(m);if(p)cnt[p]=(cnt[p]||0)+1});
+  const wEl=$("#profWarn");if(wEl)wEl.innerHTML=cfg.profs.length?(semMail?`<div class="msg bad">${semMail} formador(es) sem email válido — não vão receber mensagens.</div>`:`<div class="msg ok">${cfg.profs.length} formador(es), todos com email.</div>`):"";
   $("#tbProfs").innerHTML=list.map(p=>`<tr data-id="${p.id}">
    <td><input type="text" data-k="cod" value="${esc(p.cod||"")}"></td>
    <td><input type="text" data-k="nome" value="${esc(p.nome)}"></td>
    <td><input type="email" data-k="email" value="${esc(p.email)}"></td>
-   <td class="hm" style="color:var(--muted)">${cfg.mods.filter(m=>m.profId===p.id).length}</td>
-   <td><button class="x" title="Remover" data-del>×</button></td></tr>`).join("")||`<tr><td colspan="5" class="hint">${cfg.profs.length?"Ninguém corresponde à procura.":"Ainda sem professores — adicione no formulário acima ou cole uma lista abaixo."}</td></tr>`;
+   <td class="hm" style="color:var(--muted)">${cnt[p.id]||0}</td>
+   <td><button class="x" title="Remover" data-del>×</button></td></tr>`).join("")||`<tr><td colspan="5" class="hint">${cfg.profs.length?"Ninguém corresponde à procura.":"Ainda sem formadores — adicione no formulário acima ou cole uma lista abaixo."}</td></tr>`;
 }
-$("#tbProfs").addEventListener("input",e=>{const tr=e.target.closest("tr");const p=cfg.profs.find(x=>x.id===tr.dataset.id);p[e.target.dataset.k]=e.target.value;save();if(e.target.dataset.k==="nome")renderMods()});
-$("#tbProfs").addEventListener("click",e=>{if(!e.target.hasAttribute("data-del"))return;const id=e.target.closest("tr").dataset.id;cfg.profs=cfg.profs.filter(x=>x.id!==id);cfg.mods.forEach(m=>{if(m.profId===id)m.profId=""});save();renderAll()});
+$("#tbProfs").addEventListener("input",e=>{const tr=e.target.closest("tr");const p=cfg.profs.find(x=>x.id===tr.dataset.id);p[e.target.dataset.k]=e.target.value;save();if(e.target.dataset.k==="nome"){renderMods();renderGrid()}});
+$("#tbProfs").addEventListener("click",e=>{if(!e.target.hasAttribute("data-del"))return;const id=e.target.closest("tr").dataset.id;
+  cfg.profs=cfg.profs.filter(x=>x.id!==id);cfg.mods.forEach(m=>{if(m.profId===id)m.profId=""});for(const k in cfg.grid)if(cfg.grid[k]===id)delete cfg.grid[k];save();renderAll();toast("Formador removido (pode anular)")});
 $("#profForm").addEventListener("input",()=>{$("#pFormMsg").innerHTML=""});
 $("#profForm").addEventListener("submit",e=>{e.preventDefault();
   const cod=$("#pCod").value.trim(),nome=$("#pNome").value.trim(),email=$("#pEmail").value.trim();
   const msg=(t,k)=>{$("#pFormMsg").innerHTML=`<div class="msg ${k}" style="margin:0 0 12px">${esc(t)}</div>`};
-  if(!nome){msg("Indique o nome do professor.","bad");$("#pNome").focus();return}
+  if(!nome){msg("Indique o nome do formador.","bad");$("#pNome").focus();return}
   if(email&&!/^\S+@\S+\.\S+$/.test(email)){msg("O email não parece válido.","bad");$("#pEmail").focus();return}
   const dup=cfg.profs.find(p=>(cod&&norm(p.cod)===norm(cod))||(email&&norm(p.email)===norm(email)));
-  if(dup){msg(`Já existe um professor com ${cod&&norm(dup.cod)===norm(cod)?"esse código":"esse email"}: ${dup.nome}.`,"bad");return}
+  if(dup){msg(`Já existe um formador com ${cod&&norm(dup.cod)===norm(cod)?"esse código":"esse email"}: ${dup.nome}.`,"bad");return}
   cfg.profs.push({id:uid(),cod,nome,email});cfg.profs.sort((a,b)=>a.nome.localeCompare(b.nome,"pt"));save();renderAll();
   msg(`${nome} adicionado(a).`,"ok");$("#profForm").reset();$("#pCod").focus();});
-
 $("#profFilter").addEventListener("input",renderProfs);
 $("#profImport").onclick=()=>{
+  const lines=$("#profBulk").value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);if(!lines.length)return;
+  ponto("Antes de colar uma lista de formadores");
   let add=0,upd=0,bad=0;
-  for(const l of $("#profBulk").value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean)){
+  for(const l of lines){
     const em=(l.match(/[^\s;,<>"]+@[^\s;,<>"]+\.[^\s;,<>"]+/)||[])[0]||"";
-    if(!em&&(/e-?mail|c[oó]digo/i.test(l)||/^(nome|name|professor(es)?)$/i.test(l.trim())))continue; // linha de cabeçalho
+    if(!em&&(/e-?mail|c[oó]digo/i.test(l)||/^(nome|name|professor(es)?|formador(es)?)$/i.test(l.trim())))continue; // linha de cabeçalho
     let parts=l.replace(em,"").replace(/[<>"]/g,"").split(/\t|;|,/).map(x=>x.trim()).filter(Boolean);
-    // código interno: primeira coluna curta, sem espaços e com algarismos (ex.: 0123, P045)
     let cod="";if(parts.length>=2&&/^[\w.\-\/]{1,12}$/.test(parts[0])&&/\d/.test(parts[0])){cod=parts.shift()}
     let nm=parts.join(" ").trim();
     if(!nm&&!em){bad++;continue}
@@ -546,66 +684,105 @@ $("#profImport").onclick=()=>{
   $("#profMsg").textContent=`${add} adicionado(s), ${upd} atualizado(s)${bad?`, ${bad} linha(s) ignorada(s)`:""}.`;
   if(add||upd)$("#profBulk").value="";
 };
-function profOpts(sel){return `<option value="">— escolher —</option>`+cfg.profs.slice().sort((a,b)=>a.nome.localeCompare(b.nome,"pt")).map(p=>`<option value="${p.id}" ${p.id===sel?"selected":""}>${esc(p.nome||"(sem nome)")}${p.cod?` (${esc(p.cod)})`:""}</option>`).join("")}
+function profOpts(sel,first){return (first??`<option value="">— escolher —</option>`)+cfg.profs.slice().sort((a,b)=>a.nome.localeCompare(b.nome,"pt")).map(p=>`<option value="${p.id}" ${p.id===sel?"selected":""}>${esc(p.nome||"(sem nome)")}${p.cod?` (${esc(p.cod)})`:""}</option>`).join("")}
+
+/* ---------- grelha turma × disciplina ---------- */
+function gridRows(){
+  const map=new Map();
+  for(const m of cfg.mods){const k=gridKey(m);if(!map.has(k))map.set(k,{k,turma:m.turma,disc:m.disc,mods:[]});map.get(k).mods.push(m)}
+  return [...map.values()].sort((a,b)=>a.turma.localeCompare(b.turma,"pt",{numeric:true})||a.disc.localeCompare(b.disc,"pt",{numeric:true}));
+}
+function renderGrid(){
+  const q=norm($("#gFilter").value),only=$("#gEmpty").checked;
+  const rows=gridRows().filter(r=>(!q||norm(r.turma+" "+r.disc).includes(q))&&(!only||!cfg.grid[r.k]));
+  let html="",last=null;
+  for(const r of rows){
+    if(r.turma!==last){html+=`<div class="gturma">${esc(r.turma||"(sem turma)")}</div>`;last=r.turma}
+    const exc=r.mods.filter(isExc);
+    html+=`<div class="grow2${cfg.grid[r.k]?"":" vazio"}" data-g="${esc(r.k)}"><span>${esc(r.disc||"(sem disciplina)")}</span><span class="n">${r.mods.length} módulo${r.mods.length===1?"":"s"}</span>
+      <select data-grid>${profOpts(cfg.grid[r.k]||"",`<option value="">— sem formador —</option>`)}</select>
+      <span class="exc">${exc.length?`<a href="#" data-excf="${esc(r.turma+" "+discShort(r.disc))}">${exc.length} exceção${exc.length===1?"":"ões"}: ${esc([...new Set(exc.map(m=>profName(m.profId)))].join(", "))}</a>`:""}</span></div>`;
+  }
+  const all=gridRows(),sem=all.filter(r=>!cfg.grid[r.k]).length;
+  $("#grid").innerHTML=(all.length?`<p class="hint">${all.length} disciplinas em ${new Set(all.map(r=>r.turma)).size} turmas · ${sem} sem formador</p>`:"")+(html||`<p class="hint">${cfg.mods.length?"Nada corresponde ao filtro.":"Ainda sem módulos: carregue a listagem da Box e clique em “Detetar módulos e UFCD”."}</p>`);
+}
+$("#gFilter").addEventListener("input",renderGrid);$("#gEmpty").addEventListener("change",renderGrid);
+$("#grid").addEventListener("change",e=>{if(!e.target.matches("[data-grid]"))return;const k=e.target.closest("[data-g]").dataset.g;
+  if(e.target.value)cfg.grid[k]=e.target.value;else delete cfg.grid[k];
+  cfg.mods.forEach(m=>{if(gridKey(m)===k&&m.profId===e.target.value)m.profId=""}); // deixa de ser exceção se coincidir
+  save();renderGrid();renderMods();renderProfs()});
+$("#grid").addEventListener("click",e=>{const a=e.target.closest("[data-excf]");if(!a)return;e.preventDefault();$("#modFilter").value="!exc "+a.dataset.excf;renderMods();$("#tbMods").scrollIntoView({behavior:"smooth",block:"start"})});
+
+/* ---------- lista de módulos (exceções) ---------- */
 function modVisible(m){const q=norm($("#modFilter").value);if(!q)return true;
-  const noProf=q.includes("!prof");const rest=q.replace("!prof","").trim();
-  if(noProf&&m.profId)return false;
-  const prof=(cfg.profs.find(p=>p.id===m.profId)||{}).nome||"";
-  const hay=norm([m.nome,m.turma,m.pasta,prof].join(" "));
+  let rest=q;const noProf=rest.includes("!prof"),exc=rest.includes("!exc");rest=rest.replace("!prof","").replace("!exc","").trim();
+  if(noProf&&profOf(m))return false;if(exc&&!isExc(m))return false;
+  const hay=norm([m.turma,m.disc,m.cod,desigOf(m),m.pasta,profName(profOf(m))].join(" "));
   return rest.split(" ").filter(Boolean).every(w=>hay.includes(w));}
 function renderMods(){
-  $("#bulkProf").innerHTML=profOpts("");
+  $("#bulkProf").innerHTML=profOpts("",`<option value="">— escolher —</option><option value="__grid">↩ segue a grelha (desfazer exceções)</option>`);
   const vis=cfg.mods.filter(modVisible);
-  $("#detMsg").textContent=cfg.mods.length?`${vis.length} de ${cfg.mods.length} módulo(s) visíveis · ${cfg.mods.filter(m=>!m.profId).length} sem professor`:"";
-  $("#tbMods").innerHTML=vis.slice(0,400).map(m=>`<div class="mcard${m.profId?"":" noprof"}" data-id="${m.id}">
-   <label class="f-nome"><span>Módulo</span><input type="text" data-k="nome" value="${esc(m.nome)}"></label>
-   <label class="f-turma"><span>Turma</span><input type="text" data-k="turma" value="${esc(m.turma)}" title="${esc(m.turma)}"></label>
-   <label class="f-prof"><span>Professor</span><select data-k="profId">${profOpts(m.profId)}</select></label>
+  $("#detMsg").textContent=cfg.mods.length?`${cfg.mods.length} módulos · ${cfg.mods.filter(m=>!profOf(m)).length} sem formador · ${cfg.mods.filter(isExc).length} exceções`:"";
+  $("#tbMods").innerHTML=vis.slice(0,400).map(m=>{const g=cfg.grid[gridKey(m)]||"",exc=isExc(m);
+    return `<div class="mcard${profOf(m)?"":" noprof"}${exc?" exc":""}" data-id="${m.id}">
+   <label class="f-nome"><span>Módulo / UFCD${exc?` <span class="tag exc">exceção</span>`:""}</span><input type="text" data-k="cod" value="${esc(m.cod)}"></label>
+   <label class="f-turma"><span>Turma · disciplina</span><input type="text" value="${esc(m.turma+" · "+m.disc)}" title="${esc(m.turma+" · "+m.disc)}" disabled></label>
+   <label class="f-prof"><span>Formador</span><select data-k="profId"><option value="">↩ segue a grelha${g?` (${esc(profName(g))})`:" (sem formador)"}</option>${profOpts(m.profId,"")}</select></label>
    <button class="x f-del" title="Remover módulo" data-del>×</button>
-   <label class="f-pasta"><span>Pastas do módulo</span><input type="text" data-k="pasta" value="${esc(m.pasta)}" placeholder="caminho/da/pasta" title="${esc(m.pasta)}"></label>
-   <div class="f-docs"><span>Documentos exigidos</span><div class="chips">${cfg.docTypes.map(d=>{const on=m.docs.includes(d.id);return `<label class="chip ${on?"on":""}"><input type="checkbox" data-doc="${d.id}" ${on?"checked":""}>${esc(d.nome)}</label>`}).join("")}</div></div>
-  </div>`).join("")+(vis.length>400?`<p class="hint">A mostrar 400 de ${vis.length}. Use o filtro para ver os restantes.</p>`:"")||`<p class="hint">${cfg.mods.length?"Nenhum módulo corresponde ao filtro.":"Ainda sem módulos. Detete-os na listagem da Box, adicione um a um ou importe em lote."}</p>`;
+   <label class="f-pasta"><span>Designação</span><input type="text" data-des value="${esc(desigOf(m))}" placeholder="ex.: Probabilidade"></label>
+   <div class="f-docs"><span>Documentos exigidos · pastas: ${esc(m.pasta)}</span><div class="chips">${cfg.docTypes.map(d=>{const on=m.docs.includes(d.id);return `<label class="chip ${on?"on":""}"><input type="checkbox" data-doc="${d.id}" ${on?"checked":""}>${esc(d.nome)}</label>`}).join("")}</div></div>
+  </div>`}).join("")+(vis.length>400?`<p class="hint">A mostrar 400 de ${vis.length}. Use o filtro para ver os restantes.</p>`:"")||`<p class="hint">${cfg.mods.length?"Nenhum módulo corresponde ao filtro.":"Ainda sem módulos."}</p>`;
 }
 $("#modFilter").addEventListener("input",renderMods);
-$("#bulkAssign").onclick=()=>{const pid=$("#bulkProf").value;if(!pid){toast("Escolha um professor");return}
-  const vis=cfg.mods.filter(modVisible);if(!vis.length)return;vis.forEach(m=>m.profId=pid);save();renderProfs();renderMods();
-  toast(`${vis.length} módulo(s) atribuídos`)};
+$("#bulkAssign").onclick=()=>{const pid=$("#bulkProf").value;if(!pid){toast("Escolha um formador");return}
+  const vis=cfg.mods.filter(modVisible);if(!vis.length)return;
+  ponto(`Antes de mudar o formador de ${vis.length} módulo(s)`);
+  vis.forEach(m=>{m.profId=pid==="__grid"?"":(pid===(cfg.grid[gridKey(m)]||"")?"":pid)});save();renderAll();
+  toast(pid==="__grid"?`${vis.length} módulo(s) voltaram a seguir a grelha`:`${vis.length} módulo(s) mudados`)};
 $("#detect").onclick=()=>{
   if(!files.length&&!folders.length){$("#detMsg").textContent="Carregue primeiro a listagem da Box em Dados da Box.";return}
-  const isMod=c=>/^(modulo|mod\.?|ufcd)\s*[a-z0-9]/.test(norm(c));
-  const isTurma=c=>/\(\d{2}\s*-\s*\d{2}\)/.test(c);
+  // só procura módulos nas secções usadas pelos documentos exigidos (ex.: 006, 007, 008, 012)
+  const secs=[...new Set(cfg.docTypes.map(d=>segs(d.subpasta)[0]).filter(Boolean))];
   const found=new Map();
   const dirs=new Set([...folders,...files.map(f=>f.rawDir)]);
-  for(const d of dirs){const comps=d.split("/").filter(Boolean);
-    for(let i=1;i<comps.length;i++){if(!isMod(comps[i]))continue;
-      const disc=comps[i-1];const turma=comps.slice(0,i-1).find(isTurma)||comps[Math.max(0,i-2)];
-      const key=norm(turma+"|"+disc+"|"+comps[i]);
-      if(!found.has(key))found.set(key,{turma,disc,mod:comps[i]});break;}}
-  const have=new Set(cfg.mods.map(m=>normPath(m.pasta.replace(/\s*\/\s*/g,"/"))));
-  let n=0;
-  for(const v of found.values()){const pasta=`${v.turma} / ${v.disc} / ${v.mod}`;if(have.has(normPath(pasta.replace(/\s*\/\s*/g,"/"))))continue;
-    cfg.mods.push({id:uid(),nome:`${v.disc.replace(/^\d+\s*-\s*/,"")} — ${v.mod}`,turma:v.turma,profId:"",pasta,docs:cfg.docTypes.map(d=>d.id)});n++;}
-  cfg.mods.sort((a,b)=>(a.turma+a.nome).localeCompare(b.turma+b.nome,"pt",{numeric:true}));
-  save();renderAll();toast(n?`${n} módulo(s) novos detetados`:"Nenhum módulo novo encontrado");
+  for(const d of dirs){const comps=d.split("/").map(x=>x.trim()).filter(Boolean),nc=comps.map(norm);
+    if(secs.length&&!secs.some(s=>nc.some(c=>segMatch(c,s))))continue;
+    for(let i=1;i<comps.length;i++){
+      let disc=null,mod=null;
+      if(isDisc(comps[i-1])){disc=comps[i-1];mod=comps[i]}else if(isModName(comps[i])&&!isDisc(comps[i])){disc=comps[i-1];mod=comps[i]}
+      if(!mod)continue;
+      const turma=comps.slice(0,i).find(isTurma)||comps[Math.max(0,i-2)];
+      const key=norm(turma)+"|"+discCode(disc)+"|"+modKey(mod);
+      if(!found.has(key))found.set(key,{turma,disc,mod});break;}}
+  const have=new Set(cfg.mods.map(m=>norm(m.turma)+"|"+discCode(m.disc)+"|"+modKey(m.cod)));
+  const novos=[...found.values()].filter(v=>!have.has(norm(v.turma)+"|"+discCode(v.disc)+"|"+modKey(v.mod)));
+  if(novos.length)ponto(`Antes de detetar ${novos.length} módulo(s)`);
+  for(const v of novos)cfg.mods.push({id:uid(),nome:"",turma:v.turma,disc:v.disc,cod:v.mod,profId:"",pasta:`${v.turma} / ${v.disc} / ${v.mod}`,docs:cfg.docTypes.map(d=>d.id)});
+  cfg.mods.sort((a,b)=>(a.turma+"|"+a.disc+"|"+a.cod).localeCompare(b.turma+"|"+b.disc+"|"+b.cod,"pt",{numeric:true}));
+  save();renderAll();toast(novos.length?`${novos.length} módulo(s)/UFCD novos detetados (pode anular)`:"Nenhum módulo novo encontrado");
 };
 $("#tbMods").addEventListener("input",e=>{const tr=e.target.closest("[data-id]");if(!tr)return;const m=cfg.mods.find(x=>x.id===tr.dataset.id);
-  if(e.target.dataset.doc){const id=e.target.dataset.doc;if(e.target.checked){if(!m.docs.includes(id))m.docs.push(id)}else m.docs=m.docs.filter(x=>x!==id);e.target.parentElement.classList.toggle("on",e.target.checked)}
-  else m[e.target.dataset.k]=e.target.value;
-  save(); if(e.target.dataset.k==="profId"){renderProfs();tr.classList.toggle("noprof",!m.profId)}});
+  if(e.target.dataset.doc){const id=e.target.dataset.doc;if(e.target.checked){if(!m.docs.includes(id))m.docs.push(id)}else m.docs=m.docs.filter(x=>x!==id);e.target.parentElement.classList.toggle("on",e.target.checked);save();return}
+  if(e.target.hasAttribute("data-des")){const k=discCode(m.disc)+"|"+modKey(m.cod);if(e.target.value.trim())cfg.desig[k]=e.target.value.trim();else delete cfg.desig[k];save();return}
+  const k=e.target.dataset.k;if(!k)return;
+  if(k==="profId"){m.profId=e.target.value===(cfg.grid[gridKey(m)]||"")?"":e.target.value;save();renderMods();renderGrid();renderProfs();return}
+  m[k]=e.target.value;if(k==="cod")m.pasta=`${m.turma} / ${m.disc} / ${m.cod}`;save();});
+$("#tbMods").addEventListener("click",e=>{if(!e.target.hasAttribute("data-del"))return;const id=e.target.closest("[data-id]").dataset.id;cfg.mods=cfg.mods.filter(x=>x.id!==id);save();renderAll();toast("Módulo removido (pode anular)")});
+$("#addMod").onclick=()=>{const t=prompt2();cfg.mods.unshift({id:uid(),nome:"",turma:t.turma,disc:t.disc,cod:"Novo módulo",profId:"",pasta:`${t.turma} / ${t.disc} / Novo módulo`,docs:cfg.docTypes.map(d=>d.id)});save();$("#modFilter").value="";renderAll()};
+function prompt2(){const r=gridRows()[0];return{turma:r?r.turma:"Turma",disc:r?r.disc:"0000 - Disciplina"}}
 
-$("#tbMods").addEventListener("click",e=>{if(!e.target.hasAttribute("data-del"))return;const id=e.target.closest("[data-id]").dataset.id;cfg.mods=cfg.mods.filter(x=>x.id!==id);save();renderAll()});
-$("#addMod").onclick=()=>{cfg.mods.push({id:uid(),nome:"",turma:"",profId:"",pasta:"",docs:cfg.docTypes.map(d=>d.id)});save();renderMods()};
-
-$("#doBulk").onclick=()=>{
-  const lines=$("#bulk").value.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);let n=0;
-  for(const l of lines){const sep=l.includes("\t")?"\t":(l.includes(";")?";":",");const c=l.split(sep).map(x=>x.trim());
-    if(c.length<3)continue; if(/^professor$/i.test(c[0]))continue;
-    const [pn,em,mn,tu,pa]=c; let p=cfg.profs.find(x=>norm(x.nome)===norm(pn)||(em&&norm(x.email)===norm(em)));
-    if(!p){p={id:uid(),nome:pn,email:em||""};cfg.profs.push(p)} else if(em&&!p.email)p.email=em;
-    cfg.mods.push({id:uid(),nome:mn||"",turma:tu||"",profId:p.id,pasta:pa||"",docs:cfg.docTypes.map(d=>d.id)});n++;}
-  save();renderAll();$("#bulkMsg").textContent=n?`${n} módulo(s) importado(s).`:"Nenhuma linha válida (mínimo: Professor;Email;Módulo).";if(n)$("#bulk").value="";
+/* ---------- designações ---------- */
+$("#desImport").onclick=()=>{
+  const lines=$("#desBulk").value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);if(!lines.length)return;
+  ponto("Antes de guardar designações");let n=0,bad=0;
+  for(const l of lines){const p=l.split(/\t|;/).map(x=>x.trim()).filter(Boolean);
+    if(/designa/i.test(l)&&p.length<=3&&!/\d/.test(p[0]||""))continue;
+    if(p.length>=3){cfg.desig[discCode(p[0])+"|"+modKey(p[1])]=p.slice(2).join(" ");n++}
+    else if(p.length===2){cfg.desig["*|"+modKey(p[0])]=p[1];n++}else bad++}
+  save();renderAll();$("#desMsg").textContent=`${n} designação(ões) guardada(s)${bad?`, ${bad} linha(s) ignorada(s)`:""}.`;if(n)$("#desBulk").value="";
 };
-function renderAll(){renderDocs();renderProfs();renderMods()}
+function renderAll(){renderDocs();renderProfs();renderGrid();renderMods();undoUI()}
+
 
 /* ---------- CSV ---------- */
 function parseCSV(text){
@@ -696,9 +873,19 @@ function qualOf(f,dupMap){
 function evaluate(){
   const out=[];
   const dupMap=new Map();for(const f of files)if(f.sha1&&f.size>0){if(!dupMap.has(f.sha1))dupMap.set(f.sha1,[]);dupMap.get(f.sha1).push(f)}
+  // pastas existentes (da análise) + pastas onde há ficheiros
+  const fset=new Set(folders);files.forEach(f=>{const p=f.rawDir.split("/");for(let i=1;i<=p.length;i++)fset.add(p.slice(0,i).join("/"))});
+  const fl=[...fset].map(p=>{const r=p.split("/");return{r,n:r.map(norm)}});
+  // nome real de uma pasta a partir do que foi escrito (ex.: "008" → "008 - Avaliação")
+  const nameCache=new Map();
+  const realName=s=>{if(nameCache.has(s))return nameCache.get(s);let v=s;
+    outer:for(const f of fl)for(let i=0;i<f.n.length;i++)if(segMatch(f.n[i],s)){v=f.r[i];break outer}
+    nameCache.set(s,v);return v};
+  const ref=lastEnvio(),refSet=ref?new Set(Object.values(ref.miss).flat()):null;
   for(const m of cfg.mods){
     const ms=segs(m.pasta);const folder=ms.join(" / ");
     const modFiles=ms.length?files.filter(f=>allIn(f.comps,ms)):[];
+    const modFolders=ms.length?fl.filter(f=>allIn(f.n,ms)):[];
     const items=[];
     for(const did of m.docs){const d=cfg.docTypes.find(x=>x.id===did);if(!d)continue;
       const sub=segs(d.subpasta),kws=splitList(d.palavras),exts=splitList(d.ext);
@@ -713,19 +900,54 @@ function evaluate(){
       if(good.length>=need){state=clean.length>=need?"ok":"warn";if(state==="warn")reasons=good.filter(x=>x.q).map(x=>`${x.f.name}: ${x.q.txt}`)}
       else if(hits.length){state="blank";reasons=q.filter(x=>x.q&&x.q.lvl==="bad").map(x=>`${x.f.name}: ${x.q.txt}`)}
       else state="missing";
-      items.push({doc:d,ok:state==="ok"||state==="warn",state,reasons,hits});}
+      // localização esperada e se a pasta existe
+      const secName=sub.length?realName(sub[0]):"";
+      const rest=sub.slice(1).map(realName);
+      const loc=[secName,m.disc,m.cod,...rest].filter(Boolean).join(" > ");
+      let falta=d.nome,pastaObs="";
+      if(state==="missing"){
+        const inSec=sub.length?modFolders.filter(f=>allIn(f.n,[sub[0]])):modFolders;
+        const exact=sub.length?modFolders.filter(f=>allIn(f.n,sub)):modFolders;
+        if(!inSec.length){pastaObs=`a pasta “${m.cod}” não existe${secName?" em "+secName:""}`}
+        else if(!exact.length&&rest.length){pastaObs=`a subpasta “${rest.join(" > ")}” não existe`}
+        else pastaObs="a pasta existe mas está vazia";
+      }
+      const key=m.id+"|"+d.id;
+      let seg="";if(ref){const was=refSet.has(key);
+        if(state==="ok"||state==="warn"){if(was)seg="entregue desde o envio de "+dataPT(ref.t)}
+        else seg=was?"pedido a "+dataPT(ref.t)+" — continua em falta":"novo (não constava do envio de "+dataPT(ref.t)+")"}
+      items.push({doc:d,key,ok:state==="ok"||state==="warn",state,reasons,hits,loc,falta,pastaObs,seg,since:!!(ref&&seg.startsWith("entregue desde"))});}
     out.push({mod:m,items,nFiles:modFiles.length,folder});
   }
   return out;
 }
 function byTeacher(ev){
   const map=new Map();
-  for(const e of ev){const k=e.mod.profId||"_";if(!map.has(k))map.set(k,[]);map.get(k).push(e)}
-  const arr=[...map.entries()].map(([pid,list])=>{const p=cfg.profs.find(x=>x.id===pid)||{id:"_",nome:"(sem professor atribuído)",email:""};
+  for(const e of ev){const k=profOf(e.mod)||"_";if(!map.has(k))map.set(k,[]);map.get(k).push(e)}
+  const arr=[...map.entries()].map(([pid,list])=>{const p=cfg.profs.find(x=>x.id===pid)||{id:"_",nome:"(sem formador atribuído)",email:""};
     const tot=list.reduce((a,e)=>a+e.items.length,0),ok=list.reduce((a,e)=>a+e.items.filter(i=>i.ok).length,0);return {p,list,tot,ok,miss:tot-ok}});
   arr.sort((a,b)=>b.miss-a.miss||a.p.nome.localeCompare(b.p.nome,"pt"));return arr;
 }
-const modLabel=m=>[m.nome||"(módulo sem nome)",m.turma].filter(Boolean).join(" · ");
+const obsOf=i=>[i.state==="blank"?"ficheiro entregue em branco":"",i.pastaObs,i.state==="warn"?"a confirmar: "+i.reasons.join("; "):"",i.state==="blank"?i.reasons.join("; "):"",i.seg].filter(Boolean).join(" · ");
+const ESTADO={ok:"Entregue",warn:"Entregue — a confirmar",blank:"Entregue em branco",missing:"Em falta"};
+/* linhas no formato do Excel da escola */
+function rowsFor(t,onlyMissing){const r=[];
+  for(const e of t.list)for(const i of e.items){if(onlyMissing&&i.ok)continue;
+    r.push({turma:e.mod.turma,disc:e.mod.disc,mod:modTitle(e.mod),loc:i.loc,falta:i.falta,obs:obsOf(i),state:i.state,item:i,e})}
+  return r;}
+
+/* ---------- envios registados (acompanhamento) ---------- */
+function lastEnvio(){return (cfg.envios||[])[0]||null}
+function registarEnvio(label){
+  const T=byTeacher(evaluate());const miss={};let n=0;
+  for(const t of T){if(t.p.id==="_")continue;const k=[];for(const e of t.list)for(const i of e.items)if(!i.ok)k.push(i.key);if(k.length){miss[t.p.id]=k;n+=k.length}}
+  ponto("Antes de registar o envio");
+  cfg.envios=[{id:uid(),t:Date.now(),label:label||"Envio de emails",miss,n,ano:cfg.mail.ano,prazo:cfg.mail.prazo},...(cfg.envios||[])].slice(0,30);
+  save();renderEnvios();toast(`Envio registado: ${n} item(ns) em falta`);
+}
+function renderEnvios(){const el=$("#envios");if(!el)return;
+  el.innerHTML=(cfg.envios||[]).map((v,i)=>`<div class="rp"><span class="d">${new Date(v.t).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"})}</span><span class="l">${esc(v.label)} · ${v.n} item(ns) em falta${v.prazo?` · prazo ${esc(v.prazo)}`:""}${i===0?` <span class="tag ok">referência atual</span>`:""}</span><button class="x" title="Apagar este registo" data-envdel="${i}">×</button></div>`).join("")||`<p class="hint">Ainda não registou nenhum envio.</p>`}
+$("#envios").addEventListener("click",e=>{const b=e.target.closest("[data-envdel]");if(!b)return;cfg.envios.splice(+b.dataset.envdel,1);save();renderEnvios();toast("Registo apagado (pode anular)")});
 
 /* ---------- report ---------- */
 ["#fProf","#fShow","#fTxt","#chkFiles"].forEach(s=>$(s).addEventListener("input",renderReport));
@@ -733,39 +955,35 @@ function renderReport(){
   const ev=evaluate(),T=byTeacher(ev);
   const fp=$("#fProf").value;
   $("#fProf").innerHTML=`<option value="">Todos</option>`+T.map(t=>`<option value="${t.p.id}" ${t.p.id===fp?"selected":""}>${esc(t.p.nome)}</option>`).join("");
-  const tot=T.reduce((a,t)=>a+t.tot,0),ok=T.reduce((a,t)=>a+t.ok,0),profsMiss=T.filter(t=>t.miss>0).length;
-  const nBlank=ev.reduce((a,e)=>a+e.items.filter(i=>i.state==="blank").length,0),nWarn=ev.reduce((a,e)=>a+e.items.filter(i=>i.state==="warn").length,0);
+  const tot=T.reduce((a,t)=>a+t.tot,0),ok=T.reduce((a,t)=>a+t.ok,0),profsMiss=T.filter(t=>t.miss>0&&t.p.id!=="_").length;
+  const all=ev.flatMap(e=>e.items);
+  const nBlank=all.filter(i=>i.state==="blank").length,nWarn=all.filter(i=>i.state==="warn").length,nSince=all.filter(i=>i.since).length;
+  const ref=lastEnvio();
   const pct=tot?Math.round(ok/tot*100):0;
   $("#tiles").innerHTML=`
    <div class="tile"><div class="v">${pct}%</div><div class="l">documentação entregue</div></div>
-   <div class="tile"><div class="v" style="color:var(--bad)">${tot-ok}</div><div class="l">documentos em falta</div></div>
-   <div class="tile"><div class="v">${profsMiss} / ${T.filter(t=>t.p.id!=="_").length}</div><div class="l">professores com falhas</div></div>
+   <div class="tile"><div class="v" style="color:var(--bad)">${tot-ok}</div><div class="l">itens em falta</div></div>
+   <div class="tile"><div class="v">${profsMiss}</div><div class="l">formadores com falhas</div></div>
+   ${ref?`<div class="tile"><div class="v" style="color:var(--ok)">${nSince}</div><div class="l">entregues desde o envio de ${dataPT(ref.t)}</div></div>`:""}
    <div class="tile"><div class="v" style="color:#b26a00">${nBlank+nWarn}</div><div class="l">em branco (${nBlank}) ou a confirmar (${nWarn})</div></div>`;countUp($("#tiles"));
   const w=[];
   if(!files.length)w.push(["info","Ainda não carregou a listagem da Box (em Dados da Box). Sem ela, tudo aparece em falta."]);
-  const empty=ev.filter(e=>e.folder&&e.nFiles===0);
-  if(files.length&&empty.length)w.push(["warn",`${empty.length} módulo(s) sem nenhum ficheiro na pasta indicada — confirme o caminho: ${empty.slice(0,6).map(e=>modLabel(e.mod)).join("; ")}${empty.length>6?"…":""}`]);
-  const nofolder=ev.filter(e=>!e.folder);if(nofolder.length)w.push(["warn",`${nofolder.length} módulo(s) sem pasta definida.`]);
-  const noprof=cfg.mods.filter(m=>!m.profId).length;if(noprof)w.push(["warn",`${noprof} módulo(s) sem professor atribuído.`]);
+  const noprof=cfg.mods.filter(m=>!profOf(m)).length;if(noprof)w.push(["warn",`${noprof} módulo(s) sem formador atribuído — veja a grelha em Atribuições.`]);
   $("#warns").innerHTML=w.map(([k,t])=>`<div class="msg ${k==="warn"?"bad":"info"}">${esc(t)}</div>`).join("");
-  const mode=$("#fShow").value,showAll=mode==="tudo",q=norm($("#fTxt").value),sf=$("#chkFiles").checked;
-  const show=i=>showAll||!i.ok||(mode==="aviso"&&i.state==="warn");
+  const mode=$("#fShow").value,q=norm($("#fTxt").value),sf=$("#chkFiles").checked;
+  const show=i=>mode==="tudo"||(mode==="desde"?i.since:(!i.ok||(mode==="aviso"&&i.state==="warn")));
   let html="";
   for(const t of T){ if(fp&&t.p.id!==fp)continue;
-    const mods=t.list.filter(e=>(!q||norm(modLabel(e.mod)+" "+e.mod.pasta).includes(q))&&e.items.some(show));
-    if(!mods.length&&!showAll)continue;
+    const rows=rowsFor(t,false).filter(r=>show(r.item)&&(!q||norm(r.turma+" "+r.disc+" "+r.mod+" "+r.loc).includes(q)));
+    if(!rows.length)continue;
     const pc=t.tot?Math.round(t.ok/t.tot*100):100;
     html+=`<div class="prof"><div class="hd"><b>${esc(t.p.nome)}</b>${t.p.cod?`<span class="tag" style="background:#eef1f5;color:#4a5260">${esc(t.p.cod)}</span>`:""}<span class="hint" style="margin:0">${esc(t.p.email)}</span><span class="grow"></span>
       <div class="bar"><i style="width:${pc}%"></i></div><span>${t.ok}/${t.tot}</span>
-      ${t.miss?`<span class="tag bad">${t.miss} em falta</span>`:`<span class="tag ok">completo</span>`}</div>`;
-    for(const e of mods){const its=e.items.filter(show);
-      html+=`<div class="mod"><div class="t">${esc(modLabel(e.mod))} <span class="hint" style="font-weight:400">— ${esc(e.mod.pasta||"sem pasta")} · ${e.nFiles} ficheiro(s)</span></div>
-      <div class="items">${its.map(i=>`<span class="it ${{ok:"ok",warn:"warn",blank:"bad",missing:"bad"}[i.state]}" title="${esc(i.reasons.join("\n"))}">${{ok:"✓",warn:"⚠",blank:"✗",missing:"✗"}[i.state]} ${esc(i.doc.nome)}${i.state==="blank"?" (em branco)":""}${i.doc.min>1?` (${i.hits.length}/${i.doc.min})`:""}</span>`).join("")}</div>
-      ${its.filter(i=>i.reasons.length).map(i=>`<div class="files" style="color:${i.state==="blank"?"var(--bad)":"#8a5a00"}">${i.state==="blank"?"✗":"⚠"} <b>${esc(i.doc.nome)}:</b> ${i.reasons.map(esc).join(" · ")}</div>`).join("")}
-      ${sf?e.items.filter(i=>i.hits.length).map(i=>`<div class="files"><b>${esc(i.doc.nome)}:</b> ${i.hits.map(h=>esc(h.name)).join(", ")}</div>`).join(""):""}</div>`;}
-    if(!mods.length)html+=`<div class="mod hint">Sem módulos para mostrar.</div>`;
-    html+=`</div>`;}
-  $("#report").innerHTML=html||`<div class="card"><p class="hint" style="margin:0">${cfg.mods.length?"Nada em falta com estes filtros. 🎉":"Defina primeiro os módulos em Atribuições."}</p></div>`;
+      ${t.miss?`<span class="tag bad">${t.miss} em falta</span>`:`<span class="tag ok">completo</span>`}</div>
+      <div style="padding:4px 12px 10px;overflow-x:auto"><table class="rtab rt"><thead><tr><th>Turma</th><th>Disciplina</th><th>Módulo/UFCD</th><th>Localização na Box</th><th>O que está em falta</th><th>Observações</th></tr></thead><tbody>
+      ${rows.map(r=>`<tr class="s-${r.state}"><td>${esc(r.turma)}</td><td>${esc(r.disc)}</td><td>${esc(r.mod)}</td><td>${esc(r.loc)}</td><td class="f">${{ok:"✓",warn:"⚠",blank:"✗",missing:"✗"}[r.state]} ${esc(r.falta)}</td><td class="o">${esc(r.obs||(r.state==="ok"?"entregue":""))}${sf&&r.item.hits.length?`<br><b>Ficheiros:</b> ${r.item.hits.map(h=>esc(h.name)).join(", ")}`:""}</td></tr>`).join("")}
+      </tbody></table></div></div>`;}
+  $("#report").innerHTML=html||`<div class="card"><p class="hint" style="margin:0">${cfg.mods.length?"Nada a mostrar com estes filtros. 🎉":"Defina primeiro os módulos em Atribuições."}</p></div>`;
 }
 
 /* ---------- verificação do conteúdo (só leitura) ---------- */
@@ -818,11 +1036,17 @@ $("#qGo").onclick=async()=>{
 };
 
 /* ---------- send ---------- */
-function missingFor(t){return t.list.map(e=>({m:e.mod,miss:e.items.filter(i=>!i.ok).map(i=>i.doc.nome+(i.state==="blank"?" (o ficheiro entregue está em branco)":""))})).filter(x=>x.miss.length)}
-function listText(t){return missingFor(t).map(x=>`• ${modLabel(x.m)}: ${x.miss.join(", ")}`).join("\n")}
+const anoLetivo=()=>cfg.mail.ano||(()=>{const m=(lastListing&&lastListing.pasta||"").match(/(20\d\d)[.\-\/](20\d\d)/);return m?m[1]+"/"+m[2]:"[ano letivo]"})();
+function listText(t){return rowsFor(t,true).map(r=>`• ${r.turma} | ${discShort(r.disc)} | ${r.mod} → ${r.falta}${r.loc?` (${r.loc})`:""}${r.state==="blank"?" — o ficheiro entregue está em branco":""}`).join("\n")}
+function fill(tpl,t,semLista){
+  const first=String(t.p.nome||"").trim().split(/\s+/)[0]||"";
+  let s=tpl.replace(/\{primeiro_nome\}/g,first).replace(/\{nome\}/g,t.p.nome).replace(/\{ano\}/g,anoLetivo()).replace(/\{prazo\}/g,cfg.mail.prazo||"[prazo]").replace(/\{total\}/g,t.miss);
+  s=semLista?s.replace(/[^\n]*\{lista\}[^\n]*\n?/g,"").replace(/\(\d+ item\(ns\)\):/,"(lista em anexo).").replace(/\n{3,}/g,"\n\n"):s.replace(/\{lista\}/g,listText(t));
+  return s;}
+const subj=t=>fill(cfg.mail.subj,t);
 function geralText(){
   const T=byTeacher(evaluate());const d=new Date().toLocaleDateString("pt-PT");
-  let s=`RELATÓRIO DE DOCUMENTAÇÃO NÃO ENTREGUE — ${d}\n`;
+  let s=`RELATÓRIO DE DOCUMENTAÇÃO NÃO ENTREGUE — Ano letivo ${anoLetivo()} — ${d}\n`;
   const tot=T.reduce((a,t)=>a+t.tot,0),ok=T.reduce((a,t)=>a+t.ok,0);
   s+=`Entregue: ${ok}/${tot} (${tot?Math.round(ok/tot*100):0}%) · Em falta: ${tot-ok}\n\n`;
   for(const t of T){if(!t.miss)continue;s+=`${t.p.nome}${t.p.email?" <"+t.p.email+">":""} — ${t.miss} em falta\n${listText(t)}\n\n`}
@@ -833,53 +1057,85 @@ function geralText(){
 }
 function geralCSV(){
   const T=byTeacher(evaluate());const q=v=>`"${String(v??"").replace(/"/g,'""')}"`;
-  const rows=[["Código","Professor","Email","Módulo","Turma","Pasta","Documento","Estado"]];
-  for(const t of T)for(const e of t.list)for(const i of e.items)rows.push([t.p.cod||"",t.p.nome,t.p.email,e.mod.nome,e.mod.turma,e.mod.pasta,i.doc.nome,({ok:"Entregue",warn:"Entregue — a confirmar",blank:"Entregue em branco",missing:"Em falta"})[i.state]]);
+  const rows=[["Código","Formador","Email","Turma","Disciplina","Módulo/UFCD","Localização na Box","Documento","Estado","Observações"]];
+  for(const t of T)for(const r of rowsFor(t,false))rows.push([t.p.cod||"",t.p.nome,t.p.email,r.turma,r.disc,r.mod,r.loc,r.falta,ESTADO[r.state],r.obs]);
   return rows.map(r=>r.map(q).join(";")).join("\n");
 }
-function fill(tpl,t){return tpl.replace(/\{nome\}/g,t.p.nome).replace(/\{lista\}/g,listText(t)).replace(/\{prazo\}/g,cfg.mail.prazo||"[prazo]").replace(/\{total\}/g,t.miss)}
-["#mSubj","#mPrazo","#mBody"].forEach((s,i)=>$(s).addEventListener("input",e=>{cfg.mail[["subj","prazo","body"][i]]=e.target.value;save();renderMails()}));
-function renderSend(){$("#mSubj").value=cfg.mail.subj;$("#mPrazo").value=cfg.mail.prazo;$("#mBody").value=cfg.mail.body;$("#geralPrev").textContent=geralText();renderMails()}
+[["#mSubj","subj"],["#mPrazo","prazo"],["#mAno","ano"],["#mBody","body"]].forEach(([s,k])=>$(s).addEventListener("input",e=>{cfg.mail[k]=e.target.value;save();renderMails();$("#geralPrev").textContent=geralText()}));
+$("#mReset").onclick=()=>{cfg.mail.subj=MAIL_SUBJ;cfg.mail.body=MAIL_BODY;save();renderSend();toast("Texto EPISJ reposto (pode anular)")};
+function renderSend(){$("#mSubj").value=cfg.mail.subj;$("#mPrazo").value=cfg.mail.prazo||"";$("#mAno").value=cfg.mail.ano||"";$("#mAno").placeholder=anoLetivo();$("#mBody").value=cfg.mail.body;$("#gTo").value=cfg.mail.relatorio_para||"";$("#geralPrev").textContent=geralText();renderMails();renderEnvios()}
 let mailCache=[];
 function renderMails(){
   const T=byTeacher(evaluate()).filter(t=>t.miss&&t.p.id!=="_");mailCache=T;
   $("#mails").innerHTML=T.map((t,i)=>{const body=fill(cfg.mail.body,t);
-    const href=`mailto:${encodeURIComponent(t.p.email)}?subject=${encodeURIComponent(cfg.mail.subj)}&body=${encodeURIComponent(body)}`;
+    let mb=body;if(mb.length>1800)mb=fill(cfg.mail.body,t,true)+"\n\n[A lista completa está no Excel de emails — anexe-o.]";
+    const href=`mailto:${encodeURIComponent(t.p.email)}?subject=${encodeURIComponent(subj(t))}&body=${encodeURIComponent(mb)}`;
     return `<div class="prof"><div class="hd"><b>${esc(t.p.nome)}</b><span>${esc(t.p.email||"(sem email)")}</span><span class="grow"></span><span class="tag bad">${t.miss} em falta</span>
      <button class="b s" data-cp="${i}">Copiar mensagem</button>${t.p.email?`<a class="b" style="text-decoration:none" href="${href}">Abrir no email</a>`:""}</div>
-     <div class="mailbox" style="margin:10px 14px 14px">${esc(body)}</div></div>`}).join("")||`<p class="hint">Nenhum professor com documentação em falta.</p>`;
+     <div class="mailbox" style="margin:10px 14px 14px;max-height:260px;overflow:auto">${esc(body)}</div></div>`}).join("")||`<p class="hint">Nenhum formador com documentação em falta.</p>`;
 }
-$("#mails").addEventListener("click",e=>{const b=e.target.closest("[data-cp]");if(!b)return;const t=mailCache[+b.dataset.cp];copy(`Para: ${t.p.email}\nAssunto: ${cfg.mail.subj}\n\n${fill(cfg.mail.body,t)}`)});
+$("#mails").addEventListener("click",e=>{const b=e.target.closest("[data-cp]");if(!b)return;const t=mailCache[+b.dataset.cp];copy(`Para: ${t.p.email}\nAssunto: ${subj(t)}\n\n${fill(cfg.mail.body,t)}`)});
 $("#cpTxt").onclick=()=>copy(geralText());
 $("#cpCsv").onclick=()=>copy(geralCSV());
 
+/* ---------- Excel de emails (formato da escola) ---------- */
+let XLSXlib=null;
+function loadXLSX(){return XLSXlib?Promise.resolve(XLSXlib):new Promise((ok,ko)=>{const s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";s.onload=()=>{XLSXlib=window.XLSX;ok(XLSXlib)};s.onerror=()=>ko(new Error("Não foi possível carregar o gerador de Excel (sem internet?)"));document.head.appendChild(s)})}
+async function gerarExcel(){
+  const X=await loadXLSX();
+  const T=byTeacher(evaluate()).filter(t=>t.miss&&t.p.id!=="_");
+  if(!T.length){toast("Nenhum formador com documentação em falta");return false}
+  const wb=X.utils.book_new(),used=new Set(["Índice"]);
+  const sheetName=t=>{let b=(String(t.p.nome).trim().split(/\s+/)[0]||"Formador").replace(/[\[\]:*?\/\\]/g,"").slice(0,28),n=b,i=2;while(used.has(n))n=b+" "+(i++);used.add(n);return n};
+  const names=T.map(sheetName);
+  const idx=[[`Emails — Documentos em Falta na Box (Ano Letivo ${anoLetivo()})`],[`Gerado a ${new Date().toLocaleDateString("pt-PT")}. Prazo proposto nos emails: ${cfg.mail.prazo||"—"}. Cada folha tem o email pronto a copiar e a lista de itens desse formador.`],[],["Formador","Nº de Itens em Falta","Folha"],...T.map((t,i)=>[t.p.nome,t.miss,names[i]])];
+  const wi=X.utils.aoa_to_sheet(idx);wi["!cols"]=[{wch:44},{wch:20},{wch:16}];X.utils.book_append_sheet(wb,wi,"Índice");
+  T.forEach((t,i)=>{
+    const rows=rowsFor(t,true);
+    const aoa=[[`Email para ${t.p.nome}`],[`Nº de itens em falta: ${t.miss}  |  Copia o texto da caixa abaixo para o corpo do email.`],[],["Assunto:",subj(t)],[],["Corpo do email (copiar e colar):"],[fill(cfg.mail.body,t,true)],["Lista de documentos/pastas em falta (anexar ou citar no email):"],
+      ["Turma","Disciplina","Módulo/UFCD","Localização na Box (Secção > Disciplina > Módulo > Subpasta)","O que está em falta","Observações"],
+      ...rows.map(r=>[r.turma,r.disc,r.mod,r.loc,r.falta,r.obs])];
+    const ws=X.utils.aoa_to_sheet(aoa);ws["!cols"]=[{wch:34},{wch:26},{wch:40},{wch:58},{wch:30},{wch:40}];
+    ws["!merges"]=[{s:{r:6,c:0},e:{r:6,c:5}}];ws["!rows"]=[];ws["!rows"][6]={hpt:260};
+    X.utils.book_append_sheet(wb,ws,names[i]);
+  });
+  const out=X.write(wb,{bookType:"xlsx",type:"array"});
+  download(`Emails_Documentos_em_Falta_${hoje()}.xlsx`,new Blob([out],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}));
+  return true;
+}
+$("#xlsGo").onclick=async()=>{const b=$("#xlsGo");b.disabled=true;
+  try{const ok=await gerarExcel();if(ok&&$("#xlsReg").checked)registarEnvio("Excel de emails gerado");}catch(e){toast(e.message)}b.disabled=false};
+$("#regGo").onclick=()=>registarEnvio("Envio registado");
+
 /* ---------- save/load ---------- */
 $("#cpCfg").onclick=()=>copy(JSON.stringify(cfg,null,2));
-function loadCfgText(t){try{const c=JSON.parse(t);if(!c.docTypes||!c.mods||!c.profs)throw 0;c.mail=c.mail||defaultCfg().mail;cfg=c;save();renderAll();$("#cfgMsg").innerHTML=`<div class="msg ok">Configuração carregada: ${c.profs.length} professores, ${c.mods.length} módulos.</div>`}catch(e){$("#cfgMsg").innerHTML=`<div class="msg bad">O texto não é uma configuração válida.</div>`}}
+function loadCfgText(t){try{const c=JSON.parse(t);if(!c.docTypes||!c.mods||!c.profs)throw 0;ponto("Antes de carregar uma configuração");cfg=c;migrate();save();refreshAll();$("#cfgMsg").innerHTML=`<div class="msg ok">Configuração carregada: ${c.profs.length} formadores, ${c.mods.length} módulos. (Pode voltar atrás em Pontos de restauro.)</div>`}catch(e){$("#cfgMsg").innerHTML=`<div class="msg bad">O texto não é uma configuração válida.</div>`}}
 $("#loadCfg").onclick=()=>loadCfgText($("#cfgTxt").value);
 $("#fileCfg").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{$("#cfgTxt").value=r.result;loadCfgText(r.result)};r.readAsText(f)};
 let resetArm=false;
 $("#resetAll").onclick=e=>{if(!resetArm){resetArm=true;e.target.textContent="Clique de novo para confirmar";setTimeout(()=>{resetArm=false;e.target.textContent="Apagar tudo"},3000);return}
-  cfg=defaultCfg();files=[];save();renderAll();renderPreview();$("#cfgTxt").value=JSON.stringify(cfg,null,2);e.target.textContent="Apagar tudo";resetArm=false;toast("Tudo apagado")};
+  ponto("Antes de apagar tudo");cfg=defaultCfg();files=[];save();refreshAll();renderPreview();e.target.textContent="Apagar tudo";resetArm=false;toast("Tudo apagado — pode restaurar em Pontos de restauro")};
 
 /* ---------- demo ---------- */
 $("#demo").onclick=()=>{
-  const c=defaultCfg();const D=c.docTypes;
-  const P=[["Ana Silva","ana.silva@escola.pt"],["Bruno Medeiros","bruno.medeiros@escola.pt"],["Carla Sousa","carla.sousa@escola.pt"]].map(([n,e])=>({id:uid(),nome:n,email:e}));
-  c.profs=P;
+  ponto("Antes de carregar os dados de exemplo");
+  const c=defaultCfg();
+  c.profs=[["Ana Silva","ana.silva@escola.pt"],["Bruno Medeiros","bruno.medeiros@escola.pt"],["Carla Sousa","carla.sousa@escola.pt"]].map(([n,e])=>({id:uid(),nome:n,email:e}));
   cfg=c;save();
-  const T="997 Mecatrónica Automóvel (23-26)",R="DTP 2025.2026/"+T;
-  const P6=R+"/006 - Planificações/006.3 - Módulo e UFCDs",P7=R+"/007 - Recursos Didáticos";
+  const R="DTP 2025.2026/997 Mecatrónica Automóvel (23-26)";
   const L=["path,name,type",
-   `${P6}/1600 - Matemática/Módulo A07,Mod A07 - Planificação.pdf,file`,`${P7}/1600 - Matemática/Módulo A07,Mod A7 - Ficha de trabalho 1.pdf,file`,`${P7}/1600 - Matemática/Módulo A07,Teste A07.pdf,file`,
-   `${P6}/1600 - Matemática/Módulo A08,Mod A08 - Planificação.pdf,file`,`${P7}/1600 - Matemática/Módulo A08,,folder`,
-   `${P6}/9020 - Português/Módulo 5,Planificação M5.docx,file`,`${P7}/9020 - Português/Módulo 5,Ficha de leitura.pdf,file`,
-   `${P6}/9020 - Português/Módulo 6,,folder`,`${P7}/9020 - Português/Módulo 6,Atividade poesia.pdf,file`,
-   `${P6}/1100 - LE I - Inglês/Módulo 7,Planificação mod 7.pdf,file`].join("\n");
+   `${R}/006 - Planificações/006.3 - Módulo e UFCDs/1600 - Matemática/Módulo A07,Planificação A07.pdf,file`,
+   `${R}/007 - Recursos Didáticos/1600 - Matemática/Módulo A07,Ficha 1.pdf,file`,
+   `${R}/012 - Orientação Educativa/1600 - Matemática/Módulo A07,Registo.pdf,file`,
+   `${R}/008 - Avaliação/1600 - Matemática/Módulo A07/Matrizes,Matriz A07.pdf,file`,
+   `${R}/008 - Avaliação/1600 - Matemática/Módulo A07/Testes e Fichas de Avaliação,Teste A07.pdf,file`,
+   `${R}/008 - Avaliação/1600 - Matemática/Módulo A07/Enunciados e Prop. de Correção,,folder`,
+   `${R}/007 - Recursos Didáticos/8821 - TP/10861,Apresentação.pdf,file`,
+   `${R}/012 - Orientação Educativa/8821 - TP/10861,,folder`].join("\n");
   ingest(L,"os dados de exemplo");
   $("#detect").click();
-  const byDisc=k=>cfg.mods.filter(m=>m.pasta.includes(k));
-  byDisc("Matemática").forEach(m=>m.profId=P[1].id);byDisc("Português").forEach(m=>m.profId=P[0].id);byDisc("Inglês").forEach(m=>m.profId=P[2].id);
+  for(const r of gridRows())cfg.grid[r.k]=/Matem/.test(r.disc)?c.profs[1].id:c.profs[0].id;
+  cfg.desig["1600|a07"]="Probabilidade";cfg.desig["*|10861"]="Diagnóstico e Reparação de Sistemas de Iluminação e Aviso";
   save();renderAll();
 };
 
@@ -1097,7 +1353,7 @@ $("#dlCfg").onclick=()=>download(`entregas_config_${hoje()}.json`,JSON.stringify
 /* ---------- init ---------- */
 qualInit();
 try{$("#skipDirs").value=localStorage.getItem("box_skip")||""}catch(e){}
-renderAll();
+renderAll();renderRP();renderEnvios();
 $("#gTo").value=cfg.mail.relatorio_para||"";
 showLast();
 loginUI();
