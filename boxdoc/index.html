@@ -214,7 +214,7 @@ button.big{width:100%;padding:13px 18px;font-size:16px}
 @media (max-width:760px){.grow2{grid-template-columns:1fr 1fr}.undo{display:none}}
 
 details.altp{border:1px solid var(--line);border-radius:10px;margin-bottom:8px;background:#fff}
-details.altp>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:minmax(220px,1.6fr) repeat(3,minmax(80px,.5fr)) minmax(110px,.6fr);gap:10px;align-items:center;padding:10px 14px}
+details.altp>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:minmax(220px,1.6fr) repeat(4,minmax(76px,.5fr)) minmax(110px,.6fr);gap:10px;align-items:center;padding:10px 14px}
 details.altp>summary::-webkit-details-marker{display:none}
 details.altp[open]>summary{border-bottom:1px solid var(--line);background:#fafbfd}
 .who2{display:flex;align-items:center;gap:10px}
@@ -527,7 +527,7 @@ details.altp[open]>summary{border-bottom:1px solid var(--line);background:#fafbf
 <script>
 (function(){
 "use strict";
-const VERSAO="0.8"; // versão do BoxCheck — sobe a cada alteração publicada
+const VERSAO="0.9"; // versão do BoxCheck — sobe a cada alteração publicada
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 const $=s=>document.querySelector(s);
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -1037,22 +1037,29 @@ async function wordsOf(fid){
   return{w};
 }
 const TEXT_EXT=/\.(pdf|docx?|odt|rtf|pptx?|odp|xlsx?|ods|txt)$/i;
-$("#qGo").onclick=async()=>{
-  if(!SES){toast("Entre primeiro na Box");return}
-  const ev=evaluate();const todo=new Map();
-  for(const e of ev)for(const i of e.items)for(const f of i.hits)if(f.fid&&f.sha1&&TEXT_EXT.test(f.name)&&!(CT[f.sha1]&&CT[f.sha1].w!=null)&&f.size!==0)todo.set(f.sha1,f);
-  if(!files.some(f=>f.fid)){$("#qMsg").textContent="Faça uma nova análise em Dados da Box (a listagem antiga não tem os dados necessários).";return}
-  const list=[...todo.values()];
-  if(!list.length){$("#qMsg").textContent="Todos os documentos já foram verificados.";renderReport();return}
-  const b=$("#qGo");b.disabled=true;$("#qProg").style.display="block";$("#qProg i").style.width="2%";
-  let done=0,err=0,idx=0;const t0=Date.now();
+// lê o texto (só leitura) de uma lista de ficheiros {fid,sha1,name,size}; guarda o nº de palavras por impressão digital
+async function checkFiles(list,onProg){
+  let done=0,err=0,idx=0;
   const worker=async()=>{while(idx<list.length){const f=list[idx++];
-    try{const r=await wordsOf(f.fid);if(r.w!=null)CT[f.sha1]={w:r.w,t:Date.now()};else err++}catch(e){err++}
-    done++;$("#qMsg").textContent=`A ler o texto… ${done}/${list.length}`;$("#qProg i").style.width=Math.max(2,Math.round(done/list.length*100))+"%";}};
+    try{const r=await wordsOf(f.fid);if(r.w!=null)CT[f.sha1]={w:r.w,t:Date.now()};else err++}catch(e){if(e.kind==="auth")throw e;err++}
+    done++;onProg&&onProg(done,list.length)}};
   await Promise.all(Array.from({length:Math.min(6,list.length)},worker));
   try{localStorage.setItem("boxcheck_texto",JSON.stringify(CT))}catch(e){}
+  return{done,err};
+}
+const precisaLer=f=>f&&f.fid&&f.sha1&&TEXT_EXT.test(f.name||"")&&f.size!==0&&!(CT[f.sha1]&&CT[f.sha1].w!=null);
+$("#qGo").onclick=async()=>{
+  if(!SES){toast("Entre primeiro na Box");return}
+  if(!files.some(f=>f.fid)){$("#qMsg").textContent="Faça uma nova análise em Dados da Box (a listagem antiga não tem os dados necessários).";return}
+  const ev=evaluate();const todo=new Map();
+  for(const e of ev)for(const i of e.items)for(const f of i.hits)if(precisaLer(f))todo.set(f.sha1,f);
+  const list=[...todo.values()];
+  if(!list.length){$("#qMsg").textContent="Todos os documentos já foram verificados.";renderReport();return}
+  const b=$("#qGo");b.disabled=true;$("#qProg").style.display="block";$("#qProg i").style.width="2%";const t0=Date.now();
+  try{const r=await checkFiles(list,(d,n)=>{$("#qMsg").textContent=`A ler o texto… ${d}/${n}`;$("#qProg i").style.width=Math.max(2,Math.round(d/n*100))+"%"});
+    $("#qMsg").textContent=`Concluído em ${Math.round((Date.now()-t0)/1000)} s: ${r.done-r.err} documento(s) lidos${r.err?`, ${r.err} sem texto disponível (não foram avaliados)`:""}.`}
+  catch(e){$("#qMsg").textContent="Erro: "+e.message}
   b.disabled=false;setTimeout(()=>{$("#qProg").style.display="none"},800);
-  $("#qMsg").textContent=`Concluído em ${Math.round((Date.now()-t0)/1000)} s: ${done-err} documento(s) lidos${err?`, ${err} sem texto disponível (não foram avaliados)`:""}.`;
   renderReport();
 };
 
@@ -1179,9 +1186,10 @@ function diffListings(prev,cur,deleted){
   const C=new Map(cur.itens.filter(x=>x.type==="file"&&x.id).map(x=>[x.id,x]));
   const novos=[],alterados=[],apagados=[];
   for(const [id,x] of C){const o=P.get(id);
-    if(!o)novos.push({p:x.path,n:x.name,by:x.cb||x.by||null,t:x.modified_at||""});
-    else if((o.sha1&&x.sha1&&o.sha1!==x.sha1)||(o.size!==x.size&&o.size!=null&&x.size!=null))alterados.push({p:x.path,n:x.name,by:x.by||null,t:x.modified_at||""});
-    else if(o.path!==x.path||o.name!==x.name)alterados.push({p:x.path,n:x.name,by:x.by||null,t:x.modified_at||"",mv:1})}
+    const base={p:x.path,n:x.name,t:x.modified_at||"",fid:x.id,sha1:x.sha1||"",size:x.size??null,name:x.name};
+    if(!o)novos.push({...base,by:x.cb||x.by||null});
+    else if((o.sha1&&x.sha1&&o.sha1!==x.sha1)||(o.size!==x.size&&o.size!=null&&x.size!=null))alterados.push({...base,by:x.by||null});
+    else if(o.path!==x.path||o.name!==x.name)alterados.push({...base,by:x.by||null,mv:1})}
   const delBy=new Map((deleted||[]).map(d=>[d.id,d.by]));
   for(const [id,o] of P)if(!C.has(id))apagados.push({p:o.path,n:o.name,by:delBy.get(id)||null});
   // efeito no relatório
@@ -1200,6 +1208,9 @@ const pessoaKey=b=>b?(b.e||b.n||"?").toLowerCase():"?";
 function formadorDe(b){if(!b)return null;const e=norm(b.e),n=norm(b.n);
   return cfg.profs.find(p=>(e&&norm(p.email)===e))||cfg.profs.find(p=>n&&norm(p.nome)===n)||null}
 let altSel=0;
+// estado do conteúdo de um ficheiro do painel: "branco", "scan" (sem texto, talvez digitalizado), "ok", "?" (não lido)
+function conteudo(x){if(x.size===0)return"branco";const c=x.sha1&&CT[x.sha1];if(!c||c.w==null)return TEXT_EXT.test(x.n||"")?"?":"";
+  if(c.w<minPal())return (x.size||0)<150000?"branco":"scan";return"ok"}
 function renderAlt(){
   const l=altList();const el=$("#altBody");
   $("#altPick").innerHTML=l.map((d,i)=>`<option value="${i}" ${i===altSel?"selected":""}>${esc(d.desde)} → ${esc(d.ate)} · ${esc(d.pasta)}</option>`).join("");
@@ -1207,31 +1218,37 @@ function renderAlt(){
   const d=l[altSel];
   if(!d){el.innerHTML=`<div class="card"><p class="hint" style="margin:0">Ainda não há alterações para mostrar. A primeira análise de uma pasta serve de ponto de partida; a partir da análise seguinte aparece aqui quem colocou, alterou ou apagou documentos e o efeito no relatório de cada formador.</p></div>`;$("#altTiles").innerHTML="";return}
   const nE=Object.values(d.entregues).reduce((a,x)=>a+x.length,0),nP=Object.values(d.perdidos).reduce((a,x)=>a+x.length,0);
+  const postos=[...d.novos,...d.alterados.filter(x=>!x.mv)],nB=postos.filter(x=>conteudo(x)==="branco").length,nS=postos.filter(x=>conteudo(x)==="scan").length,nQ=postos.filter(x=>conteudo(x)==="?").length;
   $("#altTiles").innerHTML=`
    <div class="tile"><div class="v" style="color:var(--ok)">${d.novos.length}</div><div class="l">documentos colocados</div></div>
    <div class="tile"><div class="v">${d.alterados.length}</div><div class="l">substituídos ou movidos</div></div>
    <div class="tile"><div class="v" style="color:var(--bad)">${d.apagados.length}</div><div class="l">apagados</div></div>
+   <div class="tile"><div class="v" style="color:var(--bad)">${nB}</div><div class="l">colocados em branco${nS?` · ${nS} a confirmar`:""}${nQ?` · ${nQ} por verificar`:""}</div></div>
    <div class="tile"><div class="v" style="color:var(--ok)">${nE}</div><div class="l">itens do relatório passaram a entregues</div></div>
    ${nP?`<div class="tile"><div class="v" style="color:var(--bad)">${nP}</div><div class="l">itens deixaram de estar entregues</div></div>`:""}`;countUp($("#altTiles"));
   // por pessoa (quem fez)
   const P=new Map();const add=(k,arr)=>{for(const x of arr){const key=pessoaKey(x.by);if(!P.has(key))P.set(key,{by:x.by,novos:[],alterados:[],apagados:[],ult:""});const r=P.get(key);r[k].push(x);if(x.t&&x.t>r.ult)r.ult=x.t}};
   add("novos",d.novos);add("alterados",d.alterados);add("apagados",d.apagados);
   const pessoas=[...P.values()].sort((a,b)=>(b.novos.length+b.alterados.length+b.apagados.length)-(a.novos.length+a.alterados.length+a.apagados.length));
-  const fl=(arr,cls)=>arr.slice(0,200).map(x=>`<div class="files ${cls||""}">${x.mv?"↪ movido: ":""}<b>${esc(x.n)}</b> — ${esc(x.p)}</div>`).join("")+(arr.length>200?`<div class="files">… e mais ${arr.length-200}</div>`:"");
+  const tagC=x=>{const c=conteudo(x);return c==="branco"?` <span class="tag bad">em branco</span>`:c==="scan"?` <span class="tag warn">sem texto — a confirmar</span>`:c==="?"?` <span class="tag" style="background:#eef1f5;color:#4a5260">por verificar</span>`:""};
+  const fl=(arr,del)=>arr.slice(0,200).map(x=>`<div class="files">${x.mv?"↪ movido: ":""}<b>${esc(x.n)}</b>${x.mv||del?"":tagC(x)} — ${esc(x.p)}</div>`).join("")+(arr.length>200?`<div class="files">… e mais ${arr.length-200}</div>`:"");
   const rowsP=pessoas.map((r,i)=>{const f=formadorDe(r.by);const nome=r.by?(r.by.n||r.by.e):"(desconhecido)";
     return `<details class="altp"><summary><span class="who2"><span class="av">${esc((nome||"?").split(/\s+/).filter(Boolean).map(w=>w[0]).slice(0,2).join("").toUpperCase())}</span><span><b>${esc(nome)}</b>${r.by&&r.by.e?`<br><span class="hint" style="margin:0">${esc(r.by.e)}</span>`:""}</span>${f?`<span class="tag ok">formador</span>`:""}</span>
-      <span class="num ok">+${r.novos.length}<small>colocou</small></span><span class="num">${r.alterados.length}<small>substituiu</small></span><span class="num bad">${r.apagados.length}<small>apagou</small></span><span class="hint" style="margin:0">${r.ult?new Date(r.ult).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"}):""}</span></summary>
-      <div style="padding:6px 14px 12px">${r.novos.length?`<h3 style="margin:6px 0">Colocou</h3>${fl(r.novos)}`:""}${r.alterados.length?`<h3 style="margin:6px 0">Substituiu / moveu</h3>${fl(r.alterados)}`:""}${r.apagados.length?`<h3 style="margin:6px 0">Apagou</h3>${fl(r.apagados)}`:""}</div></details>`}).join("");
+      <span class="num ok">+${r.novos.length}<small>colocou</small></span><span class="num">${r.alterados.length}<small>substituiu</small></span><span class="num bad">${r.apagados.length}<small>apagou</small></span><span class="num bad">${[...r.novos,...r.alterados.filter(x=>!x.mv)].filter(x=>conteudo(x)==="branco").length}<small>em branco</small></span><span class="hint" style="margin:0">${r.ult?new Date(r.ult).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"}):""}</span></summary>
+      <div style="padding:6px 14px 12px">${r.novos.length?`<h3 style="margin:6px 0">Colocou</h3>${fl(r.novos)}`:""}${r.alterados.length?`<h3 style="margin:6px 0">Substituiu / moveu</h3>${fl(r.alterados)}`:""}${r.apagados.length?`<h3 style="margin:6px 0">Apagou</h3>${fl(r.apagados,true)}`:""}</div></details>`}).join("");
   // por formador (efeito no relatório)
   const ids=new Set([...Object.keys(d.entregues),...Object.keys(d.perdidos)]);
   const T=byTeacher(evaluate());const faltaAgora=new Map(T.map(t=>[t.p.id,t.miss]));
   const rowsF=[...ids].map(id=>({id,p:cfg.profs.find(p=>p.id===id)||{nome:id==="_"?"(sem formador atribuído)":"(formador removido)"},e:d.entregues[id]||[],x:d.perdidos[id]||[]}))
-    .sort((a,b)=>b.e.length-a.e.length).map(r=>`<details class="altp"><summary><span class="who2"><b>${esc(r.p.nome)}</b></span><span class="num ok">+${r.e.length}<small>entregues</small></span><span class="num bad">${r.x.length?"−"+r.x.length:"0"}<small>deixaram de estar</small></span><span class="num">${faltaAgora.get(r.id)??"—"}<small>ainda em falta</small></span><span></span></summary>
+    .sort((a,b)=>b.e.length-a.e.length).map(r=>`<details class="altp"><summary><span class="who2"><b>${esc(r.p.nome)}</b></span><span class="num ok">+${r.e.length}<small>entregues</small></span><span class="num bad">${r.x.length?"−"+r.x.length:"0"}<small>deixaram de estar</small></span><span class="num">${faltaAgora.get(r.id)??"—"}<small>ainda em falta</small></span><span></span><span></span></summary>
       <div style="padding:6px 14px 12px">${r.e.map(x=>`<div class="files" style="color:var(--ok)">✓ ${esc(x.t)} — ${esc(x.d)}</div>`).join("")}${r.x.map(x=>`<div class="files" style="color:var(--bad)">✗ ${esc(x.t)} — ${esc(x.d)}</div>`).join("")}</div></details>`).join("");
-  el.innerHTML=`<div class="card"><h2>Quem fez o quê</h2><p class="hint">Entre a análise de ${esc(d.desde)} e a de ${esc(d.ate)}. Clique numa pessoa para ver os ficheiros.</p>${rowsP||`<p class="hint">Nenhum documento colocado, alterado ou apagado.</p>`}</div>
+  el.innerHTML=`<div class="card"><h2>Quem fez o quê</h2><p class="hint">Entre a análise de ${esc(d.desde)} e a de ${esc(d.ate)}. Clique numa pessoa para ver os ficheiros. “Em branco” = documentos colocados ou substituídos sem conteúdo (menos de ${minPal()} palavras).${nQ?` Há ${nQ} documento(s) ainda por verificar — <a href="#" id="altCheck">verificar agora</a>.`:""}</p>${rowsP||`<p class="hint">Nenhum documento colocado, alterado ou apagado.</p>`}</div>
     <div class="card"><h2>Efeito no relatório, por formador</h2><p class="hint">Itens exigidos (turma · disciplina · módulo · documento) que mudaram de estado entre as duas análises.</p>${rowsF||`<p class="hint">Nenhum item mudou de estado.</p>`}</div>`;
 }
 $("#altPick").addEventListener("change",e=>{altSel=+e.target.value;renderAlt()});
+$("#altBody").addEventListener("click",async e=>{if(e.target.id!=="altCheck")return;e.preventDefault();const d=altList()[altSel];if(!d||!SES){toast("Entre primeiro na Box");return}
+  const list=[...d.novos,...d.alterados].filter(x=>precisaLer(x));e.target.textContent="a verificar…";
+  try{await checkFiles(list,(a,n)=>{e.target.textContent=`a verificar… ${a}/${n}`})}catch(er){toast(er.message)}renderAlt()});
 
 /* ---------- relatório de pastas ---------- */
 function buildTree(){
@@ -1485,6 +1502,15 @@ async function runScan(full){
     if(!res){st.opened=0;st.nF=0;st.nP=0;res=await fullScan(run,curFolder.id,root,st)}
     const nPast=res.itens.filter(x=>x.type==="folder").length,nFich=res.itens.filter(x=>x.type==="file").length;
     const j={v:2,pasta:root,rootId:curFolder.id,t:Date.now(),quando:new Date().toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"}),itens:res.itens,pos:res.pos,failed:st.failed};
+    // verificação automática do conteúdo (antes de comparar): documentos novos ou alterados e documentos exigidos ainda não lidos
+    let verif=null;
+    {const pf=new Map(prev&&prev.rootId===j.rootId&&prev.v===2?prev.itens.filter(x=>x.type==="file").map(x=>[x.id,x.sha1]):[]);
+     const todo=new Map();const asF=x=>({fid:x.id,sha1:x.sha1,name:x.name,n:x.name,size:x.size??null});
+     if(pf.size)for(const x of j.itens)if(x.type==="file"&&(!pf.has(x.id)||pf.get(x.id)!==x.sha1)){const f=asF(x);if(precisaLer(f))todo.set(f.sha1,f)}
+     for(const e of evalWith(j))for(const i of e.items)for(const f of i.hits)if(todo.size<600&&precisaLer(f))todo.set(f.sha1,f);
+     if(todo.size){const tt=Date.now();try{const r=await checkFiles([...todo.values()],(a,n)=>{$("#scanMsg").textContent=`Pastas lidas. A verificar se os documentos estão em branco… ${a}/${n}`});
+        verif={n:r.done,b:[...todo.values()].filter(x=>{const c=CT[x.sha1];return c&&c.w!=null&&c.w<minPal()&&(x.size||0)<150000}).length,s:Math.round((Date.now()-tt)/1000)}}
+       catch(er){verif={erro:er.message}}}}
     let diff=null;
     if(prev&&prev.rootId===j.rootId&&prev.v===2){try{diff=diffListings(prev,j,st.deleted);saveAlt(diff);altSel=0}catch(e){console.warn(e)}}
     try{localStorage.setItem("box_last_listing",JSON.stringify(j))}catch(e){toast("A listagem é grande demais para ficar guardada neste navegador — descarregue-a em CSV")}
@@ -1492,7 +1518,10 @@ async function runScan(full){
     const secs=Math.round((Date.now()-st.t0)/1000);
     $("#scanMsg").textContent=`Concluído em ${secs} s (${st.modo}${st.modo==="só o que mudou"?`: ${st.mudancas} alteração(ões), ${st.opened} pasta(s) relidas`:""}) · ${nPast} pastas, ${nFich} ficheiros${RATE.hits?` · a Box pediu ${RATE.hits} pausa(s)`:""}${st.failed.length?` · ⚠ ${st.failed.length} pasta(s) sem acesso: ${st.failed.slice(0,3).join("; ")}${st.failed.length>3?"…":""}`:""}.`;
     useListing(j,"a Box");showLast();scanHint();
+    if(verif)$("#scanMsg").textContent+=verif.erro?` · Não foi possível verificar o conteúdo: ${verif.erro}`:` · Conteúdo verificado em ${verif.n} documento(s): ${verif.b} em branco.`;
+    if(verif&&verif.b)toast(`${verif.b} documento(s) em branco — veja “Alterações” e o Relatório`);
     if(diff){const n=diff.novos.length+diff.alterados.length+diff.apagados.length;$("#scanMsg").textContent+=` Alterações desde ${diff.desde}: ${diff.novos.length} colocado(s), ${diff.alterados.length} substituído(s), ${diff.apagados.length} apagado(s) — veja “Alterações”.`;if(n)toast(`${n} alteração(ões) desde a última análise — veja “Alterações”`)}
+
     if(!cfg.mods.length)toast("Agora use “Detetar módulos” em Atribuições");
   }catch(e){scanRun++;$("#scanMsg").textContent="Erro: "+e.message}
   b.disabled=false;$("#scanUpd").disabled=false;$("#scanProg i").style.width="100%";setTimeout(()=>{$("#scanProg").style.display="none"},900);
