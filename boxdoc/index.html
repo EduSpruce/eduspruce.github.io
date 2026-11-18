@@ -546,7 +546,7 @@ details.altp>summary{grid-template-columns:minmax(220px,1.6fr) repeat(5,minmax(6
 <script>
 (function(){
 "use strict";
-const VERSAO="1.0"; // versão do BoxCheck — sobe a cada alteração publicada
+const VERSAO="1.1"; // versão do BoxCheck — sobe a cada alteração publicada
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 const $=s=>document.querySelector(s);
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -1603,7 +1603,7 @@ function printText(title,text){
 // ÚNICA porta de acesso à Box: só pedidos GET (leitura). Não há neste código nada que escreva na Box.
 // Endereço do serviço de login na Cloudflare. Pode ser escrito aqui (recomendado ao publicar)
 // ou indicado na própria página, no separador "Dados da Box".
-const BOXDOC_WORKER="";
+const BOXDOC_WORKER="https://boxdoc-login.joel-cunha83.workers.dev";
 const workerUrl=()=>{let u=BOXDOC_WORKER;try{u=u||localStorage.getItem("boxdoc_worker")||""}catch(e){}return u.replace(/\/+$/,"")};
 // Sessão: {mode:"oauth"|"dev", a: access token, r: refresh token, exp: ms}
 let SES=null;
