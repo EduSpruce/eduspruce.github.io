@@ -100,13 +100,37 @@ details.fd.leaf>summary::before{content:"·"}
   <nav id="nav" class="side">
     <button data-t="box" class="on"><svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>Dados da Box</button>
     <button data-t="pas"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>Pastas</button>
-    <button data-t="config"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Atribuições</button>
+    <button data-t="prof"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>Professores</button>
+    <button data-t="config"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Atribuições</button>
     <button data-t="rel"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 15l2 2 4-4"/></svg>Relatório</button>
     <button data-t="env"><svg viewBox="0 0 24 24"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>Enviar</button>
     <button data-t="cop"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>Guardar / carregar</button>
     <div class="foot">BoxDoc — ferramenta interna da escola. Só leitura: não altera nada na Box.<br>Não é um produto da Box, Inc.</div>
   </nav>
 <main>
+
+<!-- PROFESSORES -->
+<section id="prof">
+  <div class="card">
+    <h2>Professores</h2>
+    <p class="hint">Registe aqui os professores e os respetivos emails. Depois atribui-lhes os módulos em <b>Atribuições</b>, e o email é usado em <b>Enviar</b>.</p>
+    <div class="row" style="margin-bottom:10px">
+      <label class="grow">Procurar<input type="text" id="profFilter" placeholder="nome ou email"></label>
+      <button class="b" id="addProf" style="align-self:flex-end">+ Professor</button>
+    </div>
+    <table>
+      <thead><tr><th>Nome</th><th>Email</th><th class="hm">Módulos atribuídos</th><th></th></tr></thead>
+      <tbody id="tbProfs"></tbody>
+    </table>
+    <div id="profWarn"></div>
+  </div>
+  <div class="card">
+    <h2>Colar uma lista de professores</h2>
+    <p class="hint">Copie duas colunas do Excel (nome e email) e cole aqui, um professor por linha. Também serve <code>Nome;email</code> ou <code>Nome, email</code>. Quem já existir (mesmo nome ou email) é atualizado, não duplicado.</p>
+    <textarea id="profBulk" placeholder="Ana Silva&#9;ana.silva@escola.pt&#10;Bruno Medeiros&#9;bruno.medeiros@escola.pt"></textarea>
+    <div class="row" style="margin-top:8px"><button class="b" id="profImport">Adicionar professores</button><span id="profMsg" class="hint" style="margin:0"></span></div>
+  </div>
+</section>
 
 <!-- 1. CONFIG -->
 <section id="config">
@@ -118,15 +142,6 @@ details.fd.leaf>summary::before{content:"·"}
       <tbody id="tbDocs"></tbody>
     </table>
     <div class="row" style="margin-top:10px"><button class="b s" id="addDoc">+ Documento</button></div>
-  </div>
-
-  <div class="card">
-    <h2>Professores</h2>
-    <table>
-      <thead><tr><th>Nome</th><th>Email</th><th class="hm">Módulos</th><th></th></tr></thead>
-      <tbody id="tbProfs"></tbody>
-    </table>
-    <div class="row" style="margin-top:10px"><button class="b s" id="addProf">+ Professor</button></div>
   </div>
 
   <div class="card">
@@ -183,6 +198,9 @@ details.fd.leaf>summary::before{content:"·"}
       <h3>Escolha a pasta a analisar</h3>
       <div class="row" id="crumbs" style="gap:4px;font-size:14px"></div>
       <div id="subfolders" class="chips" style="margin:10px 0"></div>
+      <div class="row" style="margin-bottom:10px">
+        <label class="grow">Saltar as pastas cujo nome começa por (opcional, mais rápido)<input type="text" id="skipDirs" placeholder="ex.: 015, 016, 017, 018"></label>
+      </div>
       <div class="row">
         <button class="b" id="scanBtn">Analisar esta pasta e subpastas</button>
         <span id="scanMsg" class="hint" style="margin:0"></span>
@@ -362,16 +380,37 @@ $("#tbDocs").addEventListener("click",e=>{if(!e.target.hasAttribute("data-del"))
 $("#addDoc").onclick=()=>{const d={id:uid(),nome:"Novo documento",subpasta:"",palavras:"",ext:"",min:1};cfg.docTypes.push(d);cfg.mods.forEach(m=>m.docs.push(d.id));save();renderAll()};
 
 function renderProfs(){
-  $("#tbProfs").innerHTML=cfg.profs.map(p=>`<tr data-id="${p.id}">
+  const q=norm(($("#profFilter")||{}).value||"");
+  const list=cfg.profs.filter(p=>!q||norm(p.nome+" "+p.email).includes(q));
+  const semMail=cfg.profs.filter(p=>!/\S+@\S+\.\S+/.test(p.email||"")).length;
+  const wEl=$("#profWarn");if(wEl)wEl.innerHTML=cfg.profs.length?(semMail?`<div class="msg bad">${semMail} professor(es) sem email válido — não vão receber mensagens.</div>`:`<div class="msg ok">${cfg.profs.length} professor(es), todos com email.</div>`):"";
+  $("#tbProfs").innerHTML=list.map(p=>`<tr data-id="${p.id}">
    <td><input type="text" data-k="nome" value="${esc(p.nome)}"></td>
    <td><input type="email" data-k="email" value="${esc(p.email)}"></td>
    <td class="hm" style="color:var(--muted)">${cfg.mods.filter(m=>m.profId===p.id).length}</td>
-   <td><button class="x" title="Remover" data-del>×</button></td></tr>`).join("")||`<tr><td colspan="4" class="hint">Ainda sem professores.</td></tr>`;
+   <td><button class="x" title="Remover" data-del>×</button></td></tr>`).join("")||`<tr><td colspan="4" class="hint">${cfg.profs.length?"Ninguém corresponde à procura.":"Ainda sem professores — adicione um a um ou cole uma lista abaixo."}</td></tr>`;
 }
 $("#tbProfs").addEventListener("input",e=>{const tr=e.target.closest("tr");const p=cfg.profs.find(x=>x.id===tr.dataset.id);p[e.target.dataset.k]=e.target.value;save();if(e.target.dataset.k==="nome")renderMods()});
 $("#tbProfs").addEventListener("click",e=>{if(!e.target.hasAttribute("data-del"))return;const id=e.target.closest("tr").dataset.id;cfg.profs=cfg.profs.filter(x=>x.id!==id);cfg.mods.forEach(m=>{if(m.profId===id)m.profId=""});save();renderAll()});
 $("#addProf").onclick=()=>{cfg.profs.push({id:uid(),nome:"",email:""});save();renderProfs();const ins=$("#tbProfs").querySelectorAll("tr:last-child input");ins[0]&&ins[0].focus()};
 
+$("#profFilter").addEventListener("input",renderProfs);
+$("#profImport").onclick=()=>{
+  let add=0,upd=0,bad=0;
+  for(const l of $("#profBulk").value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean)){
+    const em=(l.match(/[^\s;,<>"]+@[^\s;,<>"]+\.[^\s;,<>"]+/)||[])[0]||"";
+    let nm=l.replace(em,"").replace(/[<>"]/g,"").split(/\t|;|,/).map(x=>x.trim()).filter(Boolean).join(" ").trim();
+    if(!em&&(/^(nome|name|professor(es)?)$/i.test(nm)||/e-?mail/i.test(l)))continue; // linha de cabeçalho
+    if(!nm&&!em){bad++;continue}
+    if(!nm)nm=em.split("@")[0];
+    const ex=cfg.profs.find(p=>(em&&norm(p.email)===norm(em))||norm(p.nome)===norm(nm));
+    if(ex){if(em)ex.email=em;if(nm&&!ex.nome)ex.nome=nm;upd++}else{cfg.profs.push({id:uid(),nome:nm,email:em});add++}
+  }
+  cfg.profs.sort((a,b)=>a.nome.localeCompare(b.nome,"pt"));
+  save();renderAll();
+  $("#profMsg").textContent=`${add} adicionado(s), ${upd} atualizado(s)${bad?`, ${bad} linha(s) ignorada(s)`:""}.`;
+  if(add||upd)$("#profBulk").value="";
+};
 function profOpts(sel){return `<option value="">— escolher —</option>`+cfg.profs.slice().sort((a,b)=>a.nome.localeCompare(b.nome,"pt")).map(p=>`<option value="${p.id}" ${p.id===sel?"selected":""}>${esc(p.nome||"(sem nome)")}</option>`).join("")}
 function modVisible(m){const q=norm($("#modFilter").value);if(!q)return true;
   const noProf=q.includes("!prof");const rest=q.replace("!prof","").trim();
@@ -725,7 +764,7 @@ async function boxGet(path,params){
     if(r.ok)return r.json();
     if(r.status===401){if(!renewed&&SES&&SES.mode==="oauth"){renewed=true;await accessToken(true);continue}
       logout(false);throw new Error("O acesso à Box expirou. Volte a entrar.")}
-    if(r.status===429||r.status>=500){await new Promise(s=>setTimeout(s,Math.min(30,(+r.headers.get("Retry-After")||2**t))*1000));continue}
+    if(r.status===429||r.status>=500){await new Promise(s=>setTimeout(s,Math.min(30,(+r.headers.get("Retry-After")||0.5*2**t))*1000));continue}
     throw new Error("A Box respondeu "+r.status+(r.status===403?" (sem permissão para esta pasta)":"")+".");
   }
   throw new Error("A Box está a limitar os pedidos. Tente daqui a pouco.");
@@ -783,25 +822,29 @@ function useListing(j,label){
   $("#dlList").style.display="";
 }
 $("#scanBtn").onclick=async()=>{
-  const b=$("#scanBtn");b.disabled=true;
+  const b=$("#scanBtn");b.disabled=true;$("#scanMsg").textContent="A ler…";
   const root=curFolder.path.slice(1).map(p=>p.name).join("/")||"Box";
   const itens=[];let nP=0,nF=0;const t0=Date.now();
   try{
     try{localStorage.setItem("box_last_folder",JSON.stringify(curFolder))}catch(e){}
+    const skip=String($("#skipDirs").value||"").split(/[,;]/).map(norm).filter(Boolean);
+    try{localStorage.setItem("box_skip",$("#skipDirs").value)}catch(e){}
+    const skipped=n=>skip.some(k=>segMatch(norm(n),k));let nS=0;
+    const CONC=14; // pedidos em simultâneo (a Box aceita cerca de 16 por segundo por utilizador)
     const queue=[{id:curFolder.id,path:root}];let active=0,err=null;
     await new Promise(resolve=>{
       const pump=()=>{
         if(err||(!queue.length&&!active)){resolve();return}
-        while(active<6&&queue.length){const f=queue.shift();active++;
+        while(active<CONC&&queue.length){const f=queue.shift();active++;
           listFolder(f.id).then(list=>{for(const x of list){
-              if(x.type==="folder"){const p=f.path+"/"+x.name;itens.push({path:p,name:"",type:"folder"});queue.push({id:x.id,path:p});nP++}
+              if(x.type==="folder"){if(skipped(x.name)){nS++;continue}const p=f.path+"/"+x.name;itens.push({path:p,name:"",type:"folder"});queue.push({id:x.id,path:p});nP++}
               else if(x.type==="file"){itens.push({path:f.path,name:x.name,type:"file",modified_at:x.modified_at||""});nF++}}})
-          .catch(e=>{err=e}).finally(()=>{active--;$("#scanMsg").textContent=`A ler… ${nP} pastas, ${nF} ficheiros`;pump()})}
+          .catch(e=>{err=e}).finally(()=>{active--;$("#scanMsg").textContent=`A ler… ${nP} pastas, ${nF} ficheiros${nS?` · ${nS} saltadas`:""} · ${queue.length+active} por ler`;pump()})}
       };pump();});
     if(err)throw err;
     const j={pasta:root,quando:new Date().toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"}),itens};
     try{localStorage.setItem("box_last_listing",JSON.stringify(j))}catch(e){}
-    $("#scanMsg").textContent=`Concluído em ${Math.round((Date.now()-t0)/1000)} s.`;
+    $("#scanMsg").textContent=`Concluído em ${Math.round((Date.now()-t0)/1000)} s · ${nP} pastas, ${nF} ficheiros${nS?` · ${nS} pastas saltadas`:""}.`;
     useListing(j,"a Box");showLast();
     if(!cfg.mods.length)toast("Agora use “Detetar módulos” em Atribuições");
   }catch(e){$("#scanMsg").textContent="Erro: "+e.message}
@@ -823,6 +866,7 @@ $("#gMail").addEventListener("click",e=>{const to=$("#gTo").value.trim();let bod
 $("#dlCfg").onclick=()=>download(`entregas_config_${hoje()}.json`,JSON.stringify(cfg,null,2),"application/json");
 
 /* ---------- init ---------- */
+try{$("#skipDirs").value=localStorage.getItem("box_skip")||""}catch(e){}
 renderAll();
 $("#gTo").value=cfg.mail.relatorio_para||"";
 showLast();
