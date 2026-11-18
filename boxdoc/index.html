@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BoxDoc — Controlo de Entregas</title>
+<title>EPISJ Box — Controlo de Entregas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -135,10 +135,57 @@ details.fd[open]>details{animation:fadeUp .2s ease}
 .brand:hover svg{transform:rotate(-8deg) scale(1.08)}
 .done-burst{display:inline-block;animation:pop .4s cubic-bezier(.2,.8,.2,1.5)}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* ---------- ecrã de entrada ---------- */
+.gate{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:20px;
+  background:radial-gradient(1200px 600px at 10% -10%,#dfeafc 0,transparent 60%),radial-gradient(900px 500px at 110% 110%,#e3ecfb 0,transparent 55%),#f5f7fb;transition:opacity .35s,visibility .35s}
+.gate.off{opacity:0;visibility:hidden}
+.gcard{width:100%;max-width:440px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:36px 34px 26px;text-align:center;box-shadow:0 20px 50px rgba(16,24,40,.10);animation:pop .45s cubic-bezier(.2,.8,.2,1.15)}
+.glogo svg{width:64px;height:64px;animation:pop .5s .1s both cubic-bezier(.2,.8,.2,1.5)}
+.gcard h1{margin:12px 0 4px;font-size:30px;letter-spacing:-.02em;font-weight:600}
+.gcard h1 b,.brand b{color:var(--brand);font-weight:800}
+.gsub{color:var(--muted);margin:0 0 24px;font-size:14.5px;line-height:1.5}.gsub span{font-size:13px}
+button.big{width:100%;padding:13px 18px;font-size:16px}
+.gcard #wkSet,.gcard #devTok{text-align:left}
+.gfoot{margin:22px 0 0;font-size:12px;color:var(--muted)}
+.gwait{display:flex;align-items:center;justify-content:center;gap:10px;color:var(--muted);padding:14px 0}
+.spin{width:18px;height:18px;border:2.5px solid #d6e2f7;border-top-color:var(--brand);border-radius:50%;animation:rot .8s linear infinite;display:inline-block}
+@keyframes rot{to{transform:rotate(360deg)}}
+.who{display:flex;align-items:center;gap:10px;font-size:13.5px;color:#3d434b}
+.who .av{width:30px;height:30px;border-radius:50%;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+.who a{color:var(--muted);text-decoration:none;font-size:12.5px}.who a:hover{color:var(--bad)}
+.top .grow{flex:1}
 </style>
 </head>
 <body>
-<div class="top"><div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="2" width="28" height="28" rx="8" fill="#1a5fd0"/><path d="M10.5 8.5h7.5l4 4v11a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 9 23.5V10a1.5 1.5 0 0 1 1.5-1.5z" fill="#fff"/><path d="M12.5 18l2.3 2.3 4.7-4.7" stroke="#1a5fd0" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>BoxDoc</div><span class="sub">Controlo de entregas de documentação</span></div>
+<div id="gate" class="gate">
+  <div class="gcard">
+    <div class="glogo"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="2" width="28" height="28" rx="8" fill="#1a5fd0"/><path d="M10.5 8.5h7.5l4 4v11a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 9 23.5V10a1.5 1.5 0 0 1 1.5-1.5z" fill="#fff"/><path d="M12.5 18l2.3 2.3 4.7-4.7" stroke="#1a5fd0" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <h1>EPISJ <b>Box</b></h1>
+    <p class="gsub">Controlo de entregas de documentação<br><span>Escola Profissional da Ilha de São Jorge</span></p>
+    <div id="gateWait" class="gwait" style="display:none"><span class="spin"></span> A ligar à Box…</div>
+    <div id="gateLogin">
+    <div id="loginBox">
+      <button class="b big" id="oaGo">Entrar com a Box</button>
+      <p class="hint" style="margin:10px 0 0">Só é preciso entrar uma vez neste navegador: a sessão renova-se sozinha.</p>
+      <div id="wkSet" style="display:none;margin-top:12px">
+        <p class="hint">Primeira vez neste navegador: indique o endereço do serviço de login (Cloudflare) — ver LEIA-ME, passo 3.</p>
+        <div class="row"><label class="grow">Endereço do serviço de login<input type="text" id="wkUrl" placeholder="https://boxdoc-login.o-seu-nome.workers.dev"></label><button class="b s" id="wkSave" style="align-self:flex-end">Guardar</button></div>
+      </div>
+    </div>
+    <details id="devTok" style="margin-top:12px">
+      <summary class="hint" style="cursor:pointer;margin:0">Alternativa: usar um token de programador (60 minutos)</summary>
+      <div class="row" style="margin-top:8px">
+        <label class="grow">Token de programador<input type="text" id="tok" autocomplete="off" spellcheck="false" style="-webkit-text-security:disc" placeholder="cole aqui o Developer Token"></label>
+        <button class="b s" id="tokGo" style="align-self:flex-end">Ligar com token</button>
+      </div>
+    </details>
+    </div>
+    <div id="gateMsg"></div>
+    <p class="gfoot">Só leitura: a app não altera, move nem apaga nada na Box.</p>
+  </div>
+</div>
+<div class="top"><div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="2" width="28" height="28" rx="8" fill="#1a5fd0"/><path d="M10.5 8.5h7.5l4 4v11a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 9 23.5V10a1.5 1.5 0 0 1 1.5-1.5z" fill="#fff"/><path d="M12.5 18l2.3 2.3 4.7-4.7" stroke="#1a5fd0" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>EPISJ <b>Box</b></span></div><span class="sub">Controlo de entregas de documentação</span><span class="grow"></span><span id="who" class="who" style="display:none"></span></div>
 <div class="shell">
   <nav id="nav" class="side">
     <button data-t="box" class="on"><svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>Dados da Box</button>
@@ -148,7 +195,7 @@ details.fd[open]>details{animation:fadeUp .2s ease}
     <button data-t="rel"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 15l2 2 4-4"/></svg>Relatório</button>
     <button data-t="env"><svg viewBox="0 0 24 24"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>Enviar</button>
     <button data-t="cop"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>Guardar / carregar</button>
-    <div class="foot">BoxDoc — ferramenta interna da escola. Só leitura: não altera nada na Box.<br>Não é um produto da Box, Inc.</div>
+    <div class="foot">EPISJ Box — ferramenta interna da Escola Profissional da Ilha de São Jorge. Só leitura: não altera nada na Box.<br>Não é um produto da Box, Inc.</div>
   </nav>
 <main>
 
@@ -216,25 +263,8 @@ details.fd[open]>details{animation:fadeUp .2s ease}
 <!-- 2. BOX -->
 <section id="box" class="on">
   <div class="card" id="boxLive">
-    <h2>Ligação direta à Box <span class="tag ok" style="vertical-align:middle">só leitura</span></h2>
+    <h2>Pastas da Box <span class="tag ok" style="vertical-align:middle">só leitura</span></h2>
     <p class="hint">A app só lê nomes de pastas e ficheiros. Não abre, altera, move nem apaga nada na Box.</p>
-    <div id="loginBox">
-      <div class="row">
-        <button class="b" id="oaGo">Entrar com a Box</button>
-        <span class="hint" style="margin:0">Entra uma vez; a sessão renova-se sozinha.</span>
-      </div>
-      <div id="wkSet" style="display:none;margin-top:12px">
-        <p class="hint">Primeira vez neste navegador: indique o endereço do serviço de login (Cloudflare) — ver LEIA-ME, passo 3.</p>
-        <div class="row"><label class="grow">Endereço do serviço de login<input type="text" id="wkUrl" placeholder="https://boxdoc-login.o-seu-nome.workers.dev"></label><button class="b s" id="wkSave" style="align-self:flex-end">Guardar</button></div>
-      </div>
-    </div>
-    <details id="devTok" style="margin-top:12px">
-      <summary class="hint" style="cursor:pointer;margin:0">Alternativa: usar um token de programador (60 minutos)</summary>
-      <div class="row" style="margin-top:8px">
-        <label class="grow">Token de programador<input type="text" id="tok" autocomplete="off" spellcheck="false" style="-webkit-text-security:disc" placeholder="cole aqui o Developer Token"></label>
-        <button class="b s" id="tokGo" style="align-self:flex-end">Ligar com token</button>
-      </div>
-    </details>
     <div class="row" style="margin-top:10px"><button class="b s" id="tokOut" style="display:none">Terminar sessão</button></div>
     <div id="boxAuth"></div>
     <div id="boxBrowse" style="display:none">
@@ -788,13 +818,13 @@ let refreshing=null;
 async function accessToken(force){
   if(!SES)throw new Error("Não está ligado à Box.");
   if(!force&&Date.now()<SES.exp)return SES.a;
-  if(SES.mode!=="oauth"){logout(false);throw new Error("O token de programador expirou. Gere um novo ou use “Entrar com a Box”.")}
+  if(SES.mode!=="oauth"){const m="O token de programador expirou. Gere um novo ou use “Entrar com a Box”.";logout(false,m);throw new Error(m)}
   if(!refreshing)refreshing=(async()=>{
     const w=workerUrl();if(!w)throw new Error("Falta o endereço do serviço de login.");
     let r;try{r=await fetch(w+"/refresh",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({refresh_token:SES.r})})}
     catch(e){throw new Error("Não foi possível contactar o serviço de login ("+w+").")}
     const j=await r.json().catch(()=>({}));
-    if(!r.ok||!j.access_token){logout(false);throw new Error(j.erro||"Sessão expirada. Entre outra vez com a Box.")}
+    if(!r.ok||!j.access_token){const m=j.erro||"Sessão expirada. Entre outra vez com a Box.";logout(false,m);throw new Error(m)}
     SES={mode:"oauth",a:j.access_token,r:j.refresh_token||SES.r,exp:Date.now()+(j.expires_in||3600)*1000-120e3};saveSes();return SES.a;
   })().finally(()=>{refreshing=null});
   return refreshing;
@@ -810,7 +840,7 @@ async function boxGet(path,params){
     catch(e){throw new Error("O navegador não conseguiu falar com a Box. Confirme que o endereço deste site ("+location.origin+") está em “CORS Domains” na sua aplicação da Box.")}
     if(r.ok)return r.json();
     if(r.status===401){if(!renewed&&SES&&SES.mode==="oauth"){renewed=true;await accessToken(true);continue}
-      logout(false);throw new Error("O acesso à Box expirou. Volte a entrar.")}
+      logout(false,"O acesso à Box expirou. Volte a entrar.");throw new Error("O acesso à Box expirou. Volte a entrar.")}
     if(r.status===429||r.status>=500){await new Promise(s=>setTimeout(s,Math.min(30,(+r.headers.get("Retry-After")||0.5*2**t))*1000));continue}
     throw new Error("A Box respondeu "+r.status+(r.status===403?" (sem permissão para esta pasta)":"")+".");
   }
@@ -834,19 +864,30 @@ $("#wkSave").onclick=()=>{let v=$("#wkUrl").value.trim();if(!/^https:\/\//.test(
   try{localStorage.setItem("boxdoc_worker",v.replace(/\/+$/,""))}catch(e){}loginUI();toast("Guardado")};
 async function tokGo(){
   const v=$("#tok").value.trim();if(!v){toast("Cole o token");return}
-  SES={mode:"dev",a:v,exp:Date.now()+3600e3};$("#boxAuth").innerHTML=`<div class="msg info">A ligar…</div>`;
+  SES={mode:"dev",a:v,exp:Date.now()+3600e3};gateState("wait");
   try{const me=await boxGet("users/me",{fields:"name,login"});saveSes();connected(me)}
-  catch(e){SES=null;$("#boxAuth").innerHTML=`<div class="msg bad">${esc(e.message)}</div>`}
+  catch(e){SES=null;gateState("login",e.message)}
+}
+function gateState(st,msg){
+  $("#gate").classList.toggle("off",st==="off");
+  $("#gateWait").style.display=st==="wait"?"flex":"none";
+  $("#gateLogin").style.display=st==="login"?"":"none";
+  $("#gateMsg").innerHTML=msg?`<div class="msg bad" style="text-align:left">${esc(msg)}</div>`:"";
 }
 function connected(me){
+  gateState("off");
+  const ini=(me.name||"?").split(/\s+/).filter(Boolean).map(w=>w[0]).slice(0,2).join("").toUpperCase();
+  $("#who").innerHTML=`<span class="av">${esc(ini)}</span><span>${esc(me.name)}</span><a href="#" id="whoOut">Terminar sessão</a>`;$("#who").style.display="flex";
+  $("#whoOut").onclick=e=>{e.preventDefault();logout(true)};
   $("#boxAuth").innerHTML=`<div class="msg ok">Ligado à Box como <b>${esc(me.name)}</b> (${esc(me.login)})${SES.mode==="oauth"?" — a sessão renova-se automaticamente.":" com token de programador (válido 60 minutos)."}</div>`;
-  $("#tok").value="";$("#tokOut").style.display="";$("#loginBox").style.display="none";$("#devTok").style.display="none";
+  $("#tok").value="";$("#loginBox").style.display="none";$("#devTok").style.display="none";
   $("#boxBrowse").style.display="block";browse(curFolder.id,curFolder.path);
 }
-function logout(revoke){
+function logout(revoke,msg){
   const old=SES;SES=null;saveSes();
   if(revoke&&old&&old.mode==="oauth"&&workerUrl())fetch(workerUrl()+"/logout",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({token:old.r||old.a})}).catch(()=>{});
   $("#boxBrowse").style.display="none";$("#tokOut").style.display="none";$("#loginBox").style.display="";$("#devTok").style.display="";$("#boxAuth").innerHTML="";loginUI();
+  $("#who").style.display="none";gateState("login",msg||"");
 }
 $("#tokGo").onclick=tokGo;$("#tok").addEventListener("keydown",e=>{if(e.key==="Enter")tokGo()});
 $("#tokOut").onclick=()=>logout(true);
@@ -921,8 +962,8 @@ $("#gTo").value=cfg.mail.relatorio_para||"";
 showLast();
 loginUI();
 if(window.__goBox)show("box");
-if(window.__authErr)$("#boxAuth").innerHTML=`<div class="msg bad">${esc(window.__authErr)}</div>`;
-if(SES)boxGet("users/me",{fields:"name,login"}).then(connected).catch(e=>{$("#boxAuth").innerHTML=`<div class="msg bad">${esc(e.message)}</div>`});
+if(SES){gateState("wait");boxGet("users/me",{fields:"name,login"}).then(connected).catch(e=>gateState("login",e.message))}
+else gateState("login",window.__authErr||"");
 })();
 </script>
 </body>
