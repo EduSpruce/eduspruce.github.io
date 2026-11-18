@@ -702,6 +702,7 @@ nav.side .anasel select{max-width:none!important;width:100%;height:34px;font-siz
     <p class="hint">Compara o estado atual com uma <b>contagem</b> (um ponto de partida): quem colocou, substituiu ou apagou documentos desde então, e que itens do relatório passaram a estar entregues. Fica uma contagem nova quando regista um envio de emails ou quando carrega no botão; as atualizações automáticas não a mudam.</p>
     <div class="row"><label class="grow" style="max-width:560px">Comparar com<select id="altPick"></select></label>
     <button class="b s" id="altNova" style="align-self:flex-end;display:none">Começar nova contagem a partir de agora</button></div>
+    <div class="row" id="altEstado" style="margin-top:10px;display:none;align-items:center"><span id="altQuando" class="hint" style="margin:0"></span><button class="b s" id="altAtual">↻ Atualizar agora a partir da Box</button></div>
   </div>
   <div class="tiles" id="altTiles"></div>
   <div id="altBody"></div>
@@ -1000,7 +1001,7 @@ nav.side .anasel select{max-width:none!important;width:100%;height:34px;font-siz
 <script>
 (function(){
 "use strict";
-const VERSAO="0.3"; // versão da GUIDE — sobe a cada alteração publicada
+const VERSAO="0.4"; // versão da GUIDE — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo BoxCheck
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -1227,7 +1228,7 @@ let curTab="box";
 $("#nav").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;show(b.dataset.t)});
 function show(t){curTab=t;document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
   document.querySelectorAll("main>section").forEach(s=>s.classList.toggle("on",s.id===t));
-  if(t==="rel")renderReport(); if(t==="est")renderEst(); if(t==="pas")renderTree(); if(t==="alt")renderAlt(); if(t==="rel"||t==="alt")verificarFundo(); if(t==="env")renderSend(); if(t==="def")renderDef(); if(t==="cop"){$("#cfgTxt").value=JSON.stringify(cfg,null,2);renderRP()} if(t==="pra")renderPrazos()}
+  if(t==="rel")renderReport(); if(t==="est")renderEst(); if(t==="pas")renderTree(); if(t==="alt"){renderAlt();if(SES&&lastListing&&!scanBusy&&Date.now()-(lastListing.t||0)>120000)altAtualizar(true)} if(t==="rel"||t==="alt")verificarFundo(); if(t==="env")renderSend(); if(t==="def")renderDef(); if(t==="cop"){$("#cfgTxt").value=JSON.stringify(cfg,null,2);renderRP()} if(t==="pra")renderPrazos()}
 function refreshAll(){renderAll();if(curTab==="pra")renderPrazos();if(curTab==="rel")renderReport();if(curTab==="est")renderEst();if(curTab==="env")renderSend();if(curTab==="pas")renderTree();if(curTab==="alt")renderAlt();if(curTab==="cop"){$("#cfgTxt").value=JSON.stringify(cfg,null,2);renderRP()}}
 const debounce=(fn,ms)=>{let h;return()=>{clearTimeout(h);h=setTimeout(fn,ms)}};
 
@@ -2088,6 +2089,9 @@ async function renderAlt(){
   if(!opts.some(o=>o.k===altSel))altSel=opts.length?opts[0].k:"";
   $("#altPick").innerHTML=opts.map(o=>`<option value="${o.k}" ${o.k===altSel?"selected":""}>${esc(o.txt)}</option>`).join("");
   $("#altPick").parentElement.style.display=opts.length?"":"none";$("#altNova").style.display=root?"":"none";
+  $("#altEstado").style.display=root?"flex":"none";
+  if(root)$("#altQuando").innerHTML=scanBusy?`<span class="spin" style="width:13px;height:13px;vertical-align:-2px"></span> A ler as alterações na Box…`:`Estado atual: leitura da Box de <b>${esc(lastListing.quando)}</b>.`;
+  $("#altAtual").disabled=!!scanBusy;
   let d=null;
   if(altSel.startsWith("L|"))d=legacy[+altSel.slice(2)];
   else if(altSel&&root){const t=+altSel.slice(2),k=root+"|"+t;if(!BASEC||BASEC.k!==k){const b=await lerBase(root,t);if(my!==altBusy)return;BASEC={k,b}}
@@ -2119,10 +2123,24 @@ async function renderAlt(){
   const rowsF=[...ids].map(id=>({id,p:cfg.profs.find(p=>p.id===id)||{nome:id==="_"?"(sem formador atribuído)":"(formador removido)"},e:d.entregues[id]||[],x:d.perdidos[id]||[]}))
     .sort((a,b)=>b.e.length-a.e.length).map(r=>`<details class="altp"><summary><span class="who2"><b>${esc(r.p.nome)}</b></span><span class="num ok">+${r.e.length}<small>entregues</small></span><span class="num bad">${r.x.length?"−"+r.x.length:"0"}<small>deixaram de estar</small></span><span class="num">${faltaAgora.get(r.id)??"—"}<small>ainda em falta</small></span><span></span><span></span><span></span></summary>
       <div style="padding:6px 14px 12px">${r.e.map(x=>`<div class="files" style="color:var(--ok)">✓ ${esc(x.t)} — ${esc(x.d)}</div>`).join("")}${r.x.map(x=>`<div class="files" style="color:var(--bad)">✗ ${esc(x.t)} — ${esc(x.d)}</div>`).join("")}</div></details>`).join("");
-  el.innerHTML=`<div class="card"><h2>Quem fez o quê</h2><p class="hint">Entre ${esc(d.desde)} e ${esc(d.ate)}. Clique numa pessoa para ver os ficheiros. “Vazios / falsos” = documentos colocados ou substituídos que não contam (em branco, texto de enchimento ou modelo por preencher).${nQ?` Há ${nQ} documento(s) ainda por ler — a leitura corre em segundo plano.`:""}</p>${rowsP||`<p class="hint">Nenhum documento colocado, alterado ou apagado.</p>`}</div>
+  const igual=BASEC&&BASEC.b&&lastListing&&BASEC.b.t>=(lastListing.t||0)&&!altSel.startsWith("L|");
+  el.innerHTML=(igual?`<div class="msg info" style="margin-bottom:14px">A contagem foi feita a partir da última leitura da Box (${esc(lastListing.quando)}), por isso ainda não há nada para comparar. Carregue em <b>↻ Atualizar agora a partir da Box</b> para ver o que mudou desde então.</div>`:"")+`<div class="card"><h2>Quem fez o quê</h2><p class="hint">Entre ${esc(d.desde)} e ${esc(d.ate)}. Clique numa pessoa para ver os ficheiros. “Vazios / falsos” = documentos colocados ou substituídos que não contam (em branco, texto de enchimento ou modelo por preencher).${nQ?` Há ${nQ} documento(s) ainda por ler — a leitura corre em segundo plano.`:""}</p>${rowsP||`<p class="hint">Nenhum documento colocado, alterado ou apagado.</p>`}</div>
     <div class="card"><h2>Efeito no relatório, por formador</h2><p class="hint">Itens exigidos (turma · disciplina · módulo · documento) que mudaram de estado desde a contagem.</p>${rowsF||`<p class="hint">Nenhum item mudou de estado.</p>`}</div>`;
 }
 $("#altPick").addEventListener("change",e=>{altSel=e.target.value;renderAlt()});
+// lê na Box o que mudou desde a última análise e volta a comparar (só leitura)
+async function altAtualizar(auto){
+  if(!SES){if(!auto)toast("Entre primeiro na Box");return}
+  if(!lastListing){if(!auto)toast("Faça primeiro uma análise em Gestão Documental");return}
+  if(scanBusy){if(!auto)toast("Já está a decorrer uma leitura da Box");return}
+  const L=lastListing,t0=L.t||0;
+  if(curFolder.id!==L.rootId){let f=null;try{f=JSON.parse(localStorage.getItem("box_last_folder")||"null")}catch(e){}
+    curFolder=f&&f.id===L.rootId?f:{id:L.rootId,path:[{id:"0",name:"Box"},{id:L.rootId,name:L.pasta}]}}
+  const pr=runScan(false,auto);renderAlt();await pr;
+  if(lastListing&&(lastListing.t||0)===t0&&!auto)toast($("#scanMsg").textContent||"Não foi possível atualizar");
+  else if(lastListing&&(lastListing.t||0)===t0&&auto&&/7 dias/.test($("#scanMsg").textContent))toast("A última leitura completa tem mais de 7 dias: faça “Analisar” em Gestão Documental");
+  if(curTab==="alt")renderAlt()}
+$("#altAtual").onclick=()=>altAtualizar(false);
 $("#altNova").onclick=async()=>{if(!lastListing)return;const b=await criarBase(lastListing,"Contagem iniciada à mão");
   if(b){altSel="B|"+b.t;BASEC=null;toast("Nova contagem iniciada: as alterações passam a contar a partir de agora")}else toast("Não foi possível guardar a contagem");renderAlt()};
 
