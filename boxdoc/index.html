@@ -81,6 +81,13 @@ code{background:#f0f2f5;padding:1px 5px;border-radius:4px;font-size:13px}
 #subfolders .chip{display:flex;border:0;border-bottom:1px solid var(--line);border-radius:0;background:#fff;padding:10px 14px;font-size:14px;gap:10px}
 #subfolders .chip:hover{background:#f5f8fe}
 #subfolders .chip:last-child{border-bottom:0}
+#subfolders .chip .nm{flex:1;min-width:0}
+.exc{flex:none;width:26px;height:26px;border-radius:50%;border:1.5px solid #e5484d;background:#fff;color:#e5484d;font:700 17px/1 system-ui;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;transition:background .15s,color .15s,transform .15s}
+.exc:hover{background:#e5484d;color:#fff;transform:scale(1.08)}
+.exc.inc{border-color:#18a058;color:#18a058}.exc.inc:hover{background:#18a058;color:#fff}
+#subfolders .chip.off{background:#fafafa;color:#9aa0a8}#subfolders .chip.off svg{opacity:.35}#subfolders .chip.off .nm{text-decoration:line-through}
+#subfolders .chip .xt{font-size:12px;color:#e5484d;text-decoration:none}
+#excList{margin-top:8px}#excList .chip{background:#fff5f5;border-color:#f3c4c6;color:#a3262b;cursor:default}#excList .chip .exc{width:20px;height:20px;font-size:14px}
 #subfolders .chip svg{width:20px;height:20px;flex:none}
 #crumbs a{color:var(--brand);text-decoration:none;font-weight:500}#crumbs a:hover{text-decoration:underline}
 details.fd{margin-left:18px;border-left:1px solid var(--line);padding-left:8px}
@@ -361,7 +368,7 @@ details.altp>summary{grid-template-columns:minmax(220px,1.6fr) repeat(5,minmax(6
     <div id="boxBrowse" style="display:none">
       <h3>Escolha a pasta a analisar</h3>
       <div class="row" id="crumbs" style="gap:4px;font-size:14px"></div>
-      <div id="subfolders" class="chips" style="margin:10px 0"></div>
+      <div id="subfolders" class="chips" style="margin:10px 0"></div><div id="excList"></div>
             <div class="row">
         <button class="b" id="scanBtn">Analisar esta pasta e subpastas</button>
         <button class="b s" id="scanUpd" title="Volta a ler todas as pastas, uma a uma">Leitura completa</button>
@@ -548,7 +555,7 @@ details.altp>summary{grid-template-columns:minmax(220px,1.6fr) repeat(5,minmax(6
 <script>
 (function(){
 "use strict";
-const VERSAO="1.4"; // versão do BoxCheck — sobe a cada alteração publicada
+const VERSAO="1.5"; // versão do BoxCheck — sobe a cada alteração publicada
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 const $=s=>document.querySelector(s);
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -1730,16 +1737,44 @@ async function browse(id,path){
     curFolder={id,path};
     $("#crumbs").innerHTML=path.map((p,i)=>`${i?"<span>›</span>":""}<a href="#" data-ci="${i}">${esc(p.name)}</a>`).join("");
     const pastas=it.filter(x=>x.type==="folder").sort((a,b)=>a.name.localeCompare(b.name,"pt",{numeric:true}));
-    $("#subfolders").innerHTML=pastas.map(f=>`<span class="chip" data-fid="${f.id}" data-nm="${esc(f.name)}"><svg viewBox="0 0 24 24"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h4.6l2 2.2h8.4A1.5 1.5 0 0 1 21 8.7v9.8a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5z" fill="#6aa0f0"/></svg>${esc(f.name)}</span>`).join("")||`<span class="hint">Sem subpastas.</span>`;
+    const pref=path.slice(1).map(p=>p.name).join("/"),X=cfg.excluir||{};
+    $("#subfolders").innerHTML=pastas.map(f=>{const off=!!X[f.id];return`<span class="chip${off?" off":""}" data-fid="${f.id}" data-nm="${esc(f.name)}"><svg viewBox="0 0 24 24"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h4.6l2 2.2h8.4A1.5 1.5 0 0 1 21 8.7v9.8a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5z" fill="#6aa0f0"/></svg><span class="nm">${esc(f.name)}</span>${off?`<span class="xt">excluída da análise</span>`:""}<button class="exc${off?" inc":""}" data-x="${f.id}" data-p="${esc((pref?pref+"/":"")+f.name)}" title="${off?"Voltar a incluir na análise":"Excluir esta pasta (e subpastas) da análise"}">${off?"+":"−"}</button></span>`}).join("")||`<span class="hint">Sem subpastas.</span>`;
+    renderExc();
     $("#scanBtn").textContent=`Analisar “${path[path.length-1].name}” e subpastas`;scanHint();
   }catch(e){$("#subfolders").innerHTML=`<div class="msg bad">${esc(e.message)}</div>`}
 }
 $("#crumbs").addEventListener("click",e=>{const a=e.target.closest("[data-ci]");if(!a)return;e.preventDefault();const p=curFolder.path.slice(0,+a.dataset.ci+1);browse(p[p.length-1].id,p)});
-$("#subfolders").addEventListener("click",e=>{const c=e.target.closest("[data-fid]");if(!c)return;browse(c.dataset.fid,[...curFolder.path,{id:c.dataset.fid,name:c.dataset.nm}])});
+// excluir pastas da análise: não são abertas nas leituras e o seu conteúdo não entra no relatório
+const EXC=()=>new Set(Object.keys(cfg.excluir||{}));
+const dentro=(path,P)=>path===P||path.startsWith(P+"/");
+function semExcluidas(j){const X=Object.values(cfg.excluir||{});if(!X.length)return j;
+  return{...j,itens:j.itens.filter(x=>!X.some(e=>dentro(x.type==="folder"?x.path:x.path,e.path)&&!(x.type==="folder"&&x.path===e.path)))}}
+function renderExc(){const X=cfg.excluir||{},k=Object.keys(X);
+  $("#excList").innerHTML=k.length?`<div class="hint" style="margin:0 0 4px">Pastas excluídas da análise (${k.length}):</div><div class="chips">${k.map(id=>`<span class="chip">${esc(X[id].path)} <button class="exc inc" data-x="${id}" data-p="${esc(X[id].path)}" title="Voltar a incluir">+</button></span>`).join("")}</div>`:""}
+async function alternarExc(id,P){cfg.excluir=cfg.excluir||{};const on=!cfg.excluir[id];
+  if(on)cfg.excluir[id]={path:P,nome:P.split("/").pop(),t:Date.now()};else delete cfg.excluir[id];
+  save();browse(curFolder.id,curFolder.path);
+  if(lastListing){useListing(lastListing,true);showLast()}
+  toast(on?`“${P.split("/").pop()}” excluída da análise (pode voltar a incluir com +)`:`“${P.split("/").pop()}” incluída outra vez`);
+  if(on||!lastListing||!dentro(P,lastListing.pasta)||P===lastListing.pasta)return;
+  // voltou a incluir: se esta pasta nunca foi lida, lê-a agora (só ela e as subpastas)
+  if(lastListing.itens.some(x=>x.path.startsWith(P+"/")))return;
+  if(scanBusy){toast("Quando a análise terminar, faça “Leitura completa” para ler esta pasta");return}
+  scanBusy=true;const run=++scanRun,st={nP:0,nF:0,opened:0,retries:0,failed:[],t0:Date.now(),modo:"a ler a pasta incluída"};
+  $("#scanProg").style.display="block";
+  try{const itens=[];await crawl(run,[{id,path:P}],itens,st);const j=lastListing;
+    const ids=new Set(j.itens.map(x=>x.type+x.id));for(const x of itens)if(!ids.has(x.type+x.id))j.itens.push(x);
+    j.nP=j.itens.filter(x=>x.type==="folder").length;j.nF=j.itens.length-j.nP;
+    await guardarListagem(j);nuvemListagem(j);scanRun++;useListing(j,true);showLast();
+    $("#scanMsg").textContent=`Lida a pasta “${P.split("/").pop()}”: ${st.nP} pastas, ${st.nF} ficheiros.`;verificarFundo()}
+  catch(e){scanRun++;$("#scanMsg").textContent="Erro ao ler a pasta incluída: "+e.message}
+  finally{scanBusy=false;$("#scanProg").style.display="none"}}
+$("#excList").addEventListener("click",e=>{const b=e.target.closest(".exc");if(b)alternarExc(b.dataset.x,b.dataset.p)});
+$("#subfolders").addEventListener("click",e=>{const x=e.target.closest(".exc");if(x){e.stopPropagation();alternarExc(x.dataset.x,x.dataset.p);return}const c=e.target.closest("[data-fid]");if(!c)return;browse(c.dataset.fid,[...curFolder.path,{id:c.dataset.fid,name:c.dataset.nm}])});
 let lastListing=null;
 // carrega uma listagem da Box (da análise ou guardada) para o relatório
 function useListing(j,quiet){
-  lastListing=j;const t=toFF(j);files=t.fs;folders=t.fo;rawRows=null;$("#colPick").style.display="none";
+  lastListing=j;const t=toFF(semExcluidas(j));files=t.fs;folders=t.fo;rawRows=null;$("#colPick").style.display="none";
   dadosMudaram();
   if(!quiet)boxMsg(`${files.length} ficheiros e ${folders.length} pastas de “${j.pasta}” (${j.quando}).`,"ok");
   $("#dlList").style.display="";qualInit();
@@ -1765,7 +1800,7 @@ async function crawl(run,starts,itens,st,ck){
       if(!queue.length&&!active){resolve();return}
       while(active<16&&queue.length){const f=queue.shift();active++;infl.set(f.id,f);
         listFolder(f.id).then(list=>{st.opened++;for(const x of list){
-            if(x.type==="folder"){const p=f.path+"/"+x.name;itens.push({path:p,name:"",type:"folder",id:x.id,pid:f.id});queue.push({id:x.id,path:p});st.nP++}
+            if(x.type==="folder"){const p=f.path+"/"+x.name;itens.push({path:p,name:"",type:"folder",id:x.id,pid:f.id});if(!EXC().has(x.id))queue.push({id:x.id,path:p});st.nP++}
             else if(x.type==="file"){itens.push(fileItem(x,f.path,f.id));st.nF++}}})
         .catch(e=>{
           if(e.kind==="auth"){st.fatal=e;return}
@@ -1835,7 +1870,7 @@ async function updateScan(run,prev,st){
     for(const k of kids.get(fid)||[]){const n=now.get(k.id);if(!n||n.name!==k.path.split("/").pop())dropTree(k.id);else{keep.push(k);kept.add(k.id)}}
     for(const [id,x] of now){if(kept.has(id))continue;
       if(fo.has(id)){unlink(fo.get(id).pid,id);dropTree(id)}
-      const it={path:F.path+"/"+x.name,name:"",type:"folder",id,pid:fid};fo.set(id,it);keep.push(it);st.nP++;newStarts.push({id,path:it.path})}
+      const it={path:F.path+"/"+x.name,name:"",type:"folder",id,pid:fid};fo.set(id,it);keep.push(it);st.nP++;if(!EXC().has(id))newStarts.push({id,path:it.path})}
     kids.set(fid,keep);
   }
   const itens=[];for(const x of fo.values())if(!x.root)itens.push(x);for(const a of filesBy.values())for(const f of a)itens.push(f);
@@ -1911,7 +1946,8 @@ async function ungz(buf){const s=new Blob([buf]).stream().pipeThrough(new Decomp
 async function nuvem(method,name,body,t){
   const w=workerUrl();if(!w||!SES)throw new Error("sem sessão");
   const H={Authorization:"Bearer "+await accessToken()};if(t)H["X-T"]=String(t);
-  const r=await fetch(w+"/sync"+(name?"/"+encodeURIComponent(name):""),{method,headers:H,body});
+  let r;try{r=await fetch(w+"/sync"+(name?"/"+encodeURIComponent(name):""),{method,headers:H,body})}
+  catch(e){if(NUV.ativo!==true){NUV.ativo=false;nuvemUI();const x=new Error("serviço sem armazenamento");x.kind="nokv";throw x}throw e} // serviço antigo: recusa o pedido
   if(r.status===501){NUV.ativo=false;nuvemUI();const e=new Error("sem armazenamento");e.kind="nokv";throw e}
   if(r.status===404&&method==="GET"&&!name){NUV.ativo=false;nuvemUI();const e=new Error("serviço antigo");e.kind="nokv";throw e}
   if(!r.ok)throw new Error("o serviço respondeu "+r.status);
