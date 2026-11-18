@@ -82,12 +82,12 @@ code{background:#f0f2f5;padding:1px 5px;border-radius:4px;font-size:13px}
 #subfolders .chip:hover{background:#f5f8fe}
 #subfolders .chip:last-child{border-bottom:0}
 #subfolders .chip .nm{flex:1;min-width:0}
-.exc{flex:none;width:26px;height:26px;border-radius:50%;border:1.5px solid #e5484d;background:#fff;color:#e5484d;font:700 17px/1 system-ui;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;transition:background .15s,color .15s,transform .15s}
-.exc:hover{background:#e5484d;color:#fff;transform:scale(1.08)}
-.exc.inc{border-color:#18a058;color:#18a058}.exc.inc:hover{background:#18a058;color:#fff}
+.exb{flex:none;width:26px;height:26px;border-radius:50%;border:1.5px solid #e5484d;background:#fff;color:#e5484d;font:700 17px/1 system-ui;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;transition:background .15s,color .15s,transform .15s}
+.exb:hover{background:#e5484d;color:#fff;transform:scale(1.08)}
+.exb.inc{border-color:#18a058;color:#18a058}.exb.inc:hover{background:#18a058;color:#fff}
 #subfolders .chip.off{background:#fafafa;color:#9aa0a8}#subfolders .chip.off svg{opacity:.35}#subfolders .chip.off .nm{text-decoration:line-through}
 #subfolders .chip .xt{font-size:12px;color:#e5484d;text-decoration:none}
-#excList{margin-top:8px}#excList .chip{background:#fff5f5;border-color:#f3c4c6;color:#a3262b;cursor:default}#excList .chip .exc{width:20px;height:20px;font-size:14px}
+#excList{margin-top:8px}#excList .chip{background:#fff5f5;border-color:#f3c4c6;color:#a3262b;cursor:default}#excList .chip .exb{width:20px;height:20px;font-size:14px}
 #subfolders .chip svg{width:20px;height:20px;flex:none}
 #crumbs a{color:var(--brand);text-decoration:none;font-weight:500}#crumbs a:hover{text-decoration:underline}
 details.fd{margin-left:18px;border-left:1px solid var(--line);padding-left:8px}
@@ -234,6 +234,98 @@ details.altp[open]>summary{border-bottom:1px solid var(--line);background:#fafbf
 .bgp{font-size:12px;font-weight:600;color:var(--brand);background:var(--brandbg);border-radius:999px;padding:4px 10px;margin-right:10px;white-space:nowrap}
 details.altp>summary{grid-template-columns:minmax(220px,1.6fr) repeat(5,minmax(66px,.5fr)) minmax(100px,.6fr)}
 @media (max-width:760px){details.altp>summary{grid-template-columns:1fr 1fr 1fr}.bgp{display:none}}
+
+/* ===================== estilo shadcn/ui com o azul da BoxCheck (v1.6) ===================== */
+:root{
+  --bg:#f8f9fb; --card:#fff; --ink:#0a0f1a; --muted:#64708a; --line:#e3e7ee; --line2:#d3d9e3;
+  --brand:#0061d5; --brand2:#0052b4; --brandbg:#ebf3ff; --ring:rgba(0,97,213,.28);
+  --ok:#15803d; --okbg:#ecfdf3; --bad:#dc2626; --badbg:#fef2f2; --warn:#b45309; --warnbg:#fffbeb;
+  --r:10px; --rs:7px;
+  --sh-sm:0 1px 2px rgba(15,23,42,.05); --sh:0 1px 3px rgba(15,23,42,.06),0 1px 2px rgba(15,23,42,.04);
+}
+body{font-size:14px;-webkit-font-smoothing:antialiased;letter-spacing:-.003em;font-feature-settings:"cv11","ss01"}
+/* topo e barra lateral */
+.top{height:58px;background:rgba(255,255,255,.85);backdrop-filter:saturate(1.6) blur(10px);border-bottom:1px solid var(--line)}
+.brand{font-size:18px;font-weight:650;letter-spacing:-.02em}
+.top .sub{font-size:13px}
+nav.side{background:#fbfcfd;border-right:1px solid var(--line);padding:16px 12px;gap:3px;top:58px;height:calc(100vh - 58px)}
+nav.side button{border-radius:var(--rs);padding:8px 11px;font-size:13.5px;color:#3b4456;font-weight:500}
+nav.side button:hover{background:#f1f4f8;color:var(--ink)}
+nav.side button.on{background:#fff;color:var(--brand);font-weight:600;box-shadow:var(--sh),inset 0 0 0 1px var(--line)}
+nav.side button::before{display:none}
+nav.side button:hover svg{transform:none}
+/* cartões */
+.card{border-radius:var(--r);border-color:var(--line);box-shadow:var(--sh-sm);padding:22px 24px}
+.card:hover{box-shadow:var(--sh-sm);border-color:var(--line)}
+.card h2{font-size:17px;font-weight:650;letter-spacing:-.015em;margin-bottom:2px}
+.card h3{font-size:14.5px;font-weight:600;letter-spacing:-.01em}
+.hint{font-size:13px;color:var(--muted)}
+/* botões (default, outline, ghost) */
+button.b,a.b,label.b{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:36px;padding:0 16px;font-size:13.5px;font-weight:550;border-radius:var(--rs);border:1px solid var(--brand);background:var(--brand);color:#fff;box-shadow:0 1px 2px rgba(0,61,140,.18),inset 0 1px 0 rgba(255,255,255,.12);text-decoration:none;white-space:nowrap}
+button.b:hover,a.b:hover,label.b:hover{background:var(--brand2);border-color:var(--brand2)}
+button.s,label.s,a.b.s{background:#fff;color:var(--ink);border-color:var(--line2);box-shadow:var(--sh-sm)}
+button.s:hover,label.s:hover,a.b.s:hover{background:#f4f6f9;border-color:var(--line2);color:var(--ink)}
+button.b:active,a.b:active,label.b:active{transform:scale(.98)}
+button.big{height:44px;font-size:15px;border-radius:9px}
+button.b:disabled{opacity:.5;cursor:not-allowed}
+button.b:focus-visible,a.b:focus-visible,label.b:focus-visible{outline:none;box-shadow:0 0 0 2px #fff,0 0 0 4px var(--ring)}
+button.x{border-radius:6px}button.x:hover{background:var(--badbg)}
+/* campos */
+input[type=text],input[type=email],input[type=number],input[type=date],input[type=password],select,textarea{height:36px;padding:0 11px;border:1px solid var(--line2);border-radius:var(--rs);font-size:13.5px;background:#fff;box-shadow:var(--sh-sm);color:var(--ink)}
+textarea{height:auto;padding:9px 11px}
+select{appearance:none;-webkit-appearance:none;padding-right:30px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364708a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 15 5 5 5-5M7 9l5-5 5 5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;background-size:14px}
+input:focus,select:focus,textarea:focus{border-color:var(--brand);box-shadow:0 0 0 3px var(--ring)}
+input::placeholder,textarea::placeholder{color:#9aa3b5}
+input[type=checkbox],input[type=radio]{accent-color:var(--brand);width:15px;height:15px}
+/* tabelas */
+table{font-size:13.5px}
+th{font-size:12.5px;text-transform:none;letter-spacing:0;color:var(--muted);font-weight:550;padding:9px 8px;border-bottom:1px solid var(--line);background:transparent}
+td{padding:9px 8px;border-bottom:1px solid #eef1f5}
+tbody tr{transition:background .12s}tbody tr:hover{background:#f8fafc}
+/* indicadores */
+.tiles{gap:14px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.tile{border-radius:var(--r);border:1px solid var(--line);box-shadow:var(--sh-sm);padding:16px 18px;display:flex;flex-direction:column-reverse;gap:6px;justify-content:flex-end}
+.tile:hover{transform:none;box-shadow:var(--sh)}
+.tile .l{font-size:12.5px;font-weight:500;color:var(--muted)}
+.tile .v{font-size:30px;font-weight:650;letter-spacing:-.03em;line-height:1.05;font-variant-numeric:tabular-nums}
+number-flow{--number-flow-char-height:1.05em;font-variant-numeric:tabular-nums}
+/* emblemas, mensagens, cartões de formador */
+.tag{font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:6px;border:1px solid transparent}
+.tag.ok{border-color:#bbf7d0}.tag.bad{border-color:#fecaca}.tag.warn{border-color:#fde68a}
+.ver{background:var(--brandbg);color:var(--brand);border:1px solid #cfe1ff;border-radius:6px;font-weight:600}
+.msg{border-radius:var(--rs);border:1px solid;font-size:13.5px;padding:10px 13px}
+.msg.ok{background:var(--okbg);border-color:#bbf7d0;color:#14532d}
+.msg.bad{background:var(--badbg);border-color:#fecaca;color:#7f1d1d}
+.msg.info{background:#f0f6ff;border-color:#cfe1ff;color:#123b74}
+.prof{border-radius:var(--r);box-shadow:var(--sh-sm)}
+.prof .hd{background:#fbfcfd}
+.bar{height:6px;background:#eef1f5;border-radius:99px}.bar i{background:linear-gradient(90deg,#16a34a,#22c55e);border-radius:99px}
+.chip{border-radius:6px;border-color:var(--line2);background:#fff;font-weight:500}
+.chip.on{background:var(--brandbg);border-color:#9fc3f7;color:var(--brand2)}
+#subfolders{border-radius:var(--r);border-color:var(--line);box-shadow:var(--sh-sm)}
+#subfolders .chip{font-size:13.5px;padding:10px 14px}
+#subfolders .chip:hover{background:#f6f9fe;padding-left:14px}
+#crumbs{font-size:13.5px}#crumbs span{color:#a3abbb;margin:0 4px}
+.mcard{border-radius:var(--r);border-left-width:1px;border-color:var(--line);box-shadow:var(--sh-sm)}
+.mcard.noprof{border-color:#fcd34d;background:#fffdf5}
+.prog{height:4px;background:#e9eef6}.prog i{background:var(--brand)}
+code{background:#f1f4f8;border:1px solid var(--line);border-radius:5px;font-size:12.5px}
+.mailbox{border-radius:var(--rs);background:#fbfcfd}
+/* avisos ao estilo Sonner (canto inferior direito) */
+.toast{left:auto;right:20px;bottom:20px;transform:translateY(12px) scale(.98);background:#fff;color:var(--ink);border:1px solid var(--line);box-shadow:0 10px 30px rgba(15,23,42,.12),0 2px 6px rgba(15,23,42,.06);border-radius:var(--r);padding:13px 16px;font-size:13.5px;font-weight:500;max-width:380px}
+.toast.on{transform:none}
+/* ecrã de entrada */
+.gate{background:radial-gradient(900px 500px at 15% -5%,#dbe9ff 0,transparent 60%),radial-gradient(800px 450px at 105% 105%,#e0ecff 0,transparent 55%),#f7f9fc}
+.gcard{border-radius:16px;box-shadow:0 1px 2px rgba(15,23,42,.04),0 24px 48px -12px rgba(15,23,42,.14);padding:38px 36px 28px}
+.gcard h1{font-weight:650;letter-spacing:-.03em}
+.who .av{background:linear-gradient(135deg,#2b7bff,#0b2a6b)}
+label{font-size:13px;font-weight:500;color:#2a3242}
+.hint label,.chip,label.chip{font-weight:500}
+input[type=file]{font:inherit;font-size:13px;color:var(--muted)}
+input[type=file]::file-selector-button{font:inherit;font-size:13px;font-weight:550;height:34px;padding:0 14px;margin-right:10px;border:1px solid var(--line2);border-radius:var(--rs);background:#fff;color:var(--ink);box-shadow:var(--sh-sm);cursor:pointer}
+input[type=file]::file-selector-button:hover{background:#f4f6f9}
+.grow2{border-radius:var(--rs);box-shadow:var(--sh-sm);padding:7px 12px}
+@media (max-width:820px){nav.side{height:auto;top:auto}}
 </style>
 </head>
 <body>
@@ -555,7 +647,7 @@ details.altp>summary{grid-template-columns:minmax(220px,1.6fr) repeat(5,minmax(6
 <script>
 (function(){
 "use strict";
-const VERSAO="1.5"; // versão do BoxCheck — sobe a cada alteração publicada
+const VERSAO="1.6"; // versão do BoxCheck — sobe a cada alteração publicada
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 const $=s=>document.querySelector(s);
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -1475,9 +1567,14 @@ $("#demo").onclick=()=>{
   save();renderAll();
 };
 
-function countUp(root){if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
-  root.querySelectorAll(".tile .v").forEach(el=>{const m=el.textContent.match(/^(\d+)(.*)$/);if(!m)return;const end=+m[1],rest=m[2];if(end<2)return;
-    const t0=performance.now(),d=650;const step=t=>{const k=Math.min(1,(t-t0)/d),e=1-Math.pow(1-k,3);el.textContent=Math.round(end*e)+rest;if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step)})}
+// números dos indicadores animados com o NumberFlow (passam suavemente do valor anterior para o novo)
+const NFV=new Map();
+function countUp(root){const nf=!!(window.customElements&&customElements.get("number-flow"));
+  root.querySelectorAll(".tile").forEach((tile,i)=>{const el=tile.querySelector(".v");if(!el)return;const m=el.textContent.trim().match(/^(\d+)(.*)$/);if(!m)return;
+    const end=+m[1],rest=m[2],k=(root.id||"")+"|"+((tile.querySelector(".l")||{}).textContent||i),prev=NFV.get(k);NFV.set(k,end);
+    if(!nf){if(end<2||matchMedia("(prefers-reduced-motion: reduce)").matches)return;const t0=performance.now(),d=650;const step=t=>{const q=Math.min(1,(t-t0)/d),e=1-Math.pow(1-q,3);el.textContent=Math.round(end*e)+rest;if(q<1)requestAnimationFrame(step)};requestAnimationFrame(step);return}
+    const f=document.createElement("number-flow");f.locales="pt-PT";if(rest)f.numberSuffix=rest;
+    el.textContent="";el.appendChild(f);f.update(prev==null?0:prev);requestAnimationFrame(()=>requestAnimationFrame(()=>f.update(end)))})}
 /* ---------- painel de alterações desde uma contagem ---------- */
 const ALTKEY="boxcheck_alteracoes"; // comparações guardadas pelas versões 0.8/0.9
 const pes=u=>u?{n:u.name||"",e:u.login||""}:null;
@@ -1738,7 +1835,7 @@ async function browse(id,path){
     $("#crumbs").innerHTML=path.map((p,i)=>`${i?"<span>›</span>":""}<a href="#" data-ci="${i}">${esc(p.name)}</a>`).join("");
     const pastas=it.filter(x=>x.type==="folder").sort((a,b)=>a.name.localeCompare(b.name,"pt",{numeric:true}));
     const pref=path.slice(1).map(p=>p.name).join("/"),X=cfg.excluir||{};
-    $("#subfolders").innerHTML=pastas.map(f=>{const off=!!X[f.id];return`<span class="chip${off?" off":""}" data-fid="${f.id}" data-nm="${esc(f.name)}"><svg viewBox="0 0 24 24"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h4.6l2 2.2h8.4A1.5 1.5 0 0 1 21 8.7v9.8a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5z" fill="#6aa0f0"/></svg><span class="nm">${esc(f.name)}</span>${off?`<span class="xt">excluída da análise</span>`:""}<button class="exc${off?" inc":""}" data-x="${f.id}" data-p="${esc((pref?pref+"/":"")+f.name)}" title="${off?"Voltar a incluir na análise":"Excluir esta pasta (e subpastas) da análise"}">${off?"+":"−"}</button></span>`}).join("")||`<span class="hint">Sem subpastas.</span>`;
+    $("#subfolders").innerHTML=pastas.map(f=>{const off=!!X[f.id];return`<span class="chip${off?" off":""}" data-fid="${f.id}" data-nm="${esc(f.name)}"><svg viewBox="0 0 24 24"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h4.6l2 2.2h8.4A1.5 1.5 0 0 1 21 8.7v9.8a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5z" fill="#6aa0f0"/></svg><span class="nm">${esc(f.name)}</span>${off?`<span class="xt">excluída da análise</span>`:""}<button class="exb${off?" inc":""}" data-x="${f.id}" data-p="${esc((pref?pref+"/":"")+f.name)}" title="${off?"Voltar a incluir na análise":"Excluir esta pasta (e subpastas) da análise"}">${off?"+":"−"}</button></span>`}).join("")||`<span class="hint">Sem subpastas.</span>`;
     renderExc();
     $("#scanBtn").textContent=`Analisar “${path[path.length-1].name}” e subpastas`;scanHint();
   }catch(e){$("#subfolders").innerHTML=`<div class="msg bad">${esc(e.message)}</div>`}
@@ -1750,7 +1847,7 @@ const dentro=(path,P)=>path===P||path.startsWith(P+"/");
 function semExcluidas(j){const X=Object.values(cfg.excluir||{});if(!X.length)return j;
   return{...j,itens:j.itens.filter(x=>!X.some(e=>dentro(x.type==="folder"?x.path:x.path,e.path)&&!(x.type==="folder"&&x.path===e.path)))}}
 function renderExc(){const X=cfg.excluir||{},k=Object.keys(X);
-  $("#excList").innerHTML=k.length?`<div class="hint" style="margin:0 0 4px">Pastas excluídas da análise (${k.length}):</div><div class="chips">${k.map(id=>`<span class="chip">${esc(X[id].path)} <button class="exc inc" data-x="${id}" data-p="${esc(X[id].path)}" title="Voltar a incluir">+</button></span>`).join("")}</div>`:""}
+  $("#excList").innerHTML=k.length?`<div class="hint" style="margin:0 0 4px">Pastas excluídas da análise (${k.length}):</div><div class="chips">${k.map(id=>`<span class="chip">${esc(X[id].path)} <button class="exb inc" data-x="${id}" data-p="${esc(X[id].path)}" title="Voltar a incluir">+</button></span>`).join("")}</div>`:""}
 async function alternarExc(id,P){cfg.excluir=cfg.excluir||{};const on=!cfg.excluir[id];
   if(on)cfg.excluir[id]={path:P,nome:P.split("/").pop(),t:Date.now()};else delete cfg.excluir[id];
   save();browse(curFolder.id,curFolder.path);
@@ -1769,8 +1866,8 @@ async function alternarExc(id,P){cfg.excluir=cfg.excluir||{};const on=!cfg.exclu
     $("#scanMsg").textContent=`Lida a pasta “${P.split("/").pop()}”: ${st.nP} pastas, ${st.nF} ficheiros.`;verificarFundo()}
   catch(e){scanRun++;$("#scanMsg").textContent="Erro ao ler a pasta incluída: "+e.message}
   finally{scanBusy=false;$("#scanProg").style.display="none"}}
-$("#excList").addEventListener("click",e=>{const b=e.target.closest(".exc");if(b)alternarExc(b.dataset.x,b.dataset.p)});
-$("#subfolders").addEventListener("click",e=>{const x=e.target.closest(".exc");if(x){e.stopPropagation();alternarExc(x.dataset.x,x.dataset.p);return}const c=e.target.closest("[data-fid]");if(!c)return;browse(c.dataset.fid,[...curFolder.path,{id:c.dataset.fid,name:c.dataset.nm}])});
+$("#excList").addEventListener("click",e=>{const b=e.target.closest(".exb");if(b)alternarExc(b.dataset.x,b.dataset.p)});
+$("#subfolders").addEventListener("click",e=>{const x=e.target.closest(".exb");if(x){e.stopPropagation();alternarExc(x.dataset.x,x.dataset.p);return}const c=e.target.closest("[data-fid]");if(!c)return;browse(c.dataset.fid,[...curFolder.path,{id:c.dataset.fid,name:c.dataset.nm}])});
 let lastListing=null;
 // carrega uma listagem da Box (da análise ou guardada) para o relatório
 function useListing(j,quiet){
@@ -2044,6 +2141,9 @@ if(window.__goBox)show("box");
 if(SES){gateState("wait");boxGet("users/me",{fields:"name,login"}).then(connected).catch(e=>gateState("login",e.message))}
 else gateState("login",window.__authErr||"");
 })();
+</script>
+<script>/* NumberFlow 0.6.2 (MIT, Maxwell Barvian) */
+(()=>{var u=!0;var X=globalThis.process?.env?.NODE_ENV,Q=X&&!X.toLowerCase().startsWith("prod");var gt=String.raw,W=String.raw,H=u&&(()=>{try{document.createElement("div").animate({opacity:0},{easing:"linear(0, 1)"})}catch{return!1}return!0})(),z=u&&typeof CSS<"u"&&CSS.supports&&CSS.supports("line-height","mod(1,1)"),A=u&&typeof matchMedia<"u"?matchMedia("(prefers-reduced-motion: reduce)"):null,b="--_number-flow-d-opacity",R="--_number-flow-d-width",w="--_number-flow-dx",T="--_number-flow-d",Y=(()=>{try{return CSS.registerProperty({name:b,syntax:"<number>",inherits:!1,initialValue:"0"}),CSS.registerProperty({name:w,syntax:"<length>",inherits:!0,initialValue:"0px"}),CSS.registerProperty({name:R,syntax:"<number>",inherits:!1,initialValue:"0"}),CSS.registerProperty({name:T,syntax:"<number>",inherits:!0,initialValue:"0"}),!0}catch{return!1}})(),k="round(nearest, calc(var(--number-flow-mask-height, 0.25em) / 2), 1px)",m=`calc(${k} * 2)`,V="var(--number-flow-mask-width, 0.5em)",g=`calc(${V} / var(--scale-x))`,C="#000 0, transparent 71%",U=W`:host{display:inline-block;direction:ltr;white-space:nowrap;isolation:isolate;line-height:1}.number,.number__inner{display:inline-block;transform-origin:left top}:host([data-will-change]) :is(.number,.number__inner,.section,.digit,.digit__num,.symbol){will-change:transform}.number{--scale-x:calc(1 + var(${R}) / var(--width));transform:translateX(var(${w})) scaleX(var(--scale-x));margin:0 calc(-1 * ${V});position:relative;-webkit-mask-image:linear-gradient(to right,transparent 0,#000 ${g},#000 calc(100% - ${g}),transparent ),linear-gradient(to bottom,transparent 0,#000 ${m},#000 calc(100% - ${m}),transparent 100% ),radial-gradient(at bottom right,${C}),radial-gradient(at bottom left,${C}),radial-gradient(at top left,${C}),radial-gradient(at top right,${C});-webkit-mask-size:100% calc(100% - ${m} * 2),calc(100% - ${g} * 2) 100%,${g} ${m},${g} ${m},${g} ${m},${g} ${m};-webkit-mask-position:center,center,top left,top right,bottom right,bottom left;-webkit-mask-repeat:no-repeat}.number__inner{padding:${k} ${V};transform:scaleX(calc(1 / var(--scale-x))) translateX(calc(-1 * var(${w})))}:host > :not(.number){z-index:5}.section,.symbol{display:inline-block;position:relative;isolation:isolate}.section::after{content:'\200b';display:inline-block}.section--justify-left{transform-origin:center left}.section--justify-right{transform-origin:center right}.section > [inert],.symbol > [inert]{margin:0 !important;position:absolute !important;z-index:-1}.digit{display:inline-block;position:relative;--c:var(--current) + var(${T})}.digit__num,.number .section::after{padding:${k} 0}.digit__num{display:inline-block;--offset-raw:mod(var(--length) + var(--n) - mod(var(--c),var(--length)),var(--length));--offset:calc( var(--offset-raw) - var(--length) * round(down,var(--offset-raw) / (var(--length) / 2),1) );--y:clamp(-100%,var(--offset) * 100%,100%);transform:translateY(var(--y))}.digit__num[inert]{position:absolute;top:0;left:50%;transform:translateX(-50%) translateY(var(--y))}.digit:not(.is-spinning) .digit__num[inert]{display:none}.symbol__value{display:inline-block;mix-blend-mode:plus-lighter;white-space:pre}.section--justify-left .symbol > [inert]{left:0}.section--justify-right .symbol > [inert]{right:0}.animate-presence{opacity:calc(1 + var(${b}))}`,Z=u&&typeof HTMLElement<"u"?HTMLElement:class{},q=W`:host{display:inline-block;direction:ltr;white-space:nowrap;line-height:1}span{display:inline-block}:host([data-will-change]) span{will-change:transform}.number,.digit{padding:${k} 0}.symbol{white-space:pre}`;var J=(n="")=>W`:where(number-flow${n}){line-height:1}number-flow${n} > span{font-kerning:none;display:inline-block;padding:${m} 0}`;var f=(n,t,e)=>{let i=document.createElement(n),[s,r]=Array.isArray(t)?[void 0,t]:[t,e];return s&&Object.assign(i,s),r?.forEach(a=>i.appendChild(a)),i},it=(n,t)=>{var e;return t==="left"?n.offsetLeft:(((e=n.offsetParent instanceof HTMLElement?n.offsetParent:null)==null?void 0:e.offsetWidth)??0)-n.offsetWidth-n.offsetLeft},st=n=>n.offsetWidth>0&&n.offsetHeight>0,L=(n,t)=>{u&&typeof HTMLElement<"u"&&typeof customElements<"u"&&!customElements.get(n)&&customElements.define(n,t)};function nt(n,t,{reverse:e=!1}={}){let i=n.length;for(let s=e?i-1:0;e?s>=0:s<i;e?s--:s++)t(n[s],s)}function G(n,t,e,i){let s=t.formatToParts(n);e&&s.unshift({type:"prefix",value:e}),i&&s.push({type:"suffix",value:i});let r=[],a=[],o=[],c=[],p={},d=h=>`${h}:${p[h]=(p[h]??-1)+1}`,v="",y=!1,_=!1;for(let h of s){v+=h.value;let l=h.type==="minusSign"||h.type==="plusSign"?"sign":h.type;l==="integer"?(y=!0,a.push(...h.value.split("").map(D=>({type:l,value:parseInt(D)})))):l==="group"?a.push({type:l,value:h.value}):l==="decimal"?(_=!0,o.push({type:l,value:h.value,key:d(l)})):l==="fraction"?o.push(...h.value.split("").map(D=>({type:l,value:parseInt(D),key:d(l),pos:-1-p[l]}))):(y||_?c:r).push({type:l,value:h.value,key:d(l)})}let I=[];for(let h=a.length-1;h>=0;h--){let l=a[h];I.unshift(l.type==="integer"?{...l,key:d(l.type),pos:p[l.type]}:{...l,key:d(l.type)})}return{pre:r,integer:I,fraction:o,post:c,valueAsString:v,value:typeof n=="string"?parseFloat(n):n}}var F=z&&H&&Y,$=class extends Z{constructor(){super(),this.created=!1,this.batched=!1,this._preUpdated=!1;let{animated:t,...e}=this.constructor.defaultProps;this._animated=this.computedAnimated=t,Object.assign(this,e)}get animated(){return this._animated}set animated(t){var e;this.animated!==t&&(this._animated=t,(e=this.shadowRoot)==null||e.getAnimations().forEach(i=>i.finish()))}set data(t){var e,i;if(t==null||t===this._data)return;let{pre:s,integer:r,fraction:a,post:o,value:c}=t;if(this.created){let p=this._data;this._data=t,this.computedTrend=typeof this.trend=="function"?this.trend(p.value,c):this.trend,this.computedAnimated=F&&this._animated&&(!this.respectMotionPreference||!((e=A)!=null&&e.matches))&&st(this)&&this.ownerDocument.visibilityState==="visible",(i=this.plugins)==null||i.forEach(d=>{var v;return(v=d.onUpdate)==null?void 0:v.call(d,t,p,this)}),this.batched||this.willUpdate(),this._pre.update(s),this._num.update({integer:r,fraction:a}),this._post.update(o),this.batched||this.didUpdate()}else{this._data=t,this.attachShadow({mode:"open"});try{this._internals??(this._internals=this.attachInternals()),this._internals.role="img"}catch{}let p=document.createElement("style");this.nonce&&(p.nonce=this.nonce),p.textContent=U,this.shadowRoot.appendChild(p),this._pre=new M(this,s,{justify:"right",part:"left"}),this.shadowRoot.appendChild(this._pre.el),this._num=new O(this,r,a),this.shadowRoot.appendChild(this._num.el),this._post=new M(this,o,{justify:"left",part:"right"}),this.shadowRoot.appendChild(this._post.el),this.created=!0}try{this._internals.ariaLabel=t.valueAsString}catch{}}willUpdate(){var t;this._preUpdated=F&&this._animated&&(!this.respectMotionPreference||!((t=A)!=null&&t.matches))&&this.ownerDocument.visibilityState==="visible",this._preUpdated&&(this._pre.willUpdate(),this._num.willUpdate(),this._post.willUpdate())}didUpdate(){if(!this.computedAnimated||!this._preUpdated)return;this._abortAnimationsFinish?this._abortAnimationsFinish.abort():this.dispatchEvent(new Event("animationsstart")),this._pre.didUpdate(),this._num.didUpdate(),this._post.didUpdate();let t=new AbortController;Promise.all(this.shadowRoot.getAnimations().map(e=>e.finished)).then(()=>{t.signal.aborted||(this.dispatchEvent(new Event("animationsfinish")),this._abortAnimationsFinish=void 0)}),this._abortAnimationsFinish=t}};$.defaultProps={transformTiming:{duration:900,easing:"linear(0,.005,.019,.039,.066,.096,.129,.165,.202,.24,.278,.316,.354,.39,.426,.461,.494,.526,.557,.586,.614,.64,.665,.689,.711,.731,.751,.769,.786,.802,.817,.831,.844,.856,.867,.877,.887,.896,.904,.912,.919,.925,.931,.937,.942,.947,.951,.955,.959,.962,.965,.968,.971,.973,.976,.978,.98,.981,.983,.984,.986,.987,.988,.989,.99,.991,.992,.992,.993,.994,.994,.995,.995,.996,.996,.9963,.9967,.9969,.9972,.9975,.9977,.9979,.9981,.9982,.9984,.9985,.9987,.9988,.9989,1)"},spinTiming:void 0,opacityTiming:{duration:450,easing:"ease-out"},animated:!0,trend:(n,t)=>Math.sign(t-n),respectMotionPreference:!0,plugins:void 0,digits:void 0};var O=class{constructor(t,e,i,{className:s,...r}={}){this.flow=t,this._integer=new N(t,e,{justify:"right",part:"integer"}),this._fraction=new N(t,i,{justify:"left",part:"fraction"}),this._inner=f("span",{className:"number__inner"},[this._integer.el,this._fraction.el]),this.el=f("span",{...r,part:"number",className:`number ${s??""}`},[this._inner])}willUpdate(){this._prevWidth=this.el.offsetWidth,this._prevLeft=this.el.getBoundingClientRect().left,this._integer.willUpdate(),this._fraction.willUpdate()}update({integer:t,fraction:e}){this._integer.update(t),this._fraction.update(e)}didUpdate(){let t=this.el.getBoundingClientRect();this._integer.didUpdate(),this._fraction.didUpdate();let e=this._prevLeft-t.left,i=this.el.offsetWidth,s=this._prevWidth-i;this.el.style.setProperty("--width",String(i)),this.el.animate({[w]:[`${e}px`,"0px"],[R]:[s,0]},{...this.flow.transformTiming,composite:"accumulate"})}},j=class{constructor(t,e,{justify:i,className:s,...r},a){this.flow=t,this.children=new Map,this.onCharRemove=c=>()=>{this.children.delete(c)},this.justify=i;let o=e.map(c=>this.addChar(c).el);this.el=f("span",{...r,className:`section section--justify-${i} ${s??""}`},a?a(o):o)}addChar(t,{startDigitsAtZero:e=!1,...i}={}){let s=t.type==="integer"||t.type==="fraction"?new E(this,t.type,e?0:t.value,t.pos,{...i,onRemove:this.onCharRemove(t.key)}):new B(this,t.type,t.value,{...i,onRemove:this.onCharRemove(t.key)});return this.children.set(t.key,s),s}unpop(t){t.el.removeAttribute("inert"),t.el.style.top="",t.el.style[this.justify]=""}pop(t){t.forEach(e=>{e.el.style.top=`${e.el.offsetTop}px`,e.el.style[this.justify]=`${it(e.el,this.justify)}px`}),t.forEach(e=>{e.el.setAttribute("inert",""),e.present=!1})}addNewAndUpdateExisting(t){let e=new Map,i=new Map,s=this.justify==="left",r=s?"prepend":"append";if(nt(t,a=>{let o;this.children.has(a.key)?(o=this.children.get(a.key),i.set(a,o),this.unpop(o),o.present=!0):(o=this.addChar(a,{startDigitsAtZero:!0,animateIn:!0}),e.set(a,o)),this.el[r](o.el)},{reverse:s}),this.flow.computedAnimated){let a=this.el.getBoundingClientRect();e.forEach(o=>{o.willUpdate(a)})}e.forEach((a,o)=>{a.update(o.value)}),i.forEach((a,o)=>{a.update(o.value)})}willUpdate(){let t=this.el.getBoundingClientRect();this._prevOffset=t[this.justify],this.children.forEach(e=>e.willUpdate(t))}didUpdate(){let t=this.el.getBoundingClientRect();this.children.forEach(s=>s.didUpdate(t));let e=t[this.justify],i=this._prevOffset-e;i&&this.children.size&&this.el.animate({transform:[`translateX(${i}px)`,"none"]},{...this.flow.transformTiming,composite:"accumulate"})}},N=class extends j{update(t){let e=new Map;this.children.forEach((i,s)=>{t.find(r=>r.key===s)||e.set(s,i),this.unpop(i)}),this.addNewAndUpdateExisting(t),e.forEach(i=>{i instanceof E&&i.update(0)}),this.pop(e)}},M=class extends j{update(t){let e=new Map;this.children.forEach((i,s)=>{t.find(r=>r.key===s)||e.set(s,i)}),this.pop(e),this.addNewAndUpdateExisting(t)}},x=class{constructor(t,e,{onRemove:i,animateIn:s=!1}={}){this.flow=t,this.el=e,this._present=!0,this._remove=()=>{var r;this.el.remove(),(r=this._onRemove)==null||r.call(this)},this.el.classList.add("animate-presence"),this.flow.computedAnimated&&s&&this.el.animate({[b]:[-.9999,0]},{...this.flow.opacityTiming,composite:"accumulate"}),this._onRemove=i}get present(){return this._present}set present(t){if(this._present!==t){if(this._present=t,t?this.el.removeAttribute("inert"):this.el.setAttribute("inert",""),!this.flow.computedAnimated){t||this._remove();return}this.el.style.setProperty("--_number-flow-d-opacity",t?"0":"-.999"),this.el.animate({[b]:t?[-.9999,0]:[.999,0]},{...this.flow.opacityTiming,composite:"accumulate"}),t?this.flow.removeEventListener("animationsfinish",this._remove):this.flow.addEventListener("animationsfinish",this._remove,{once:!0})}}},P=class extends x{constructor(t,e,i,s){super(t.flow,i,s),this.section=t,this.value=e,this.el=i}},E=class extends P{constructor(t,e,i,s,r){var a,o;let c=(((o=(a=t.flow.digits)==null?void 0:a[s])==null?void 0:o.max)??9)+1,p=Array.from({length:c}).map((v,y)=>{let _=f("span",{className:"digit__num"},[document.createTextNode(String(y))]);return y!==i&&_.setAttribute("inert",""),_.style.setProperty("--n",String(y)),_}),d=f("span",{part:`digit ${e}-digit`,className:"digit"},p);d.style.setProperty("--current",String(i)),d.style.setProperty("--length",String(c)),super(t,i,d,r),this.pos=s,this._onAnimationsFinish=()=>{this.el.classList.remove("is-spinning")},this._numbers=p,this.length=c}willUpdate(t){let e=this.el.getBoundingClientRect();this._prevValue=this.value;let i=e[this.section.justify]-t[this.section.justify],s=e.width/2;this._prevCenter=this.section.justify==="left"?i+s:i-s}update(t){this.el.style.setProperty("--current",String(t)),this._numbers.forEach((e,i)=>i===t?e.removeAttribute("inert"):e.setAttribute("inert","")),this.value=t}didUpdate(t){let e=this.el.getBoundingClientRect(),i=e[this.section.justify]-t[this.section.justify],s=e.width/2,r=this.section.justify==="left"?i+s:i-s,a=this._prevCenter-r;a&&this.el.animate({transform:[`translateX(${a}px)`,"none"]},{...this.flow.transformTiming,composite:"accumulate"});let o=this.getDelta();o&&(this.el.classList.add("is-spinning"),this.el.animate({[T]:[-o,0]},{...this.flow.spinTiming??this.flow.transformTiming,composite:"accumulate"}),this.flow.addEventListener("animationsfinish",this._onAnimationsFinish,{once:!0}))}getDelta(){var t;if(this.flow.plugins)for(let s of this.flow.plugins){let r=(t=s.getDelta)==null?void 0:t.call(s,this.value,this._prevValue,this);if(r!=null)return r}let e=this.value-this._prevValue,i=this.flow.computedTrend||Math.sign(e);return i<0&&this.value>this._prevValue?this.value-this.length-this._prevValue:i>0&&this.value<this._prevValue?this.length-this._prevValue+this.value:e}},B=class extends P{constructor(t,e,i,s){let r=f("span",{className:"symbol__value",textContent:i});super(t,i,f("span",{part:`symbol ${e}`,className:"symbol"},[r]),s),this.type=e,this._children=new Map,this._onChildRemove=a=>()=>{this._children.delete(a)},this._children.set(i,new x(this.flow,r,{onRemove:this._onChildRemove(i)}))}willUpdate(t){if(this.type==="decimal")return;let e=this.el.getBoundingClientRect();this._prevOffset=e[this.section.justify]-t[this.section.justify]}update(t){if(this.value!==t){let e=this._children.get(this.value);e&&(e.present=!1);let i=this._children.get(t);if(i)i.present=!0;else{let s=f("span",{className:"symbol__value",textContent:t});this.el.appendChild(s),this._children.set(t,new x(this.flow,s,{animateIn:!0,onRemove:this._onChildRemove(t)}))}}this.value=t}didUpdate(t){if(this.type==="decimal")return;let e=this.el.getBoundingClientRect()[this.section.justify]-t[this.section.justify],i=this._prevOffset-e;i&&this.el.animate({transform:[`translateX(${i}px)`,"none"]},{...this.flow.transformTiming,composite:"accumulate"})}};var K=n=>[q,J(n),U];var Nt=K(),at="number-flow-connect",rt="number-flow-update";var S=class extends ${constructor(){super(...arguments),this.connected=!1}connectedCallback(){this.connected=!0,this.dispatchEvent(new Event(at,{bubbles:!0}))}disconnectedCallback(){this.connected=!1}get value(){return this._value}update(t){(!this._formatter||this._prevFormat!==this.format||this._prevLocales!==this.locales)&&(this._formatter=new Intl.NumberFormat(this.locales,this.format),this._prevFormat=this.format,this._prevLocales=this.locales),t!=null&&(this._value=t),this.dispatchEvent(new Event(rt,{bubbles:!0})),this.data=G(this._value,this._formatter,this.numberPrefix,this.numberSuffix)}};L("number-flow",S);try{(L||((n,t)=>customElements.get(n)||customElements.define(n,t)))("number-flow",S)}catch{}window.__NF=!0;})();
 </script>
 </body>
 </html>
