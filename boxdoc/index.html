@@ -550,6 +550,16 @@ body.esch #esMsg{padding:16px}
 .rc-bl b{font-weight:600;font-variant-numeric:tabular-nums}.rc-bl span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .rc-hh{display:flex;flex-wrap:wrap}.rc-3 .rc-bl{font-size:11px;padding:3px 4px}
 .rc-bl.curto{flex-direction:row;align-items:center;gap:4px}.rc-bl.curto .rc-hh{flex:none}
+/* EPISJ 360 0.9.14: o mapa segue os tempos letivos do horário da escola */
+.rc-horas .rc-tp{position:absolute;left:0;right:6px;display:flex;flex-direction:column;justify-content:center;align-items:flex-end;gap:1px;line-height:1.15;font-variant-numeric:tabular-nums;pointer-events:none}
+.rc-horas .rc-tp b{font-size:11.5px;font-weight:600;color:var(--ink)}.rc-horas .rc-tp em{font-style:normal;font-size:10.5px;color:var(--muted)}
+.rc-horas .rc-alm{position:absolute;left:0;right:6px;display:flex;align-items:center;justify-content:flex-end;font-size:10px;font-weight:600;letter-spacing:.02em;color:var(--muted);text-transform:uppercase;pointer-events:none}
+.rc-lanes>i.t{border-top:1px solid var(--line)}
+.rc-lanes>b.rc-int{position:absolute;left:0;right:0;z-index:0;pointer-events:none;border-radius:4px;background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--line) 55%,transparent) 0 1px,transparent 1px 6px),color-mix(in srgb,var(--line) 35%,transparent)}
+.rc-lanes>b.rc-int.alm{background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--muted) 22%,transparent) 0 1px,transparent 1px 6px),color-mix(in srgb,var(--line) 60%,transparent)}
+#tFse::placeholder,#tbTur [data-k=fse]::placeholder{text-transform:none}
+.rc-tps{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:13px}.rc-tps .b.s{height:30px;padding:0 9px;font-size:12px;font-variant-numeric:tabular-nums}
+.rc-tps .b.s.on{background:color-mix(in srgb,var(--brand) 12%,#fff);border-color:var(--brand);color:var(--brand)}
 .rc-bl:hover,.rc-bl:focus-visible{z-index:2;outline:2px solid var(--c);outline-offset:0}
 .rc-mut{color:var(--muted)}
 .rc-lista{display:flex;flex-direction:column}
@@ -829,12 +839,13 @@ body.temfundos nav.side{padding-bottom:16px}
 <section id="tur">
   <div class="card">
     <h2>Turmas</h2>
-    <p class="hint">Uma turma vive vários anos letivos (do ano de <b>início</b> até ao ano de <b>fim</b>: <code>A04 (25/28)</code> está em 2025/2026, 2026/2027 e 2027/2028). Aparecem por omissão as do ano letivo ativo, <b id="turAnoLbl"></b>. O <b>nome na Box</b> liga a turma às pastas do BoxCheck.</p>
+    <p class="hint">Uma turma vive vários anos letivos (do ano de <b>início</b> até ao ano de <b>fim</b>: <code>A04 (25/28)</code> está em 2025/2026, 2026/2027 e 2027/2028). Aparecem por omissão as do ano letivo ativo, <b id="turAnoLbl"></b>. O <b>nome na Box</b> liga a turma às pastas do BoxCheck. O <b>projeto FSE</b> é o código da operação do Fundo Social Europeu que financia a turma (ex.: <code>ACORES-10-5571-FSE-000123</code>).</p>
     <form id="turForm" class="row" style="background:#f6f8fb;border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:14px" autocomplete="off">
       <label style="width:100px">Turma<input type="text" id="tCod" placeholder="ex.: A07" required></label>
       <label class="grow">Curso<select id="tCurso"></select></label>
       <label style="width:110px">Início<input type="number" id="tIni" min="2000" max="2100" style="width:100%"></label>
       <label style="width:110px">Fim<input type="number" id="tFim" min="2000" max="2100" style="width:100%"></label>
+      <label style="width:250px" title="Código da operação do Fundo Social Europeu que financia a turma">Projeto FSE<input type="text" id="tFse" placeholder="ex.: ACORES-10-5571-FSE-000123" spellcheck="false" style="text-transform:uppercase"></label>
       <button class="b" type="submit" style="align-self:flex-end">Criar turma</button>
     </form>
     <div class="row" style="margin-bottom:10px">
@@ -843,7 +854,7 @@ body.temfundos nav.side{padding-bottom:16px}
       <button class="b s" id="escImport2" style="align-self:flex-end">Importar da Box</button>
     </div>
     <table class="rt">
-      <thead><tr><th style="width:80px">Turma</th><th>Curso</th><th style="width:94px">Início</th><th style="width:94px">Fim</th><th class="hm">Ano</th><th>Diretor de turma</th><th class="hm">Nome na Box</th><th></th></tr></thead>
+      <thead><tr><th style="width:80px">Turma</th><th>Curso</th><th style="width:94px">Início</th><th style="width:94px">Fim</th><th class="hm">Ano</th><th>Diretor de turma</th><th>Projeto FSE</th><th class="hm">Nome na Box</th><th></th></tr></thead>
       <tbody id="tbTur"></tbody>
     </table>
   </div>
@@ -1467,6 +1478,8 @@ body.temfundos nav.side{padding-bottom:16px}
     <div class="row" style="margin-top:12px"><button class="b s" id="rcEspAdd">+ Acrescentar espaço</button></div>
     <h3>Horário do mapa</h3>
     <div class="row"><label style="width:140px">Abre às<input type="time" id="rcAbre" step="900"></label><label style="width:140px">Fecha às<input type="time" id="rcFecha" step="900"></label><label class="chk" style="align-self:flex-end;display:flex;gap:6px;align-items:center"><input type="checkbox" id="rcSab"> Mostrar sábado</label></div>
+    <label style="display:block;margin-top:14px">Tempos letivos <span class="hint">(um por linha, ex.: 08:30-09:20 — o mapa da semana segue estes tempos; os intervalos e o almoço são o que fica entre eles)</span><textarea id="rcTempos" rows="7" spellcheck="false" style="font-variant-numeric:tabular-nums;max-width:260px;display:block"></textarea></label>
+    <div class="row" style="margin-top:6px"><button class="b s" id="rcTemposES">Copiar do horário do EduSchedule</button><button class="b s" id="rcTemposRepor">Repor os da escola</button></div>
     <div id="rcNuv" style="margin-top:14px"></div>
   </div>
 </section>
@@ -1479,7 +1492,7 @@ body.temfundos nav.side{padding-bottom:16px}
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.13"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.15"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo BoxCheck
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -4125,7 +4138,7 @@ function renderTurmas(){const e=escData(),a=anoAtivo(),q=norm($("#turFilter").va
   $("#turAnoLbl").textContent=a.nome;
   const curOpts=sel=>`<option value="">— sem curso —</option>`+e.cursos.map(c=>`<option value="${c.id}" ${c.id===sel?"selected":""}>${esc(c.nome)}</option>`).join("");
   const L=(todas?e.turmas.slice().sort((x,y)=>String(x.cod).localeCompare(String(y.cod),"pt",{numeric:true})):turmasDoAno(a))
-    .filter(t=>!q||norm(t.cod+" "+turmaNome(t)+" "+((cursoById(t.cursoId)||{}).nome||"")+" "+profName(t.dt)).includes(q));
+    .filter(t=>!q||norm(t.cod+" "+turmaNome(t)+" "+((cursoById(t.cursoId)||{}).nome||"")+" "+profName(t.dt)+" "+(t.fse||"")).includes(q));
   $("#tbTur").innerHTML=L.map(t=>{const ac=anoCurricular(t,a);return `<tr data-id="${t.id}">
     <td><input type="text" data-k="cod" value="${esc(t.cod)}" style="width:70px"></td>
     <td><select data-k="cursoId">${curOpts(t.cursoId)}</select></td>
@@ -4133,19 +4146,27 @@ function renderTurmas(){const e=escData(),a=anoAtivo(),q=norm($("#turFilter").va
     <td><input type="number" data-k="anoFim" value="${t.anoFim||""}" min="2000" max="2100" style="width:84px"></td>
     <td class="hm">${ac?esc(ac):`<span class="hint" style="margin:0">fora de ${esc(a.nome)}</span>`}</td>
     <td><select data-k="dt">${profOpts(t.dt,`<option value="">— sem DT —</option>`)}</select></td>
+    <td><input type="text" data-k="fse" value="${esc(t.fse||"")}" placeholder="código FSE" spellcheck="false" style="min-width:190px;text-transform:uppercase;font-variant-numeric:tabular-nums"${t.fse&&!fseOk(t.fse)?` title="Confirme o código: o habitual é REGIÃO-00-0000-FSE-000000"`:""}></td>
     <td class="hm"><input type="text" data-k="nome" value="${esc(t.nome||"")}" placeholder="${esc(turmaNome(Object.assign({},t,{nome:""})))}"></td>
     <td><button class="x" data-del title="Apagar turma">×</button></td></tr>`}).join("")
-    ||`<tr><td colspan="8" class="hint">${e.turmas.length?(q?"Nenhuma turma corresponde à procura.":`Nenhuma turma em ${esc(a.nome)} — veja <b>todas as turmas</b> ou crie uma acima.`):"Ainda sem turmas — crie uma acima ou importe da Box."}</td></tr>`;
+    ||`<tr><td colspan="9" class="hint">${e.turmas.length?(q?"Nenhuma turma corresponde à procura.":`Nenhuma turma em ${esc(a.nome)} — veja <b>todas as turmas</b> ou crie uma acima.`):"Ainda sem turmas — crie uma acima ou importe da Box."}</td></tr>`;
   $("#tCurso").innerHTML=curOpts($("#tCurso").value);if(!$("#tIni").value)$("#tIni").placeholder=a.ini;if(!$("#tFim").value)$("#tFim").placeholder=a.ini+3}
 $("#turFilter").addEventListener("input",renderTurmas);$("#turTodas").addEventListener("change",renderTurmas);
 $("#tbTur").addEventListener("change",e=>{const tr=e.target.closest("tr");const t=escData().turmas.find(x=>x.id===tr.dataset.id);if(!t)return;const k=e.target.dataset.k;
-  t[k]=/^anoIni|anoFim$/.test(k)?(parseInt(e.target.value)||null):e.target.value.trim();if(k==="cod")t.cod=t.cod.toUpperCase();save();renderTurmas();esRecarregar()});
+  t[k]=/^anoIni|anoFim$/.test(k)?(parseInt(e.target.value)||null):e.target.value.trim();if(k==="cod")t.cod=t.cod.toUpperCase();
+  if(k==="fse"){t.fse=fseNorm(t.fse);if(t.fse&&!fseOk(t.fse))toast("Guardado — mas confirme o código FSE (o habitual é ACORES-10-5571-FSE-000123)")}
+  save();renderTurmas();esRecarregar()});
 $("#tbTur").addEventListener("click",e=>{if(!e.target.hasAttribute("data-del"))return;const E=escData(),t=E.turmas.find(x=>x.id===e.target.closest("tr").dataset.id);if(!t)return;
   ponto("Antes de apagar a turma "+t.cod);E.turmas=E.turmas.filter(x=>x!==t);save();escRender();esRecarregar();toast("Turma apagada (pode anular)")});
+// 0.9.15: código do projeto do Fundo Social Europeu de cada turma
+const fseNorm=v=>String(v||"").trim().toUpperCase().replace(/\s+/g,"").replace(/[‐-―]/g,"-");
+const fseOk=v=>/^[A-Z]+-\d{2}-\d{4}-FSE\+?-\d{6}$/.test(fseNorm(v));
 $("#turForm").addEventListener("submit",e=>{e.preventDefault();const a=anoAtivo(),cod=$("#tCod").value.trim().toUpperCase();if(!cod)return;
   const ai=parseInt($("#tIni").value)||a.ini,af=parseInt($("#tFim").value)||ai+3;
   if(escData().turmas.some(t=>norm(t.cod)===norm(cod)&&t.anoIni===ai)){toast("Já existe a turma "+cod+" com início em "+ai);return}
-  escData().turmas.push({id:uid(),cod,nome:"",cursoId:$("#tCurso").value,anoIni:ai,anoFim:af,dt:""});save();$("#turForm").reset();escRender();esRecarregar();toast("Turma "+cod+" criada")});
+  const fse=fseNorm($("#tFse").value);
+  escData().turmas.push({id:uid(),cod,nome:"",cursoId:$("#tCurso").value,anoIni:ai,anoFim:af,dt:"",fse});save();$("#turForm").reset();escRender();esRecarregar();
+  toast("Turma "+cod+" criada"+(fse&&!fseOk(fse)?" — confirme o código FSE":""))});
 
 function escRender(){renderAnoTopo();if(curTab==="esc")renderEscPainel();if(curTab==="anos")renderAnos();if(curTab==="cur")renderCursos();if(curTab==="tur")renderTurmas();if(curTab==="for")renderFormandos()}
 
@@ -4340,6 +4361,9 @@ let RC=(()=>{let o=null;try{o=JSON.parse(localStorage.getItem("roomcheck")||"nul
   if(!o||typeof o!=="object")o={};if(!Array.isArray(o.esp)||!o.esp.length)o.esp=RC_ESP0.map(x=>({...x}));
   o.cfg=Object.assign({abre:480,fecha:1140,sab:false},o.cfg||{});o.res=o.res&&typeof o.res==="object"?o.res:{};o.et=o.et||0;return o})();
 const RCV={sem:"",esp:"todos",ed:null};
+// 0.9.14: tempos letivos (início e fim em minutos) — os do horário da escola; podem mudar-se em RoomCheck › Espaços
+const RC_TEMPOS0=[[510,560],[570,620],[640,690],[700,750],[810,860],[870,920],[940,990]];
+function rcTempos(){const T=(Array.isArray(RC.cfg.tempos)?RC.cfg.tempos:RC_TEMPOS0).filter(t=>Array.isArray(t)&&Number.isFinite(t[0])&&Number.isFinite(t[1])&&t[1]>t[0]).slice().sort((a,b)=>a[0]-b[0]);return T.length?T:RC_TEMPOS0}
 const rcPad=n=>String(n).padStart(2,"0");
 const rcIso=d=>d.getFullYear()+"-"+rcPad(d.getMonth()+1)+"-"+rcPad(d.getDate());
 const rcData=s=>{const p=String(s||"").split("-");return new Date(+p[0],(+p[1]||1)-1,+p[2]||1)};
@@ -4382,24 +4406,28 @@ function rcRender(t){t=t||curTab;if(!RCV.sem)RCV.sem=rcSeg(rcHoje());
 function rcMapa(){const hoje=rcHoje(),E=RC.esp.filter(e=>e.on),esps=RCV.esp==="todos"?E:E.filter(e=>e.id===RCV.esp);if(!esps.length){RCV.esp="todos";return rcMapa()}
   const n=RC.cfg.sab?6:5,dias=[...Array(n)].map((_,i)=>rcMais(RCV.sem,i));const A=rcAtivas();
   if(!RC.cfg.sab&&A.some(r=>r.d===rcMais(RCV.sem,5)))dias.push(rcMais(RCV.sem,5));
-  let H0=RC.cfg.abre,H1=RC.cfg.fecha;A.forEach(r=>{if(dias.includes(r.d)&&esps.some(e=>e.id===r.e)){H0=Math.min(H0,Math.floor(r.h0/60)*60);H1=Math.max(H1,Math.ceil(r.h1/60)*60)}});
-  const PX=.9,alt=(H1-H0)*PX,estreito=esps.length>1,fim=rcMais(RCV.sem,dias.length-1);
+  const T=rcTempos();let H0=T[0][0],H1=T[T.length-1][1];A.forEach(r=>{if(dias.includes(r.d)&&esps.some(e=>e.id===r.e)){H0=Math.min(H0,Math.floor(r.h0/30)*30);H1=Math.max(H1,Math.ceil(r.h1/30)*30)}});
+  const PX=1.15,alt=(H1-H0)*PX,estreito=esps.length>1,fim=rcMais(RCV.sem,dias.length-1);
   $("#rcEsps").innerHTML=`<button class="rc-chip${RCV.esp==="todos"?" on":""}" data-rcesp="todos">Todos</button>`+E.map(e=>`<button class="rc-chip${RCV.esp===e.id?" on":""}" data-rcesp="${esc(e.id)}" style="--c:${esc(e.c)}"><i></i>${esc(e.n)}</button>`).join("");
   $("#rcSem").textContent=rcData(RCV.sem).toLocaleDateString("pt-PT",{day:"numeric",month:"short"})+" – "+rcData(fim).toLocaleDateString("pt-PT",{day:"numeric",month:"short",year:"numeric"});
-  const horas=[];for(let m=H0;m<=H1;m+=60)horas.push(m);
+  const horas=[];for(let m=Math.ceil(H0/60)*60;m<=H1;m+=60)if(m<T[0][0]-15||m>T[T.length-1][1]+15)horas.push(m); // horas só fora dos tempos letivos
+  const gaps=T.slice(1).map((t,i)=>[T[i][1],t[0]]).filter(g=>g[1]>g[0]);
   const bloco=(r,e)=>{const top=(r.h0-H0)*PX,h=Math.max(18,(r.h1-r.h0)*PX-2),curto=h<40,medio=h<62;
     const hh=estreito?`<b>${rcHc(r.h0)}</b>${medio?"":`<b>–${rcHc(r.h1)}</b>`}`:`<b>${rcHm(r.h0)}–${rcHm(r.h1)}</b>`;
     return `<button class="rc-bl${curto?" curto":""}" data-rcr="${esc(r.id)}" style="--c:${esc(e.c)};top:${top}px;height:${h}px" title="${esc(e.n+" · "+rcHm(r.h0)+"–"+rcHm(r.h1)+" · "+r.p+(r.t?" · "+r.t:"")+(r.m?" · "+r.m:""))}"><span class="rc-hh">${hh}</span><span>${esc(r.p)}</span>${curto?"":r.t?`<span class="rc-mut">${esc(r.t)}</span>`:""}</button>`};
-  const linhas=horas.map(m=>`<i style="top:${(m-H0)*PX}px"></i>`).join("");
+  const linhas=horas.map(m=>`<i style="top:${(m-H0)*PX}px"></i>`).join("")+T.map(t=>`<i class="t" style="top:${(t[0]-H0)*PX}px"></i><i class="t" style="top:${(t[1]-H0)*PX}px"></i>`).join("")
+    +gaps.map(g=>`<b class="rc-int${g[1]-g[0]>=45?" alm":""}" style="top:${(g[0]-H0)*PX}px;height:${(g[1]-g[0])*PX}px"></b>`).join("");
   $("#rcGrid").innerHTML=`<div class="rc-grid${estreito?" rc-3":""}" style="--nd:${dias.length}"><div class="rc-cab"></div>
     ${dias.map(d=>`<div class="rc-cab${d===hoje?" hoje":""}"><b>${esc(rcData(d).toLocaleDateString("pt-PT",{weekday:"short"}).replace(".",""))}</b> <span>${rcData(d).getDate()}</span>${estreito?`<div class="rc-sub" style="grid-template-columns:repeat(${esps.length},1fr)">${esps.map(e=>`<span style="--c:${esc(e.c)}" title="${esc(e.n)}">${esc(e.sg)}</span>`).join("")}</div>`:""}</div>`).join("")}
-    <div class="rc-horas" style="height:${alt}px">${horas.map(m=>`<span style="top:${(m-H0)*PX}px">${rcHm(m)}</span>`).join("")}</div>
+    <div class="rc-horas" style="height:${alt}px">${horas.map(m=>`<span style="top:${(m-H0)*PX}px">${rcHm(m)}</span>`).join("")}${T.map(t=>`<div class="rc-tp" style="top:${(t[0]-H0)*PX}px;height:${(t[1]-t[0])*PX}px"><b>${rcHm(t[0])}</b><em>${rcHm(t[1])}</em></div>`).join("")}${gaps.filter(g=>g[1]-g[0]>=45).map(g=>`<div class="rc-alm" style="top:${(g[0]-H0)*PX}px;height:${(g[1]-g[0])*PX}px">Almoço</div>`).join("")}</div>
     ${dias.map(d=>`<div class="rc-dia${d===hoje?" hoje":""}${d<hoje?" pas":""}"><div class="rc-lanes" style="height:${alt}px">${linhas}${esps.map(e=>`<div class="rc-lane" data-rcd="${d}" data-rce="${esc(e.id)}" style="--c:${esc(e.c)}">${A.filter(r=>r.d===d&&r.e===e.id).map(r=>bloco(r,e)).join("")}</div>`).join("")}</div></div>`).join("")}</div>`;
   const prox=A.filter(r=>r.d>=hoje).sort((a,b)=>a.d.localeCompare(b.d)||a.h0-b.h0).slice(0,10);
   $("#rcProx").innerHTML=prox.length?`<div class="rc-lista">${prox.map(r=>{const e=rcE(r.e);return `<div class="rc-it" style="--c:${esc(e.c)}"><i></i><div><b>${esc(e.n)}</b> · ${esc(rcDia(r.d))} · ${rcHm(r.h0)}–${rcHm(r.h1)}<br><span class="rc-mut">${esc(r.p)}${r.t?" · "+esc(r.t):""}${r.m?" · "+esc(r.m):""}${r.s?" · todas as semanas":""}</span></div><button class="b s" data-rcv="${esc(r.id)}">Ver</button></div>`}).join("")}</div>`:`<p class="hint" style="margin:0">Ainda não há reservas marcadas.</p>`;
   document.querySelectorAll("[data-rcesp]").forEach(b=>b.onclick=()=>{RCV.esp=b.dataset.rcesp;rcMapa()});
   document.querySelectorAll("#rcGrid .rc-lane").forEach(l=>l.onclick=ev=>{if(ev.target.closest(".rc-bl"))return;const d=l.dataset.rcd;if(d<hoje){toast("Não dá para reservar em dias que já passaram");return}
-    let h0=H0+Math.floor((ev.clientY-l.getBoundingClientRect().top)/PX/30)*30;if(d===hoje){const n=new Date(),ag=n.getHours()*60+n.getMinutes();if(h0+30<=ag)h0=Math.ceil(ag/15)*15}
+    const m=H0+(ev.clientY-l.getBoundingClientRect().top)/PX,tp=T.find(t=>m>=t[0]&&m<t[1]),ag=(()=>{const n=new Date();return n.getHours()*60+n.getMinutes()})();
+    if(tp){if(d===hoje&&tp[1]<=ag){toast("Esse tempo já passou");return}rcNova({e:l.dataset.rce,d,h0:tp[0],h1:tp[1]});return} // clique num tempo: reserva esse tempo
+    let h0=H0+Math.floor((m-H0)/30)*30;if(d===hoje&&h0+30<=ag)h0=Math.ceil(ag/15)*15;
     rcNova({e:l.dataset.rce,d,h0,h1:Math.min(1439,h0+90)})});
   document.querySelectorAll("#rcMapa [data-rcr],#rcMapa [data-rcv]").forEach(b=>b.onclick=()=>rcVer(RC.res[b.dataset.rcr||b.dataset.rcv]))}
 document.querySelectorAll("[data-rcnav]").forEach(b=>b.onclick=()=>{const n=b.dataset.rcnav;RCV.sem=n==="0"?rcSeg(rcHoje()):rcMais(RCV.sem||rcSeg(rcHoje()),+n);rcMapa()});
@@ -4419,6 +4447,7 @@ function rcNova(o){const hoje=rcHoje(),E=RC.esp.filter(e=>e.on);const e=o.e||(RC
   rcAbrir("Nova reserva",`<div class="rc-f">
     <span class="rc-l">Espaço</span><div class="rc-ops">${E.map(x=>`<label class="rc-op" style="--c:${esc(x.c)}"><input type="radio" name="rcE" value="${esc(x.id)}" ${x.id===e?"checked":""}><i></i>${esc(x.n)}</label>`).join("")}</div>
     <div class="rc-3c"><label>Dia<input type="date" id="rcD" value="${d}" min="${hoje}"></label><label>Das<input type="time" id="rcH0" value="${rcHm(h0)}" step="300"></label><label>Às<input type="time" id="rcH1" value="${rcHm(h1)}" step="300"></label></div>
+    <div class="rc-tps"><span class="rc-mut">Tempos:</span>${rcTempos().map((t,i)=>`<button class="b s" data-rctp="${i}" title="${rcHm(t[0])}–${rcHm(t[1])}">${rcHm(t[0])}</button>`).join("")}</div>
     <div class="rc-dur"><span class="rc-mut">Duração:</span>${[45,50,90,100,180].map(m=>`<button class="b s" data-rcdur="${m}">${Math.floor(m/60)}h${rcPad(m%60)}</button>`).join("")}</div>
     <div id="rcLivre" class="rc-livre" aria-live="polite"></div>
     <label>Reservado por<input type="text" id="rcP" list="rcPL" maxlength="80" placeholder="Nome do formador ou serviço"></label><datalist id="rcPL">${profs.map(p=>`<option value="${esc(p)}">`).join("")}</datalist>
@@ -4433,8 +4462,12 @@ function rcNova(o){const hoje=rcHoje(),E=RC.esp.filter(e=>e.on);const e=o.e||(RC
   const livre=()=>{const x=val(),el=$("#rcLivre");if(!x.d||!Number.isFinite(x.h0)||!Number.isFinite(x.h1)){el.className="rc-livre";el.textContent="";return}
     if(x.h1<=x.h0){el.className="rc-livre mau";el.textContent="A hora de fim tem de ser depois da hora de início.";return}
     const c=rcChoque(x.e,x.d,x.h0,x.h1);el.className="rc-livre "+(c?"mau":"bom");el.textContent=c?`Ocupado: ${c.p} das ${rcHm(c.h0)} às ${rcHm(c.h1)}.`:`✓ ${rcE(x.e).n} livre nesse horário.`};
-  document.querySelectorAll("#rcDwC input").forEach(i=>i.addEventListener("input",livre));document.querySelectorAll('#rcDwC input[type=radio]').forEach(i=>i.addEventListener("change",livre));livre();
-  document.querySelectorAll("[data-rcdur]").forEach(b=>b.onclick=()=>{const h=rcMin($("#rcH0").value);if(Number.isFinite(h)){$("#rcH1").value=rcHm(Math.min(1439,h+ +b.dataset.rcdur));livre()}});
+  const TT=rcTempos(),tpUI=()=>{const a=rcMin($("#rcH0").value),b=rcMin($("#rcH1").value);document.querySelectorAll("[data-rctp]").forEach(x=>{const t=TT[+x.dataset.rctp];x.classList.toggle("on",t[0]>=a&&t[1]<=b)})};
+  document.querySelectorAll("[data-rctp]").forEach(x=>x.onclick=()=>{const i=+x.dataset.rctp,j=TT.findIndex(t=>t[0]===rcMin($("#rcH0").value));
+    if(j>=0&&i>j&&TT[i][1]>rcMin($("#rcH1").value))$("#rcH1").value=rcHm(TT[i][1]); // outro tempo a seguir: junta até lá
+    else{$("#rcH0").value=rcHm(TT[i][0]);$("#rcH1").value=rcHm(TT[i][1])}livre();tpUI()});
+  document.querySelectorAll("#rcDwC input").forEach(i=>i.addEventListener("input",()=>{livre();tpUI()}));document.querySelectorAll('#rcDwC input[type=radio]').forEach(i=>i.addEventListener("change",livre));livre();tpUI();
+  document.querySelectorAll("[data-rcdur]").forEach(b=>b.onclick=()=>{const h=rcMin($("#rcH0").value);if(Number.isFinite(h)){$("#rcH1").value=rcHm(Math.min(1439,h+ +b.dataset.rcdur));livre();tpUI()}});
   $("#rcRep").onchange=ev=>{$("#rcRepW").hidden=!ev.target.checked};
   $("#rcD").addEventListener("change",()=>{const v=$("#rcD").value;if(v){$("#rcAte").min=rcMais(v,7);if($("#rcAte").value<=v)$("#rcAte").value=rcMais(v,56)}});
   $("#rcX").onclick=rcFechar;
@@ -4496,13 +4529,21 @@ $("#rcPdf").onclick=async()=>{try{const J=await loadPDF(),doc=new J({orientation
 /* ---------- espaços ---------- */
 function rcEspMudou(){RC.et=Date.now();rcGravar();rcEspacos()}
 function rcEspacos(){$("#rcEspTab").innerHTML=`<table class="rc-t"><thead><tr><th>Cor</th><th>Nome</th><th>Sigla</th><th>Reservável</th><th></th></tr></thead><tbody>${RC.esp.map((e,i)=>`<tr data-i="${i}"><td><input type="color" data-k="c" value="${esc(e.c)}"></td><td><input type="text" data-k="n" value="${esc(e.n)}" maxlength="60"></td><td style="width:110px"><input type="text" data-k="sg" value="${esc(e.sg)}" maxlength="5"></td><td style="width:100px"><input type="checkbox" data-k="on" ${e.on?"checked":""}></td><td style="width:60px">${rcAtivas().some(r=>r.e===e.id)?"":`<button class="b s" data-rcdel="${i}" title="Apagar">✕</button>`}</td></tr>`).join("")}</tbody></table>`;
-  $("#rcAbre").value=rcHm(RC.cfg.abre);$("#rcFecha").value=rcHm(RC.cfg.fecha);$("#rcSab").checked=!!RC.cfg.sab}
+  $("#rcAbre").value=rcHm(RC.cfg.abre);$("#rcFecha").value=rcHm(RC.cfg.fecha);$("#rcSab").checked=!!RC.cfg.sab;
+  if(document.activeElement!==$("#rcTempos"))$("#rcTempos").value=rcTempos().map(t=>rcHm(t[0])+"-"+rcHm(t[1])).join("\n")}
 $("#rcEspTab").addEventListener("change",ev=>{const i=ev.target.closest("tr")?.dataset.i,k=ev.target.dataset.k;if(i==null||!k)return;const e=RC.esp[+i];
   if(k==="on")e.on=ev.target.checked?1:0;else{const v=ev.target.value.trim();if(!v&&k!=="c"){rcEspacos();return}e[k]=v}rcEspMudou()});
 $("#rcEspTab").addEventListener("click",ev=>{const b=ev.target.closest("[data-rcdel]");if(!b)return;const e=RC.esp[+b.dataset.rcdel];if(confirm(`Apagar o espaço “${e.n}”?`)){RC.esp.splice(+b.dataset.rcdel,1);rcEspMudou()}});
 $("#rcEspAdd").onclick=()=>{RC.esp.push({id:"e"+uid(),n:"Novo espaço",sg:"NE",c:"#2f9e57",on:1});rcEspMudou()};
 [["#rcAbre","abre"],["#rcFecha","fecha"]].forEach(([s,k])=>$(s).addEventListener("change",ev=>{const m=rcMin(ev.target.value);if(Number.isFinite(m)){RC.cfg[k]=m;if(RC.cfg.fecha<=RC.cfg.abre+60)RC.cfg.fecha=Math.min(1440,RC.cfg.abre+60);rcEspMudou()}}));
 $("#rcSab").addEventListener("change",ev=>{RC.cfg.sab=ev.target.checked;rcEspMudou()});
+$("#rcTempos").addEventListener("change",ev=>{const T=[],mal=[];ev.target.value.split(/\n/).map(l=>l.trim()).filter(Boolean).forEach(l=>{const m=l.match(/(\d{1,2})[:h.](\d{2})\s*[-–a]+\s*(\d{1,2})[:h.](\d{2})/);if(!m){mal.push(l);return}
+    const a=+m[1]*60+ +m[2],b=+m[3]*60+ +m[4];if(b>a)T.push([a,b]);else mal.push(l)});
+  if(!T.length){toast("Não percebi nenhum tempo — use o formato 08:30-09:20");return}
+  RC.cfg.tempos=T.sort((a,b)=>a[0]-b[0]);rcEspMudou();toast(T.length+" tempos guardados"+(mal.length?` · ${mal.length} linha(s) não percebida(s)`:""))});
+$("#rcTemposRepor").onclick=()=>{delete RC.cfg.tempos;rcEspMudou();toast("Repostos os tempos da escola")};
+$("#rcTemposES").onclick=()=>{const st=mhEstado(),T=(st&&st.periods||[]).map(p=>[rcMin(p.start),rcMin(p.end)]).filter(t=>Number.isFinite(t[0])&&Number.isFinite(t[1])&&t[1]>t[0]);
+  if(!T.length){toast("O horário do EduSchedule deste ano letivo ainda não tem tempos com horas");return}RC.cfg.tempos=T;rcEspMudou();toast(T.length+" tempos copiados do EduSchedule")};
 // abre logo com a última análise guardada, sem voltar a ler a Box
 const pronto=(async()=>{try{await migrarListagem;let root="";try{root=localStorage.getItem("box_last_root")||""}catch(e){}
   if(root){const j=await lerListagem(root);if(j){useListing(j,true);showLast();boxMsg(`Aberta a análise guardada de “${j.pasta}” (${j.quando}): ${files.length} ficheiros e ${folders.length} pastas.`,"ok")}}
