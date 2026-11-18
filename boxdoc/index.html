@@ -557,6 +557,40 @@ body.esch #esMsg{padding:16px}
 .rc-lanes>i.t{border-top:1px solid var(--line)}
 .rc-lanes>b.rc-int{position:absolute;left:0;right:0;z-index:0;pointer-events:none;border-radius:4px;background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--line) 55%,transparent) 0 1px,transparent 1px 6px),color-mix(in srgb,var(--line) 35%,transparent)}
 .rc-lanes>b.rc-int.alm{background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--muted) 22%,transparent) 0 1px,transparent 1px 6px),color-mix(in srgb,var(--line) 60%,transparent)}
+/* RoomCheck 1.1: vistas de semana, mês e ano */
+.rc-bl{touch-action:none}.rc-bl.arr{opacity:.92;box-shadow:0 8px 22px rgba(16,24,40,.22);z-index:5;cursor:grabbing;transition:none}
+.rc-bl.arr.mau{outline:2px dashed var(--bad);background:color-mix(in srgb,var(--bad) 10%,#fff)}
+.rc-arrh{position:fixed;z-index:400;pointer-events:none;background:#1d2433;color:#fff;font-size:12px;padding:4px 8px;border-radius:6px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.rc-mv{display:flex;flex-direction:column;gap:8px}.rc-mv .b{display:block;width:100%;white-space:normal;text-align:left;height:auto;padding:10px 14px;line-height:1.35}.rc-mv .b small{display:block;margin-top:2px;font-weight:400;opacity:.8}
+.rc-vis{display:inline-flex;padding:3px;gap:2px;border:1px solid var(--line);border-radius:10px;background:#f6f8fb}
+.rc-vis button{height:28px;padding:0 13px;border:0;border-radius:7px;background:transparent;font:inherit;font-size:13px;color:var(--muted);cursor:pointer}
+.rc-vis button.on{background:#fff;color:var(--brand);font-weight:600;box-shadow:0 1px 3px rgba(16,24,40,.12)}
+.rc-mes{display:grid;grid-template-columns:repeat(var(--nd),minmax(118px,1fr));gap:6px;min-width:calc(var(--nd)*124px)}
+.rc-mes .rc-cab{border-bottom:0;padding-bottom:2px}
+.rc-md{min-height:118px;border:1px solid var(--line);border-radius:9px;padding:6px;display:flex;flex-direction:column;gap:3px;background:#fff;cursor:copy;min-width:0}
+.rc-md:hover{border-color:color-mix(in srgb,var(--brand) 40%,var(--line))}
+.rc-md.fora{background:#fafbfd;opacity:.55}.rc-md.pas{cursor:default;background:repeating-linear-gradient(135deg,transparent 0 6px,color-mix(in srgb,var(--line) 45%,transparent) 6px 7px)}
+.rc-md.hoje{border-color:var(--brand);box-shadow:inset 0 0 0 1px var(--brand)}
+.rc-mdn{align-self:flex-start;border:0;background:none;font:inherit;font-size:13px;font-weight:600;padding:1px 6px;border-radius:6px;cursor:pointer;color:var(--ink)}
+.rc-mdn:hover{background:#eef3fb}.rc-md.hoje .rc-mdn{background:var(--brand);color:#fff}
+.rc-mc{display:flex;align-items:center;gap:5px;width:100%;min-width:0;border:0;border-left:3px solid var(--c);border-radius:4px;background:color-mix(in srgb,var(--c) 14%,#fff);padding:2px 5px;font:inherit;font-size:11.5px;text-align:left;cursor:pointer;color:var(--ink)}
+.rc-mc b{font-weight:600;font-variant-numeric:tabular-nums;flex:none}.rc-mc span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rc-mc:hover{outline:2px solid var(--c)}
+.rc-mais{border:0;background:none;font:inherit;font-size:11.5px;color:var(--brand);text-align:left;padding:1px 4px;cursor:pointer}
+.rc-ano{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.rc-am{border:1px solid var(--line);border-radius:10px;padding:10px 10px 8px;background:#fff}
+.rc-am h4{margin:0 0 6px;display:flex;justify-content:space-between;align-items:baseline;font-size:14px;text-transform:capitalize}
+.rc-am h4 button{border:0;background:none;font:inherit;font-weight:700;color:var(--ink);cursor:pointer;padding:0;text-transform:capitalize}.rc-am h4 button:hover{color:var(--brand)}
+.rc-am h4 span{font-size:11.5px;font-weight:400;color:var(--muted);text-transform:none}
+.rc-amg{display:grid;grid-template-columns:repeat(var(--nd),1fr);gap:3px}
+.rc-amg i{font-style:normal;font-size:10.5px;color:var(--muted);text-align:center}
+.rc-amg button{aspect-ratio:1;border:0;border-radius:5px;font:inherit;font-size:11px;font-variant-numeric:tabular-nums;cursor:pointer;color:var(--ink);background:#f3f5f9}
+.rc-amg button.l1{background:color-mix(in srgb,var(--c) 22%,#fff)}.rc-amg button.l2{background:color-mix(in srgb,var(--c) 42%,#fff)}
+.rc-amg button.l3{background:color-mix(in srgb,var(--c) 66%,#fff);color:#fff}.rc-amg button.l4{background:var(--c);color:#fff}
+.rc-amg button.pas{opacity:.6}.rc-amg button.hoje{outline:2px solid var(--brand);outline-offset:1px;font-weight:700}
+.rc-amg button:hover{outline:2px solid var(--c);outline-offset:1px}
+.rc-leg{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--muted);margin-top:12px}.rc-leg b{width:14px;height:14px;border-radius:4px;display:inline-block;background:#f3f5f9}
+@media (max-width:820px){.rc-vis{order:3}}
 #tFse::placeholder,#tbTur [data-k=fse]::placeholder{text-transform:none}
 .rc-tps{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:13px}.rc-tps .b.s{height:30px;padding:0 9px;font-size:12px;font-variant-numeric:tabular-nums}
 .rc-tps .b.s.on{background:color-mix(in srgb,var(--brand) 12%,#fff);border-color:var(--brand);color:var(--brand)}
@@ -743,7 +777,7 @@ body.temfundos nav.side{padding-bottom:16px}
     </div>
     <div class="mgrp" data-m="roomcheck">
     <div class="mh">RoomCheck <span class="mv" data-rcver></span></div>
-    <button data-t="rcMapa"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M9.5 21v-6.5h5V21"/></svg>Mapa da semana</button>
+    <button data-t="rcMapa"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M9.5 21v-6.5h5V21"/></svg>Mapa</button>
     <button data-t="rcLista"><svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>Todas as reservas</button>
     <button data-t="rcEsp"><svg viewBox="0 0 24 24"><path d="M3 21h18M6 21V4h12v17"/><circle cx="14.5" cy="12.5" r=".9" fill="currentColor"/></svg>Espaços</button>
     </div>
@@ -1444,7 +1478,8 @@ body.temfundos nav.side{padding-bottom:16px}
     <div class="rc-bar">
       <div class="rc-esps" id="rcEsps"></div>
       <span class="grow"></span>
-      <div class="rc-nav"><button class="b s" data-rcnav="-7" aria-label="Semana anterior">‹</button><button class="b s" data-rcnav="0">Hoje</button><button class="b s" data-rcnav="7" aria-label="Semana seguinte">›</button><b id="rcSem"></b></div>
+      <div class="rc-vis" role="tablist" aria-label="Vista do mapa"><button data-rcvis="sem" role="tab">Semana</button><button data-rcvis="mes" role="tab">Mês</button><button data-rcvis="ano" role="tab">Ano</button></div>
+      <div class="rc-nav"><button class="b s" data-rcnav="-1" aria-label="Anterior">‹</button><button class="b s" data-rcnav="0">Hoje</button><button class="b s" data-rcnav="1" aria-label="Seguinte">›</button><b id="rcSem"></b></div>
     </div>
     <div id="rcMsg"></div>
     <div class="rc-scroll"><div id="rcGrid"></div></div>
@@ -1492,7 +1527,7 @@ body.temfundos nav.side{padding-bottom:16px}
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.15"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.17"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo BoxCheck
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -4354,13 +4389,13 @@ loginUI();
 /* ---------- módulo RoomCheck: reservas do Auditório e dos Laboratórios de Informática 1 e 2 ----------
    Guardado neste navegador ("roomcheck") e na nuvem da EPISJ 360 (nome "rc"), junto por reserva: em cada uma vence a alteração mais recente
    (as canceladas ficam marcadas x:1 durante 90 dias para não voltarem de outro computador). Nada vai para a Box. */
-const RC_VER="1.0";
+const RC_VER="1.2";
 document.querySelectorAll("[data-rcver]").forEach(el=>el.textContent="v"+RC_VER);
 const RC_ESP0=[{id:"auditorio",n:"Auditório",sg:"Aud.",c:"#7c3aed",on:1},{id:"lab1",n:"Laboratório de Informática 1",sg:"LI1",c:"#0e7490",on:1},{id:"lab2",n:"Laboratório de Informática 2",sg:"LI2",c:"#c2410c",on:1}];
 let RC=(()=>{let o=null;try{o=JSON.parse(localStorage.getItem("roomcheck")||"null")}catch(e){}
   if(!o||typeof o!=="object")o={};if(!Array.isArray(o.esp)||!o.esp.length)o.esp=RC_ESP0.map(x=>({...x}));
   o.cfg=Object.assign({abre:480,fecha:1140,sab:false},o.cfg||{});o.res=o.res&&typeof o.res==="object"?o.res:{};o.et=o.et||0;return o})();
-const RCV={sem:"",esp:"todos",ed:null};
+const RCV={sem:"",esp:"todos",ed:null,vista:(()=>{try{return localStorage.getItem("rc_vista")||"sem"}catch(e){return"sem"}})(),ref:""};
 // 0.9.14: tempos letivos (início e fim em minutos) — os do horário da escola; podem mudar-se em RoomCheck › Espaços
 const RC_TEMPOS0=[[510,560],[570,620],[640,690],[700,750],[810,860],[870,920],[940,990]];
 function rcTempos(){const T=(Array.isArray(RC.cfg.tempos)?RC.cfg.tempos:RC_TEMPOS0).filter(t=>Array.isArray(t)&&Number.isFinite(t[0])&&Number.isFinite(t[1])&&t[1]>t[0]).slice().sort((a,b)=>a[0]-b[0]);return T.length?T:RC_TEMPOS0}
@@ -4404,6 +4439,8 @@ function rcRender(t){t=t||curTab;if(!RCV.sem)RCV.sem=rcSeg(rcHoje());
 
 /* ---------- mapa da semana ---------- */
 function rcMapa(){const hoje=rcHoje(),E=RC.esp.filter(e=>e.on),esps=RCV.esp==="todos"?E:E.filter(e=>e.id===RCV.esp);if(!esps.length){RCV.esp="todos";return rcMapa()}
+  document.querySelectorAll("[data-rcvis]").forEach(b=>{b.classList.toggle("on",b.dataset.rcvis===RCV.vista);b.setAttribute("aria-selected",b.dataset.rcvis===RCV.vista)});
+  if(RCV.vista==="mes"||RCV.vista==="ano")return rcMesAno(E,esps);
   const n=RC.cfg.sab?6:5,dias=[...Array(n)].map((_,i)=>rcMais(RCV.sem,i));const A=rcAtivas();
   if(!RC.cfg.sab&&A.some(r=>r.d===rcMais(RCV.sem,5)))dias.push(rcMais(RCV.sem,5));
   const T=rcTempos();let H0=T[0][0],H1=T[T.length-1][1];A.forEach(r=>{if(dias.includes(r.d)&&esps.some(e=>e.id===r.e)){H0=Math.min(H0,Math.floor(r.h0/30)*30);H1=Math.max(H1,Math.ceil(r.h1/30)*30)}});
@@ -4429,8 +4466,86 @@ function rcMapa(){const hoje=rcHoje(),E=RC.esp.filter(e=>e.on),esps=RCV.esp==="t
     if(tp){if(d===hoje&&tp[1]<=ag){toast("Esse tempo já passou");return}rcNova({e:l.dataset.rce,d,h0:tp[0],h1:tp[1]});return} // clique num tempo: reserva esse tempo
     let h0=H0+Math.floor((m-H0)/30)*30;if(d===hoje&&h0+30<=ag)h0=Math.ceil(ag/15)*15;
     rcNova({e:l.dataset.rce,d,h0,h1:Math.min(1439,h0+90)})});
-  document.querySelectorAll("#rcMapa [data-rcr],#rcMapa [data-rcv]").forEach(b=>b.onclick=()=>rcVer(RC.res[b.dataset.rcr||b.dataset.rcv]))}
-document.querySelectorAll("[data-rcnav]").forEach(b=>b.onclick=()=>{const n=b.dataset.rcnav;RCV.sem=n==="0"?rcSeg(rcHoje()):rcMais(RCV.sem||rcSeg(rcHoje()),+n);rcMapa()});
+  document.querySelectorAll("#rcMapa [data-rcr],#rcMapa [data-rcv]").forEach(b=>b.onclick=()=>{if(rcArrastou){rcArrastou=false;return}rcVer(RC.res[b.dataset.rcr||b.dataset.rcv])});
+  document.querySelectorAll("#rcGrid .rc-bl").forEach(b=>b.addEventListener("pointerdown",ev=>rcArrastar(ev,b,{H0,PX,T,hoje})))}
+/* RoomCheck 1.2: arrastar uma reserva para outra hora, dia ou espaço; nas que se repetem, pergunta se é só este dia ou todas */
+let rcArrastou=false;
+function rcArrastar(ev,el,o){if(ev.button!==0)return;const r=RC.res[el.dataset.rcr];if(!r||r.d<o.hoje)return;
+  const dur=r.h1-r.h0,y0=ev.clientY,x0=ev.clientX,lane0=el.parentNode,top0=parseFloat(el.style.top),dy=y0-el.getBoundingClientRect().top;
+  let ativo=false,alvo=null,dica=null;
+  const calc=(cx,cy)=>{el.style.pointerEvents="none";const ln=document.elementFromPoint(cx,cy)?.closest?.(".rc-lane");el.style.pointerEvents="";if(!ln)return null;
+    let h0=o.H0+(cy-dy-ln.getBoundingClientRect().top)/o.PX;const tp=o.T.find(t=>h0+10>=t[0]&&h0+10<t[1]); // perto do início de um tempo: encaixa nele
+    h0=tp&&Math.abs(h0-tp[0])<=20?tp[0]:Math.round(h0/5)*5;h0=Math.max(0,Math.min(1440-dur,h0));
+    const d=ln.dataset.rcd,e=ln.dataset.rce;return{ln,d,e,h0,h1:h0+dur,mau:d<o.hoje?"dia que já passou":(rcChoque(e,d,h0,h0+dur,r.id)?"ocupado":"")}};
+  const mover=m=>{if(!ativo){if(Math.hypot(m.clientX-x0,m.clientY-y0)<5)return;ativo=true;el.classList.add("arr");el.setPointerCapture(ev.pointerId);dica=document.createElement("div");dica.className="rc-arrh";document.body.appendChild(dica)}
+    m.preventDefault();const a=calc(m.clientX,m.clientY);if(!a)return;alvo=a;if(a.ln!==el.parentNode)a.ln.appendChild(el);
+    el.style.top=(a.h0-o.H0)*o.PX+"px";el.classList.toggle("mau",!!a.mau);
+    dica.textContent=`${rcE(a.e).sg} · ${rcData(a.d).toLocaleDateString("pt-PT",{weekday:"short",day:"numeric"})} · ${rcHm(a.h0)}–${rcHm(a.h1)}${a.mau?" — "+a.mau:""}`;dica.style.left=m.clientX+14+"px";dica.style.top=m.clientY+14+"px"};
+  const largar=()=>{el.removeEventListener("pointermove",mover);el.removeEventListener("pointerup",largar);el.removeEventListener("pointercancel",largar);if(dica)dica.remove();
+    if(!ativo)return;rcArrastou=true;setTimeout(()=>rcArrastou=false,50);
+    const voltar=()=>{lane0.appendChild(el);el.style.top=top0+"px";el.classList.remove("arr","mau")};
+    if(!alvo||(alvo.d===r.d&&alvo.e===r.e&&alvo.h0===r.h0)){voltar();return}
+    if(alvo.mau){voltar();toast(alvo.mau==="ocupado"?"Esse espaço está ocupado nesse horário":"Não dá para mudar para um dia que já passou");return}
+    rcMover(r,alvo,voltar)};
+  el.addEventListener("pointermove",mover);el.addEventListener("pointerup",largar);el.addEventListener("pointercancel",largar)}
+function rcMover(r,a,voltar){const hoje=rcHoje(),serie=r.s?rcAtivas().filter(x=>x.s===r.s&&x.d>=r.d&&x.d>=hoje).sort((x,y)=>x.d.localeCompare(y.d)):[];
+  const desc=`${rcE(a.e).n} · ${rcDia(a.d)} · ${rcHm(a.h0)}–${rcHm(a.h1)}`;
+  const aplicar=todas=>{const dd=Math.round((rcData(a.d)-rcData(r.d))/864e5),u=Date.now(),L=todas?serie:[r],ok=[],oc=[];
+    for(const x of L){const d=rcMais(x.d,dd),c=rcChoque(a.e,d,a.h0,a.h1,x.id);if(c||d<hoje){oc.push({d,c});continue}
+      RC.res[x.id]={...x,e:a.e,d,h0:a.h0,h1:a.h1,s:todas?x.s:"",u};ok.push(d)} // só este dia: sai da série
+    rcGravar();rcFechar();rcRender(curTab);
+    if(!oc.length)toast(ok.length>1?ok.length+" reservas mudadas":"Reserva mudada · "+desc);
+    else toast(`${ok.length} mudada(s); ficaram como estavam ${oc.length} (ocupado: ${oc.map(o=>rcDia(o.d,{day:"numeric",month:"short"})).join(", ")})`)};
+  if(serie.length<2){aplicar(false);return}
+  rcAbrir("Mudar reserva",`<div class="rc-ver" style="--c:${esc(rcE(a.e).c)}"><b>${esc(r.p)}</b><span>${esc(desc)}</span></div>
+    <p class="hint">Esta reserva repete-se todas as semanas (${serie.length} de hoje em diante). O que quer mudar?</p>
+    <div class="rc-mv"><button class="b" id="rcMv1">Só este dia<small>${esc(rcDia(r.d,{weekday:"long",day:"numeric",month:"long"}))} — as outras semanas ficam como estão</small></button>
+    <button class="b s" id="rcMvT">Todas as semanas, deste dia em diante<small>${serie.length} reservas passam para ${esc(rcData(a.d).toLocaleDateString("pt-PT",{weekday:"long"}))}, ${rcHm(a.h0)}–${rcHm(a.h1)}${a.e!==r.e?", "+esc(rcE(a.e).n):""}</small></button>
+    <button class="b s" id="rcMvX">Cancelar</button></div>`);
+  voltar(); // até escolher, a reserva fica onde estava (fechar o painel de qualquer forma é cancelar)
+  $("#rcMv1").onclick=()=>aplicar(false);$("#rcMvT").onclick=()=>aplicar(true);$("#rcMvX").onclick=rcFechar}
+document.querySelectorAll("[data-rcnav]").forEach(b=>b.onclick=()=>{const n=+b.dataset.rcnav,v=RCV.vista;
+  if(!n){RCV.sem=rcSeg(rcHoje());RCV.ref=rcHoje()}
+  else if(v==="sem")RCV.sem=rcMais(RCV.sem||rcSeg(rcHoje()),7*n);
+  else{const r=rcData(RCV.ref||rcHoje());RCV.ref=rcIso(v==="mes"?new Date(r.getFullYear(),r.getMonth()+n,1):new Date(r.getFullYear()+n,0,1))}
+  rcMapa()});
+document.querySelectorAll("[data-rcvis]").forEach(b=>b.onclick=()=>{const v=b.dataset.rcvis;if(v===RCV.vista)return;
+  if(v!=="sem")RCV.ref=RCV.vista==="sem"?rcMais(RCV.sem||rcSeg(rcHoje()),3):(RCV.ref||rcHoje()); // mês/ano: o da semana que se estava a ver
+  else{const r=RCV.ref||rcHoje(),h=rcHoje();RCV.sem=rcSeg(r.slice(0,7)===h.slice(0,7)||(RCV.vista==="ano"&&r.slice(0,4)===h.slice(0,4))?h:r)}
+  RCV.vista=v;try{localStorage.setItem("rc_vista",v)}catch(e){}rcMapa()});
+const rcIrSemana=d=>{RCV.sem=rcSeg(d);RCV.vista="sem";try{localStorage.setItem("rc_vista","sem")}catch(e){}rcMapa()};
+/* ---------- RoomCheck 1.1: mapa do mês e do ano ---------- */
+function rcMesAno(E,esps){const hoje=rcHoje(),A=rcAtivas(),ids=new Set(esps.map(e=>e.id)),R=A.filter(r=>ids.has(r.e)),ref=rcData(RCV.ref||(RCV.ref=rcHoje())),y=ref.getFullYear(),T=rcTempos();
+  const porDia=new Map();R.forEach(r=>(porDia.get(r.d)||porDia.set(r.d,[]).get(r.d)).push(r));porDia.forEach(L=>L.sort((a,b)=>a.h0-b.h0||String(a.e).localeCompare(String(b.e))));
+  $("#rcEsps").innerHTML=`<button class="rc-chip${RCV.esp==="todos"?" on":""}" data-rcesp="todos">Todos</button>`+E.map(e=>`<button class="rc-chip${RCV.esp===e.id?" on":""}" data-rcesp="${esc(e.id)}" style="--c:${esc(e.c)}"><i></i>${esc(e.n)}</button>`).join("");
+  const comSab=d0=>RC.cfg.sab||R.some(r=>r.d.slice(0,d0.length)===d0&&rcData(r.d).getDay()===6),nomeDia=["Seg","Ter","Qua","Qui","Sex","Sáb"];
+  const um=esps.length===1,cor=um?esps[0].c:"var(--brand)";
+  if(RCV.vista==="mes"){const m=ref.getMonth(),pre=rcIso(new Date(y,m,1)).slice(0,7),nd=comSab(pre)?6:5,ini=rcSeg(rcIso(new Date(y,m,1))),fimM=rcIso(new Date(y,m+1,0));
+    $("#rcSem").textContent=new Date(y,m,1).toLocaleDateString("pt-PT",{month:"long",year:"numeric"});
+    let h=`<div class="rc-mes" style="--nd:${nd}">${nomeDia.slice(0,nd).map(n=>`<div class="rc-cab"><b>${n}</b></div>`).join("")}`;
+    for(let w=ini;w<=fimM;w=rcMais(w,7))for(let i=0;i<nd;i++){const d=rcMais(w,i),L=porDia.get(d)||[],max=L.length>4?3:4;
+      h+=`<div class="rc-md${d.slice(0,7)!==pre?" fora":""}${d===hoje?" hoje":""}${d<hoje?" pas":""}" data-rcmd="${d}"><button class="rc-mdn" data-rcir="${d}" title="Ver a semana">${rcData(d).getDate()}</button>
+        ${L.slice(0,max).map(r=>{const e=rcE(r.e);return `<button class="rc-mc" data-rcr="${esc(r.id)}" style="--c:${esc(e.c)}" title="${esc(e.n+" · "+rcHm(r.h0)+"–"+rcHm(r.h1)+" · "+r.p+(r.t?" · "+r.t:""))}"><b>${rcHm(r.h0)}</b><span>${um?"":esc(e.sg)+" · "}${esc(r.p)}</span></button>`}).join("")}
+        ${L.length>max?`<button class="rc-mais" data-rcir="${d}">+${L.length-max} mais</button>`:""}</div>`}
+    $("#rcGrid").innerHTML=h+`</div>`}
+  else{const a0=ref.getMonth()>=8?y:y-1;$("#rcSem").textContent="Ano letivo "+a0+"/"+(a0+1);const tot=T.reduce((s,t)=>s+t[1]-t[0],0)*esps.length||1;
+    let h=`<div class="rc-ano" style="--c:${esc(cor)}">`;
+    for(let k=0;k<12;k++){const ym=new Date(a0,8+k,1),yy=ym.getFullYear(),m=ym.getMonth(),pre=rcIso(ym).slice(0,7),nd=comSab(pre)?6:5,ini=rcSeg(pre+"-01"),fimM=rcIso(new Date(yy,m+1,0));
+      const nRes=R.filter(r=>r.d.slice(0,7)===pre).length;
+      h+=`<div class="rc-am"><h4><button data-rcmes="${pre}-01">${ym.toLocaleDateString("pt-PT",{month:"long"})}${m===0?" "+yy:""}</button><span>${nRes?nRes+(nRes>1?" reservas":" reserva"):""}</span></h4><div class="rc-amg" style="--nd:${nd}">${nomeDia.slice(0,nd).map(n=>`<i>${n[0]}</i>`).join("")}`;
+      for(let w=ini;w<=fimM;w=rcMais(w,7))for(let i=0;i<nd;i++){const d=rcMais(w,i);if(d.slice(0,7)!==pre){h+=`<span></span>`;continue}
+        const L=porDia.get(d)||[];let oc=0;L.forEach(r=>T.forEach(t=>{oc+=Math.max(0,Math.min(r.h1,t[1])-Math.max(r.h0,t[0]))}));
+        const f=oc/tot,lv=!L.length?0:f<.15?1:f<.4?2:f<.7?3:4;
+        h+=`<button class="${lv?"l"+lv:""}${d<hoje?" pas":""}${d===hoje?" hoje":""}" data-rcir="${d}" title="${esc(rcDia(d,{weekday:"long",day:"numeric",month:"long"}))}${L.length?" · "+L.length+(L.length>1?" reservas":" reserva")+" · "+Math.round(f*100)+"% dos tempos ocupados":" · livre"}">${rcData(d).getDate()}</button>`}
+      h+=`</div></div>`}
+    $("#rcGrid").innerHTML=h+`</div><div class="rc-leg" style="--c:${esc(cor)}">Ocupação dos tempos letivos${um?"":" (todos os espaços)"}: <b></b> livre <b style="background:color-mix(in srgb,var(--c) 22%,#fff)"></b><b style="background:color-mix(in srgb,var(--c) 42%,#fff)"></b><b style="background:color-mix(in srgb,var(--c) 66%,#fff)"></b><b style="background:var(--c)"></b> cheio · clique num dia para ver a semana</div>`}
+  const prox=A.filter(r=>r.d>=hoje).sort((a,b)=>a.d.localeCompare(b.d)||a.h0-b.h0).slice(0,10);
+  $("#rcProx").innerHTML=prox.length?`<div class="rc-lista">${prox.map(r=>{const e=rcE(r.e);return `<div class="rc-it" style="--c:${esc(e.c)}"><i></i><div><b>${esc(e.n)}</b> · ${esc(rcDia(r.d))} · ${rcHm(r.h0)}–${rcHm(r.h1)}<br><span class="rc-mut">${esc(r.p)}${r.t?" · "+esc(r.t):""}${r.m?" · "+esc(r.m):""}${r.s?" · todas as semanas":""}</span></div><button class="b s" data-rcv="${esc(r.id)}">Ver</button></div>`}).join("")}</div>`:`<p class="hint" style="margin:0">Ainda não há reservas marcadas.</p>`;
+  document.querySelectorAll("[data-rcesp]").forEach(b=>b.onclick=()=>{RCV.esp=b.dataset.rcesp;rcMapa()});
+  document.querySelectorAll("#rcGrid [data-rcir]").forEach(b=>b.onclick=ev=>{ev.stopPropagation();rcIrSemana(b.dataset.rcir)});
+  document.querySelectorAll("#rcGrid [data-rcmes]").forEach(b=>b.onclick=()=>{RCV.ref=b.dataset.rcmes;RCV.vista="mes";try{localStorage.setItem("rc_vista","mes")}catch(e){}rcMapa()});
+  document.querySelectorAll("#rcGrid [data-rcmd]").forEach(c=>c.onclick=ev=>{if(ev.target.closest("button"))return;const d=c.dataset.rcmd;if(d<hoje){toast("Não dá para reservar em dias que já passaram");return}rcNova({e:RCV.esp!=="todos"?RCV.esp:undefined,d,h0:T[0][0],h1:T[0][1]})});
+  document.querySelectorAll("#rcMapa [data-rcr],#rcMapa [data-rcv]").forEach(b=>b.onclick=ev=>{ev.stopPropagation();rcVer(RC.res[b.dataset.rcr||b.dataset.rcv])})}
 $("#rcNova").onclick=()=>rcNova({});
 
 /* ---------- painel lateral ---------- */
