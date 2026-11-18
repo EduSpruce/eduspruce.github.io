@@ -212,6 +212,16 @@ button.big{width:100%;padding:13px 18px;font-size:16px}
 .rp .d{color:var(--muted);font-size:12.5px;width:130px;flex:none}
 .rp .l{flex:1}
 @media (max-width:760px){.grow2{grid-template-columns:1fr 1fr}.undo{display:none}}
+
+details.altp{border:1px solid var(--line);border-radius:10px;margin-bottom:8px;background:#fff}
+details.altp>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:minmax(220px,1.6fr) repeat(3,minmax(80px,.5fr)) minmax(110px,.6fr);gap:10px;align-items:center;padding:10px 14px}
+details.altp>summary::-webkit-details-marker{display:none}
+details.altp[open]>summary{border-bottom:1px solid var(--line);background:#fafbfd}
+.who2{display:flex;align-items:center;gap:10px}
+.who2 .av{width:32px;height:32px;border-radius:50%;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12.5px;flex:none}
+.num{font-size:20px;font-weight:700;text-align:center;line-height:1.1}.num small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.num.ok{color:var(--ok)}.num.bad{color:var(--bad)}
+@media (max-width:760px){details.altp>summary{grid-template-columns:1fr 1fr 1fr}details.altp>summary .who2{grid-column:1/-1}}
 </style>
 </head>
 <body>
@@ -246,6 +256,7 @@ button.big{width:100%;padding:13px 18px;font-size:16px}
 <div class="shell">
   <nav id="nav" class="side">
     <button data-t="box" class="on"><svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>Dados da Box</button>
+    <button data-t="alt"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Alterações</button>
     <button data-t="pas"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>Pastas</button>
     <button data-t="prof"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>Formadores</button>
     <button data-t="config"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Atribuições</button>
@@ -387,6 +398,17 @@ button.big{width:100%;padding:13px 18px;font-size:16px}
   </div>
 </section>
 
+<!-- ALTERAÇÕES -->
+<section id="alt">
+  <div class="card">
+    <h2>Alterações desde a análise anterior</h2>
+    <p class="hint">Em cada análise, a app compara com a anterior: quem colocou, substituiu ou apagou documentos, e que itens do relatório passaram a estar entregues.</p>
+    <label style="max-width:520px">Comparação<select id="altPick"></select></label>
+  </div>
+  <div class="tiles" id="altTiles"></div>
+  <div id="altBody"></div>
+</section>
+
 <!-- PASTAS -->
 <section id="pas">
   <div class="tiles" id="pTiles"></div>
@@ -505,7 +527,7 @@ button.big{width:100%;padding:13px 18px;font-size:16px}
 <script>
 (function(){
 "use strict";
-const VERSAO="0.7"; // versão do BoxCheck — sobe a cada alteração publicada
+const VERSAO="0.8"; // versão do BoxCheck — sobe a cada alteração publicada
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 const $=s=>document.querySelector(s);
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -617,7 +639,7 @@ let curTab="box";
 $("#nav").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;show(b.dataset.t)});
 function show(t){curTab=t;document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
   document.querySelectorAll("main>section").forEach(s=>s.classList.toggle("on",s.id===t));
-  if(t==="rel")renderReport(); if(t==="pas")renderTree(); if(t==="env")renderSend(); if(t==="cop"){$("#cfgTxt").value=JSON.stringify(cfg,null,2);renderRP()}}
+  if(t==="rel")renderReport(); if(t==="pas")renderTree(); if(t==="alt")renderAlt(); if(t==="env")renderSend(); if(t==="cop"){$("#cfgTxt").value=JSON.stringify(cfg,null,2);renderRP()}}
 function refreshAll(){renderAll();if(curTab==="rel")renderReport();if(curTab==="env")renderSend();if(curTab==="cop"){$("#cfgTxt").value=JSON.stringify(cfg,null,2);renderRP()}}
 
 /* ---------- documentos exigidos ---------- */
@@ -1141,6 +1163,76 @@ $("#demo").onclick=()=>{
 function countUp(root){if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
   root.querySelectorAll(".tile .v").forEach(el=>{const m=el.textContent.match(/^(\d+)(.*)$/);if(!m)return;const end=+m[1],rest=m[2];if(end<2)return;
     const t0=performance.now(),d=650;const step=t=>{const k=Math.min(1,(t-t0)/d),e=1-Math.pow(1-k,3);el.textContent=Math.round(end*e)+rest;if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step)})}
+/* ---------- painel de alterações entre análises ---------- */
+const ALTKEY="boxcheck_alteracoes";
+const byOf=x=>x&&(x.modified_by||x.created_by)?{n:(x.modified_by||x.created_by).name||"",e:(x.modified_by||x.created_by).login||""}:null;
+const cbOf=x=>x&&x.created_by?{n:x.created_by.name||"",e:x.created_by.login||""}:null;
+// converte uma listagem guardada nas estruturas files/folders usadas pela avaliação
+function toFF(L){const fs=[],fo=[];
+  for(const x of L.itens){if(x.type==="folder"){fo.push(x.path);continue}
+    const segs_=x.path.split("/").map(s=>s.trim()).filter(Boolean);
+    fs.push({path:[...segs_,x.name].join("/"),rawDir:segs_.join("/"),comps:segs_.map(norm),name:x.name,nname:norm(x.name),date:x.modified_at||"",fid:x.id||"",size:x.size??null,sha1:x.sha1||""})}
+  return{fs,fo}}
+function evalWith(L){const sf=files,so=folders;const t=toFF(L);files=t.fs;folders=t.fo;try{return evaluate()}finally{files=sf;folders=so}}
+function diffListings(prev,cur,deleted){
+  const P=new Map(prev.itens.filter(x=>x.type==="file"&&x.id).map(x=>[x.id,x]));
+  const C=new Map(cur.itens.filter(x=>x.type==="file"&&x.id).map(x=>[x.id,x]));
+  const novos=[],alterados=[],apagados=[];
+  for(const [id,x] of C){const o=P.get(id);
+    if(!o)novos.push({p:x.path,n:x.name,by:x.cb||x.by||null,t:x.modified_at||""});
+    else if((o.sha1&&x.sha1&&o.sha1!==x.sha1)||(o.size!==x.size&&o.size!=null&&x.size!=null))alterados.push({p:x.path,n:x.name,by:x.by||null,t:x.modified_at||""});
+    else if(o.path!==x.path||o.name!==x.name)alterados.push({p:x.path,n:x.name,by:x.by||null,t:x.modified_at||"",mv:1})}
+  const delBy=new Map((deleted||[]).map(d=>[d.id,d.by]));
+  for(const [id,o] of P)if(!C.has(id))apagados.push({p:o.path,n:o.name,by:delBy.get(id)||null});
+  // efeito no relatório
+  const before=new Map(),after=new Map();
+  for(const e of evalWith(prev))for(const i of e.items)before.set(i.key,i.ok);
+  const evNow=evalWith(cur),entregues={},perdidos={};
+  for(const e of evNow)for(const i of e.items){const was=before.get(i.key);if(was===undefined)continue;
+    const pid=profOf(e.mod)||"_";
+    if(!was&&i.ok)(entregues[pid]=entregues[pid]||[]).push({k:i.key,t:modLabel(e.mod),d:i.doc.nome});
+    if(was&&!i.ok)(perdidos[pid]=perdidos[pid]||[]).push({k:i.key,t:modLabel(e.mod),d:i.doc.nome})}
+  return{t:Date.now(),desde:prev.quando,ate:cur.quando,pasta:cur.pasta,novos,alterados,apagados,entregues,perdidos};
+}
+function altList(){try{return JSON.parse(localStorage.getItem(ALTKEY)||"[]")}catch(e){return[]}}
+function saveAlt(d){try{const l=altList();l.unshift(d);localStorage.setItem(ALTKEY,JSON.stringify(l.slice(0,15)))}catch(e){}}
+const pessoaKey=b=>b?(b.e||b.n||"?").toLowerCase():"?";
+function formadorDe(b){if(!b)return null;const e=norm(b.e),n=norm(b.n);
+  return cfg.profs.find(p=>(e&&norm(p.email)===e))||cfg.profs.find(p=>n&&norm(p.nome)===n)||null}
+let altSel=0;
+function renderAlt(){
+  const l=altList();const el=$("#altBody");
+  $("#altPick").innerHTML=l.map((d,i)=>`<option value="${i}" ${i===altSel?"selected":""}>${esc(d.desde)} → ${esc(d.ate)} · ${esc(d.pasta)}</option>`).join("");
+  $("#altPick").parentElement.style.display=l.length?"":"none";
+  const d=l[altSel];
+  if(!d){el.innerHTML=`<div class="card"><p class="hint" style="margin:0">Ainda não há alterações para mostrar. A primeira análise de uma pasta serve de ponto de partida; a partir da análise seguinte aparece aqui quem colocou, alterou ou apagou documentos e o efeito no relatório de cada formador.</p></div>`;$("#altTiles").innerHTML="";return}
+  const nE=Object.values(d.entregues).reduce((a,x)=>a+x.length,0),nP=Object.values(d.perdidos).reduce((a,x)=>a+x.length,0);
+  $("#altTiles").innerHTML=`
+   <div class="tile"><div class="v" style="color:var(--ok)">${d.novos.length}</div><div class="l">documentos colocados</div></div>
+   <div class="tile"><div class="v">${d.alterados.length}</div><div class="l">substituídos ou movidos</div></div>
+   <div class="tile"><div class="v" style="color:var(--bad)">${d.apagados.length}</div><div class="l">apagados</div></div>
+   <div class="tile"><div class="v" style="color:var(--ok)">${nE}</div><div class="l">itens do relatório passaram a entregues</div></div>
+   ${nP?`<div class="tile"><div class="v" style="color:var(--bad)">${nP}</div><div class="l">itens deixaram de estar entregues</div></div>`:""}`;countUp($("#altTiles"));
+  // por pessoa (quem fez)
+  const P=new Map();const add=(k,arr)=>{for(const x of arr){const key=pessoaKey(x.by);if(!P.has(key))P.set(key,{by:x.by,novos:[],alterados:[],apagados:[],ult:""});const r=P.get(key);r[k].push(x);if(x.t&&x.t>r.ult)r.ult=x.t}};
+  add("novos",d.novos);add("alterados",d.alterados);add("apagados",d.apagados);
+  const pessoas=[...P.values()].sort((a,b)=>(b.novos.length+b.alterados.length+b.apagados.length)-(a.novos.length+a.alterados.length+a.apagados.length));
+  const fl=(arr,cls)=>arr.slice(0,200).map(x=>`<div class="files ${cls||""}">${x.mv?"↪ movido: ":""}<b>${esc(x.n)}</b> — ${esc(x.p)}</div>`).join("")+(arr.length>200?`<div class="files">… e mais ${arr.length-200}</div>`:"");
+  const rowsP=pessoas.map((r,i)=>{const f=formadorDe(r.by);const nome=r.by?(r.by.n||r.by.e):"(desconhecido)";
+    return `<details class="altp"><summary><span class="who2"><span class="av">${esc((nome||"?").split(/\s+/).filter(Boolean).map(w=>w[0]).slice(0,2).join("").toUpperCase())}</span><span><b>${esc(nome)}</b>${r.by&&r.by.e?`<br><span class="hint" style="margin:0">${esc(r.by.e)}</span>`:""}</span>${f?`<span class="tag ok">formador</span>`:""}</span>
+      <span class="num ok">+${r.novos.length}<small>colocou</small></span><span class="num">${r.alterados.length}<small>substituiu</small></span><span class="num bad">${r.apagados.length}<small>apagou</small></span><span class="hint" style="margin:0">${r.ult?new Date(r.ult).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"}):""}</span></summary>
+      <div style="padding:6px 14px 12px">${r.novos.length?`<h3 style="margin:6px 0">Colocou</h3>${fl(r.novos)}`:""}${r.alterados.length?`<h3 style="margin:6px 0">Substituiu / moveu</h3>${fl(r.alterados)}`:""}${r.apagados.length?`<h3 style="margin:6px 0">Apagou</h3>${fl(r.apagados)}`:""}</div></details>`}).join("");
+  // por formador (efeito no relatório)
+  const ids=new Set([...Object.keys(d.entregues),...Object.keys(d.perdidos)]);
+  const T=byTeacher(evaluate());const faltaAgora=new Map(T.map(t=>[t.p.id,t.miss]));
+  const rowsF=[...ids].map(id=>({id,p:cfg.profs.find(p=>p.id===id)||{nome:id==="_"?"(sem formador atribuído)":"(formador removido)"},e:d.entregues[id]||[],x:d.perdidos[id]||[]}))
+    .sort((a,b)=>b.e.length-a.e.length).map(r=>`<details class="altp"><summary><span class="who2"><b>${esc(r.p.nome)}</b></span><span class="num ok">+${r.e.length}<small>entregues</small></span><span class="num bad">${r.x.length?"−"+r.x.length:"0"}<small>deixaram de estar</small></span><span class="num">${faltaAgora.get(r.id)??"—"}<small>ainda em falta</small></span><span></span></summary>
+      <div style="padding:6px 14px 12px">${r.e.map(x=>`<div class="files" style="color:var(--ok)">✓ ${esc(x.t)} — ${esc(x.d)}</div>`).join("")}${r.x.map(x=>`<div class="files" style="color:var(--bad)">✗ ${esc(x.t)} — ${esc(x.d)}</div>`).join("")}</div></details>`).join("");
+  el.innerHTML=`<div class="card"><h2>Quem fez o quê</h2><p class="hint">Entre a análise de ${esc(d.desde)} e a de ${esc(d.ate)}. Clique numa pessoa para ver os ficheiros.</p>${rowsP||`<p class="hint">Nenhum documento colocado, alterado ou apagado.</p>`}</div>
+    <div class="card"><h2>Efeito no relatório, por formador</h2><p class="hint">Itens exigidos (turma · disciplina · módulo · documento) que mudaram de estado entre as duas análises.</p>${rowsF||`<p class="hint">Nenhum item mudou de estado.</p>`}</div>`;
+}
+$("#altPick").addEventListener("change",e=>{altSel=+e.target.value;renderAlt()});
+
 /* ---------- relatório de pastas ---------- */
 function buildTree(){
   const nodes=new Map();
@@ -1250,7 +1342,7 @@ async function boxGet(path,params){
 }
 async function listFolder(id){
   let out=[],marker=null;
-  do{const p={fields:"id,type,name,modified_at,size,sha1",limit:1000,usemarker:"true"};if(marker)p.marker=marker;
+  do{const p={fields:"id,type,name,modified_at,size,sha1,created_by,modified_by",limit:1000,usemarker:"true"};if(marker)p.marker=marker;
     const j=await boxGet(`folders/${id}/items`,p);out=out.concat(j.entries||[]);marker=j.next_marker||null}while(marker);
   return out;
 }
@@ -1327,7 +1419,7 @@ async function crawl(run,starts,itens,st){
       while(active<RATE.conc&&queue.length){const f=queue.shift();active++;
         listFolder(f.id).then(list=>{st.opened++;for(const x of list){
             if(x.type==="folder"){const p=f.path+"/"+x.name;itens.push({path:p,name:"",type:"folder",id:x.id,pid:f.id});queue.push({id:x.id,path:p});st.nP++}
-            else if(x.type==="file"){itens.push({path:f.path,name:x.name,type:"file",modified_at:x.modified_at||"",id:x.id,pid:f.id,size:x.size,sha1:x.sha1||""});st.nF++}}})
+            else if(x.type==="file"){itens.push({path:f.path,name:x.name,type:"file",modified_at:x.modified_at||"",id:x.id,pid:f.id,size:x.size,sha1:x.sha1||"",by:byOf(x),cb:cbOf(x)});st.nF++}}})
         .catch(e=>{
           if(e.kind==="auth"){st.fatal=e;return}
           if(e.kind==="http"&&(e.status===403||e.status===404)){st.failed.push(f.path);st.opened++;return}
@@ -1360,6 +1452,7 @@ async function updateScan(run,prev,st){
     if(s.type==="file"){const op=fileParent.get(s.id);if(op&&byId.has(op))relist.add(op)}
     if(s.type==="folder"&&byId.has(s.id)){const old=byId.get(s.id);if(old.pid&&byId.has(old.pid))relist.add(old.pid);relist.add(s.id)}}
   st.mudancas=evs.length;
+  st.deleted=evs.filter(ev=>/TRASH|DELETE/.test(ev.event_type||"")&&ev.source&&ev.source.type==="file").map(ev=>({id:ev.source.id,by:ev.created_by?{n:ev.created_by.name||"",e:ev.created_by.login||""}:null}));
   const removeSubtree=path=>{for(let i=itens.length-1;i>=0;i--){const x=itens[i];const p=x.type==="folder"?x.path:x.path+"/"+x.name;if(p===path||p.startsWith(path+"/")||(x.type==="file"&&(x.path===path||x.path.startsWith(path+"/"))))itens.splice(i,1)}};
   const newStarts=[],willCrawl=new Set();
   for(const fid of relist){if(willCrawl.has(fid))continue;byId=fold();const F=byId.get(fid);if(!F)continue;
@@ -1369,7 +1462,7 @@ async function updateScan(run,prev,st){
     for(let i=itens.length-1;i>=0;i--)if(itens[i].type==="file"&&itens[i].pid===fid)itens.splice(i,1);
     const newIds=new Set(list.map(x=>x.id));
     for(const x of list)if(x.type==="file"){for(let i=itens.length-1;i>=0;i--)if(itens[i].type==="file"&&itens[i].id===x.id)itens.splice(i,1);
-      itens.push({path:F.path,name:x.name,type:"file",modified_at:x.modified_at||"",id:x.id,pid:fid,size:x.size,sha1:x.sha1||""});st.nF++}
+      itens.push({path:F.path,name:x.name,type:"file",modified_at:x.modified_at||"",id:x.id,pid:fid,size:x.size,sha1:x.sha1||"",by:byOf(x),cb:cbOf(x)});st.nF++}
     // subpastas: removidas, renomeadas ou novas
     const oldKids=itens.filter(x=>x.type==="folder"&&x.pid===fid);
     for(const k of oldKids){const now=list.find(x=>x.id===k.id);if(!now||now.name!==k.path.split("/").pop())removeSubtree(k.path)}
@@ -1392,11 +1485,14 @@ async function runScan(full){
     if(!res){st.opened=0;st.nF=0;st.nP=0;res=await fullScan(run,curFolder.id,root,st)}
     const nPast=res.itens.filter(x=>x.type==="folder").length,nFich=res.itens.filter(x=>x.type==="file").length;
     const j={v:2,pasta:root,rootId:curFolder.id,t:Date.now(),quando:new Date().toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"}),itens:res.itens,pos:res.pos,failed:st.failed};
+    let diff=null;
+    if(prev&&prev.rootId===j.rootId&&prev.v===2){try{diff=diffListings(prev,j,st.deleted);saveAlt(diff);altSel=0}catch(e){console.warn(e)}}
     try{localStorage.setItem("box_last_listing",JSON.stringify(j))}catch(e){toast("A listagem é grande demais para ficar guardada neste navegador — descarregue-a em CSV")}
     scanRun++;// impede atualizações tardias da mensagem
     const secs=Math.round((Date.now()-st.t0)/1000);
     $("#scanMsg").textContent=`Concluído em ${secs} s (${st.modo}${st.modo==="só o que mudou"?`: ${st.mudancas} alteração(ões), ${st.opened} pasta(s) relidas`:""}) · ${nPast} pastas, ${nFich} ficheiros${RATE.hits?` · a Box pediu ${RATE.hits} pausa(s)`:""}${st.failed.length?` · ⚠ ${st.failed.length} pasta(s) sem acesso: ${st.failed.slice(0,3).join("; ")}${st.failed.length>3?"…":""}`:""}.`;
     useListing(j,"a Box");showLast();scanHint();
+    if(diff){const n=diff.novos.length+diff.alterados.length+diff.apagados.length;$("#scanMsg").textContent+=` Alterações desde ${diff.desde}: ${diff.novos.length} colocado(s), ${diff.alterados.length} substituído(s), ${diff.apagados.length} apagado(s) — veja “Alterações”.`;if(n)toast(`${n} alteração(ões) desde a última análise — veja “Alterações”`)}
     if(!cfg.mods.length)toast("Agora use “Detetar módulos” em Atribuições");
   }catch(e){scanRun++;$("#scanMsg").textContent="Erro: "+e.message}
   b.disabled=false;$("#scanUpd").disabled=false;$("#scanProg i").style.width="100%";setTimeout(()=>{$("#scanProg").style.display="none"},900);
