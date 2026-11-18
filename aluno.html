@@ -2,7 +2,7 @@
 <html lang="pt-PT">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-4z+9nYSkp1GxZnMcMS/Y8/F+JcJ0u3FHBUPDeum8sUg='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-BspGAN3e8XbhbEyVCy2wXBh6E+5SmYfISAGoeQBRzSY='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
@@ -152,7 +152,7 @@ function ecraOk(r){app.innerHTML=`<section class="card ok"><div class="ico" aria
   <h1>Obrigado, ${esc(S.aluno.nm.split(' ')[0])}!</h1><p class="mut">A tua autoavaliação foi enviada ao professor.</p><button class="btn sec" id="ed">Corrigir a minha resposta</button></section>`;
   $('#ed').onclick=()=>ecraForm(r);try{$('.ok h1').focus()}catch(_){}}
 
-const raw=decodeURIComponent((location.hash||'').slice(1)).trim();const mP=raw.match(/^([0-9A-Za-z]{4}-?[0-9A-Za-z]{4})\.([a-z0-9]{6,32})\.([0-9A-Za-z]{5})$/);
+const raw=(h=>{try{return decodeURIComponent(h)}catch(_){return h}})((location.hash||'').slice(1)).trim();const mP=raw.match(/^([0-9A-Za-z]{4}-?[0-9A-Za-z]{4})\.([a-z0-9]{6,32})\.([0-9A-Za-z]{5})$/);
 if(mP)PRE={code:norm(mP[1]),aid:mP[2],chave:norm(mP[3])};const h=PRE?PRE.code:norm(raw);
 if(!window.crypto||!crypto.subtle){app.innerHTML='<section class="card"><h1>Navegador antigo</h1><p>Abre esta página num navegador atualizado (Safari, Chrome, Firefox ou Edge).</p></section>'}
 else if(h.length===8){app.innerHTML=`<section class="card"><p>${espera('A abrir a autoavaliação…')}</p></section>`;abrir(h)}else ecraCodigo('',h?h:'')

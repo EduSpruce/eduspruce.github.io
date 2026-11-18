@@ -2,7 +2,7 @@
 <html lang="pt-PT">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-VnfM+ddce/1VKQ8PZzhAu8C6czMvayBM+cf4ZmR+lVI='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-uPPXPTXXDVe/EVTlUJqnozad4zdK4L1HhoXGSEMG+nU='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
@@ -299,7 +299,7 @@ function ecraResultado(resp,pub){const F=S.D.f;const Q=F.itens.filter(PERG);cons
   ${Q.map((q,i)=>{const a=pq[q.id];const cls=!(+q.pts)?'':a==null?'p':a>=+q.pts?'c':a>0?'p':'e';const k=certa(q);const fb=fbs(q,resp[q.id]);const cp=pub&&pub.c&&pub.c[q.id];
     return `<section class="card fq rq ${cls}"><h2><span class="n">${i+1}.</span><span>${esc(q.titulo||'Pergunta')}</span>${+q.pts?`<span class="pts">${a==null?'?':nf(a)} / ${nf(q.pts)}</span>`:''}</h2><div class="ra">${txt(q,resp[q.id])}</div>${k&&cls!=='c'?`<div class="rk">Resposta certa: ${k}</div>`:''}${fb.map(x=>`<div class="fb">${esc(x)}</div>`).join('')}${cp?`<div class="fb"><b>Professor:</b> ${esc(cp)}</div>`:''}</section>`}).join('')}`;scrollTo(0,0)}
 /* arranque */
-const raw=decodeURIComponent((location.hash||'').slice(1)).trim();
+const raw=(h=>{try{return decodeURIComponent(h)}catch(_){return h}})((location.hash||'').slice(1)).trim();
 if(!window.crypto||!crypto.subtle){app.innerHTML='<section class="card"><h1>Navegador antigo</h1><p>Abre esta página num navegador atualizado (Safari, Chrome, Firefox ou Edge).</p></section>'}
 else if(raw==='previsualizar'){app.innerHTML=`<section class="card"><p>${espera('A preparar a pré-visualização…')}</p></section>`;
   addEventListener('message',ev=>{if(ev.origin!==location.origin||!ev.data||!ev.data.fmPrev)return;S={code:'',id:'',k:null,D:ev.data.fmPrev,aluno:null,chave:'',nome:'',prev:true};cor();comecar()})}

@@ -1,5 +1,5 @@
 // Fornecedor «Base de dados EduSpruce» (Supabase): a conta (entra-se com Google) e os dados de cada professor.
-//   sessao() · guardada() · entrarGoogle() · sair() · autorizado() · tempoReal()
+//   sessao() · guardada() · entrarGoogle() · sair() · autorizado() · tempoReal() · sinal()
 //   lista() → {nome: tamanho} · lerDados() → {nome: texto} · ler(nome) → texto|null · escrever(nome, texto) · criar(nome, texto) · apagar(nome)
 // O texto dos dados chega já cifrado pela app (AES-256-GCM); a chave fica guardada na conta, na linha «conta-chave».
 const CHAVE_SESSAO='eduspruce.sb';
@@ -52,7 +52,10 @@ export async function criarProvSupabase({url,anonKey,tabela='eduspruce_partes'})
       const j=JSON.parse(atob(t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));const u=await fetch(url+'/auth/v1/user',{headers:{apikey:anonKey,Authorization:'Bearer '+t}});
       const hd=JSON.parse(atob(t.split('.')[0].replace(/-/g,'+').replace(/_/g,'/')));let q='';try{const r=await fetch(url+'/rest/v1/rpc/eduspruce_quem',{method:'POST',headers:{apikey:anonKey,'Content-Type':'application/json',Authorization:'Bearer '+t},body:'{}',cache:'no-store'});q=' · bd '+r.status+' '+(await r.text()).slice(0,220)}catch(e){q=' · bd erro '+e.message}
       return 'papel '+j.role+' · e-mail '+(j.email||'(nenhum)')+' · uid '+String(j.sub||'').slice(0,8)+' · contas '+u.status+' · alg '+(hd.alg||'?')+' · kid '+String(hd.kid||'-').slice(0,8)+' · iss '+String(j.iss||'').replace(/^https?:\/\//,'').slice(0,40)+q},
-    tempoReal(uid,cb){try{const c=sb.channel('es-'+uid).on('postgres_changes',{event:'*',schema:'public',table:'eduspruce_sinal',filter:'user_id=eq.'+uid},()=>cb()).subscribe();return c}catch(e){console.warn('[EduSpruce] tempo real indisponível',e);return null}},
+    /* est(estado) recebe o estado do canal (SUBSCRIBED, CHANNEL_ERROR, TIMED_OUT, CLOSED): com o canal ligado a app pergunta menos vezes à base de dados */
+    tempoReal(uid,cb,est){try{const c=sb.channel('es-'+uid).on('postgres_changes',{event:'*',schema:'public',table:'eduspruce_sinal',filter:'user_id=eq.'+uid},pl=>{let v=null;try{v=pl&&pl.new&&pl.new.versao!=null?+pl.new.versao:null}catch(_){}cb(v)}).subscribe(s=>{try{est&&est(s)}catch(_){}});return c}catch(e){console.warn('[EduSpruce] tempo real indisponível',e);return null}},
+    /* o «sinal» da conta: um número que a base de dados aumenta a cada gravação (null se ainda não houver) — pergunta muito mais leve do que ler o índice dos dados */
+    async sinal(){const u=await uid();const d=ok(await sb.from('eduspruce_sinal').select('versao').eq('user_id',u).maybeSingle());return d?d.versao:null},
     async sair(){try{await sb.auth.signOut({scope:'local'})}catch(_){}},
     async lista(){await uid();const o={};let de=0;for(;;){const d=ok(await sb.from(tabela).select('nome,tamanho').order('nome').range(de,de+999));d.forEach(r=>o[r.nome]=r.tamanho);if(d.length<1000)break;de+=1000}return o},
     /* tudo o que é preciso para abrir, num só pedido: todas as linhas da conta menos as fotografias e anexos (ef-f-…), que chegam depois */

@@ -2,7 +2,7 @@
 <html lang="pt">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-MqTbuQm9kwAg17PV9FVhBSGtbUrgbxo7t67O9ueMxsw=' 'sha256-4oETQkvYi9UL1QDGmDgyNlS4b2A2Lbnpc6WrBspPP+I=' 'sha256-G9xGQSUaqfQfgSD+WBd1eP/6zWKFLvDByeDyk5jlItE=' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co data: blob:; worker-src 'self' blob:; child-src 'self' blob:; frame-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-MqTbuQm9kwAg17PV9FVhBSGtbUrgbxo7t67O9ueMxsw=' 'sha256-4oETQkvYi9UL1QDGmDgyNlS4b2A2Lbnpc6WrBspPP+I=' 'sha256-6rVCtxigE7sU+iLGdW1+eyS30ky4Dtm85oObQdoJej4=' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co data: blob:; worker-src 'self' blob:; child-src 'self' blob:; frame-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>EduSchedule · EduSpruce</title>
 <script>/* nunca dentro de uma página de outro sítio (proteção contra cliques enganados) */try{if(top!==self){let m=false;try{m=top.location.origin===location.origin}catch(_){}if(!m)document.documentElement.style.display='none'}}catch(_){}
@@ -2640,7 +2640,7 @@ function planoAcertar(l,r,wks){
     if(e.key==='Escape'){ui.sel=null;render();}
     else if(e.key==='Delete'||e.key==='Backspace'){e.preventDefault();moveCard(id,null,null);}
     else if(e.key==='f'||e.key==='F'){if(c.day!=null){mutate(()=>{c.locked=!c.locked;});again();}}
-    else if(c.day!=null&&e.key.startsWith('Arrow')){e.preventDefault();const d=c.day+(e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0),p=c.period+(e.key==='ArrowDown'?1:e.key==='ArrowUp'?-1:0);if(d<0||d>=S.days.length||p<0||p+c.len>S.periods.length)return;moveCard(id,d,p);again();}
+    else if(c.day!=null&&String(e.key||'').startsWith('Arrow')){e.preventDefault();const d=c.day+(e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0),p=c.period+(e.key==='ArrowDown'?1:e.key==='ArrowUp'?-1:0);if(d<0||d>=S.days.length||p<0||p+c.len>S.periods.length)return;moveCard(id,d,p);again();}
   });
 })();
 
@@ -3130,7 +3130,7 @@ function start(){
   document.addEventListener('keydown',e=>{
     if(e.key==='Escape'&&ui.sel&&!$('#dlg').open){ui.sel=null;render();return;}
     if(!(e.ctrlKey||e.metaKey)||/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)||busy)return;
-    const k=e.key.toLowerCase();if(k==='z'&&!e.shiftKey){e.preventDefault();desfazer();}else if(k==='y'||(k==='z'&&e.shiftKey)){e.preventDefault();step(redo,undo);}
+    const k=String(e.key||'').toLowerCase();if(k==='z'&&!e.shiftKey){e.preventDefault();desfazer();}else if(k==='y'||(k==='z'&&e.shiftKey)){e.preventDefault();step(redo,undo);}
   });
   window.addEventListener('beforeunload',()=>{if(saveState==='pend')try{ESTORE.setItem(LS,JSON.stringify(S));}catch(e){}});
   window.addEventListener('hashchange',route);route();

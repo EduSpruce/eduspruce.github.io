@@ -2,7 +2,7 @@
 <html lang="pt-PT">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-JIn1geHBHD7L4akvqIjtHx2tateG1WLG8/zf7Rtapxg='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-oqt32oFTf4L2xWclK3wqyf6KVBTzqL5NFp3tyW1c+7s='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
@@ -171,7 +171,7 @@ async function abrir(code){try{const {id,k}=await chaves(code);let L;try{L=await
     ecraQuem()}
   catch(e){console.warn(e);ecraCodigo(navigator.onLine?'Não foi possível ligar. Tenta outra vez dentro de momentos.':'Sem internet. Liga-te e tenta outra vez.',code)}}
 function ecraAviso(t,m){app.innerHTML=`<section class="card ok"><div class="ico" aria-hidden="true" style="background:var(--acc2);color:var(--fc)"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><h1>${esc(t)}</h1><p class="mut">${esc(m)}</p><button class="btn sec" id="rt">Tentar de novo</button></section>`;$('#rt').onclick=()=>{app.innerHTML=`<section class="card"><p>${espera('A verificar…')}</p></section>`;abrir(S.code)}}
-function cab(){const D=S.D,F=D.f;return `<section class="card fcab">${S.prev?'<p class="prevb">Pré-visualização · as respostas não são enviadas</p>':''}<div class="tit"><h1>${esc(F.titulo)}</h1>${F.quiz?'<span class="tag">Teste</span>':''}</div>${F.desc?`<p class="mut">${esc(F.desc).replace(/\n/g,'<br>')}</p>`:''}${D.t?`<p class="mut peq">${esc(D.t)}${D.d?' · '+esc(D.d):''}${D.prof?' · '+esc(D.prof):''}</p>`:''}
+function cab(){const D=S.D,F=D.f;return `<section class="card fcab">${S.prev?'<p class="prevb">Pré-visualização · as respostas não são enviadas</p>':''}<div class="tit"><h1>${esc(F.titulo)}</h1>${F.quiz?'<span class="tag">'+({teste:'Teste',ficha:'Ficha',quiz:'Quiz',revisao:'Revisão',tpc:'TPC'}[F.formato]||'Teste')+'</span>':''}</div>${F.desc?`<p class="mut">${esc(F.desc).replace(/\n/g,'<br>')}</p>`:''}${D.t?`<p class="mut peq">${esc(D.t)}${D.d?' · '+esc(D.d):''}${D.prof?' · '+esc(D.prof):''}</p>`:''}
   ${S.aluno?`<p class="peq"><b>N.º ${esc(S.aluno.n)} · ${esc(S.aluno.nm)}</b>${R.t0||S.prev?'':` · <button type="button" id="troca" style="background:none;border:0;color:var(--fc);font-weight:700;padding:6px 2px;cursor:pointer">não sou eu</button>`}</p>`:''}</section>`}
 /* quem és? */
 function ecraQuem(msg){const D=S.D;
@@ -302,7 +302,7 @@ async function enviar(auto){const b=$('#b'),e=$('#e');if(b){b.disabled=true;b.in
   const o={pv:1,aid:S.aluno?S.aluno.id:'',chave:S.chave||'',nome:S.aluno?'':S.nome,t0:R.t0,t1:Date.now(),resp:R.resp,sai:R.sai||0,ecra:R.ecra||0};
   if(S.prev)return ecraOk(o,auto);
   try{let c=await cifrar(o,S.k);if(c.length>(+S.D.lr||40000)){Object.keys(o.resp).forEach(k=>{if(typeof o.resp[k]==='string')o.resp[k]=o.resp[k].slice(0,1500)});c=await cifrar(o,S.k)}
-    await rpc('eduspruce_autoav_enviar',{p_id:S.id,p_conteudo:c});ecraOk(o,auto)}
+    const ok=await rpc('eduspruce_autoav_enviar',{p_id:S.id,p_conteudo:c});if(ok===false){R.enviado=false;throw new Error('fechada')}ecraOk(o,auto)}
   catch(x){console.warn(x);if(b){b.disabled=false;b.textContent='Enviar'}const m=/fechad|closed|expir|não está aberta|limite/i.test(x.message||'')?'A prova já fechou ou atingiu o limite de respostas. Fala com o professor.':navigator.onLine?'Não foi possível enviar. Tenta outra vez.':'Sem internet. Liga-te e toca outra vez em Enviar (as tuas respostas continuam aqui).';
     if(e)e.textContent=m;else app.insertAdjacentHTML('beforeend',`<section class="card"><p class="err">${esc(m)}</p><button class="btn" id="re">Tentar de novo</button></section>`);const re=$('#re');if(re)re.onclick=()=>enviar(auto)}}
 function ecraOk(o,auto){const D=S.D,F=D.f;const nome=S.aluno?S.aluno.nm.split(' ')[0]:(S.nome||'').split(' ')[0];
@@ -346,7 +346,7 @@ function ecraResultado(resp,pub){const F=S.D.f;const Q=F.itens.filter(PERG);cons
     let tx=txt(q,resp[q.id]);((pub&&pub.an&&pub.an[q.id])||[]).forEach(z=>{const e=esc(z.t);const j=tx.indexOf(e);if(e&&j>=0)tx=tx.slice(0,j)+'<mark>'+e+'</mark><small class="anc">'+esc(z.c)+'</small>'+tx.slice(j+e.length)});
     return `<section class="card fq rq ${cls}"><h2><span class="n">${i+1}.</span><span>${esc(q.titulo||'Pergunta')}</span>${+q.pts?`<span class="pts">${a==null?'?':nf(a)} / ${nf(q.pts)}</span>`:''}</h2>${q.html?`<div class="enun">${limpa(q.html)}</div>`:''}<div class="ra">${tx}</div>${resp[q.id+'~j']?`<div class="ra"><b>Justificação:</b> ${esc(resp[q.id+'~j']).replace(/\n/g,'<br>')}</div>`:''}${q.resol?`<div class="rk"><b>Proposta de resolução:</b> ${esc(q.resol).replace(/\n/g,'<br>')}</div>`:''}${k&&cls!=='c'?`<div class="rk">Resposta certa: ${k}</div>`:''}${fb.map(x=>`<div class="fb">${esc(x)}</div>`).join('')}${cp?`<div class="fb"><b>Professor:</b> ${esc(cp)}</div>`:''}</section>`}).join('')}`;scrollTo(0,0)}
 /* arranque */
-const raw=decodeURIComponent((location.hash||'').slice(1)).trim();
+const raw=(h=>{try{return decodeURIComponent(h)}catch(_){return h}})((location.hash||'').slice(1)).trim();
 if(!window.crypto||!crypto.subtle){app.innerHTML='<section class="card"><h1>Navegador antigo</h1><p>Abre esta página num navegador atualizado (Safari, Chrome, Firefox ou Edge).</p></section>'}
 else if(raw==='previsualizar'){app.innerHTML=`<section class="card"><p>${espera('A preparar a pré-visualização…')}</p></section>`;
   addEventListener('message',ev=>{if(ev.origin!==location.origin||!ev.data||!ev.data.pvPrev)return;S={code:'',id:'',k:null,D:ev.data.pvPrev,aluno:null,chave:'',nome:'',prev:true};cor();comecar()})}

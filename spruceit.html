@@ -2,7 +2,7 @@
 <html lang="pt-PT">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-SCnTV443XH+1c8juFqDCuNLMnUIWunmPeFAXhacAN60=' 'sha256-9kXk6U4GCnFoWEn4qxJTtsGr+n3A/+GYheTlKWrzLQs=' 'sha256-NMe3qt6wltaGllB268Rq2Gm7E5ZOBlQa2Mr6UPYJ+7o='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-SCnTV443XH+1c8juFqDCuNLMnUIWunmPeFAXhacAN60=' 'sha256-9kXk6U4GCnFoWEn4qxJTtsGr+n3A/+GYheTlKWrzLQs=' 'sha256-P2qFgN5fYpJO46enISdLZAYqbdM+XgnyWP09o8vb/yA='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5efe2">
 <meta name="robots" content="noindex">
@@ -676,7 +676,7 @@ async function ecraColecao(novo){let c;try{c=await rpc('arena_colecao',{p_id:st.
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&st.j){atualizar();if(st.livre&&!ocupado&&ecraAtual.startsWith('q')===false&&ecraAtual!=='colheita'&&ecraAtual!=='fb')proxima()}});
 addEventListener('online',()=>{semRede(false);if(st.j)atualizar()});
 document.addEventListener('click',e=>{if(e.target&&e.target.closest&&e.target.closest('[data-recarregar]'))location.reload()});
-const h=AR.limpaCod(decodeURIComponent(location.hash.slice(1)));ecraCodigo('',h);if(h.length===6)abrir(h);
+const h=AR.limpaCod((h=>{try{return decodeURIComponent(h)}catch(_){return h}})(location.hash.slice(1)));ecraCodigo('',h);if(h.length===6)abrir(h);
 })();
 </script>
 </body>
