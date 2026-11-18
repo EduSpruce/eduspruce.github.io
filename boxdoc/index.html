@@ -347,9 +347,11 @@ button.big{width:100%;padding:13px 18px;font-size:16px}
       <div id="subfolders" class="chips" style="margin:10px 0"></div>
             <div class="row">
         <button class="b" id="scanBtn">Analisar esta pasta e subpastas</button>
+        <button class="b s" id="scanUpd" title="Volta a ler todas as pastas, uma a uma">Leitura completa</button>
         <span id="scanMsg" class="hint" style="margin:0"></span>
       </div>
       <div class="prog" id="scanProg"><i></i></div>
+      <p class="hint" id="scanHint" style="margin-top:8px"></p>
     </div>
     <div class="row" style="margin-top:12px">
       <button class="b s" id="lastScan" style="display:none">Usar a última análise guardada</button>
@@ -503,7 +505,7 @@ button.big{width:100%;padding:13px 18px;font-size:16px}
 <script>
 (function(){
 "use strict";
-const VERSAO="0.6"; // versão do BoxCheck — sobe a cada alteração publicada
+const VERSAO="0.7"; // versão do BoxCheck — sobe a cada alteração publicada
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 const $=s=>document.querySelector(s);
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -1223,7 +1225,7 @@ async function accessToken(force){
 }
 // ÚNICA porta de acesso aos ficheiros da Box: só pedidos GET (leitura). Não há neste código nada que escreva na Box.
 // ritmo adaptativo: acelera enquanto a Box aceita, abranda quando ela pede (HTTP 429)
-const RATE={conc:16,max:32,min:4,okStreak:0,hits:0,pauseUntil:0};
+const RATE={conc:8,max:16,min:3,okStreak:0,hits:0,pauseUntil:0};
 async function boxGet(path,params){
   const url="https://api.box.com/2.0/"+path+(params?"?"+new URLSearchParams(params):"");
   let renewed=false;
@@ -1232,16 +1234,19 @@ async function boxGet(path,params){
     const tok=await accessToken();
     let r;
     try{r=await fetch(url,{method:"GET",headers:{Authorization:"Bearer "+tok}})}
-    catch(e){throw new Error("O navegador não conseguiu falar com a Box. Confirme que o endereço deste site ("+location.origin+") está em “CORS Domains” na sua aplicação da Box.")}
+    catch(e){ // a Box, quando recusa pedidos a mais, às vezes responde sem as autorizações do navegador: parece uma falha de rede
+      RATE.hits++;RATE.okStreak=0;RATE.conc=Math.max(RATE.min,Math.floor(RATE.conc*0.7));RATE.pauseUntil=Math.max(RATE.pauseUntil,Date.now()+1000*(t+1));
+      if(t<5)continue;
+      const er=new Error("O navegador não conseguiu falar com a Box. Se acontecer logo ao entrar, confirme que o endereço deste site ("+location.origin+") está em “CORS Domains” na sua aplicação da Box.");er.kind="net";throw er}
     if(r.ok){if(++RATE.okStreak>=25&&RATE.conc<RATE.max){RATE.conc++;RATE.okStreak=0}return r.json()}
     if(r.status===429){RATE.hits++;RATE.okStreak=0;RATE.conc=Math.max(RATE.min,Math.floor(RATE.conc*0.7));
       const ra=(+r.headers.get("Retry-After")||1)*1000;RATE.pauseUntil=Math.max(RATE.pauseUntil,Date.now()+ra);continue}
     if(r.status===401){if(!renewed&&SES&&SES.mode==="oauth"){renewed=true;await accessToken(true);continue}
-      logout(false,"O acesso à Box expirou. Volte a entrar.");throw new Error("O acesso à Box expirou. Volte a entrar.")}
+      logout(false,"O acesso à Box expirou. Volte a entrar.");const er=new Error("O acesso à Box expirou. Volte a entrar.");er.kind="auth";throw er}
     if(r.status>=500){await new Promise(s=>setTimeout(s,Math.min(20,0.5*2**t)*1000));continue}
-    throw new Error("A Box respondeu "+r.status+(r.status===403?" (sem permissão para esta pasta)":"")+".");
+    const er=new Error("A Box respondeu "+r.status+(r.status===403?" (sem permissão para esta pasta)":"")+".");er.kind="http";er.status=r.status;throw er;
   }
-  throw new Error("A Box está a limitar os pedidos. Tente daqui a pouco.");
+  const er=new Error("A Box está a limitar os pedidos. Tente daqui a pouco.");er.kind="net";throw er;
 }
 async function listFolder(id){
   let out=[],marker=null;
@@ -1295,7 +1300,7 @@ async function browse(id,path){
     $("#crumbs").innerHTML=path.map((p,i)=>`${i?"<span>›</span>":""}<a href="#" data-ci="${i}">${esc(p.name)}</a>`).join("");
     const pastas=it.filter(x=>x.type==="folder").sort((a,b)=>a.name.localeCompare(b.name,"pt",{numeric:true}));
     $("#subfolders").innerHTML=pastas.map(f=>`<span class="chip" data-fid="${f.id}" data-nm="${esc(f.name)}"><svg viewBox="0 0 24 24"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5h4.6l2 2.2h8.4A1.5 1.5 0 0 1 21 8.7v9.8a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5z" fill="#6aa0f0"/></svg>${esc(f.name)}</span>`).join("")||`<span class="hint">Sem subpastas.</span>`;
-    $("#scanBtn").textContent=`Analisar “${path[path.length-1].name}” e subpastas`;
+    $("#scanBtn").textContent=`Analisar “${path[path.length-1].name}” e subpastas`;scanHint();
   }catch(e){$("#subfolders").innerHTML=`<div class="msg bad">${esc(e.message)}</div>`}
 }
 $("#crumbs").addEventListener("click",e=>{const a=e.target.closest("[data-ci]");if(!a)return;e.preventDefault();const p=curFolder.path.slice(0,+a.dataset.ci+1);browse(p[p.length-1].id,p)});
@@ -1307,34 +1312,100 @@ function useListing(j,label){
   boxMsg(`${files.length} ficheiros e ${folders.length} pastas de “${j.pasta}” (${j.quando}).`,"ok");
   $("#dlList").style.display="";
 }
-$("#scanBtn").onclick=async()=>{
-  const b=$("#scanBtn");b.disabled=true;$("#scanMsg").textContent="A ler…";$("#scanProg").style.display="block";$("#scanProg i").style.width="3%";
+/* ---------- leitura da Box: completa ou só o que mudou ---------- */
+let scanRun=0;
+function progress(run,st,pending){if(run!==scanRun)return;
+  const sec=(Date.now()-st.t0)/1000,opened=st.opened,mm=Math.floor(sec/60),ss=String(Math.floor(sec%60)).padStart(2,"0");
+  $("#scanMsg").textContent=`${mm}:${ss} · ${st.modo} · abertas ${opened} de ${opened+pending} pastas · ${st.nF} ficheiros · ${sec>3?(opened/sec).toFixed(1):"…"} pastas/s${RATE.hits?` · ${RATE.hits} pausa(s) pedidas pela Box`:""}${RATE.pauseUntil>Date.now()?" · em pausa":""}${st.retries?` · ${st.retries} repetição(ões)`:""}`;
+  $("#scanProg i").style.width=Math.max(3,Math.min(99,Math.round(opened/(opened+pending||1)*100)))+"%";}
+// percorre pastas (e subpastas) a partir de "starts"; erros temporários são repetidos, nunca param a análise
+async function crawl(run,starts,itens,st){
+  const queue=starts.slice();let active=0;const tries=new Map();
+  await new Promise(resolve=>{
+    const pump=()=>{
+      if(st.fatal||(!queue.length&&!active)){resolve();return}
+      while(active<RATE.conc&&queue.length){const f=queue.shift();active++;
+        listFolder(f.id).then(list=>{st.opened++;for(const x of list){
+            if(x.type==="folder"){const p=f.path+"/"+x.name;itens.push({path:p,name:"",type:"folder",id:x.id,pid:f.id});queue.push({id:x.id,path:p});st.nP++}
+            else if(x.type==="file"){itens.push({path:f.path,name:x.name,type:"file",modified_at:x.modified_at||"",id:x.id,pid:f.id,size:x.size,sha1:x.sha1||""});st.nF++}}})
+        .catch(e=>{
+          if(e.kind==="auth"){st.fatal=e;return}
+          if(e.kind==="http"&&(e.status===403||e.status===404)){st.failed.push(f.path);st.opened++;return}
+          const n=(tries.get(f.id)||0)+1;tries.set(f.id,n);st.retries++;
+          if(n<=8){RATE.conc=Math.max(RATE.min,Math.floor(RATE.conc*0.7));RATE.pauseUntil=Math.max(RATE.pauseUntil,Date.now()+800*n);queue.push(f)}
+          else{st.failed.push(f.path);st.opened++}})
+        .finally(()=>{active--;progress(run,st,queue.length+active);pump()})}
+    };pump();});
+  if(st.fatal)throw st.fatal;
+}
+async function streamNow(){try{return (await boxGet("events",{stream_position:"now"})).next_stream_position||null}catch(e){return null}}
+async function fullScan(run,rootId,root,st){
+  const pos=await streamNow();const itens=[];
+  st.modo="leitura completa";
+  await crawl(run,[{id:rootId,path:root}],itens,st);
+  return{itens,pos};
+}
+// só volta a abrir as pastas onde a Box registou alterações desde a última análise
+async function updateScan(run,prev,st){
+  st.modo="só o que mudou";
+  let pos=prev.pos,evs=[];
+  for(let k=0;k<400;k++){const j=await boxGet("events",{stream_type:"changes",stream_position:pos,limit:500});
+    const e=j.entries||[];evs=evs.concat(e);pos=j.next_stream_position||pos;if(!e.length||!j.chunk_size)break;if(evs.length>20000)return null}
+  const itens=prev.itens.slice();
+  const fold=()=>{const m=new Map([[prev.rootId,{path:prev.pasta}]]);for(const x of itens)if(x.type==="folder"&&x.id)m.set(x.id,x);return m};
+  let byId=fold();const fileParent=new Map(itens.filter(x=>x.type==="file").map(x=>[x.id,x.pid]));
+  const relist=new Set();
+  for(const ev of evs){const s=ev.source;if(!s||!s.type||!s.id)continue;const pid=s.parent&&s.parent.id;
+    if(pid&&byId.has(pid))relist.add(pid);
+    if(s.type==="file"){const op=fileParent.get(s.id);if(op&&byId.has(op))relist.add(op)}
+    if(s.type==="folder"&&byId.has(s.id)){const old=byId.get(s.id);if(old.pid&&byId.has(old.pid))relist.add(old.pid);relist.add(s.id)}}
+  st.mudancas=evs.length;
+  const removeSubtree=path=>{for(let i=itens.length-1;i>=0;i--){const x=itens[i];const p=x.type==="folder"?x.path:x.path+"/"+x.name;if(p===path||p.startsWith(path+"/")||(x.type==="file"&&(x.path===path||x.path.startsWith(path+"/"))))itens.splice(i,1)}};
+  const newStarts=[],willCrawl=new Set();
+  for(const fid of relist){if(willCrawl.has(fid))continue;byId=fold();const F=byId.get(fid);if(!F)continue;
+    let list;try{list=await listFolder(fid)}catch(e){if(e.kind==="auth")throw e;if(e.kind==="http"&&(e.status===404||e.status===403)){removeSubtree(F.path);continue}throw e}
+    st.opened++;progress(run,st,relist.size-st.opened);
+    // ficheiros diretos: substitui pelos atuais
+    for(let i=itens.length-1;i>=0;i--)if(itens[i].type==="file"&&itens[i].pid===fid)itens.splice(i,1);
+    const newIds=new Set(list.map(x=>x.id));
+    for(const x of list)if(x.type==="file"){for(let i=itens.length-1;i>=0;i--)if(itens[i].type==="file"&&itens[i].id===x.id)itens.splice(i,1);
+      itens.push({path:F.path,name:x.name,type:"file",modified_at:x.modified_at||"",id:x.id,pid:fid,size:x.size,sha1:x.sha1||""});st.nF++}
+    // subpastas: removidas, renomeadas ou novas
+    const oldKids=itens.filter(x=>x.type==="folder"&&x.pid===fid);
+    for(const k of oldKids){const now=list.find(x=>x.id===k.id);if(!now||now.name!==k.path.split("/").pop())removeSubtree(k.path)}
+    for(const x of list)if(x.type==="folder"){const p=F.path+"/"+x.name;if(!itens.some(y=>y.type==="folder"&&y.id===x.id)){removeSubtree(p);itens.push({path:p,name:"",type:"folder",id:x.id,pid:fid});st.nP++;newStarts.push({id:x.id,path:p});willCrawl.add(x.id)}}
+  }
+  if(newStarts.length)await crawl(run,newStarts,itens,st);
+  return{itens,pos};
+}
+async function runScan(full){
+  const run=++scanRun;const b=$("#scanBtn");b.disabled=true;$("#scanUpd").disabled=true;
+  $("#scanMsg").textContent="A ler…";$("#scanProg").style.display="block";$("#scanProg i").style.width="3%";
   const root=curFolder.path.slice(1).map(p=>p.name).join("/")||"Box";
-  const itens=[];let nP=0,nF=0;const t0=Date.now();
+  const st={nP:0,nF:0,opened:0,retries:0,failed:[],t0:Date.now(),modo:""};RATE.hits=0;
   try{
     try{localStorage.setItem("box_last_folder",JSON.stringify(curFolder))}catch(e){}
-    RATE.hits=0;
-    const queue=[{id:curFolder.id,path:root}];let active=0,err=null;
-    await new Promise(resolve=>{
-      const pump=()=>{
-        if(err||(!queue.length&&!active)){resolve();return}
-        while(active<RATE.conc&&queue.length){const f=queue.shift();active++;
-          listFolder(f.id).then(list=>{for(const x of list){
-              if(x.type==="folder"){const p=f.path+"/"+x.name;itens.push({path:p,name:"",type:"folder"});queue.push({id:x.id,path:p});nP++}
-              else if(x.type==="file"){itens.push({path:f.path,name:x.name,type:"file",modified_at:x.modified_at||"",id:x.id,size:x.size,sha1:x.sha1||""});nF++}}})
-          .catch(e=>{err=e}).finally(()=>{active--;const sec=(Date.now()-t0)/1000,opened=nP+1-(queue.length+active),mm=Math.floor(sec/60),ss=String(Math.floor(sec%60)).padStart(2,"0");
-            $("#scanMsg").textContent=`${mm}:${ss} · abertas ${opened} de ${nP+1} pastas encontradas · ${nF} ficheiros · ${sec>3?(opened/sec).toFixed(1):"…"} pastas abertas/s · ${RATE.conc} pedidos em simultâneo${RATE.hits?` · ${RATE.hits} pausa(s) pedidas pela Box`:""}${RATE.pauseUntil>Date.now()?" · em pausa":""}`;
-            const done=nP+1-(queue.length+active),pct=Math.max(3,Math.min(99,Math.round(done/(nP+1)*100)));$("#scanProg i").style.width=pct+"%";pump()})}
-      };pump();});
-    if(err)throw err;
-    const j={pasta:root,quando:new Date().toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"}),itens};
-    try{localStorage.setItem("box_last_listing",JSON.stringify(j))}catch(e){}
-    $("#scanMsg").textContent=`Concluído em ${Math.round((Date.now()-t0)/1000)} s · ${nP} pastas, ${nF} ficheiros${RATE.hits?` · a Box pediu ${RATE.hits} pausa(s)`:""}.`;
-    useListing(j,"a Box");showLast();
+    let prev=null;try{prev=JSON.parse(localStorage.getItem("box_last_listing")||"null")}catch(e){}
+    let res=null;
+    const podeAtualizar=!full&&prev&&prev.rootId===curFolder.id&&prev.pos&&prev.v===2&&Date.now()-(prev.t||0)<14*864e5;
+    if(podeAtualizar){try{res=await updateScan(run,prev,st)}catch(e){if(e.kind==="auth")throw e;res=null}}
+    if(!res){st.opened=0;st.nF=0;st.nP=0;res=await fullScan(run,curFolder.id,root,st)}
+    const nPast=res.itens.filter(x=>x.type==="folder").length,nFich=res.itens.filter(x=>x.type==="file").length;
+    const j={v:2,pasta:root,rootId:curFolder.id,t:Date.now(),quando:new Date().toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"}),itens:res.itens,pos:res.pos,failed:st.failed};
+    try{localStorage.setItem("box_last_listing",JSON.stringify(j))}catch(e){toast("A listagem é grande demais para ficar guardada neste navegador — descarregue-a em CSV")}
+    scanRun++;// impede atualizações tardias da mensagem
+    const secs=Math.round((Date.now()-st.t0)/1000);
+    $("#scanMsg").textContent=`Concluído em ${secs} s (${st.modo}${st.modo==="só o que mudou"?`: ${st.mudancas} alteração(ões), ${st.opened} pasta(s) relidas`:""}) · ${nPast} pastas, ${nFich} ficheiros${RATE.hits?` · a Box pediu ${RATE.hits} pausa(s)`:""}${st.failed.length?` · ⚠ ${st.failed.length} pasta(s) sem acesso: ${st.failed.slice(0,3).join("; ")}${st.failed.length>3?"…":""}`:""}.`;
+    useListing(j,"a Box");showLast();scanHint();
     if(!cfg.mods.length)toast("Agora use “Detetar módulos” em Atribuições");
-  }catch(e){$("#scanMsg").textContent="Erro: "+e.message}
-  b.disabled=false;$("#scanProg i").style.width="100%";setTimeout(()=>{$("#scanProg").style.display="none"},900);
-};
+  }catch(e){scanRun++;$("#scanMsg").textContent="Erro: "+e.message}
+  b.disabled=false;$("#scanUpd").disabled=false;$("#scanProg i").style.width="100%";setTimeout(()=>{$("#scanProg").style.display="none"},900);
+}
+$("#scanBtn").onclick=()=>runScan(false);
+$("#scanUpd").onclick=()=>runScan(true);
+function scanHint(){let p=null;try{p=JSON.parse(localStorage.getItem("box_last_listing")||"null")}catch(e){}
+  const ok=p&&p.v===2&&p.pos&&p.rootId===curFolder.id&&Date.now()-(p.t||0)<14*864e5;
+  $("#scanHint").textContent=ok?`Esta pasta já foi lida a ${p.quando}: “Analisar” só volta a abrir as pastas que mudaram desde então (muito mais rápido). “Leitura completa” lê tudo outra vez.`:"A primeira análise de uma pasta lê tudo, uma pasta de cada vez (a Box limita os pedidos por minuto). As análises seguintes só leem o que mudou.";}
 function showLast(){try{const j=JSON.parse(localStorage.getItem("box_last_listing")||"null");if(!j)return;
   $("#lastScan").style.display="";$("#lastInfo").textContent=`Última análise guardada: ${j.pasta} · ${j.quando} · ${j.itens.filter(x=>x.type==="file").length} ficheiros`}catch(e){}}
 $("#lastScan").onclick=()=>{try{useListing(JSON.parse(localStorage.getItem("box_last_listing")),"a última análise")}catch(e){toast("Sem análise guardada")}};
