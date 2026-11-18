@@ -222,6 +222,10 @@ details.altp[open]>summary{border-bottom:1px solid var(--line);background:#fafbf
 .num{font-size:20px;font-weight:700;text-align:center;line-height:1.1}.num small{display:block;font-size:11px;font-weight:500;color:var(--muted)}
 .num.ok{color:var(--ok)}.num.bad{color:var(--bad)}
 @media (max-width:760px){details.altp>summary{grid-template-columns:1fr 1fr 1fr}details.altp>summary .who2{grid-column:1/-1}}
+
+.bgp{font-size:12px;font-weight:600;color:var(--brand);background:var(--brandbg);border-radius:999px;padding:4px 10px;margin-right:10px;white-space:nowrap}
+details.altp>summary{grid-template-columns:minmax(220px,1.6fr) repeat(5,minmax(66px,.5fr)) minmax(100px,.6fr)}
+@media (max-width:760px){details.altp>summary{grid-template-columns:1fr 1fr 1fr}.bgp{display:none}}
 </style>
 </head>
 <body>
@@ -252,7 +256,7 @@ details.altp[open]>summary{border-bottom:1px solid var(--line);background:#fafbf
     <p class="gfoot">Só leitura: a app não altera, move nem apaga nada na Box.</p>
   </div>
 </div>
-<div class="top"><div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="2" width="28" height="28" rx="8" fill="#1a5fd0"/><path d="M10.5 8.5h7.5l4 4v11a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 9 23.5V10a1.5 1.5 0 0 1 1.5-1.5z" fill="#fff"/><path d="M12.5 18l2.3 2.3 4.7-4.7" stroke="#1a5fd0" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Box<b>Check</b></span><span class="ver" data-ver></span></div><span class="sub">Escola Profissional da Ilha de São Jorge</span><span class="grow"></span><span class="undo"><button id="undoBtn" title="Anular (Ctrl+Z)" disabled>↶ Anular</button><button id="redoBtn" title="Refazer (Ctrl+Shift+Z)" disabled>↷ Refazer</button></span><span id="who" class="who" style="display:none"></span></div>
+<div class="top"><div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="2" width="28" height="28" rx="8" fill="#1a5fd0"/><path d="M10.5 8.5h7.5l4 4v11a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 9 23.5V10a1.5 1.5 0 0 1 1.5-1.5z" fill="#fff"/><path d="M12.5 18l2.3 2.3 4.7-4.7" stroke="#1a5fd0" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Box<b>Check</b></span><span class="ver" data-ver></span></div><span class="sub">Escola Profissional da Ilha de São Jorge</span><span class="grow"></span><span id="bg" class="bgp" style="display:none"></span><span class="undo"><button id="undoBtn" title="Anular (Ctrl+Z)" disabled>↶ Anular</button><button id="redoBtn" title="Refazer (Ctrl+Shift+Z)" disabled>↷ Refazer</button></span><span id="who" class="who" style="display:none"></span></div>
 <div class="shell">
   <nav id="nav" class="side">
     <button data-t="box" class="on"><svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>Dados da Box</button>
@@ -301,6 +305,7 @@ details.altp[open]>summary{border-bottom:1px solid var(--line);background:#fafbf
   <div class="card">
     <h2>Formador por turma e disciplina</h2>
     <p class="hint">Escolha o formador de cada disciplina em cada turma — todos os módulos/UFCD dessa disciplina ficam dele. Se um módulo for de outro formador (mudança a meio do ano, Português 1 e 2 de um e 3 de outro…), mude-o na lista de <b>Módulos</b> abaixo: fica como <b>exceção</b> e a grelha não lhe toca.</p>
+    <p class="hint" id="anoInfo"></p>
     <div class="row" style="margin-bottom:10px">
       <button class="b" id="detect">Detetar módulos e UFCD na listagem da Box</button>
       <span id="detMsg" class="hint" style="margin:0"></span>
@@ -328,10 +333,10 @@ details.altp[open]>summary{border-bottom:1px solid var(--line);background:#fafbf
 
   <div class="card">
     <h2>Documentos exigidos em cada módulo</h2>
-    <p class="hint">Cada linha é um documento que cada módulo deve ter. É <b>entregue</b> se existir um ficheiro dentro das pastas do módulo <b>e</b> da secção/subpasta indicada (ex.: <code>008 / Matrizes</code> = “008 - Avaliação” › … › “Matrizes”). Palavras-chave e extensões são opcionais. Maiúsculas e acentos são ignorados.</p>
+    <p class="hint">Cada linha é um documento que cada módulo deve ter. É <b>entregue</b> se existir um ficheiro dentro das pastas do módulo <b>e</b> da secção/subpasta indicada (ex.: <code>008 / Matrizes</code> = “008 - Avaliação” › … › “Matrizes”). As restantes colunas são opcionais. “O texto deve conter” serve para detetar documentos trocados: se o texto de um ficheiro não tiver nenhuma dessas palavras, fica “a confirmar”. Maiúsculas e acentos são ignorados.</p>
     <div class="row" style="margin-bottom:10px"><button class="b s" id="dtpPreset">Usar o modelo DTP EPISJ (6 documentos)</button></div>
     <table class="rt">
-      <thead><tr><th>Documento</th><th>Secção / subpasta</th><th>Palavras-chave</th><th class="hm">Extensões</th><th class="hm">Mín.</th><th></th></tr></thead>
+      <thead><tr><th>Documento</th><th>Secção / subpasta</th><th>Nome do ficheiro contém</th><th>O texto deve conter (uma destas)</th><th class="hm">Extensões</th><th class="hm">Mín.</th><th></th></tr></thead>
       <tbody id="tbDocs"></tbody>
     </table>
     <div class="row" style="margin-top:10px"><button class="b s" id="addDoc">+ Documento</button></div>
@@ -359,13 +364,14 @@ details.altp[open]>summary{border-bottom:1px solid var(--line);background:#fafbf
             <div class="row">
         <button class="b" id="scanBtn">Analisar esta pasta e subpastas</button>
         <button class="b s" id="scanUpd" title="Volta a ler todas as pastas, uma a uma">Leitura completa</button>
+        <button class="b s" id="tplGo" title="Lê os ficheiros desta pasta e passa a usá-los como modelos oficiais da escola">Usar esta pasta como modelos oficiais</button>
         <span id="scanMsg" class="hint" style="margin:0"></span>
       </div>
       <div class="prog" id="scanProg"><i></i></div>
       <p class="hint" id="scanHint" style="margin-top:8px"></p>
     </div>
     <div class="row" style="margin-top:12px">
-      <button class="b s" id="lastScan" style="display:none">Usar a última análise guardada</button>
+      <button class="b s" id="lastScan" style="display:none">Usar a análise guardada desta pasta</button>
       <button class="b s" id="dlList" style="display:none">Descarregar listagem (CSV)</button>
       <span id="lastInfo" class="hint" style="margin:0"></span>
     </div>
@@ -401,9 +407,10 @@ details.altp[open]>summary{border-bottom:1px solid var(--line);background:#fafbf
 <!-- ALTERAÇÕES -->
 <section id="alt">
   <div class="card">
-    <h2>Alterações desde a análise anterior</h2>
-    <p class="hint">Em cada análise, a app compara com a anterior: quem colocou, substituiu ou apagou documentos, e que itens do relatório passaram a estar entregues.</p>
-    <label style="max-width:520px">Comparação<select id="altPick"></select></label>
+    <h2>Alterações desde a última contagem</h2>
+    <p class="hint">Compara o estado atual com uma <b>contagem</b> (um ponto de partida): quem colocou, substituiu ou apagou documentos desde então, e que itens do relatório passaram a estar entregues. Fica uma contagem nova quando regista um envio de emails ou quando carrega no botão; as atualizações automáticas não a mudam.</p>
+    <div class="row"><label class="grow" style="max-width:560px">Comparar com<select id="altPick"></select></label>
+    <button class="b s" id="altNova" style="align-self:flex-end;display:none">Começar nova contagem a partir de agora</button></div>
   </div>
   <div class="tiles" id="altTiles"></div>
   <div id="altBody"></div>
@@ -446,14 +453,26 @@ details.altp[open]>summary{border-bottom:1px solid var(--line);background:#fafbf
     <div id="warns"></div>
   </div>
   <div class="card">
-    <h2>Verificar o conteúdo dos documentos</h2>
-    <p class="hint">Lê o texto de cada documento entregue (só leitura, pela Box) e assinala os que estão <b>em branco ou quase vazios</b>. Também assinala ficheiros de 0 bytes e, se quiser, o <b>mesmo ficheiro colocado em vários módulos</b> (ex.: o modelo copiado sem preencher). Documentos digitalizados (imagens) não têm texto: aparecem como “a confirmar”, não como em branco. Os resultados ficam guardados — só os ficheiros novos ou alterados são lidos outra vez.</p>
-    <div class="row">
-      <label style="width:230px">Mínimo de palavras para contar como preenchido<input type="number" id="qMin" min="1" style="width:100%"></label>
-      <label class="chip" style="align-self:flex-end"><input type="checkbox" id="qDup"> assinalar ficheiros repetidos</label>
-      <button class="b" id="qGo" style="align-self:flex-end">Verificar conteúdo</button>
-      <span id="qMsg" class="hint" style="margin:0;align-self:flex-end"></span>
+    <h2>Documentos vazios, falsos ou copiados</h2>
+    <p class="hint">O texto de cada documento entregue é lido pela Box (só leitura) e guardado neste navegador; só os ficheiros novos ou alterados voltam a ser lidos. Um documento <b>vazio</b>, com <b>texto de enchimento</b> ou igual a um <b>modelo por preencher</b> não conta como entregue. Os outros sinais ficam como “⚠ a confirmar”: a decisão é sua.</p>
+    <div class="chips" id="qChecks" style="margin-bottom:12px">
+      <label class="chip"><input type="checkbox" data-q="modelo">1 · modelo por preencher</label>
+      <label class="chip"><input type="checkbox" data-q="enchimento">2 · texto de enchimento</label>
+      <label class="chip"><input type="checkbox" data-q="tipo">3 · conteúdo não corresponde ao documento</label>
+      <label class="chip"><input type="checkbox" data-q="modulo">4 · documento de outro módulo</label>
+      <label class="chip"><input type="checkbox" data-q="dup">5 · mesmo ficheiro noutro módulo</label>
+      <label class="chip"><input type="checkbox" data-q="quase">5 · texto quase igual a outro</label>
+      <label class="chip"><input type="checkbox" data-q="anterior">6 · já entregue no ano de referência</label>
+      <label class="chip"><input type="checkbox" data-q="antigo">6 · última edição anterior ao ano letivo</label>
     </div>
+    <div class="row">
+      <label style="width:170px">Mínimo de palavras<input type="number" id="qMin" min="1" style="width:100%"></label>
+      <label class="grow">Ano de referência (anterior)<select id="qRef"></select></label>
+      <label style="width:190px">Início do ano letivo<input type="text" id="qInicio"></label>
+      <button class="b" id="qGo" style="align-self:flex-end">Ler os documentos agora</button>
+    </div>
+    <p class="hint" id="qMsg" style="margin:8px 0 0"></p>
+    <p class="hint" id="qTpl" style="margin:8px 0 0"></p>
     <div class="prog" id="qProg"><i></i></div>
   </div>
   <div id="report"></div>
@@ -527,7 +546,7 @@ details.altp[open]>summary{border-bottom:1px solid var(--line);background:#fafbf
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9"; // versão do BoxCheck — sobe a cada alteração publicada
+const VERSAO="1.0"; // versão do BoxCheck — sobe a cada alteração publicada
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 const $=s=>document.querySelector(s);
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -538,9 +557,13 @@ const splitList=s=>String(s||"").split(/[,;]/).map(x=>norm(x).replace(/^\./,""))
 
 const KEY="entregas_box_v1";
 /* ---------- modelos por omissão (EPISJ) ---------- */
-const DTP_TYPES=[["Planificação","006"],["Recursos Didáticos","007"],["Orientação Educativa","012"],
-  ["Enunciados e Prop. de Correção","008 / Enunciados"],["Matrizes","008 / Matrizes"],["Testes e Fichas de Avaliação","008 / Testes"]];
-const dtpTypes=()=>DTP_TYPES.map(([nome,subpasta])=>({id:uid(),nome,subpasta,palavras:"",ext:"",min:1}));
+// [nome, secção/subpasta, "o texto deve conter" (pelo menos uma destas palavras)]
+const DTP_TYPES=[["Planificação","006","planifica, objetivos, objectivos, conteudos, competencias, estrategias, calendariza, carga horaria, aulas previstas, sumario"],
+  ["Recursos Didáticos","007",""],["Orientação Educativa","012",""],
+  ["Enunciados e Prop. de Correção","008 / Enunciados","correc, cotac, resoluc, soluc, enunciado, criterios, questao, grupo, pergunta, responde, exercicio"],
+  ["Matrizes","008 / Matrizes","matriz, cotac, conteudos, objetivos, objectivos, competencias, estrutura, criterios, ponderac, dominio"],
+  ["Testes e Fichas de Avaliação","008 / Testes","teste, ficha, avaliac, questao, grupo, cotac, pergunta, responde, exercicio, classificac"]];
+const dtpTypes=()=>DTP_TYPES.map(([nome,subpasta,conteudo])=>({id:uid(),nome,subpasta,palavras:"",conteudo,ext:"",min:1}));
 const MAIL_SUBJ="Documentos em falta na Box — Ano letivo {ano}";
 const MAIL_BODY="Olá {primeiro_nome},\n\nRemeto a lista de materiais e documentos referentes ao ano letivo {ano} que ainda não foram submetidos na Box ({total} item(ns)):\n\n{lista}\n\nEsta solicitação já foi reiterada em diversas ocasiões nos últimos meses, sem que se tenha verificado a respetiva regularização. Tratando-se de documentação essencial para a organização pedagógica da Escola e para os processos de financiamento e certificação, solicito que a submissão seja concluída até ao dia {prazo}.\n\nSolicito ainda feedback escrito, confirmando a conclusão da submissão ou, na sua ausência, a devida justificação para a inexistência do documento.\n\nDada a necessidade de encerrar definitivamente o processo relativo ao ano letivo {ano}, agradeço que este pedido não necessite de ser novamente reiterado.\n\nCom os melhores cumprimentos,";
 const OLD_BODY="Caro(a) {nome},\n\nNa verificação das pastas da Box, constatei que ainda falta entregar a seguinte documentação ({total} documento(s)):\n\n{lista}\n\nPeço que a coloque nas pastas respetivas até {prazo}.\n\nObrigado,\nA Direção";
@@ -550,9 +573,11 @@ let cfg=load()||defaultCfg();
 let files=[]; // {path, rawDir, comps, name, nname, date, fid, size, sha1}
 let folders=[]; // caminhos de pastas (para detetar módulos e saber se uma pasta existe)
 let rawRows=null, rawHead=null;
+// contadores de alterações: servem para o relatório só ser recalculado quando alguma coisa mudou
+let filesRev=0,IDX=null,cfgRev=0,txRev=0,refRev=0,tplRev=0;
 
 function load(){try{const t=localStorage.getItem(KEY);return t?JSON.parse(t):null}catch(e){return null}}
-function persist(){try{localStorage.setItem(KEY,JSON.stringify(cfg))}catch(e){}}
+function persist(s){try{localStorage.setItem(KEY,s||JSON.stringify(cfg))}catch(e){}}
 
 /* ---------- histórico: anular / refazer ---------- */
 let undoS=[],redoS=[],lastJSON=JSON.stringify(cfg),lastPush=0;
@@ -560,12 +585,12 @@ function save(){
   const cur=JSON.stringify(cfg);
   if(cur!==lastJSON){
     if(Date.now()-lastPush>1500||!undoS.length){undoS.push(lastJSON);if(undoS.length>80)undoS.shift()}
-    redoS=[];lastPush=Date.now();lastJSON=cur;
+    redoS=[];lastPush=Date.now();lastJSON=cur;cfgRev++;
   }
-  persist();undoUI();
+  persist(cur);undoUI();
 }
 function undoUI(){$("#undoBtn").disabled=!undoS.length;$("#redoBtn").disabled=!redoS.length}
-function goHist(from,to,msg){if(!from.length)return;to.push(lastJSON);lastJSON=from.pop();cfg=JSON.parse(lastJSON);lastPush=0;persist();undoUI();refreshAll();toast(msg)}
+function goHist(from,to,msg){if(!from.length)return;to.push(lastJSON);lastJSON=from.pop();cfg=JSON.parse(lastJSON);lastPush=0;cfgRev++;persist(lastJSON);undoUI();refreshAll();toast(msg)}
 const undo=()=>goHist(undoS,redoS,"Alteração anulada");
 const redo=()=>goHist(redoS,undoS,"Alteração refeita");
 $("#undoBtn").onclick=undo;$("#redoBtn").onclick=redo;
@@ -585,22 +610,28 @@ $("#rpList").addEventListener("click",e=>{const b=e.target.closest("[data-rp]");
   ponto("Antes de restaurar “"+p.label+"”");cfg=JSON.parse(p.cfg);migrate();save();refreshAll();toast("Configuração restaurada")});
 $("#rpNow").onclick=()=>{ponto("Ponto criado manualmente");toast("Ponto de restauro criado")};
 
-/* ---------- módulos: turma, disciplina, código, formador, designação ---------- */
+/* ---------- módulos: turma, disciplina, código, formador, designação, ano letivo ---------- */
 const isDisc=c=>/^\d{4}\s*-\s*\S/.test(String(c).trim());
 const isTurma=c=>/\(\d{2}\s*-\s*\d{2}\)/.test(c);
 const isModName=c=>/^(modulo|mod\.?|ufcd)\s*[a-z0-9]/.test(norm(c));
 const discCode=d=>(String(d||"").match(/^\s*(\d{3,5})/)||[])[1]||norm(d);
 const discShort=d=>String(d||"").replace(/^\s*\d+\s*-\s*/,"");
 const modKey=c=>norm(c).replace(/^(modulo|mod\.?|ufcd)\s*/,"").replace(/^0+(?=[a-z0-9])/,"");
-const gridKey=m=>norm(m.turma)+"|"+discCode(m.disc);
+// ano letivo tirado do nome de uma pasta (ex.: "DTP 2025.2026" → "2025/2026")
+const anoDe=p=>{const m=String(p||"").match(/(20\d\d)\s*[.\-\/_ ]\s*(20\d\d)/);return m&&+m[2]===+m[1]+1?m[1]+"/"+m[2]:""};
+// a grelha turma × disciplina é guardada por ano letivo; as atribuições antigas (sem ano) servem de valor por omissão
+const legKey=m=>norm(m.turma)+"|"+discCode(m.disc);
+const gridKey=m=>(m.ano?m.ano+"|":"")+legKey(m);
+const gridGet=m=>{const k=gridKey(m);if(k in cfg.grid)return cfg.grid[k]||"";return (m.ano&&cfg.grid[legKey(m)])||""};
+const pastaDe=m=>[m.anoDir,m.turma,m.disc,m.cod].filter(Boolean).join(" / ");
 function fillModFields(m){
   if(m.disc&&m.cod)return;
   const parts=String(m.pasta||"").split("/").map(x=>x.trim()).filter(Boolean);
   if(!m.disc)m.disc=parts.find(isDisc)||(parts.length>=2?parts[parts.length-2]:"");
   if(!m.cod)m.cod=parts.filter(p=>p!==m.disc&&p!==m.turma&&!isTurma(p)).pop()||m.nome||"";
 }
-const profOf=m=>m.profId||cfg.grid[gridKey(m)]||"";
-const isExc=m=>!!m.profId&&m.profId!==(cfg.grid[gridKey(m)]||"");
+const profOf=m=>m.profId||gridGet(m)||"";
+const isExc=m=>!!m.profId&&m.profId!==gridGet(m);
 const profName=id=>(cfg.profs.find(p=>p.id===id)||{}).nome||"";
 const desigOf=m=>cfg.desig[discCode(m.disc)+"|"+modKey(m.cod)]||cfg.desig["*|"+modKey(m.cod)]||"";
 const modTitle=m=>(m.cod||m.nome||"(módulo)")+(desigOf(m)?" — "+desigOf(m):"");
@@ -608,10 +639,12 @@ const modLabel=m=>[discShort(m.disc),modTitle(m),m.turma].filter(Boolean).join("
 
 /* ---------- atualização da configuração antiga ---------- */
 function migrate(){
-  cfg.grid=cfg.grid||{};cfg.desig=cfg.desig||{};cfg.envios=cfg.envios||[];cfg.qual=cfg.qual||{min:40,dup:true};
+  cfg.grid=cfg.grid||{};cfg.desig=cfg.desig||{};cfg.envios=cfg.envios||[];
+  cfg.qual=Object.assign({min:40,dup:true},cfg.qual||{});
   cfg.mail=Object.assign({subj:MAIL_SUBJ,prazo:"",ano:"",body:MAIL_BODY,relatorio_para:""},cfg.mail||{});
   cfg.mods.forEach(fillModFields);
-  if((cfg.schema||1)<2){
+  const s0=cfg.schema||1;
+  if(s0<2){
     ponto("Antes da atualização para a v"+VERSAO);
     const old=["Planificação","Recursos didáticos / fichas","Teste / prova do módulo"];
     if(cfg.docTypes.length===3&&cfg.docTypes.every((d,i)=>d.nome===old[i])){cfg.docTypes=dtpTypes();cfg.mods.forEach(m=>m.docs=cfg.docTypes.map(d=>d.id))}
@@ -623,8 +656,83 @@ function migrate(){
       if(ids.length===1&&ids[0]&&!cfg.grid[k]){cfg.grid[k]=ids[0];list.forEach(m=>m.profId="")}}
     cfg.schema=2;
   }
+  if(s0<3){
+    if(s0===2&&cfg.mods.length)ponto("Antes da atualização para a v"+VERSAO);
+    cfg.schema=3;
+  }
+  // "o texto deve conter": valores por omissão para os documentos do modelo DTP EPISJ
+  cfg.docTypes.forEach(d=>{if(d.conteudo===undefined){const p=DTP_TYPES.find(x=>x[0]===d.nome);d.conteudo=p?p[2]:""}});
 }
 migrate();persist();lastJSON=JSON.stringify(cfg);
+
+/* ---------- armazenamento local grande (IndexedDB): textos dos documentos, listagens e contagens ---------- */
+const DB=(()=>{let p=null;
+  const open=()=>p||(p=new Promise((ok,ko)=>{try{if(!window.indexedDB){ko(new Error("sem IndexedDB"));return}
+    const r=indexedDB.open("boxcheck",1);
+    r.onupgradeneeded=()=>{const d=r.result;["textos","listagens","kv"].forEach(n=>{if(!d.objectStoreNames.contains(n))d.createObjectStore(n)})};
+    r.onsuccess=()=>ok(r.result);r.onerror=()=>ko(r.error);r.onblocked=()=>ko(new Error("bloqueado"))}catch(e){ko(e)}}));
+  const tx=async(store,mode,fn)=>{const d=await open();return new Promise((ok,ko)=>{const t=d.transaction(store,mode);const s=t.objectStore(store);let res;const rq=fn(s);if(rq)rq.onsuccess=()=>{res=rq.result};t.oncomplete=()=>ok(res);t.onerror=()=>ko(t.error);t.onabort=()=>ko(t.error||new Error("abortado"))})};
+  return{
+    get:(s,k)=>tx(s,"readonly",st=>st.get(k)).catch(()=>undefined),
+    put:(s,k,v)=>tx(s,"readwrite",st=>st.put(v,k)).then(()=>true).catch(e=>{console.warn("DB",e);return false}),
+    all:s=>tx(s,"readonly",st=>st.getAll()).catch(()=>[]),
+    del:(s,k)=>tx(s,"readwrite",st=>st.delete(k)).catch(()=>{})}})();
+
+/* ---------- análise do texto de um documento: palavras, enchimento e "impressão" para comparar textos ---------- */
+const TX=new Map(); // sha1 -> {sha1, n: início do texto normalizado, w: n.º de palavras, u, top, lorem, rep, sig} (w=null: a Box não tem texto)
+function fnv(s){let h=0x811c9dc5;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,0x01000193)}return h>>>0}
+const MH=64,MHA=new Uint32Array(MH),MHB=new Uint32Array(MH);{let x=12345;const r=()=>{x=(Math.imul(x^(x>>>15),0x2c1b3c6d)+0x297a2d39)>>>0;return x};for(let i=0;i<MH;i++){MHA[i]=r()|1;MHB[i]=r()}}
+function analisarTexto(raw){
+  const full=norm(String(raw||"")).slice(0,60000);
+  const tk=full.match(/[a-z0-9]{2,}/g)||[];const w=tk.length;
+  const freq=new Map();for(const t of tk)freq.set(t,(freq.get(t)||0)+1);
+  let mx=0;for(const v of freq.values())if(v>mx)mx=v;
+  const top=w?mx/w:0,u=w?freq.size/w:0;
+  const lorem=/lorem ipsum|dolor sit amet|consectetur adipiscing/.test(full);
+  const rep=/(.)\1{11,}/.test(full.replace(/[\s._\-=*|]/g,""))||/\b([a-z0-9]{2,})(\s+\1\b){5,}/.test(full);
+  // impressão do texto (minhash sobre sequências de 5 palavras): dois textos quase iguais têm impressões quase iguais
+  const sig=new Uint32Array(MH).fill(0xffffffff);const lim=Math.min(w,5000),k=lim>=5?5:Math.max(1,lim);
+  const th=new Uint32Array(lim);for(let i=0;i<lim;i++)th[i]=fnv(tk[i]);
+  for(let i=0;i+k<=lim;i++){let h=th[i];for(let q=1;q<k;q++)h=Math.imul(h^th[i+q],0x01000193)>>>0;
+    for(let j=0;j<MH;j++){const v=(Math.imul(MHA[j],h)+MHB[j])>>>0;if(v<sig[j])sig[j]=v}}
+  return{n:full.slice(0,8000),w,u,top,lorem,rep,sig};
+}
+const simSig=(a,b)=>{let s=0;for(let i=0;i<MH;i++)if(a[i]===b[i])s++;return s/MH};
+const bandKeys=t=>t.bk||(t.bk=Array.from({length:16},(_,b)=>b+":"+t.sig[b*4]+","+t.sig[b*4+1]+","+t.sig[b*4+2]+","+t.sig[b*4+3]));
+const textosProntos=DB.all("textos").then(all=>{const lim=Date.now()-7*864e5;
+  for(const r of all){if(!r||!r.sha1)continue;if(r.w==null){if((r.t||0)>lim)TX.set(r.sha1,r)}else if(r.sig)TX.set(r.sha1,r)}
+  txRev++});
+async function guardarTexto(sha1,txt){const a=analisarTexto(txt);a.sha1=sha1;TX.set(sha1,a);txRev++;await DB.put("textos",sha1,a)}
+async function guardarSemTexto(sha1){const a={sha1,w:null,t:Date.now()};TX.set(sha1,a);await DB.put("textos",sha1,a)}
+
+/* ---------- listagens guardadas por pasta analisada, e contagens (pontos de comparação) ---------- */
+const lsJ=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k)||"null");return v==null?d:v}catch(e){return d}};
+const resumos=()=>lsJ("box_resumos",{});
+async function guardarListagem(j){
+  const ok=await DB.put("listagens","L|"+j.rootId,j);
+  const r=resumos();r[j.rootId]={pasta:j.pasta,quando:j.quando,t:j.t,tFull:j.tFull||j.t,pos:!!j.pos,n:j.nF,np:j.nP};
+  try{localStorage.setItem("box_resumos",JSON.stringify(r));localStorage.setItem("box_last_root",j.rootId);
+    if(ok)localStorage.removeItem("box_last_listing")}catch(e){}
+  if(!ok){try{localStorage.setItem("box_last_listing",JSON.stringify(j))}catch(e){}}
+  return ok}
+async function lerListagem(rootId){let j=await DB.get("listagens","L|"+rootId);
+  if(!j){const o=lsJ("box_last_listing",null);if(o&&o.itens&&(o.rootId||"legacy")===rootId)j=o}
+  return j||null}
+const basesIdx=()=>lsJ("box_bases",{});
+// uma contagem guarda só os ficheiros (é com ela que o painel Alterações compara o estado atual)
+async function criarBase(j,label){
+  const b={rootId:j.rootId,t:Date.now(),quando:j.quando,pasta:j.pasta,label,
+    itens:j.itens.filter(x=>x.type!=="folder").map(x=>({id:x.id,path:x.path,name:x.name,size:x.size??null,sha1:x.sha1||"",modified_at:x.modified_at||""}))};
+  if(!await DB.put("listagens","B|"+j.rootId+"|"+b.t,b))return null;
+  const idx=basesIdx(),l=(idx[j.rootId]=idx[j.rootId]||[]);l.unshift({t:b.t,quando:b.quando,label,n:b.itens.length});
+  while(l.length>12){const old=l.pop();DB.del("listagens","B|"+j.rootId+"|"+old.t)}
+  try{localStorage.setItem("box_bases",JSON.stringify(idx))}catch(e){}
+  return b}
+const lerBase=(rootId,t)=>DB.get("listagens","B|"+rootId+"|"+t);
+// análise guardada pelas versões anteriores (no armazenamento pequeno do navegador): passa para a base de dados local
+const migrarListagem=(async()=>{try{const o=lsJ("box_last_listing",null);if(!o||!o.itens)return;
+  if(!o.rootId)o.rootId="legacy";o.nP=o.itens.filter(x=>x.type==="folder").length;o.nF=o.itens.length-o.nP;
+  if(await guardarListagem(o)&&!(basesIdx()[o.rootId]||[]).length)await criarBase(o,"Análise de "+o.quando)}catch(e){console.warn(e)}})();
 
 function download(name,text,type){
   try{const b=text instanceof Blob?text:new Blob([text],{type:type||"text/plain;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
@@ -639,8 +747,9 @@ let curTab="box";
 $("#nav").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;show(b.dataset.t)});
 function show(t){curTab=t;document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
   document.querySelectorAll("main>section").forEach(s=>s.classList.toggle("on",s.id===t));
-  if(t==="rel")renderReport(); if(t==="pas")renderTree(); if(t==="alt")renderAlt(); if(t==="env")renderSend(); if(t==="cop"){$("#cfgTxt").value=JSON.stringify(cfg,null,2);renderRP()}}
-function refreshAll(){renderAll();if(curTab==="rel")renderReport();if(curTab==="env")renderSend();if(curTab==="cop"){$("#cfgTxt").value=JSON.stringify(cfg,null,2);renderRP()}}
+  if(t==="rel")renderReport(); if(t==="pas")renderTree(); if(t==="alt")renderAlt(); if(t==="rel"||t==="alt")verificarFundo(); if(t==="env")renderSend(); if(t==="cop"){$("#cfgTxt").value=JSON.stringify(cfg,null,2);renderRP()}}
+function refreshAll(){renderAll();if(curTab==="rel")renderReport();if(curTab==="env")renderSend();if(curTab==="pas")renderTree();if(curTab==="alt")renderAlt();if(curTab==="cop"){$("#cfgTxt").value=JSON.stringify(cfg,null,2);renderRP()}}
+const debounce=(fn,ms)=>{let h;return()=>{clearTimeout(h);h=setTimeout(fn,ms)}};
 
 /* ---------- documentos exigidos ---------- */
 function renderDocs(){
@@ -648,13 +757,14 @@ function renderDocs(){
    <td><input type="text" data-k="nome" value="${esc(d.nome)}"></td>
    <td><input type="text" data-k="subpasta" value="${esc(d.subpasta)}" placeholder="—"></td>
    <td><input type="text" data-k="palavras" value="${esc(d.palavras)}" placeholder="qualquer nome"></td>
+   <td><input type="text" data-k="conteudo" value="${esc(d.conteudo||"")}" placeholder="não verificar"></td>
    <td class="hm"><input type="text" data-k="ext" value="${esc(d.ext)}" placeholder="qualquer" style="width:110px"></td>
    <td class="hm"><input type="number" min="1" data-k="min" value="${d.min||1}"></td>
    <td><button class="x" title="Remover" data-del>×</button></td></tr>`).join("");
 }
 $("#tbDocs").addEventListener("input",e=>{const tr=e.target.closest("tr");const d=cfg.docTypes.find(x=>x.id===tr.dataset.id);const k=e.target.dataset.k;d[k]=k==="min"?Math.max(1,parseInt(e.target.value)||1):e.target.value;save();if(k==="nome")renderMods()});
 $("#tbDocs").addEventListener("click",e=>{if(!e.target.hasAttribute("data-del"))return;const id=e.target.closest("tr").dataset.id;cfg.docTypes=cfg.docTypes.filter(x=>x.id!==id);cfg.mods.forEach(m=>m.docs=m.docs.filter(x=>x!==id));save();renderAll()});
-$("#addDoc").onclick=()=>{const d={id:uid(),nome:"Novo documento",subpasta:"",palavras:"",ext:"",min:1};cfg.docTypes.push(d);cfg.mods.forEach(m=>m.docs.push(d.id));save();renderAll()};
+$("#addDoc").onclick=()=>{const d={id:uid(),nome:"Novo documento",subpasta:"",palavras:"",conteudo:"",ext:"",min:1};cfg.docTypes.push(d);cfg.mods.forEach(m=>m.docs.push(d.id));save();renderAll()};
 $("#dtpPreset").onclick=()=>{ponto("Antes de aplicar o modelo DTP EPISJ");cfg.docTypes=dtpTypes();cfg.mods.forEach(m=>m.docs=cfg.docTypes.map(d=>d.id));save();renderAll();toast("Modelo DTP EPISJ aplicado (pode anular)")};
 
 /* ---------- formadores ---------- */
@@ -662,7 +772,7 @@ function renderProfs(){
   const q=norm(($("#profFilter")||{}).value||"");
   const list=cfg.profs.filter(p=>!q||norm((p.cod||"")+" "+p.nome+" "+p.email).includes(q));
   const semMail=cfg.profs.filter(p=>!/\S+@\S+\.\S+/.test(p.email||"")).length;
-  const cnt={};cfg.mods.forEach(m=>{const p=profOf(m);if(p)cnt[p]=(cnt[p]||0)+1});
+  const cnt={};ativos().forEach(m=>{const p=profOf(m);if(p)cnt[p]=(cnt[p]||0)+1});
   const wEl=$("#profWarn");if(wEl)wEl.innerHTML=cfg.profs.length?(semMail?`<div class="msg bad">${semMail} formador(es) sem email válido — não vão receber mensagens.</div>`:`<div class="msg ok">${cfg.profs.length} formador(es), todos com email.</div>`):"";
   $("#tbProfs").innerHTML=list.map(p=>`<tr data-id="${p.id}">
    <td><input type="text" data-k="cod" value="${esc(p.cod||"")}"></td>
@@ -671,7 +781,8 @@ function renderProfs(){
    <td class="hm" style="color:var(--muted)">${cnt[p.id]||0}</td>
    <td><button class="x" title="Remover" data-del>×</button></td></tr>`).join("")||`<tr><td colspan="5" class="hint">${cfg.profs.length?"Ninguém corresponde à procura.":"Ainda sem formadores — adicione no formulário acima ou cole uma lista abaixo."}</td></tr>`;
 }
-$("#tbProfs").addEventListener("input",e=>{const tr=e.target.closest("tr");const p=cfg.profs.find(x=>x.id===tr.dataset.id);p[e.target.dataset.k]=e.target.value;save();if(e.target.dataset.k==="nome"){renderMods();renderGrid()}});
+$("#tbProfs").addEventListener("input",e=>{const tr=e.target.closest("tr");const p=cfg.profs.find(x=>x.id===tr.dataset.id);p[e.target.dataset.k]=e.target.value;save();if(e.target.dataset.k==="nome")nomesMudaram()});
+const nomesMudaram=debounce(()=>{renderMods();renderGrid()},300);
 $("#tbProfs").addEventListener("click",e=>{if(!e.target.hasAttribute("data-del"))return;const id=e.target.closest("tr").dataset.id;
   cfg.profs=cfg.profs.filter(x=>x.id!==id);cfg.mods.forEach(m=>{if(m.profId===id)m.profId=""});for(const k in cfg.grid)if(cfg.grid[k]===id)delete cfg.grid[k];save();renderAll();toast("Formador removido (pode anular)")});
 $("#profForm").addEventListener("input",()=>{$("#pFormMsg").innerHTML=""});
@@ -707,30 +818,48 @@ $("#profImport").onclick=()=>{
 };
 function profOpts(sel,first){return (first??`<option value="">— escolher —</option>`)+cfg.profs.slice().sort((a,b)=>a.nome.localeCompare(b.nome,"pt")).map(p=>`<option value="${p.id}" ${p.id===sel?"selected":""}>${esc(p.nome||"(sem nome)")}${p.cod?` (${esc(p.cod)})`:""}</option>`).join("")}
 
+/* ---------- módulos do(s) ano(s) letivo(s) da análise carregada ---------- */
+let _atv=null,_atvK="";
+function ativos(){const k=filesRev+"|"+cfgRev;if(_atv&&_atvK===k)return _atv;
+  const idx=getIdx();
+  _atv=!idx.recs.length?cfg.mods:cfg.mods.filter(m=>m.ano?idx.anos.has(m.ano):(idx.anos.size===0||idx.pick(segs(m.pasta),"folders").length>0));
+  _atvK=k;return _atv}
+// módulos antigos (sem ano letivo): ficam associados ao ano da análise onde as suas pastas existem
+function adotar(){const idx=getIdx();if(!idx.anos.size)return 0;let n=0;
+  for(const m of cfg.mods){if(m.ano)continue;const ss=segs(m.pasta);if(!ss.length)continue;
+    for(const [ano,dir] of idx.anos){if(idx.pick([norm(dir),...ss],"folders").length){m.ano=ano;m.anoDir=dir;m.pasta=dir+" / "+m.pasta;n++;break}}}
+  if(n){cfgRev++;const s=JSON.stringify(cfg);lastJSON=s;try{localStorage.setItem(KEY,s)}catch(e){}}
+  return n}
+const anoRef=()=>[...getIdx().anos.keys()].sort().join(",");
+
 /* ---------- grelha turma × disciplina ---------- */
 function gridRows(){
   const map=new Map();
-  for(const m of cfg.mods){const k=gridKey(m);if(!map.has(k))map.set(k,{k,turma:m.turma,disc:m.disc,mods:[]});map.get(k).mods.push(m)}
-  return [...map.values()].sort((a,b)=>a.turma.localeCompare(b.turma,"pt",{numeric:true})||a.disc.localeCompare(b.disc,"pt",{numeric:true}));
+  for(const m of ativos()){const k=gridKey(m);let r=map.get(k);if(!r)map.set(k,r={k,turma:m.turma,disc:m.disc,ano:m.ano||"",ref:m,mods:[]});r.mods.push(m)}
+  return [...map.values()].sort((a,b)=>a.ano.localeCompare(b.ano)||a.turma.localeCompare(b.turma,"pt",{numeric:true})||a.disc.localeCompare(b.disc,"pt",{numeric:true}));
 }
 function renderGrid(){
   const q=norm($("#gFilter").value),only=$("#gEmpty").checked;
-  const rows=gridRows().filter(r=>(!q||norm(r.turma+" "+r.disc).includes(q))&&(!only||!cfg.grid[r.k]));
+  const all=gridRows(),multi=new Set(all.map(r=>r.ano)).size>1;
+  const rows=all.filter(r=>(!q||norm(r.turma+" "+r.disc+" "+r.ano).includes(q))&&(!only||!gridGet(r.ref)));
   let html="",last=null;
   for(const r of rows){
-    if(r.turma!==last){html+=`<div class="gturma">${esc(r.turma||"(sem turma)")}</div>`;last=r.turma}
-    const exc=r.mods.filter(isExc);
-    html+=`<div class="grow2${cfg.grid[r.k]?"":" vazio"}" data-g="${esc(r.k)}"><span>${esc(r.disc||"(sem disciplina)")}</span><span class="n">${r.mods.length} módulo${r.mods.length===1?"":"s"}</span>
-      <select data-grid>${profOpts(cfg.grid[r.k]||"",`<option value="">— sem formador —</option>`)}</select>
+    const tk=r.ano+"|"+r.turma;
+    if(tk!==last){html+=`<div class="gturma">${esc(r.turma||"(sem turma)")}${multi&&r.ano?` <span class="tag" style="background:#eef1f5;color:#4a5260">${esc(r.ano)}</span>`:""}</div>`;last=tk}
+    const exc=r.mods.filter(isExc),g=gridGet(r.ref);
+    html+=`<div class="grow2${g?"":" vazio"}" data-g="${esc(r.k)}"><span>${esc(r.disc||"(sem disciplina)")}</span><span class="n">${r.mods.length} módulo${r.mods.length===1?"":"s"}</span>
+      <select data-grid>${profOpts(g,`<option value="">— sem formador —</option>`)}</select>
       <span class="exc">${exc.length?`<a href="#" data-excf="${esc(r.turma+" "+discShort(r.disc))}">${exc.length} exceção${exc.length===1?"":"ões"}: ${esc([...new Set(exc.map(m=>profName(m.profId)))].join(", "))}</a>`:""}</span></div>`;
   }
-  const all=gridRows(),sem=all.filter(r=>!cfg.grid[r.k]).length;
-  $("#grid").innerHTML=(all.length?`<p class="hint">${all.length} disciplinas em ${new Set(all.map(r=>r.turma)).size} turmas · ${sem} sem formador</p>`:"")+(html||`<p class="hint">${cfg.mods.length?"Nada corresponde ao filtro.":"Ainda sem módulos: carregue a listagem da Box e clique em “Detetar módulos e UFCD”."}</p>`);
+  const sem=all.filter(r=>!gridGet(r.ref)).length,outros=cfg.mods.length-ativos().length,anos=[...getIdx().anos.keys()].sort();
+  $("#anoInfo").innerHTML=anos.length?`Ano letivo da análise carregada: <b>${esc(anos.join(", "))}</b>${outros?` · ${outros} módulo(s) de outros anos letivos estão guardados, mas não aparecem aqui nem no relatório`:""}`:(outros?`${outros} módulo(s) de outras análises não aparecem aqui`:"");
+  $("#grid").innerHTML=(all.length?`<p class="hint">${all.length} disciplinas em ${new Set(all.map(r=>r.ano+"|"+r.turma)).size} turmas · ${sem} sem formador</p>`:"")+(html||`<p class="hint">${all.length?"Nada corresponde ao filtro.":"Ainda sem módulos nesta análise: carregue a listagem da Box e clique em “Detetar módulos e UFCD”."}</p>`);
 }
 $("#gFilter").addEventListener("input",renderGrid);$("#gEmpty").addEventListener("change",renderGrid);
-$("#grid").addEventListener("change",e=>{if(!e.target.matches("[data-grid]"))return;const k=e.target.closest("[data-g]").dataset.g;
-  if(e.target.value)cfg.grid[k]=e.target.value;else delete cfg.grid[k];
-  cfg.mods.forEach(m=>{if(gridKey(m)===k&&m.profId===e.target.value)m.profId=""}); // deixa de ser exceção se coincidir
+$("#grid").addEventListener("change",e=>{if(!e.target.matches("[data-grid]"))return;const k=e.target.closest("[data-g]").dataset.g,v=e.target.value;
+  const row=gridRows().find(r=>r.k===k);if(!row)return;const leg=legKey(row.ref);
+  if(v)cfg.grid[k]=v;else if(k!==leg&&cfg.grid[leg])cfg.grid[k]="";else delete cfg.grid[k];
+  row.mods.forEach(m=>{if(m.profId===v)m.profId=""}); // deixa de ser exceção se coincidir
   save();renderGrid();renderMods();renderProfs()});
 $("#grid").addEventListener("click",e=>{const a=e.target.closest("[data-excf]");if(!a)return;e.preventDefault();$("#modFilter").value="!exc "+a.dataset.excf;renderMods();$("#tbMods").scrollIntoView({behavior:"smooth",block:"start"})});
 
@@ -742,55 +871,64 @@ function modVisible(m){const q=norm($("#modFilter").value);if(!q)return true;
   return rest.split(" ").filter(Boolean).every(w=>hay.includes(w));}
 function renderMods(){
   $("#bulkProf").innerHTML=profOpts("",`<option value="">— escolher —</option><option value="__grid">↩ segue a grelha (desfazer exceções)</option>`);
-  const vis=cfg.mods.filter(modVisible);
-  $("#detMsg").textContent=cfg.mods.length?`${cfg.mods.length} módulos · ${cfg.mods.filter(m=>!profOf(m)).length} sem formador · ${cfg.mods.filter(isExc).length} exceções`:"";
-  $("#tbMods").innerHTML=vis.slice(0,400).map(m=>{const g=cfg.grid[gridKey(m)]||"",exc=isExc(m);
+  const atv=ativos(),vis=atv.filter(modVisible),po=profOpts("","");
+  $("#detMsg").textContent=atv.length?`${atv.length} módulos · ${atv.filter(m=>!profOf(m)).length} sem formador · ${atv.filter(isExc).length} exceções`:"";
+  $("#tbMods").innerHTML=vis.slice(0,300).map(m=>{const g=gridGet(m),exc=isExc(m);
     return `<div class="mcard${profOf(m)?"":" noprof"}${exc?" exc":""}" data-id="${m.id}">
    <label class="f-nome"><span>Módulo / UFCD${exc?` <span class="tag exc">exceção</span>`:""}</span><input type="text" data-k="cod" value="${esc(m.cod)}"></label>
    <label class="f-turma"><span>Turma · disciplina</span><input type="text" value="${esc(m.turma+" · "+m.disc)}" title="${esc(m.turma+" · "+m.disc)}" disabled></label>
-   <label class="f-prof"><span>Formador</span><select data-k="profId"><option value="">↩ segue a grelha${g?` (${esc(profName(g))})`:" (sem formador)"}</option>${profOpts(m.profId,"")}</select></label>
+   <label class="f-prof"><span>Formador</span><select data-k="profId"><option value="">↩ segue a grelha${g?` (${esc(profName(g))})`:" (sem formador)"}</option>${m.profId?po.replace(`value="${m.profId}" `,`value="${m.profId}" selected `):po}</select></label>
    <button class="x f-del" title="Remover módulo" data-del>×</button>
    <label class="f-pasta"><span>Designação</span><input type="text" data-des value="${esc(desigOf(m))}" placeholder="ex.: Probabilidade"></label>
    <div class="f-docs"><span>Documentos exigidos · pastas: ${esc(m.pasta)}</span><div class="chips">${cfg.docTypes.map(d=>{const on=m.docs.includes(d.id);return `<label class="chip ${on?"on":""}"><input type="checkbox" data-doc="${d.id}" ${on?"checked":""}>${esc(d.nome)}</label>`}).join("")}</div></div>
-  </div>`}).join("")+(vis.length>400?`<p class="hint">A mostrar 400 de ${vis.length}. Use o filtro para ver os restantes.</p>`:"")||`<p class="hint">${cfg.mods.length?"Nenhum módulo corresponde ao filtro.":"Ainda sem módulos."}</p>`;
+  </div>`}).join("")+(vis.length>300?`<p class="hint">A mostrar 300 de ${vis.length}. Use o filtro para ver os restantes.</p>`:"")||`<p class="hint">${atv.length?"Nenhum módulo corresponde ao filtro.":"Ainda sem módulos nesta análise."}</p>`;
 }
 $("#modFilter").addEventListener("input",renderMods);
 $("#bulkAssign").onclick=()=>{const pid=$("#bulkProf").value;if(!pid){toast("Escolha um formador");return}
-  const vis=cfg.mods.filter(modVisible);if(!vis.length)return;
+  const vis=ativos().filter(modVisible);if(!vis.length)return;
   ponto(`Antes de mudar o formador de ${vis.length} módulo(s)`);
-  vis.forEach(m=>{m.profId=pid==="__grid"?"":(pid===(cfg.grid[gridKey(m)]||"")?"":pid)});save();renderAll();
+  vis.forEach(m=>{m.profId=pid==="__grid"?"":(pid===gridGet(m)?"":pid)});save();renderAll();
   toast(pid==="__grid"?`${vis.length} módulo(s) voltaram a seguir a grelha`:`${vis.length} módulo(s) mudados`)};
-$("#detect").onclick=()=>{
-  if(!files.length&&!folders.length){$("#detMsg").textContent="Carregue primeiro a listagem da Box em Dados da Box.";return}
-  // só procura módulos nas secções usadas pelos documentos exigidos (ex.: 006, 007, 008, 012)
+const modId=m=>(m.ano||"")+"|"+norm(m.turma)+"|"+discCode(m.disc)+"|"+modKey(m.cod);
+function detetar(){
+  // só procura módulos nas secções usadas pelos documentos exigidos (ex.: 006, 007, 008, 012); ignora as pastas dos formandos
+  const idx=getIdx();
   const secs=[...new Set(cfg.docTypes.map(d=>segs(d.subpasta)[0]).filter(Boolean))];
   const found=new Map();
-  const dirs=new Set([...folders,...files.map(f=>f.rawDir)]);
-  for(const d of dirs){const comps=d.split("/").map(x=>x.trim()).filter(Boolean),nc=comps.map(norm);
+  for(const rec of idx.recs){const comps=rec.r,nc=rec.n;
     if(secs.length&&!secs.some(s=>nc.some(c=>segMatch(c,s))))continue;
+    if(nc.some(c=>c.includes("formandos")))continue;
     for(let i=1;i<comps.length;i++){
       let disc=null,mod=null;
       if(isDisc(comps[i-1])){disc=comps[i-1];mod=comps[i]}else if(isModName(comps[i])&&!isDisc(comps[i])){disc=comps[i-1];mod=comps[i]}
       if(!mod)continue;
       const turma=comps.slice(0,i).find(isTurma)||comps[Math.max(0,i-2)];
-      const key=norm(turma)+"|"+discCode(disc)+"|"+modKey(mod);
-      if(!found.has(key))found.set(key,{turma,disc,mod});break;}}
-  const have=new Set(cfg.mods.map(m=>norm(m.turma)+"|"+discCode(m.disc)+"|"+modKey(m.cod)));
-  const novos=[...found.values()].filter(v=>!have.has(norm(v.turma)+"|"+discCode(v.disc)+"|"+modKey(v.mod)));
+      const anoDir=comps.slice(0,i).find(c=>anoDe(c))||"";
+      const key=anoDe(anoDir)+"|"+norm(turma)+"|"+discCode(disc)+"|"+modKey(mod);
+      if(!found.has(key))found.set(key,{turma,disc,mod,anoDir});break;}}
+  return found}
+$("#detect").onclick=()=>{
+  if(!files.length&&!folders.length){$("#detMsg").textContent="Carregue primeiro a listagem da Box em Dados da Box.";return}
+  adotar();
+  const found=detetar(),have=new Set(cfg.mods.map(modId));
+  const novos=[...found.entries()].filter(([k])=>!have.has(k)).map(([,v])=>v);
   if(novos.length)ponto(`Antes de detetar ${novos.length} módulo(s)`);
-  for(const v of novos)cfg.mods.push({id:uid(),nome:"",turma:v.turma,disc:v.disc,cod:v.mod,profId:"",pasta:`${v.turma} / ${v.disc} / ${v.mod}`,docs:cfg.docTypes.map(d=>d.id)});
-  cfg.mods.sort((a,b)=>(a.turma+"|"+a.disc+"|"+a.cod).localeCompare(b.turma+"|"+b.disc+"|"+b.cod,"pt",{numeric:true}));
+  for(const v of novos){const m={id:uid(),nome:"",turma:v.turma,disc:v.disc,cod:v.mod,ano:anoDe(v.anoDir),anoDir:v.anoDir,profId:"",docs:cfg.docTypes.map(d=>d.id)};m.pasta=pastaDe(m);cfg.mods.push(m)}
+  const sk=m=>(m.ano||"")+"|"+m.turma+"|"+m.disc+"|"+m.cod;
+  cfg.mods.sort((a,b)=>sk(a).localeCompare(sk(b),"pt",{numeric:true}));
   save();renderAll();toast(novos.length?`${novos.length} módulo(s)/UFCD novos detetados (pode anular)`:"Nenhum módulo novo encontrado");
+  verificarFundo();
 };
 $("#tbMods").addEventListener("input",e=>{const tr=e.target.closest("[data-id]");if(!tr)return;const m=cfg.mods.find(x=>x.id===tr.dataset.id);
   if(e.target.dataset.doc){const id=e.target.dataset.doc;if(e.target.checked){if(!m.docs.includes(id))m.docs.push(id)}else m.docs=m.docs.filter(x=>x!==id);e.target.parentElement.classList.toggle("on",e.target.checked);save();return}
   if(e.target.hasAttribute("data-des")){const k=discCode(m.disc)+"|"+modKey(m.cod);if(e.target.value.trim())cfg.desig[k]=e.target.value.trim();else delete cfg.desig[k];save();return}
   const k=e.target.dataset.k;if(!k)return;
-  if(k==="profId"){m.profId=e.target.value===(cfg.grid[gridKey(m)]||"")?"":e.target.value;save();renderMods();renderGrid();renderProfs();return}
-  m[k]=e.target.value;if(k==="cod")m.pasta=`${m.turma} / ${m.disc} / ${m.cod}`;save();});
+  if(k==="profId"){m.profId=e.target.value===gridGet(m)?"":e.target.value;save();renderMods();renderGrid();renderProfs();return}
+  m[k]=e.target.value;if(k==="cod")m.pasta=pastaDe(m);save();});
 $("#tbMods").addEventListener("click",e=>{if(!e.target.hasAttribute("data-del"))return;const id=e.target.closest("[data-id]").dataset.id;cfg.mods=cfg.mods.filter(x=>x.id!==id);save();renderAll();toast("Módulo removido (pode anular)")});
-$("#addMod").onclick=()=>{const t=prompt2();cfg.mods.unshift({id:uid(),nome:"",turma:t.turma,disc:t.disc,cod:"Novo módulo",profId:"",pasta:`${t.turma} / ${t.disc} / Novo módulo`,docs:cfg.docTypes.map(d=>d.id)});save();$("#modFilter").value="";renderAll()};
-function prompt2(){const r=gridRows()[0];return{turma:r?r.turma:"Turma",disc:r?r.disc:"0000 - Disciplina"}}
+$("#addMod").onclick=()=>{const r=gridRows()[0],idx=getIdx(),a=[...idx.anos][0]||["",""];
+  const m={id:uid(),nome:"",turma:r?r.turma:"Turma",disc:r?r.disc:"0000 - Disciplina",cod:"Novo módulo",ano:r?r.ano:a[0],anoDir:r?(r.ref.anoDir||""):a[1],profId:"",docs:cfg.docTypes.map(d=>d.id)};
+  m.pasta=pastaDe(m);cfg.mods.unshift(m);save();$("#modFilter").value="";renderAll()};
 
 /* ---------- designações ---------- */
 $("#desImport").onclick=()=>{
@@ -848,7 +986,7 @@ function ingestRows(head,rows,source){
 function applyCols(){
   const ip=+$("#colPath").value,inn=+$("#colName").value,id=+$("#colDate").value,it=+$("#colType").value;
   files=[];folders=[];
-  const hx=k=>rawHead.findIndex(h=>norm(h)===k),iId=hx("id"),iSz=hx("size"),iSh=hx("sha1");
+  const hx=k=>rawHead.findIndex(h=>norm(h)===k),iId=hx("id"),iSz=hx("size"),iSh=hx("sha1"),iCm=hx("cmod");
   for(const r of rawRows){
     let p=(r[ip]||"").replace(/\\/g,"/").trim(); const nm=inn>=0?(r[inn]||"").trim():"";
     if(!p&&!nm)continue;
@@ -858,10 +996,12 @@ function applyCols(){
     const isFolder=it>=0?/folder|pasta/i.test(r[it]||""):!/\.[a-z0-9]{1,6}$/i.test(name);
     if(isFolder){folders.push(segs.join("/"));continue}
     files.push({path:segs.join("/"),rawDir,comps:segs.slice(0,-1).map(norm),name,nname:norm(name),date:id>=0?(r[id]||""):"",
-      fid:iId>=0?String(r[iId]||""):"",size:iSz>=0&&r[iSz]!==""&&r[iSz]!=null?+r[iSz]:null,sha1:iSh>=0?String(r[iSh]||""):""});
+      fid:iId>=0?String(r[iId]||""):"",size:iSz>=0&&r[iSz]!==""&&r[iSz]!=null?+r[iSz]:null,sha1:iSh>=0?String(r[iSh]||""):"",cmod:iCm>=0?String(r[iCm]||""):""});
   }
-  renderPreview();
+  lastListing=null;dadosMudaram();
 }
+// os ficheiros/pastas carregados mudaram: refaz o índice e atualiza o que está à vista
+function dadosMudaram(){filesRev++;IDX=null;adotar();refreshAll();renderPreview()}
 function renderPreview(){
   $("#previewCard").style.display=files.length?"block":"none";
   $("#previewInfo").textContent=`${files.length} ficheiro(s) prontos para comparação. Primeiros 15:`;
@@ -877,71 +1017,169 @@ $("#parsePaste").onclick=()=>{const t=$("#csvPaste").value;if(t.trim())ingest(t,
 const segs=s=>String(s||"").split("/").map(norm).filter(Boolean);
 function segMatch(c,s){return c===s||(c.startsWith(s)&&/[\s\-(_.]/.test(c[s.length]))}
 function allIn(comps,ss){return ss.every(s=>comps.some(c=>segMatch(c,s)))}
-/* ---------- qualidade dos ficheiros (em branco, vazios, repetidos) ---------- */
-let CT={};try{CT=JSON.parse(localStorage.getItem("boxcheck_texto")||"{}")}catch(e){}
-const minPal=()=>Math.max(1,+(cfg.qual&&cfg.qual.min)||40);
-const dupOn=()=>!(cfg.qual&&cfg.qual.dup===false);
-function qualOf(f,dupMap){
-  if(f.size===0)return{lvl:"bad",txt:"ficheiro vazio (0 bytes)"};
-  const c=f.sha1&&CT[f.sha1];
-  if(c&&c.w!=null&&c.w<minPal()){
-    if((f.size||0)<150000)return{lvl:"bad",txt:`em branco ou quase vazio (${c.w} palavra${c.w===1?"":"s"})`};
-    return{lvl:"warn",txt:"sem texto — pode ser um documento digitalizado; confirme"}}
-  if(dupOn()&&f.sha1&&dupMap){const o=(dupMap.get(f.sha1)||[]).filter(x=>x.rawDir!==f.rawDir);
-    if(o.length)return{lvl:"warn",txt:`ficheiro idêntico a ${o.length} outro(s), ex.: ${o[0].path}`}}
-  return null;
+/* ---------- índice de pastas e ficheiros: o relatório deixa de percorrer tudo de cada vez ---------- */
+function buildIndex(fs,fo){
+  const comp=new Map(); // nome de pasta (normalizado) -> {raw, files:[], folders:[]}
+  const ent=(c,raw)=>{let e=comp.get(c);if(!e){e={raw,files:[],folders:[]};comp.set(c,e)}return e};
+  const nc=new Map(),nrm=s=>{let v=nc.get(s);if(v===undefined){v=norm(s);nc.set(s,v)}return v};
+  const seen=new Set(),recs=[];
+  const addDir=p=>{ // regista a pasta e as pastas acima dela
+    if(!p||seen.has(p))return;const parts=p.split("/").map(x=>x.trim()).filter(Boolean);
+    for(let i=parts.length;i>=1;i--){const q=parts.slice(0,i).join("/");if(seen.has(q))break;seen.add(q);
+      const r=parts.slice(0,i),n=r.map(nrm),rec={r,n};recs.push(rec);
+      for(let k=0;k<n.length;k++){if(n.indexOf(n[k])!==k)continue;ent(n[k],r[k]).folders.push(rec)}}
+    seen.add(p)};
+  for(const p of fo)addDir(p);
+  for(const f of fs){addDir(f.rawDir);const c=f.comps;for(let k=0;k<c.length;k++){if(c.indexOf(c[k])!==k)continue;ent(c[k],c[k]).files.push(f)}}
+  // um segmento escrito pelo utilizador ("008", "modulo a07") corresponde às pastas com esse nome ou que começam por ele
+  const segCache=new Map();
+  const matching=s=>{let r=segCache.get(s);if(!r){r=[];const e0=comp.get(s);if(e0)r.push(e0);
+      for(const [c,e] of comp)if(c.length>s.length&&c.startsWith(s)&&/[\s\-(_.]/.test(c[s.length]))r.push(e);segCache.set(s,r)}return r};
+  const pick=(ss,kind)=>{if(!ss.length)return[];let best=null,bn=Infinity;
+    for(const s of ss){const m=matching(s);let n=0;for(const e of m)n+=e[kind].length;if(n<bn){bn=n;best=m}}
+    if(!bn)return[];const key=kind==="files"?"comps":"n",out=[];
+    if(best.length===1){for(const x of best[0][kind])if(allIn(x[key],ss))out.push(x)}
+    else{const sn=new Set();for(const e of best)for(const x of e[kind]){if(sn.has(x))continue;sn.add(x);if(allIn(x[key],ss))out.push(x)}}
+    return out};
+  const realName=s=>{const m=matching(s);return m.length?m[0].raw:s};
+  // anos letivos presentes na listagem (pastas com "2025.2026" no nome); fica a pasta com mais subpastas
+  const anos=new Map(),cnt=new Map();
+  for(const e of comp.values()){if(!e.folders.length)continue;const a=anoDe(e.raw);if(a&&(cnt.get(a)||0)<e.folders.length){anos.set(a,e.raw);cnt.set(a,e.folders.length)}}
+  return{comp,recs,pick,realName,anos,nFiles:fs.length};
 }
-function evaluate(){
+function getIdx(){return IDX||(IDX=buildIndex(files,folders))}
+
+/* ---------- verificações de qualidade: documentos vazios, falsos, trocados ou copiados ---------- */
+let CT={};try{CT=JSON.parse(localStorage.getItem("boxcheck_texto")||"{}")}catch(e){} // contagens antigas (versões 0.2–0.9)
+const QC=()=>cfg.qual||{};
+const minPal=()=>Math.max(1,+QC().min||40);
+const qOn=k=>k==="antigo"?QC()[k]===true:QC()[k]!==false; // tudo ligado por omissão, exceto a data de edição (dá muitos avisos em recursos reutilizados)
+const palavras=sha1=>{const t=sha1&&TX.get(sha1);if(t)return t.w;const c=sha1&&CT[sha1];return c&&c.w!=null?c.w:null};
+let TPL=lsJ("boxcheck_modelos",null)||{itens:[]}; // modelos oficiais da escola: {id, pasta, quando, itens:[{nome, sha1}]}
+let REF=null;                                      // ano de referência (anterior): {rootId, pasta, shas: Map(sha1 -> caminho)}
+async function carregarRef(){const id=QC().refRoot;REF=null;
+  if(id){const j=await lerListagem(id);if(j){const shas=new Map();for(const x of j.itens)if(x.type!=="folder"&&x.sha1&&x.size!==0&&!shas.has(x.sha1))shas.set(x.sha1,x.path+"/"+x.name);REF={rootId:id,pasta:j.pasta,shas}}}
+  refRev++}
+const escRe=s=>s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+// como um módulo/UFCD costuma aparecer escrito no nome ou no texto de um documento
+function modRegex(cod){
+  const k=modKey(cod);let m;
+  if(/^\d{4,}$/.test(k))return /^(19|20)\d\d$/.test(k)?new RegExp("ufcd\\s*(?:n\\.?\\s*[oº°]?\\.?\\s*)?0*"+k+"(?!\\d)"):new RegExp("(?:^|[^0-9])0*"+k+"(?!\\d)");
+  if((m=k.match(/^([a-z]{0,2})0*(\d{1,3})$/))){
+    const alt=["(?:modulos?|mod|ufcd|\\bm)\\.?\\s*(?:n\\.?\\s*[oº°]?\\.?\\s*)?"+m[1]+"\\s*0*"+m[2]+"(?!\\d)"];
+    if(m[1]&&k.length>=3)alt.push("(?:^|[^a-z0-9])"+escRe(k)+"(?![a-z0-9])");
+    return new RegExp(alt.join("|"))}
+  return k.length>=4?new RegExp(escRe(k)):null;
+}
+let MENT=new Map(),MENTK=null;
+function mencoes(f,t,dc,sibs){ // módulos da mesma disciplina referidos no nome ou no texto do ficheiro
+  const key=f.sha1+"|"+f.nname+"|"+dc;let s=MENT.get(key);if(s)return s;
+  s=new Set();const hay=f.nname+" \n "+t.n;
+  for(const [mk,x] of sibs)if((x.re&&x.re.test(hay))||(x.des.length>=8&&hay.includes(x.des)))s.add(mk);
+  MENT.set(key,s);return s}
+function qualCtx(idx,slotOf,mods){
+  const bySha=new Map(),lsh=new Map(),near=qOn("quase");
+  const addL=(t,e)=>{for(const k of bandKeys(t)){let a=lsh.get(k);if(!a)lsh.set(k,a=[]);a.push(e)}};
+  for(const [f,slot] of slotOf){
+    if(f.sha1&&f.size!==0){let a=bySha.get(f.sha1);if(!a)bySha.set(f.sha1,a=[]);a.push({f,slot})}
+    if(near){const t=f.sha1&&TX.get(f.sha1);if(t&&t.w>=60)addL(t,{f,slot,sha1:f.sha1,sg:slot.sg,sig:t.sig})}}
+  const ref=REF&&!(lastListing&&lastListing.rootId===REF.rootId)?REF:null;
+  if(near&&ref){const nome=ref.pasta.split("/").pop();for(const [sha,path] of ref.shas){const t=TX.get(sha);if(t&&t.w>=60)addL(t,{f:null,slot:null,sha1:sha,sg:"§ref",sig:t.sig,label:`“${nome}”: ${path.split("/").slice(-2).join("/")}`})}}
+  const sib=new Map(); // disciplina -> Map(módulo -> {cod, re, des})
+  for(const m of mods){const dc=discCode(m.disc),mk=modKey(m.cod);let s=sib.get(dc);if(!s)sib.set(dc,s=new Map());if(!s.has(mk))s.set(mk,{cod:m.cod,re:modRegex(m.cod),des:norm(desigOf(m))})}
+  const tpls=[],tplSha=new Map();
+  if(qOn("modelo"))for(const i of TPL.itens||[]){tplSha.set(i.sha1,i.nome);const t=TX.get(i.sha1);if(t&&t.w>=30)tpls.push({nome:i.nome,t})}
+  let inicio="";if(qOn("antigo")){inicio=QC().inicio||"";if(!/^\d{4}-\d\d-\d\d$/.test(inicio)){inicio="";if(idx.anos.size===1)inicio=[...idx.anos.keys()][0].slice(0,4)+"-07-01"}}
+  return{bySha,lsh,sib,tpls,tplSha,ref,inicio};
+}
+// devolve null (nada a apontar), {lvl:"bad"} (não conta como entregue) ou {lvl:"warn"} (conta, mas fica "a confirmar")
+function qualOf(f,slot,X){
+  if(f.size===0)return{lvl:"bad",txt:"ficheiro vazio (0 bytes)"};
+  if(f.sha1&&X.tplSha.has(f.sha1))return{lvl:"bad",txt:`é o modelo «${X.tplSha.get(f.sha1)}» por preencher (ficheiro igual ao modelo)`};
+  const t0=f.sha1?TX.get(f.sha1):null,t=t0&&t0.w!=null?t0:null,w=t?t.w:palavras(f.sha1),W=[];
+  if(w!=null&&w<minPal()){
+    if((f.size||0)<150000)return{lvl:"bad",txt:`em branco ou quase vazio (${w} palavra${w===1?"":"s"})`};
+    W.push("sem texto — pode ser um documento digitalizado")}
+  if(t&&t.w>=minPal()){
+    if(qOn("enchimento")){
+      if(t.lorem)return{lvl:"bad",txt:"texto de enchimento (lorem ipsum)"};
+      if(t.top>0.5&&t.w>=20)return{lvl:"bad",txt:"texto de enchimento (a mesma palavra repetida)"};
+      if(t.rep||(t.u<0.12&&t.w>=80))W.push("texto muito repetitivo (enchimento?)")}
+    if(X.tpls.length&&t.w>=30){let best=0,bt=null;for(const m of X.tpls){const s=simSig(t.sig,m.t.sig);if(s>best){best=s;bt=m}}
+      if(bt&&best>=0.9&&t.w-bt.t.w<Math.max(20,bt.t.w*0.1))return{lvl:"bad",txt:`é o modelo «${bt.nome}» por preencher (${Math.round(best*100)}% igual ao modelo)`};
+      if(bt&&best>=0.75)W.push(`${Math.round(best*100)}% igual ao modelo «${bt.nome}» — pouco preenchido?`)}
+    if(slot){const hay=f.nname+" \n "+t.n;
+      if(qOn("tipo")&&slot.T.cont.length&&!slot.T.cont.some(k=>hay.includes(k)))W.push(`o conteúdo não parece ser «${slot.T.d.nome}»`);
+      if(qOn("modulo")){const dc=discCode(slot.m.disc),sibs=X.sib.get(dc);
+        if(sibs&&sibs.size>1){const men=mencoes(f,t,dc,sibs);
+          if(men.size&&!men.has(modKey(slot.m.cod)))W.push(`parece ser de outro módulo (${[...men].slice(0,2).map(k=>sibs.get(k).cod).join(", ")})`)}}}}
+  if(slot&&f.sha1){
+    if(qOn("dup")){const o=(X.bySha.get(f.sha1)||[]).find(x=>x.f!==f&&x.slot.sg!==slot.sg);
+      if(o)W.push(`ficheiro igual ao de ${modLabel(o.slot.m)} › ${o.slot.T.d.nome}`)}
+    if(qOn("quase")&&t&&t.w>=60){let best=0,bo=null;
+      for(const k of bandKeys(t)){const arr=X.lsh.get(k);if(!arr)continue;
+        for(let i=0,n=Math.min(arr.length,80);i<n;i++){const x=arr[i];if(x.f===f||x.sha1===f.sha1||x.sg===slot.sg)continue;const s=simSig(t.sig,x.sig);if(s>best){best=s;bo=x}}
+        if(best>=0.97)break}
+      if(bo&&best>=0.85)W.push(`texto ${Math.round(best*100)}% igual ao de ${bo.slot?`${modLabel(bo.slot.m)} › ${bo.slot.T.d.nome} (${bo.f.name})`:bo.label}`)}}
+  if(f.sha1&&X.ref&&qOn("anterior")&&X.ref.shas.has(f.sha1))W.push(`mesmo ficheiro já entregue em “${X.ref.pasta.split("/").pop()}”`);
+  if(X.inicio&&f.cmod&&f.cmod.slice(0,10)<X.inicio)W.push(`última edição em ${f.cmod.slice(5,7)}/${f.cmod.slice(0,4)}, antes do ano letivo`);
+  return W.length?{lvl:"warn",txt:W.slice(0,3).join("; ")}:null;
+}
+function evalCore(idx,mods){
   const out=[];
-  const dupMap=new Map();for(const f of files)if(f.sha1&&f.size>0){if(!dupMap.has(f.sha1))dupMap.set(f.sha1,[]);dupMap.get(f.sha1).push(f)}
-  // pastas existentes (da análise) + pastas onde há ficheiros
-  const fset=new Set(folders);files.forEach(f=>{const p=f.rawDir.split("/");for(let i=1;i<=p.length;i++)fset.add(p.slice(0,i).join("/"))});
-  const fl=[...fset].map(p=>{const r=p.split("/");return{r,n:r.map(norm)}});
-  // nome real de uma pasta a partir do que foi escrito (ex.: "008" → "008 - Avaliação")
-  const nameCache=new Map();
-  const realName=s=>{if(nameCache.has(s))return nameCache.get(s);let v=s;
-    outer:for(const f of fl)for(let i=0;i<f.n.length;i++)if(segMatch(f.n[i],s)){v=f.r[i];break outer}
-    nameCache.set(s,v);return v};
   const ref=lastEnvio(),refSet=ref?new Set(Object.values(ref.miss).flat()):null;
-  for(const m of cfg.mods){
-    const ms=segs(m.pasta);const folder=ms.join(" / ");
-    const modFiles=ms.length?files.filter(f=>allIn(f.comps,ms)):[];
-    const modFolders=ms.length?fl.filter(f=>allIn(f.n,ms)):[];
-    const items=[];
-    for(const did of m.docs){const d=cfg.docTypes.find(x=>x.id===did);if(!d)continue;
-      const sub=segs(d.subpasta),kws=splitList(d.palavras),exts=splitList(d.ext);
-      const hits=modFiles.filter(f=>{
-        if(sub.length&&!allIn(f.comps,sub))return false;
-        if(kws.length&&!kws.some(k=>f.nname.includes(k)))return false;
-        if(exts.length){const e=(f.nname.match(/\.([a-z0-9]+)$/)||[])[1]||"";if(!exts.includes(e))return false}
-        return true});
-      const q=hits.map(f=>({f,q:qualOf(f,dupMap)}));
+  const dT=new Map(cfg.docTypes.map(d=>[d.id,{d,sub:segs(d.subpasta),kws:splitList(d.palavras),exts:splitList(d.ext),need:d.min||1,cont:splitList(d.conteudo)}]));
+  // 1.ª passagem: que ficheiros contam para cada documento exigido de cada módulo
+  const slotOf=new Map();
+  for(const m of mods){
+    const ms=segs(m.pasta),modFiles=idx.pick(ms,"files"),modFolders=idx.pick(ms,"folders"),sgm=discCode(m.disc)+"|"+modKey(m.cod)+"|",slots=[];
+    for(const did of m.docs){const T=dT.get(did);if(!T)continue;const hits=[];
+      for(const f of modFiles){
+        if(T.sub.length&&!allIn(f.comps,T.sub))continue;
+        if(T.kws.length&&!T.kws.some(k=>f.nname.includes(k)))continue;
+        if(T.exts.length){const e=(f.nname.match(/\.([a-z0-9]+)$/)||[])[1]||"";if(!T.exts.includes(e))continue}
+        hits.push(f)}
+      const slot={m,T,hits,sg:sgm+did};
+      for(const f of hits)if(!slotOf.has(f))slotOf.set(f,slot);
+      slots.push(slot)}
+    out.push({mod:m,slots,modFolders,nFiles:modFiles.length,folder:ms.join(" / ")});
+  }
+  const ck=cfgEvalKey();if(MENTK!==ck){MENT=new Map();MENTK=ck}
+  const X=qualCtx(idx,slotOf,mods);
+  // 2.ª passagem: estado de cada documento exigido
+  for(const e of out){const m=e.mod;
+    e.items=e.slots.map(slot=>{const T=slot.T,d=T.d,sub=T.sub;
+      const q=slot.hits.map(f=>({f,q:qualOf(f,slot,X)}));
       const good=q.filter(x=>!x.q||x.q.lvl!=="bad"),clean=q.filter(x=>!x.q);
-      const need=d.min||1;let state,reasons=[];
-      if(good.length>=need){state=clean.length>=need?"ok":"warn";if(state==="warn")reasons=good.filter(x=>x.q).map(x=>`${x.f.name}: ${x.q.txt}`)}
-      else if(hits.length){state="blank";reasons=q.filter(x=>x.q&&x.q.lvl==="bad").map(x=>`${x.f.name}: ${x.q.txt}`)}
+      let state,reasons=[];
+      if(good.length>=T.need){state=clean.length>=T.need?"ok":"warn";if(state==="warn")reasons=good.filter(x=>x.q).map(x=>`${x.f.name}: ${x.q.txt}`)}
+      else if(q.length){state="blank";reasons=q.filter(x=>x.q&&x.q.lvl==="bad").map(x=>`${x.f.name}: ${x.q.txt}`)}
       else state="missing";
       // localização esperada e se a pasta existe
-      const secName=sub.length?realName(sub[0]):"";
-      const rest=sub.slice(1).map(realName);
+      const secName=sub.length?idx.realName(sub[0]):"",rest=sub.slice(1).map(idx.realName);
       const loc=[secName,m.disc,m.cod,...rest].filter(Boolean).join(" > ");
-      let falta=d.nome,pastaObs="";
+      let pastaObs="";
       if(state==="missing"){
-        const inSec=sub.length?modFolders.filter(f=>allIn(f.n,[sub[0]])):modFolders;
-        const exact=sub.length?modFolders.filter(f=>allIn(f.n,sub)):modFolders;
-        if(!inSec.length){pastaObs=`a pasta “${m.cod}” não existe${secName?" em "+secName:""}`}
-        else if(!exact.length&&rest.length){pastaObs=`a subpasta “${rest.join(" > ")}” não existe`}
-        else pastaObs="a pasta existe mas está vazia";
-      }
-      const key=m.id+"|"+d.id;
-      let seg="";if(ref){const was=refSet.has(key);
+        const inSec=sub.length?e.modFolders.filter(f=>allIn(f.n,[sub[0]])):e.modFolders;
+        if(!inSec.length)pastaObs=`a pasta “${m.cod}” não existe${secName?" em "+secName:""}`;
+        else if(rest.length&&!e.modFolders.some(f=>allIn(f.n,sub)))pastaObs=`a subpasta “${rest.join(" > ")}” não existe`;
+        else pastaObs="a pasta existe mas está vazia"}
+      const key=m.id+"|"+d.id;let seg="";
+      if(ref){const was=refSet.has(key);
         if(state==="ok"||state==="warn"){if(was)seg="entregue desde o envio de "+dataPT(ref.t)}
         else seg=was?"pedido a "+dataPT(ref.t)+" — continua em falta":"novo (não constava do envio de "+dataPT(ref.t)+")"}
-      items.push({doc:d,key,ok:state==="ok"||state==="warn",state,reasons,hits,loc,falta,pastaObs,seg,since:!!(ref&&seg.startsWith("entregue desde"))});}
-    out.push({mod:m,items,nFiles:modFiles.length,folder});
-  }
+      return{doc:d,key,ok:state==="ok"||state==="warn",state,reasons,hits:slot.hits,q,loc,falta:d.nome,pastaObs,seg,since:!!(ref&&seg.startsWith("entregue desde"))}});
+    delete e.slots;delete e.modFolders}
   return out;
 }
+// o resultado fica guardado enquanto nada mudar (ficheiros, textos lidos, módulos, documentos exigidos, opções)
+let EV=null,EVK=null,_ekRev=-1,_ek="",QF=null;
+function cfgEvalKey(){if(_ekRev!==cfgRev){_ek=JSON.stringify([cfg.docTypes,cfg.mods,cfg.desig,cfg.qual,(cfg.envios||[]).map(v=>v.id)]);_ekRev=cfgRev}return _ek}
+function evaluate(){const idx=getIdx(),ck=cfgEvalKey(),k=filesRev+"|"+txRev+"|"+refRev+"|"+tplRev;
+  if(EV&&EVK&&EVK.k===k&&EVK.ck===ck)return EV;
+  EV=evalCore(idx,ativos());EVK={k,ck};QF=null;return EV}
+// estado de cada ficheiro (para o painel Alterações): id do ficheiro -> {lvl, txt}
+function qualFicheiros(){if(QF)return QF;const ev=evaluate();QF=new Map();for(const e of ev)for(const i of e.items)for(const x of i.q)if(x.f.fid)QF.set(x.f.fid,x.q||{lvl:"ok",txt:""});return QF}
 function byTeacher(ev){
   const map=new Map();
   for(const e of ev){const k=profOf(e.mod)||"_";if(!map.has(k))map.set(k,[]);map.get(k).push(e)}
@@ -949,8 +1187,10 @@ function byTeacher(ev){
     const tot=list.reduce((a,e)=>a+e.items.length,0),ok=list.reduce((a,e)=>a+e.items.filter(i=>i.ok).length,0);return {p,list,tot,ok,miss:tot-ok}});
   arr.sort((a,b)=>b.miss-a.miss||a.p.nome.localeCompare(b.p.nome,"pt"));return arr;
 }
-const obsOf=i=>[i.state==="blank"?"ficheiro entregue em branco":"",i.pastaObs,i.state==="warn"?"a confirmar: "+i.reasons.join("; "):"",i.state==="blank"?i.reasons.join("; "):"",i.seg].filter(Boolean).join(" · ");
-const ESTADO={ok:"Entregue",warn:"Entregue — a confirmar",blank:"Entregue em branco",missing:"Em falta"};
+const motivoBad=i=>{const x=(i.q||[]).find(x=>x.q&&x.q.lvl==="bad");return x?x.q.txt:"sem conteúdo válido"};
+const obsOf=i=>[i.state==="blank"?"o ficheiro entregue não conta: "+i.reasons.join("; "):"",i.pastaObs,i.state==="warn"?"a confirmar: "+i.reasons.join("; "):"",i.seg].filter(Boolean).join(" · ");
+const ESTADO={ok:"Entregue",warn:"Entregue — a confirmar",blank:"Entregue, mas não conta (vazio ou falso)",missing:"Em falta"};
+
 /* linhas no formato do Excel da escola */
 function rowsFor(t,onlyMissing){const r=[];
   for(const e of t.list)for(const i of e.items){if(onlyMissing&&i.ok)continue;
@@ -958,16 +1198,18 @@ function rowsFor(t,onlyMissing){const r=[];
   return r;}
 
 /* ---------- envios registados (acompanhamento) ---------- */
-function lastEnvio(){return (cfg.envios||[])[0]||null}
+// último envio registado para o(s) ano(s) letivo(s) da análise carregada
+function lastEnvio(){const a=anoRef();return (cfg.envios||[]).find(v=>!v.anoRef||!a||v.anoRef===a)||null}
 function registarEnvio(label){
   const T=byTeacher(evaluate());const miss={};let n=0;
   for(const t of T){if(t.p.id==="_")continue;const k=[];for(const e of t.list)for(const i of e.items)if(!i.ok)k.push(i.key);if(k.length){miss[t.p.id]=k;n+=k.length}}
   ponto("Antes de registar o envio");
-  cfg.envios=[{id:uid(),t:Date.now(),label:label||"Envio de emails",miss,n,ano:cfg.mail.ano,prazo:cfg.mail.prazo},...(cfg.envios||[])].slice(0,30);
+  cfg.envios=[{id:uid(),t:Date.now(),label:label||"Envio de emails",miss,n,ano:cfg.mail.ano,anoRef:anoRef(),prazo:cfg.mail.prazo},...(cfg.envios||[])].slice(0,30);
   save();renderEnvios();toast(`Envio registado: ${n} item(ns) em falta`);
+  if(lastListing)criarBase(lastListing,"Envio registado").then(()=>{if(curTab==="alt")renderAlt()}); // nova contagem para o painel Alterações
 }
 function renderEnvios(){const el=$("#envios");if(!el)return;
-  el.innerHTML=(cfg.envios||[]).map((v,i)=>`<div class="rp"><span class="d">${new Date(v.t).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"})}</span><span class="l">${esc(v.label)} · ${v.n} item(ns) em falta${v.prazo?` · prazo ${esc(v.prazo)}`:""}${i===0?` <span class="tag ok">referência atual</span>`:""}</span><button class="x" title="Apagar este registo" data-envdel="${i}">×</button></div>`).join("")||`<p class="hint">Ainda não registou nenhum envio.</p>`}
+  el.innerHTML=(cfg.envios||[]).map((v,i)=>`<div class="rp"><span class="d">${new Date(v.t).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"})}</span><span class="l">${esc(v.label)} · ${v.n} item(ns) em falta${v.prazo?` · prazo ${esc(v.prazo)}`:""}${v===lastEnvio()?` <span class="tag ok">referência atual</span>`:""}</span><button class="x" title="Apagar este registo" data-envdel="${i}">×</button></div>`).join("")||`<p class="hint">Ainda não registou nenhum envio.</p>`}
 $("#envios").addEventListener("click",e=>{const b=e.target.closest("[data-envdel]");if(!b)return;cfg.envios.splice(+b.dataset.envdel,1);save();renderEnvios();toast("Registo apagado (pode anular)")});
 
 /* ---------- report ---------- */
@@ -989,7 +1231,9 @@ function renderReport(){
    <div class="tile"><div class="v" style="color:#b26a00">${nBlank+nWarn}</div><div class="l">em branco (${nBlank}) ou a confirmar (${nWarn})</div></div>`;countUp($("#tiles"));
   const w=[];
   if(!files.length)w.push(["info","Ainda não carregou a listagem da Box (em Dados da Box). Sem ela, tudo aparece em falta."]);
-  const noprof=cfg.mods.filter(m=>!profOf(m)).length;if(noprof)w.push(["warn",`${noprof} módulo(s) sem formador atribuído — veja a grelha em Atribuições.`]);
+  const atv=ativos(),noprof=atv.filter(m=>!profOf(m)).length;if(noprof)w.push(["warn",`${noprof} módulo(s) sem formador atribuído — veja a grelha em Atribuições.`]);
+  const outros=cfg.mods.length-atv.length;if(outros&&files.length)w.push(["info",`${outros} módulo(s) de outros anos letivos não entram neste relatório (só contam os do ano da análise carregada).`]);
+  const pend=porLer().length;if(pend)w.push(["info",`Falta ler o conteúdo de ${pend} documento(s)${bgOn?" — a leitura está a correr em segundo plano e o relatório atualiza-se sozinho":SES?" — clique em “Ler os documentos agora”":" — entre na Box para os ler"}. Até lá, esses documentos contam como entregues.`]);
   $("#warns").innerHTML=w.map(([k,t])=>`<div class="msg ${k==="warn"?"bad":"info"}">${esc(t)}</div>`).join("");
   const mode=$("#fShow").value,q=norm($("#fTxt").value),sf=$("#chkFiles").checked;
   const show=i=>mode==="tudo"||(mode==="desde"?i.since:(!i.ok||(mode==="aviso"&&i.state==="warn")));
@@ -1004,57 +1248,83 @@ function renderReport(){
       <div style="padding:4px 12px 10px;overflow-x:auto"><table class="rtab rt"><thead><tr><th>Turma</th><th>Disciplina</th><th>Módulo/UFCD</th><th>Localização na Box</th><th>O que está em falta</th><th>Observações</th></tr></thead><tbody>
       ${rows.map(r=>`<tr class="s-${r.state}"><td>${esc(r.turma)}</td><td>${esc(r.disc)}</td><td>${esc(r.mod)}</td><td>${esc(r.loc)}</td><td class="f">${{ok:"✓",warn:"⚠",blank:"✗",missing:"✗"}[r.state]} ${esc(r.falta)}</td><td class="o">${esc(r.obs||(r.state==="ok"?"entregue":""))}${sf&&r.item.hits.length?`<br><b>Ficheiros:</b> ${r.item.hits.map(h=>esc(h.name)).join(", ")}`:""}</td></tr>`).join("")}
       </tbody></table></div></div>`;}
-  $("#report").innerHTML=html||`<div class="card"><p class="hint" style="margin:0">${cfg.mods.length?"Nada a mostrar com estes filtros. 🎉":"Defina primeiro os módulos em Atribuições."}</p></div>`;
+  $("#report").innerHTML=html||`<div class="card"><p class="hint" style="margin:0">${ativos().length?"Nada a mostrar com estes filtros. 🎉":"Defina primeiro os módulos em Atribuições."}</p></div>`;
 }
 
-/* ---------- verificação do conteúdo (só leitura) ---------- */
-function qualInit(){cfg.qual=cfg.qual||{min:40,dup:true};$("#qMin").value=cfg.qual.min;$("#qDup").checked=cfg.qual.dup!==false}
-$("#qMin").addEventListener("change",e=>{cfg.qual=cfg.qual||{};cfg.qual.min=Math.max(1,+e.target.value||40);save();renderReport()});
-$("#qDup").addEventListener("change",e=>{cfg.qual=cfg.qual||{};cfg.qual.dup=e.target.checked;save();renderReport()});
+/* ---------- opções das verificações ---------- */
+function qualInit(){
+  cfg.qual=cfg.qual||{min:40,dup:true};
+  $("#qMin").value=cfg.qual.min||40;$("#qInicio").value=cfg.qual.inicio||"";
+  document.querySelectorAll("#qChecks [data-q]").forEach(c=>{c.checked=qOn(c.dataset.q);c.parentElement.classList.toggle("on",c.checked)});
+  const cur=lastListing&&lastListing.rootId,r=resumos();
+  $("#qRef").innerHTML=`<option value="">— nenhum —</option>`+Object.keys(r).filter(id=>id!==cur).map(id=>`<option value="${esc(id)}" ${cfg.qual.refRoot===id?"selected":""}>${esc(r[id].pasta)} (analisada a ${esc(r[id].quando)})</option>`).join("");
+  const idx=getIdx();$("#qInicio").placeholder=idx.anos.size===1?[...idx.anos.keys()][0].slice(0,4)+"-07-01":"AAAA-MM-DD";
+  const n=(TPL.itens||[]).length;
+  $("#qTpl").innerHTML=n?`<b>Modelos oficiais:</b> ${n} ficheiro(s) de “${esc(TPL.pasta||"")}” (lidos a ${esc(TPL.quando||"")}). Para mudar, abra a pasta dos modelos em <b>Dados da Box</b> e clique em “Usar esta pasta como modelos oficiais”.`
+    :`<b>Modelos oficiais:</b> ainda não definidos. Em <b>Dados da Box</b>, abra a pasta onde estão os modelos da escola (ex.: <i>Formadores › Modelos de Documentos</i>) e clique em “Usar esta pasta como modelos oficiais”.`;
+}
+$("#qMin").addEventListener("change",e=>{cfg.qual.min=Math.max(1,+e.target.value||40);save();renderReport()});
+$("#qInicio").addEventListener("change",e=>{const v=e.target.value.trim();if(v&&!/^\d{4}-\d\d-\d\d$/.test(v)){toast("Escreva a data como AAAA-MM-DD");return}cfg.qual.inicio=v;save();renderReport()});
+$("#qChecks").addEventListener("change",e=>{const k=e.target.dataset.q;if(!k)return;cfg.qual[k]=e.target.checked;e.target.parentElement.classList.toggle("on",e.target.checked);save();renderReport()});
+$("#qRef").addEventListener("change",async e=>{cfg.qual.refRoot=e.target.value;save();await carregarRef();renderReport()});
+
+/* ---------- leitura do texto dos documentos (só leitura) ---------- */
 // pedido de leitura a um endereço da Box (API ou servidor de conteúdos), só GET
 async function boxRaw(url,hints,asText){
   const h=new URL(url).hostname;if(!/(^|\.)box\.com$|(^|\.)boxcloud\.com$/.test(h))throw new Error("endereço inesperado");
-  for(let t=0;t<5;t++){const tok=await accessToken();const H={Authorization:"Bearer "+tok};if(hints)H["x-rep-hints"]=hints;
-    let r;try{r=await fetch(url,{method:"GET",headers:H})}catch(e){throw new Error("rede")}
-    if(r.status===202){await new Promise(s=>setTimeout(s,1500));continue}
-    if(r.status===429||r.status>=500){await new Promise(s=>setTimeout(s,800*2**t));continue}
+  const api=/(^|\.)api\.box\.com$/.test(h);
+  for(let t=0;t<6;t++){if(api)await vez();const tok=await accessToken();const H={Authorization:"Bearer "+tok};if(hints)H["x-rep-hints"]=hints;
+    let r;try{r=await fetch(url,{method:"GET",headers:H})}catch(e){if(api)travar(1500*(t+1));if(t<3)continue;throw new Error("rede")}
+    if(r.status===202){await sleep(1500);continue}
+    if(r.status===429){travar((+r.headers.get("Retry-After")||2)*1000);continue}
+    if(r.status>=500){await sleep(800*2**t);continue}
     if(r.status===401&&SES&&SES.mode==="oauth"&&t===0){await accessToken(true);continue}
     if(!r.ok)throw new Error("Box "+r.status);
+    if(api)RATE.ok++;
     return asText?r.text():r.json()}
   throw new Error("Box ocupada");
 }
-async function wordsOf(fid){
+// texto de um ficheiro, extraído pela própria Box: devolve {txt} ou {err}
+async function textoDe(fid){
   const info=await boxRaw(`https://api.box.com/2.0/files/${fid}?fields=representations`,"[extracted_text]");
   let rep=((info.representations||{}).entries||[]).find(x=>x.representation==="extracted_text");
-  if(!rep)return{w:null,err:"sem texto disponível para este tipo"};
+  if(!rep)return{err:"sem texto disponível para este tipo"};
   for(let i=0;i<12&&rep.status&&rep.status.state!=="success"&&rep.status.state!=="viewable";i++){
-    if(rep.status.state==="error")return{w:null,err:"a Box não conseguiu ler o texto"};
-    if(i)await new Promise(s=>setTimeout(s,1500));
+    if(rep.status.state==="error")return{err:"a Box não conseguiu ler o texto"};
+    if(i)await sleep(1500);
     const st=await boxRaw(rep.info.url);rep={...rep,...st};}
-  if(rep.status&&rep.status.state!=="success"&&rep.status.state!=="viewable")return{w:null,err:"texto ainda não disponível"};
-  const txt=await boxRaw(rep.content.url_template.replace("{+asset_path}",""),null,true);
-  const w=(txt.normalize("NFC").match(/[\p{L}\p{N}]{2,}/gu)||[]).length;
-  return{w};
+  if(rep.status&&rep.status.state!=="success"&&rep.status.state!=="viewable")return{err:"texto ainda não disponível"};
+  return{txt:await boxRaw(rep.content.url_template.replace("{+asset_path}",""),null,true)};
 }
 const TEXT_EXT=/\.(pdf|docx?|odt|rtf|pptx?|odp|xlsx?|ods|txt)$/i;
-// lê o texto (só leitura) de uma lista de ficheiros {fid,sha1,name,size}; guarda o nº de palavras por impressão digital
-async function checkFiles(list,onProg){
+const precisaLer=f=>!!(f&&f.fid&&f.sha1&&TEXT_EXT.test(f.name||f.n||"")&&f.size!==0&&!TX.has(f.sha1));
+// lê o texto de uma lista de ficheiros {fid, sha1, name, size} e guarda-o (por impressão digital) neste navegador
+async function checkFiles(list,onProg,cancel,conc){
   let done=0,err=0,idx=0;
-  const worker=async()=>{while(idx<list.length){const f=list[idx++];
-    try{const r=await wordsOf(f.fid);if(r.w!=null)CT[f.sha1]={w:r.w,t:Date.now()};else err++}catch(e){if(e.kind==="auth")throw e;err++}
+  const worker=async()=>{while(idx<list.length&&SES&&!(cancel&&cancel())){const f=list[idx++];
+    try{if(!TX.has(f.sha1)){const r=await textoDe(f.fid);if(r.txt!=null)await guardarTexto(f.sha1,r.txt);else{err++;if(r.err!=="texto ainda não disponível")await guardarSemTexto(f.sha1)}}}
+    catch(e){if(e.kind==="auth")throw e;err++}
     done++;onProg&&onProg(done,list.length)}};
-  await Promise.all(Array.from({length:Math.min(6,list.length)},worker));
-  try{localStorage.setItem("boxcheck_texto",JSON.stringify(CT))}catch(e){}
+  await Promise.all(Array.from({length:Math.min(conc||6,list.length)},worker));
   return{done,err};
 }
-const precisaLer=f=>f&&f.fid&&f.sha1&&TEXT_EXT.test(f.name||"")&&f.size!==0&&!(CT[f.sha1]&&CT[f.sha1].w!=null);
+function porLer(){const todo=new Map();for(const e of evaluate())for(const i of e.items)for(const f of i.hits)if(precisaLer(f))todo.set(f.sha1,f);return[...todo.values()]}
+// verificação em segundo plano: a app continua utilizável e o relatório atualiza-se no fim
+let bgRun=0,bgOn=false;
+async function verificarFundo(){
+  if(!SES||bgOn)return;const list=porLer();if(!list.length){$("#bg").style.display="none";return}
+  const my=++bgRun;bgOn=true;const el=$("#bg");el.style.display="";let last=0;
+  try{const r=await checkFiles(list,(d,n)=>{el.textContent=`a ler documentos ${d}/${n}`;
+      if(Date.now()-last>15000){last=Date.now();if(curTab==="rel")renderReport();if(curTab==="alt")renderAlt()}},()=>my!==bgRun,4);
+    el.textContent=`${r.done-r.err} documentos lidos`;setTimeout(()=>{if(!bgOn)el.style.display="none"},6000)}
+  catch(e){el.textContent="leitura interrompida"}
+  bgOn=false;if(curTab==="rel")renderReport();if(curTab==="alt")renderAlt();
+}
 $("#qGo").onclick=async()=>{
   if(!SES){toast("Entre primeiro na Box");return}
-  if(!files.some(f=>f.fid)){$("#qMsg").textContent="Faça uma nova análise em Dados da Box (a listagem antiga não tem os dados necessários).";return}
-  const ev=evaluate();const todo=new Map();
-  for(const e of ev)for(const i of e.items)for(const f of i.hits)if(precisaLer(f))todo.set(f.sha1,f);
-  const list=[...todo.values()];
-  if(!list.length){$("#qMsg").textContent="Todos os documentos já foram verificados.";renderReport();return}
+  if(!files.some(f=>f.fid)){$("#qMsg").textContent="Faça primeiro uma análise em Dados da Box.";return}
+  bgRun++;const list=porLer();
+  if(!list.length){$("#qMsg").textContent="Todos os documentos já foram lidos.";renderReport();return}
   const b=$("#qGo");b.disabled=true;$("#qProg").style.display="block";$("#qProg i").style.width="2%";const t0=Date.now();
   try{const r=await checkFiles(list,(d,n)=>{$("#qMsg").textContent=`A ler o texto… ${d}/${n}`;$("#qProg i").style.width=Math.max(2,Math.round(d/n*100))+"%"});
     $("#qMsg").textContent=`Concluído em ${Math.round((Date.now()-t0)/1000)} s: ${r.done-r.err} documento(s) lidos${r.err?`, ${r.err} sem texto disponível (não foram avaliados)`:""}.`}
@@ -1062,10 +1332,27 @@ $("#qGo").onclick=async()=>{
   b.disabled=false;setTimeout(()=>{$("#qProg").style.display="none"},800);
   renderReport();
 };
+// modelos oficiais: lê os ficheiros da pasta escolhida em Dados da Box
+$("#tplGo").onclick=async()=>{
+  if(!SES){toast("Entre primeiro na Box");return}
+  if(scanBusy){toast("Espere que a análise termine");return}
+  if(curFolder.id==="0"){toast("Abra primeiro a pasta onde estão os modelos");return}
+  const nome=curFolder.path.slice(1).map(p=>p.name).join("/"),b=$("#tplGo");b.disabled=true;scanBusy=true;
+  const run=++scanRun,st={nP:0,nF:0,opened:0,retries:0,failed:[],t0:Date.now(),modo:"a ler a pasta dos modelos"};
+  try{const itens=[];await crawl(run,[{id:curFolder.id,path:nome}],itens,st);scanRun++;
+    const fl=itens.filter(x=>x.type==="file"&&x.sha1&&x.size!==0&&TEXT_EXT.test(x.name));
+    if(fl.length>300){$("#scanMsg").textContent=`Esta pasta tem ${fl.length} documentos — escolha a pasta que só tem os modelos.`}
+    else{await checkFiles(fl.map(x=>({fid:x.id,sha1:x.sha1,name:x.name,size:x.size})),(d,n)=>{$("#scanMsg").textContent=`A ler os modelos… ${d}/${n}`});
+      TPL={id:curFolder.id,pasta:nome,quando:new Date().toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"}),itens:fl.map(x=>({nome:x.name,sha1:x.sha1}))};
+      try{localStorage.setItem("boxcheck_modelos",JSON.stringify(TPL))}catch(e){}
+      tplRev++;qualInit();$("#scanMsg").textContent=`${TPL.itens.length} modelo(s) lidos de “${nome}”. Os documentos iguais ou quase iguais a um modelo passam a aparecer como “modelo por preencher”.`}
+  }catch(e){scanRun++;$("#scanMsg").textContent="Erro: "+e.message}
+  scanBusy=false;b.disabled=false;
+};
 
 /* ---------- send ---------- */
-const anoLetivo=()=>cfg.mail.ano||(()=>{const m=(lastListing&&lastListing.pasta||"").match(/(20\d\d)[.\-\/](20\d\d)/);return m?m[1]+"/"+m[2]:"[ano letivo]"})();
-function listText(t){return rowsFor(t,true).map(r=>`• ${r.turma} | ${discShort(r.disc)} | ${r.mod} → ${r.falta}${r.loc?` (${r.loc})`:""}${r.state==="blank"?" — o ficheiro entregue está em branco":""}`).join("\n")}
+const anoLetivo=()=>cfg.mail.ano||(()=>{const a=[...getIdx().anos.keys()];return a.length===1?a[0]:"[ano letivo]"})();
+function listText(t){return rowsFor(t,true).map(r=>`• ${r.turma} | ${discShort(r.disc)} | ${r.mod} → ${r.falta}${r.loc?` (${r.loc})`:""}${r.state==="blank"?" — o ficheiro entregue não conta: "+motivoBad(r.item):""}`).join("\n")}
 function fill(tpl,t,semLista){
   const first=String(t.p.nome||"").trim().split(/\s+/)[0]||"";
   let s=tpl.replace(/\{primeiro_nome\}/g,first).replace(/\{nome\}/g,t.p.nome).replace(/\{ano\}/g,anoLetivo()).replace(/\{prazo\}/g,cfg.mail.prazo||"[prazo]").replace(/\{total\}/g,t.miss);
@@ -1142,7 +1429,7 @@ $("#loadCfg").onclick=()=>loadCfgText($("#cfgTxt").value);
 $("#fileCfg").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{$("#cfgTxt").value=r.result;loadCfgText(r.result)};r.readAsText(f)};
 let resetArm=false;
 $("#resetAll").onclick=e=>{if(!resetArm){resetArm=true;e.target.textContent="Clique de novo para confirmar";setTimeout(()=>{resetArm=false;e.target.textContent="Apagar tudo"},3000);return}
-  ponto("Antes de apagar tudo");cfg=defaultCfg();files=[];save();refreshAll();renderPreview();e.target.textContent="Apagar tudo";resetArm=false;toast("Tudo apagado — pode restaurar em Pontos de restauro")};
+  ponto("Antes de apagar tudo");cfg=defaultCfg();files=[];folders=[];lastListing=null;save();dadosMudaram();e.target.textContent="Apagar tudo";resetArm=false;toast("Tudo apagado — pode restaurar em Pontos de restauro")};
 
 /* ---------- demo ---------- */
 $("#demo").onclick=()=>{
@@ -1170,85 +1457,98 @@ $("#demo").onclick=()=>{
 function countUp(root){if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
   root.querySelectorAll(".tile .v").forEach(el=>{const m=el.textContent.match(/^(\d+)(.*)$/);if(!m)return;const end=+m[1],rest=m[2];if(end<2)return;
     const t0=performance.now(),d=650;const step=t=>{const k=Math.min(1,(t-t0)/d),e=1-Math.pow(1-k,3);el.textContent=Math.round(end*e)+rest;if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step)})}
-/* ---------- painel de alterações entre análises ---------- */
-const ALTKEY="boxcheck_alteracoes";
-const byOf=x=>x&&(x.modified_by||x.created_by)?{n:(x.modified_by||x.created_by).name||"",e:(x.modified_by||x.created_by).login||""}:null;
-const cbOf=x=>x&&x.created_by?{n:x.created_by.name||"",e:x.created_by.login||""}:null;
-// converte uma listagem guardada nas estruturas files/folders usadas pela avaliação
+/* ---------- painel de alterações desde uma contagem ---------- */
+const ALTKEY="boxcheck_alteracoes"; // comparações guardadas pelas versões 0.8/0.9
+const pes=u=>u?{n:u.name||"",e:u.login||""}:null;
+const byOf=x=>pes(x&&(x.modified_by||x.created_by));
+const cbOf=x=>pes(x&&x.created_by);
+// converte uma listagem guardada nas estruturas usadas pelo relatório
 function toFF(L){const fs=[],fo=[];
-  for(const x of L.itens){if(x.type==="folder"){fo.push(x.path);continue}
-    const segs_=x.path.split("/").map(s=>s.trim()).filter(Boolean);
-    fs.push({path:[...segs_,x.name].join("/"),rawDir:segs_.join("/"),comps:segs_.map(norm),name:x.name,nname:norm(x.name),date:x.modified_at||"",fid:x.id||"",size:x.size??null,sha1:x.sha1||""})}
+  for(const x of L.itens){const sg=x.path.split("/").map(s=>s.trim()).filter(Boolean);
+    if(x.type==="folder"){fo.push(sg.join("/"));continue}
+    fs.push({path:[...sg,x.name].join("/"),rawDir:sg.join("/"),comps:sg.map(norm),name:x.name,nname:norm(x.name),date:x.modified_at||"",fid:x.id||"",size:x.size??null,sha1:x.sha1||"",cmod:x.cm||""})}
   return{fs,fo}}
-function evalWith(L){const sf=files,so=folders;const t=toFF(L);files=t.fs;folders=t.fo;try{return evaluate()}finally{files=sf;folders=so}}
-function diffListings(prev,cur,deleted){
-  const P=new Map(prev.itens.filter(x=>x.type==="file"&&x.id).map(x=>[x.id,x]));
-  const C=new Map(cur.itens.filter(x=>x.type==="file"&&x.id).map(x=>[x.id,x]));
-  const novos=[],alterados=[],apagados=[];
+let EVB=null;
+function evalBase(b){const rev=txRev+"|"+refRev+"|"+tplRev+"|"+cfgRev+"|"+filesRev;if(EVB&&EVB.b===b&&EVB.rev===rev)return EVB.ev;
+  if(!b._idx){const t=toFF(b);b._idx=buildIndex(t.fs,t.fo)}
+  const ev=evalCore(b._idx,ativos());EVB={b,rev,ev};return ev}
+// diferenças de ficheiros entre duas listagens (sem olhar ao relatório)
+function diffFicheiros(prev,cur){
+  const P=new Map(),C=new Map();for(const x of prev.itens)if(x.type!=="folder"&&x.id)P.set(x.id,x);for(const x of cur.itens)if(x.type!=="folder"&&x.id)C.set(x.id,x);
+  const novos=[],alterados=[],apagados=[],delBy=cur.delBy||{};
   for(const [id,x] of C){const o=P.get(id);
     const base={p:x.path,n:x.name,t:x.modified_at||"",fid:x.id,sha1:x.sha1||"",size:x.size??null,name:x.name};
     if(!o)novos.push({...base,by:x.cb||x.by||null});
     else if((o.sha1&&x.sha1&&o.sha1!==x.sha1)||(o.size!==x.size&&o.size!=null&&x.size!=null))alterados.push({...base,by:x.by||null});
     else if(o.path!==x.path||o.name!==x.name)alterados.push({...base,by:x.by||null,mv:1})}
-  const delBy=new Map((deleted||[]).map(d=>[d.id,d.by]));
-  for(const [id,o] of P)if(!C.has(id))apagados.push({p:o.path,n:o.name,by:delBy.get(id)||null});
-  // efeito no relatório
-  const before=new Map(),after=new Map();
-  for(const e of evalWith(prev))for(const i of e.items)before.set(i.key,i.ok);
-  const evNow=evalWith(cur),entregues={},perdidos={};
-  for(const e of evNow)for(const i of e.items){const was=before.get(i.key);if(was===undefined)continue;
+  for(const [id,o] of P)if(!C.has(id))apagados.push({p:o.path,n:o.name,by:delBy[id]||null});
+  return{novos,alterados,apagados}}
+function diffListings(base,cur){
+  const d=diffFicheiros(base,cur),before=new Map(),entregues={},perdidos={};
+  for(const e of evalBase(base))for(const i of e.items)before.set(i.key,i.ok);
+  for(const e of evaluate())for(const i of e.items){const was=before.get(i.key);if(was===undefined)continue;
     const pid=profOf(e.mod)||"_";
     if(!was&&i.ok)(entregues[pid]=entregues[pid]||[]).push({k:i.key,t:modLabel(e.mod),d:i.doc.nome});
     if(was&&!i.ok)(perdidos[pid]=perdidos[pid]||[]).push({k:i.key,t:modLabel(e.mod),d:i.doc.nome})}
-  return{t:Date.now(),desde:prev.quando,ate:cur.quando,pasta:cur.pasta,novos,alterados,apagados,entregues,perdidos};
+  return{...d,desde:base.quando,ate:cur.quando,pasta:cur.pasta,entregues,perdidos,vivo:true};
 }
-function altList(){try{return JSON.parse(localStorage.getItem(ALTKEY)||"[]")}catch(e){return[]}}
-function saveAlt(d){try{const l=altList();l.unshift(d);localStorage.setItem(ALTKEY,JSON.stringify(l.slice(0,15)))}catch(e){}}
+const altList=()=>lsJ(ALTKEY,[]);
 const pessoaKey=b=>b?(b.e||b.n||"?").toLowerCase():"?";
 function formadorDe(b){if(!b)return null;const e=norm(b.e),n=norm(b.n);
   return cfg.profs.find(p=>(e&&norm(p.email)===e))||cfg.profs.find(p=>n&&norm(p.nome)===n)||null}
-let altSel=0;
-// estado do conteúdo de um ficheiro do painel: "branco", "scan" (sem texto, talvez digitalizado), "ok", "?" (não lido)
-function conteudo(x){if(x.size===0)return"branco";const c=x.sha1&&CT[x.sha1];if(!c||c.w==null)return TEXT_EXT.test(x.n||"")?"?":"";
-  if(c.w<minPal())return (x.size||0)<150000?"branco":"scan";return"ok"}
-function renderAlt(){
-  const l=altList();const el=$("#altBody");
-  $("#altPick").innerHTML=l.map((d,i)=>`<option value="${i}" ${i===altSel?"selected":""}>${esc(d.desde)} → ${esc(d.ate)} · ${esc(d.pasta)}</option>`).join("");
-  $("#altPick").parentElement.style.display=l.length?"":"none";
-  const d=l[altSel];
-  if(!d){el.innerHTML=`<div class="card"><p class="hint" style="margin:0">Ainda não há alterações para mostrar. A primeira análise de uma pasta serve de ponto de partida; a partir da análise seguinte aparece aqui quem colocou, alterou ou apagou documentos e o efeito no relatório de cada formador.</p></div>`;$("#altTiles").innerHTML="";return}
+// estado do conteúdo de um ficheiro do painel: {lvl:"bad"|"warn"|"ok"|"?"|"", txt}
+function conteudo(x){
+  const q=x.fid&&qualFicheiros().get(x.fid);if(q)return q;
+  if(x.size===0)return{lvl:"bad",txt:"ficheiro vazio (0 bytes)"};
+  const w=palavras(x.sha1);
+  if(w==null)return{lvl:TEXT_EXT.test(x.n||"")&&!(x.sha1&&TX.has(x.sha1))?"?":"",txt:""};
+  if(w<minPal())return (x.size||0)<150000?{lvl:"bad",txt:`em branco ou quase vazio (${w} palavras)`}:{lvl:"warn",txt:"sem texto — pode ser um documento digitalizado"};
+  return{lvl:"ok",txt:""}}
+let altSel="",BASEC=null,altBusy=0;
+async function renderAlt(){
+  const my=++altBusy,el=$("#altBody"),root=lastListing&&lastListing.rootId;
+  const bases=root?(basesIdx()[root]||[]):[],legacy=altList();
+  const opts=bases.map(b=>({k:"B|"+b.t,txt:`Desde ${b.quando} — ${b.label}`})).concat(legacy.map((d,i)=>({k:"L|"+i,txt:`(guardada antes) ${d.desde} → ${d.ate}`})));
+  if(!opts.some(o=>o.k===altSel))altSel=opts.length?opts[0].k:"";
+  $("#altPick").innerHTML=opts.map(o=>`<option value="${o.k}" ${o.k===altSel?"selected":""}>${esc(o.txt)}</option>`).join("");
+  $("#altPick").parentElement.style.display=opts.length?"":"none";$("#altNova").style.display=root?"":"none";
+  let d=null;
+  if(altSel.startsWith("L|"))d=legacy[+altSel.slice(2)];
+  else if(altSel&&root){const t=+altSel.slice(2),k=root+"|"+t;if(!BASEC||BASEC.k!==k){const b=await lerBase(root,t);if(my!==altBusy)return;BASEC={k,b}}
+    if(BASEC.b)d=diffListings(BASEC.b,lastListing)}
+  if(!d){el.innerHTML=`<div class="card"><p class="hint" style="margin:0">${root?"Ainda não há uma contagem para comparar.":"Ainda não há alterações para mostrar. Faça uma análise em Dados da Box: a primeira serve de ponto de partida (contagem) e, a partir daí, aparece aqui quem colocou, alterou ou apagou documentos e o efeito no relatório de cada formador."}</p></div>`;$("#altTiles").innerHTML="";return}
   const nE=Object.values(d.entregues).reduce((a,x)=>a+x.length,0),nP=Object.values(d.perdidos).reduce((a,x)=>a+x.length,0);
-  const postos=[...d.novos,...d.alterados.filter(x=>!x.mv)],nB=postos.filter(x=>conteudo(x)==="branco").length,nS=postos.filter(x=>conteudo(x)==="scan").length,nQ=postos.filter(x=>conteudo(x)==="?").length;
+  const postos=[...d.novos,...d.alterados.filter(x=>!x.mv)],C=new Map(postos.map(x=>[x,conteudo(x)])),lv=x=>(C.get(x)||{}).lvl;
+  const nB=postos.filter(x=>lv(x)==="bad").length,nS=postos.filter(x=>lv(x)==="warn").length,nQ=postos.filter(x=>lv(x)==="?").length;
   $("#altTiles").innerHTML=`
    <div class="tile"><div class="v" style="color:var(--ok)">${d.novos.length}</div><div class="l">documentos colocados</div></div>
    <div class="tile"><div class="v">${d.alterados.length}</div><div class="l">substituídos ou movidos</div></div>
    <div class="tile"><div class="v" style="color:var(--bad)">${d.apagados.length}</div><div class="l">apagados</div></div>
-   <div class="tile"><div class="v" style="color:var(--bad)">${nB}</div><div class="l">colocados em branco${nS?` · ${nS} a confirmar`:""}${nQ?` · ${nQ} por verificar`:""}</div></div>
+   <div class="tile"><div class="v" style="color:var(--bad)">${nB}</div><div class="l">vazios ou falsos${nS?` · ${nS} a confirmar`:""}${nQ?` · ${nQ} por ler`:""}</div></div>
    <div class="tile"><div class="v" style="color:var(--ok)">${nE}</div><div class="l">itens do relatório passaram a entregues</div></div>
    ${nP?`<div class="tile"><div class="v" style="color:var(--bad)">${nP}</div><div class="l">itens deixaram de estar entregues</div></div>`:""}`;countUp($("#altTiles"));
   // por pessoa (quem fez)
-  const P=new Map();const add=(k,arr)=>{for(const x of arr){const key=pessoaKey(x.by);if(!P.has(key))P.set(key,{by:x.by,novos:[],alterados:[],apagados:[],ult:""});const r=P.get(key);r[k].push(x);if(x.t&&x.t>r.ult)r.ult=x.t}};
+  const P=new Map(),add=(k,arr)=>{for(const x of arr){const key=pessoaKey(x.by);if(!P.has(key))P.set(key,{by:x.by,novos:[],alterados:[],apagados:[],ult:""});const r=P.get(key);r[k].push(x);if(x.t&&x.t>r.ult)r.ult=x.t}};
   add("novos",d.novos);add("alterados",d.alterados);add("apagados",d.apagados);
   const pessoas=[...P.values()].sort((a,b)=>(b.novos.length+b.alterados.length+b.apagados.length)-(a.novos.length+a.alterados.length+a.apagados.length));
-  const tagC=x=>{const c=conteudo(x);return c==="branco"?` <span class="tag bad">em branco</span>`:c==="scan"?` <span class="tag warn">sem texto — a confirmar</span>`:c==="?"?` <span class="tag" style="background:#eef1f5;color:#4a5260">por verificar</span>`:""};
+  const tagC=x=>{const c=C.get(x)||conteudo(x);return c.lvl==="bad"?` <span class="tag bad">${esc(c.txt)}</span>`:c.lvl==="warn"?` <span class="tag warn">a confirmar: ${esc(c.txt)}</span>`:c.lvl==="?"?` <span class="tag" style="background:#eef1f5;color:#4a5260">por ler</span>`:""};
   const fl=(arr,del)=>arr.slice(0,200).map(x=>`<div class="files">${x.mv?"↪ movido: ":""}<b>${esc(x.n)}</b>${x.mv||del?"":tagC(x)} — ${esc(x.p)}</div>`).join("")+(arr.length>200?`<div class="files">… e mais ${arr.length-200}</div>`:"");
-  const rowsP=pessoas.map((r,i)=>{const f=formadorDe(r.by);const nome=r.by?(r.by.n||r.by.e):"(desconhecido)";
+  const rowsP=pessoas.map(r=>{const f=formadorDe(r.by),nome=r.by?(r.by.n||r.by.e):"(desconhecido)",put=[...r.novos,...r.alterados.filter(x=>!x.mv)];
     return `<details class="altp"><summary><span class="who2"><span class="av">${esc((nome||"?").split(/\s+/).filter(Boolean).map(w=>w[0]).slice(0,2).join("").toUpperCase())}</span><span><b>${esc(nome)}</b>${r.by&&r.by.e?`<br><span class="hint" style="margin:0">${esc(r.by.e)}</span>`:""}</span>${f?`<span class="tag ok">formador</span>`:""}</span>
-      <span class="num ok">+${r.novos.length}<small>colocou</small></span><span class="num">${r.alterados.length}<small>substituiu</small></span><span class="num bad">${r.apagados.length}<small>apagou</small></span><span class="num bad">${[...r.novos,...r.alterados.filter(x=>!x.mv)].filter(x=>conteudo(x)==="branco").length}<small>em branco</small></span><span class="hint" style="margin:0">${r.ult?new Date(r.ult).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"}):""}</span></summary>
+      <span class="num ok">+${r.novos.length}<small>colocou</small></span><span class="num">${r.alterados.length}<small>substituiu</small></span><span class="num bad">${r.apagados.length}<small>apagou</small></span><span class="num bad">${put.filter(x=>lv(x)==="bad").length}<small>vazios / falsos</small></span><span class="num" style="color:#b26a00">${put.filter(x=>lv(x)==="warn").length}<small>a confirmar</small></span><span class="hint" style="margin:0">${r.ult?new Date(r.ult).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"}):""}</span></summary>
       <div style="padding:6px 14px 12px">${r.novos.length?`<h3 style="margin:6px 0">Colocou</h3>${fl(r.novos)}`:""}${r.alterados.length?`<h3 style="margin:6px 0">Substituiu / moveu</h3>${fl(r.alterados)}`:""}${r.apagados.length?`<h3 style="margin:6px 0">Apagou</h3>${fl(r.apagados,true)}`:""}</div></details>`}).join("");
   // por formador (efeito no relatório)
   const ids=new Set([...Object.keys(d.entregues),...Object.keys(d.perdidos)]);
-  const T=byTeacher(evaluate());const faltaAgora=new Map(T.map(t=>[t.p.id,t.miss]));
+  const faltaAgora=new Map(byTeacher(evaluate()).map(t=>[t.p.id,t.miss]));
   const rowsF=[...ids].map(id=>({id,p:cfg.profs.find(p=>p.id===id)||{nome:id==="_"?"(sem formador atribuído)":"(formador removido)"},e:d.entregues[id]||[],x:d.perdidos[id]||[]}))
-    .sort((a,b)=>b.e.length-a.e.length).map(r=>`<details class="altp"><summary><span class="who2"><b>${esc(r.p.nome)}</b></span><span class="num ok">+${r.e.length}<small>entregues</small></span><span class="num bad">${r.x.length?"−"+r.x.length:"0"}<small>deixaram de estar</small></span><span class="num">${faltaAgora.get(r.id)??"—"}<small>ainda em falta</small></span><span></span><span></span></summary>
+    .sort((a,b)=>b.e.length-a.e.length).map(r=>`<details class="altp"><summary><span class="who2"><b>${esc(r.p.nome)}</b></span><span class="num ok">+${r.e.length}<small>entregues</small></span><span class="num bad">${r.x.length?"−"+r.x.length:"0"}<small>deixaram de estar</small></span><span class="num">${faltaAgora.get(r.id)??"—"}<small>ainda em falta</small></span><span></span><span></span><span></span></summary>
       <div style="padding:6px 14px 12px">${r.e.map(x=>`<div class="files" style="color:var(--ok)">✓ ${esc(x.t)} — ${esc(x.d)}</div>`).join("")}${r.x.map(x=>`<div class="files" style="color:var(--bad)">✗ ${esc(x.t)} — ${esc(x.d)}</div>`).join("")}</div></details>`).join("");
-  el.innerHTML=`<div class="card"><h2>Quem fez o quê</h2><p class="hint">Entre a análise de ${esc(d.desde)} e a de ${esc(d.ate)}. Clique numa pessoa para ver os ficheiros. “Em branco” = documentos colocados ou substituídos sem conteúdo (menos de ${minPal()} palavras).${nQ?` Há ${nQ} documento(s) ainda por verificar — <a href="#" id="altCheck">verificar agora</a>.`:""}</p>${rowsP||`<p class="hint">Nenhum documento colocado, alterado ou apagado.</p>`}</div>
-    <div class="card"><h2>Efeito no relatório, por formador</h2><p class="hint">Itens exigidos (turma · disciplina · módulo · documento) que mudaram de estado entre as duas análises.</p>${rowsF||`<p class="hint">Nenhum item mudou de estado.</p>`}</div>`;
+  el.innerHTML=`<div class="card"><h2>Quem fez o quê</h2><p class="hint">Entre ${esc(d.desde)} e ${esc(d.ate)}. Clique numa pessoa para ver os ficheiros. “Vazios / falsos” = documentos colocados ou substituídos que não contam (em branco, texto de enchimento ou modelo por preencher).${nQ?` Há ${nQ} documento(s) ainda por ler — a leitura corre em segundo plano.`:""}</p>${rowsP||`<p class="hint">Nenhum documento colocado, alterado ou apagado.</p>`}</div>
+    <div class="card"><h2>Efeito no relatório, por formador</h2><p class="hint">Itens exigidos (turma · disciplina · módulo · documento) que mudaram de estado desde a contagem.</p>${rowsF||`<p class="hint">Nenhum item mudou de estado.</p>`}</div>`;
 }
-$("#altPick").addEventListener("change",e=>{altSel=+e.target.value;renderAlt()});
-$("#altBody").addEventListener("click",async e=>{if(e.target.id!=="altCheck")return;e.preventDefault();const d=altList()[altSel];if(!d||!SES){toast("Entre primeiro na Box");return}
-  const list=[...d.novos,...d.alterados].filter(x=>precisaLer(x));e.target.textContent="a verificar…";
-  try{await checkFiles(list,(a,n)=>{e.target.textContent=`a verificar… ${a}/${n}`})}catch(er){toast(er.message)}renderAlt()});
+$("#altPick").addEventListener("change",e=>{altSel=e.target.value;renderAlt()});
+$("#altNova").onclick=async()=>{if(!lastListing)return;const b=await criarBase(lastListing,"Contagem iniciada à mão");
+  if(b){altSel="B|"+b.t;BASEC=null;toast("Nova contagem iniciada: as alterações passam a contar a partir de agora")}else toast("Não foi possível guardar a contagem");renderAlt()};
 
 /* ---------- relatório de pastas ---------- */
 function buildTree(){
@@ -1333,33 +1633,38 @@ async function accessToken(force){
   return refreshing;
 }
 // ÚNICA porta de acesso aos ficheiros da Box: só pedidos GET (leitura). Não há neste código nada que escreva na Box.
-// ritmo adaptativo: acelera enquanto a Box aceita, abranda quando ela pede (HTTP 429)
-const RATE={conc:8,max:16,min:3,okStreak:0,hits:0,pauseUntil:0};
+// ritmo: a Box aceita cerca de 1000 pedidos por minuto por utilizador. A app pede a um ritmo constante logo abaixo
+// desse limite e abranda quando a Box o pede (HTTP 429); assim a leitura avança sempre, sem paragens longas.
+const RPS0=+lsJ("boxcheck_rps",0)||14;
+const RATE={rps:RPS0,max:Math.max(16,RPS0),min:3,ok:0,hits:0,pauseUntil:0,next:0,cut:0};
+const sleep=ms=>new Promise(s=>setTimeout(s,ms));
+async function vez(){const t=Math.max(RATE.next,Date.now());RATE.next=t+1000/RATE.rps;
+  for(;;){const w=Math.max(t,RATE.pauseUntil)-Date.now();if(w<=0)return;await sleep(w)}}
+function travar(ms){RATE.hits++;RATE.ok=0;const now=Date.now();if(now-RATE.cut>2500){RATE.rps=Math.max(RATE.min,RATE.rps*0.75);RATE.cut=now}RATE.pauseUntil=Math.max(RATE.pauseUntil,now+ms)}
 async function boxGet(path,params){
   const url="https://api.box.com/2.0/"+path+(params?"?"+new URLSearchParams(params):"");
   let renewed=false;
   for(let t=0;t<12;t++){
-    const wait=RATE.pauseUntil-Date.now();if(wait>0)await new Promise(s=>setTimeout(s,wait));
+    await vez();
     const tok=await accessToken();
     let r;
     try{r=await fetch(url,{method:"GET",headers:{Authorization:"Bearer "+tok}})}
     catch(e){ // a Box, quando recusa pedidos a mais, às vezes responde sem as autorizações do navegador: parece uma falha de rede
-      RATE.hits++;RATE.okStreak=0;RATE.conc=Math.max(RATE.min,Math.floor(RATE.conc*0.7));RATE.pauseUntil=Math.max(RATE.pauseUntil,Date.now()+1000*(t+1));
+      travar(1200*(t+1));
       if(t<5)continue;
       const er=new Error("O navegador não conseguiu falar com a Box. Se acontecer logo ao entrar, confirme que o endereço deste site ("+location.origin+") está em “CORS Domains” na sua aplicação da Box.");er.kind="net";throw er}
-    if(r.ok){if(++RATE.okStreak>=25&&RATE.conc<RATE.max){RATE.conc++;RATE.okStreak=0}return r.json()}
-    if(r.status===429){RATE.hits++;RATE.okStreak=0;RATE.conc=Math.max(RATE.min,Math.floor(RATE.conc*0.7));
-      const ra=(+r.headers.get("Retry-After")||1)*1000;RATE.pauseUntil=Math.max(RATE.pauseUntil,Date.now()+ra);continue}
+    if(r.ok){if(++RATE.ok>=200&&RATE.rps<RATE.max){RATE.rps=Math.min(RATE.max,RATE.rps+1);RATE.ok=0}return r.json()}
+    if(r.status===429){travar((+r.headers.get("Retry-After")||2)*1000);continue}
     if(r.status===401){if(!renewed&&SES&&SES.mode==="oauth"){renewed=true;await accessToken(true);continue}
       logout(false,"O acesso à Box expirou. Volte a entrar.");const er=new Error("O acesso à Box expirou. Volte a entrar.");er.kind="auth";throw er}
-    if(r.status>=500){await new Promise(s=>setTimeout(s,Math.min(20,0.5*2**t)*1000));continue}
+    if(r.status>=500){await sleep(Math.min(20,0.5*2**t)*1000);continue}
     const er=new Error("A Box respondeu "+r.status+(r.status===403?" (sem permissão para esta pasta)":"")+".");er.kind="http";er.status=r.status;throw er;
   }
   const er=new Error("A Box está a limitar os pedidos. Tente daqui a pouco.");er.kind="net";throw er;
 }
 async function listFolder(id){
   let out=[],marker=null;
-  do{const p={fields:"id,type,name,modified_at,size,sha1,created_by,modified_by",limit:1000,usemarker:"true"};if(marker)p.marker=marker;
+  do{const p={fields:"id,type,name,modified_at,content_modified_at,size,sha1,created_by,modified_by",limit:1000,usemarker:"true"};if(marker)p.marker=marker;
     const j=await boxGet(`folders/${id}/items`,p);out=out.concat(j.entries||[]);marker=j.next_marker||null}while(marker);
   return out;
 }
@@ -1392,10 +1697,12 @@ function connected(me){
   $("#whoOut").onclick=e=>{e.preventDefault();logout(true)};
   $("#boxAuth").innerHTML=`<div class="msg ok">Ligado à Box como <b>${esc(me.name)}</b> (${esc(me.login)})${SES.mode==="oauth"?" — a sessão renova-se automaticamente.":" com token de programador (válido 60 minutos)."}</div>`;
   $("#tok").value="";$("#loginBox").style.display="none";$("#devTok").style.display="none";
-  $("#boxBrowse").style.display="block";browse(curFolder.id,curFolder.path);
+  $("#boxBrowse").style.display="block";
+  // ao entrar: procura sozinha o que mudou desde a última análise (poucos pedidos) e continua a leitura dos documentos
+  browse(curFolder.id,curFolder.path).then(()=>pronto).then(()=>{if(lastListing&&lastListing.rootId===curFolder.id)runScan(false,true);else verificarFundo()});
 }
 function logout(revoke,msg){
-  const old=SES;SES=null;saveSes();
+  const old=SES;SES=null;saveSes();bgRun++;
   if(revoke&&old&&old.mode==="oauth"&&workerUrl())fetch(workerUrl()+"/logout",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({token:old.r||old.a})}).catch(()=>{});
   $("#boxBrowse").style.display="none";$("#tokOut").style.display="none";$("#loginBox").style.display="";$("#devTok").style.display="";$("#boxAuth").innerHTML="";loginUI();
   $("#who").style.display="none";gateState("login",msg||"");
@@ -1415,127 +1722,157 @@ async function browse(id,path){
 $("#crumbs").addEventListener("click",e=>{const a=e.target.closest("[data-ci]");if(!a)return;e.preventDefault();const p=curFolder.path.slice(0,+a.dataset.ci+1);browse(p[p.length-1].id,p)});
 $("#subfolders").addEventListener("click",e=>{const c=e.target.closest("[data-fid]");if(!c)return;browse(c.dataset.fid,[...curFolder.path,{id:c.dataset.fid,name:c.dataset.nm}])});
 let lastListing=null;
-function useListing(j,label){
-  lastListing=j;
-  ingestRows(["path","name","type","modified_at","id","size","sha1"],j.itens.map(x=>[x.path,x.name,x.type,x.modified_at||"",x.id||"",x.size??"",x.sha1||""]),label);
-  boxMsg(`${files.length} ficheiros e ${folders.length} pastas de “${j.pasta}” (${j.quando}).`,"ok");
-  $("#dlList").style.display="";
+// carrega uma listagem da Box (da análise ou guardada) para o relatório
+function useListing(j,quiet){
+  lastListing=j;const t=toFF(j);files=t.fs;folders=t.fo;rawRows=null;$("#colPick").style.display="none";
+  dadosMudaram();
+  if(!quiet)boxMsg(`${files.length} ficheiros e ${folders.length} pastas de “${j.pasta}” (${j.quando}).`,"ok");
+  $("#dlList").style.display="";qualInit();
 }
-/* ---------- leitura da Box: completa ou só o que mudou ---------- */
-let scanRun=0;
+/* ---------- leitura da Box: completa (uma vez) ou só o que mudou ---------- */
+let scanRun=0,scanBusy=false;
+const pool=async(items,fn,n)=>{let i=0;await Promise.all(Array.from({length:Math.min(n,items.length)},async()=>{while(i<items.length){const x=items[i++];await fn(x)}}))};
+const fileItem=(x,path,pid)=>({path,name:x.name,type:"file",modified_at:x.modified_at||"",cm:x.content_modified_at||"",id:x.id,pid,size:x.size,sha1:x.sha1||"",by:byOf(x),cb:cbOf(x)});
 function progress(run,st,pending){if(run!==scanRun)return;
-  const sec=(Date.now()-st.t0)/1000,opened=st.opened,mm=Math.floor(sec/60),ss=String(Math.floor(sec%60)).padStart(2,"0");
-  $("#scanMsg").textContent=`${mm}:${ss} · ${st.modo} · abertas ${opened} de ${opened+pending} pastas · ${st.nF} ficheiros · ${sec>3?(opened/sec).toFixed(1):"…"} pastas/s${RATE.hits?` · ${RATE.hits} pausa(s) pedidas pela Box`:""}${RATE.pauseUntil>Date.now()?" · em pausa":""}${st.retries?` · ${st.retries} repetição(ões)`:""}`;
-  $("#scanProg i").style.width=Math.max(3,Math.min(99,Math.round(opened/(opened+pending||1)*100)))+"%";}
-// percorre pastas (e subpastas) a partir de "starts"; erros temporários são repetidos, nunca param a análise
-async function crawl(run,starts,itens,st){
-  const queue=starts.slice();let active=0;const tries=new Map();
+  const sec=(Date.now()-st.t0)/1000,o=st.opened,mm=Math.floor(sec/60),ss=String(Math.floor(sec%60)).padStart(2,"0"),rate=(o-(st.o0||0))/Math.max(sec,1);
+  const falta=pending>0&&sec>8&&rate>0?Math.ceil(pending/rate/60):0;
+  $("#scanMsg").textContent=`${mm}:${ss} · ${st.modo} · abertas ${o} de ${o+pending} pastas · ${st.nF} ficheiros · ${sec>3?rate.toFixed(1):"…"} pastas/s${falta?` · falta pelo menos ${falta} min`:""}${RATE.hits?` · ${RATE.hits} pausa(s) pedidas pela Box`:""}${RATE.pauseUntil>Date.now()?" · em pausa":""}${st.retries?` · ${st.retries} repetição(ões)`:""}`;
+  $("#scanProg i").style.width=Math.max(3,Math.min(99,Math.round(o/(o+pending||1)*100)))+"%";}
+// percorre pastas e subpastas a partir de "starts". Erros temporários são repetidos; com "ck" o progresso fica guardado
+// de 8 em 8 segundos, para a leitura poder continuar de onde ficou se a página for fechada ou a ligação cair.
+async function crawl(run,starts,itens,st,ck){
+  const queue=starts.slice(),tries=new Map(),infl=new Map();let active=0,lastCk=Date.now(),saving=false;
+  const checkpoint=()=>{if(!ck||saving||Date.now()-lastCk<8000)return;lastCk=Date.now();saving=true;
+    DB.put("kv",ck.key,{t:Date.now(),rootId:ck.rootId,root:ck.root,pos:ck.pos,opened:st.opened,itens:itens.slice(),queue:[...queue,...infl.values()]}).finally(()=>{saving=false})};
   await new Promise(resolve=>{
     const pump=()=>{
       if(st.fatal||(!queue.length&&!active)){resolve();return}
-      while(active<RATE.conc&&queue.length){const f=queue.shift();active++;
+      while(active<16&&queue.length){const f=queue.shift();active++;infl.set(f.id,f);
         listFolder(f.id).then(list=>{st.opened++;for(const x of list){
             if(x.type==="folder"){const p=f.path+"/"+x.name;itens.push({path:p,name:"",type:"folder",id:x.id,pid:f.id});queue.push({id:x.id,path:p});st.nP++}
-            else if(x.type==="file"){itens.push({path:f.path,name:x.name,type:"file",modified_at:x.modified_at||"",id:x.id,pid:f.id,size:x.size,sha1:x.sha1||"",by:byOf(x),cb:cbOf(x)});st.nF++}}})
+            else if(x.type==="file"){itens.push(fileItem(x,f.path,f.id));st.nF++}}})
         .catch(e=>{
           if(e.kind==="auth"){st.fatal=e;return}
           if(e.kind==="http"&&(e.status===403||e.status===404)){st.failed.push(f.path);st.opened++;return}
           const n=(tries.get(f.id)||0)+1;tries.set(f.id,n);st.retries++;
-          if(n<=8){RATE.conc=Math.max(RATE.min,Math.floor(RATE.conc*0.7));RATE.pauseUntil=Math.max(RATE.pauseUntil,Date.now()+800*n);queue.push(f)}
-          else{st.failed.push(f.path);st.opened++}})
-        .finally(()=>{active--;progress(run,st,queue.length+active);pump()})}
+          if(n<=8){travar(800*n);queue.push(f)}else{st.failed.push(f.path);st.opened++}})
+        .finally(()=>{active--;infl.delete(f.id);progress(run,st,queue.length+active);checkpoint();pump()})}
     };pump();});
   if(st.fatal)throw st.fatal;
 }
 async function streamNow(){try{return (await boxGet("events",{stream_position:"now"})).next_stream_position||null}catch(e){return null}}
-async function fullScan(run,rootId,root,st){
-  const pos=await streamNow();const itens=[];
-  st.modo="leitura completa";
-  await crawl(run,[{id:rootId,path:root}],itens,st);
-  return{itens,pos};
+async function fullScan(run,rootId,root,st,fresh){
+  const key="scan|"+rootId;let part=fresh?null:await DB.get("kv",key);
+  if(part&&(Date.now()-part.t>48*3600e3||!part.queue||!part.queue.length||!part.itens))part=null;
+  let itens,starts,pos;
+  if(part){itens=part.itens;starts=part.queue;pos=part.pos;st.opened=st.o0=part.opened||0;st.nP=itens.filter(x=>x.type==="folder").length;st.nF=itens.length-st.nP;st.modo="leitura completa (a continuar de onde ficou)"}
+  else{pos=await streamNow();itens=[];starts=[{id:rootId,path:root}];st.modo="leitura completa"}
+  await crawl(run,starts,itens,st,{key,rootId,root,pos});
+  await DB.del("kv",key);
+  const seen=new Set(),out=[];for(const x of itens){const k=x.type+x.id;if(seen.has(k))continue;seen.add(k);out.push(x)}
+  return{itens:out,pos,full:true};
 }
 // só volta a abrir as pastas onde a Box registou alterações desde a última análise
 async function updateScan(run,prev,st){
   st.modo="só o que mudou";
-  let pos=prev.pos,evs=[];
+  let pos=prev.pos;const evs=[];
   for(let k=0;k<400;k++){const j=await boxGet("events",{stream_type:"changes",stream_position:pos,limit:500});
-    const e=j.entries||[];evs=evs.concat(e);pos=j.next_stream_position||pos;if(!e.length||!j.chunk_size)break;if(evs.length>20000)return null}
-  const itens=prev.itens.slice();
-  const fold=()=>{const m=new Map([[prev.rootId,{path:prev.pasta}]]);for(const x of itens)if(x.type==="folder"&&x.id)m.set(x.id,x);return m};
-  let byId=fold();const fileParent=new Map(itens.filter(x=>x.type==="file").map(x=>[x.id,x.pid]));
+    const e=j.entries||[];for(const x of e)evs.push(x);pos=j.next_stream_position||pos;if(!e.length||!j.chunk_size)break;if(evs.length>20000)return null}
+  // estado anterior, indexado
+  const fo=new Map([[prev.rootId,{id:prev.rootId,path:prev.pasta,pid:null,root:true}]]),kids=new Map(),filesBy=new Map(),fileById=new Map();
+  const arr=(m,k)=>{let a=m.get(k);if(!a)m.set(k,a=[]);return a};
+  for(const x of prev.itens){if(x.type==="folder"){fo.set(x.id,x);arr(kids,x.pid).push(x)}else{arr(filesBy,x.pid).push(x);fileById.set(x.id,x)}}
+  // pastas a reler
   const relist=new Set();
-  for(const ev of evs){const s=ev.source;if(!s||!s.type||!s.id)continue;const pid=s.parent&&s.parent.id;
-    if(pid&&byId.has(pid))relist.add(pid);
-    if(s.type==="file"){const op=fileParent.get(s.id);if(op&&byId.has(op))relist.add(op)}
-    if(s.type==="folder"&&byId.has(s.id)){const old=byId.get(s.id);if(old.pid&&byId.has(old.pid))relist.add(old.pid);relist.add(s.id)}}
+  for(const ev of evs){const s=ev.source;if(!s||!s.id)continue;const pid=s.parent&&s.parent.id;
+    if(pid&&fo.has(pid))relist.add(pid);
+    if(s.type==="file"){const o=fileById.get(s.id);if(o&&fo.has(o.pid))relist.add(o.pid)}
+    else if(s.type==="folder"&&fo.has(s.id)){const o=fo.get(s.id);if(o.pid&&fo.has(o.pid))relist.add(o.pid);relist.add(s.id)}}
   st.mudancas=evs.length;
-  st.deleted=evs.filter(ev=>/TRASH|DELETE/.test(ev.event_type||"")&&ev.source&&ev.source.type==="file").map(ev=>({id:ev.source.id,by:ev.created_by?{n:ev.created_by.name||"",e:ev.created_by.login||""}:null}));
-  const removeSubtree=path=>{for(let i=itens.length-1;i>=0;i--){const x=itens[i];const p=x.type==="folder"?x.path:x.path+"/"+x.name;if(p===path||p.startsWith(path+"/")||(x.type==="file"&&(x.path===path||x.path.startsWith(path+"/"))))itens.splice(i,1)}};
-  const newStarts=[],willCrawl=new Set();
-  for(const fid of relist){if(willCrawl.has(fid))continue;byId=fold();const F=byId.get(fid);if(!F)continue;
-    let list;try{list=await listFolder(fid)}catch(e){if(e.kind==="auth")throw e;if(e.kind==="http"&&(e.status===404||e.status===403)){removeSubtree(F.path);continue}throw e}
-    st.opened++;progress(run,st,relist.size-st.opened);
-    // ficheiros diretos: substitui pelos atuais
-    for(let i=itens.length-1;i>=0;i--)if(itens[i].type==="file"&&itens[i].pid===fid)itens.splice(i,1);
-    const newIds=new Set(list.map(x=>x.id));
-    for(const x of list)if(x.type==="file"){for(let i=itens.length-1;i>=0;i--)if(itens[i].type==="file"&&itens[i].id===x.id)itens.splice(i,1);
-      itens.push({path:F.path,name:x.name,type:"file",modified_at:x.modified_at||"",id:x.id,pid:fid,size:x.size,sha1:x.sha1||"",by:byOf(x),cb:cbOf(x)});st.nF++}
-    // subpastas: removidas, renomeadas ou novas
-    const oldKids=itens.filter(x=>x.type==="folder"&&x.pid===fid);
-    for(const k of oldKids){const now=list.find(x=>x.id===k.id);if(!now||now.name!==k.path.split("/").pop())removeSubtree(k.path)}
-    for(const x of list)if(x.type==="folder"){const p=F.path+"/"+x.name;if(!itens.some(y=>y.type==="folder"&&y.id===x.id)){removeSubtree(p);itens.push({path:p,name:"",type:"folder",id:x.id,pid:fid});st.nP++;newStarts.push({id:x.id,path:p});willCrawl.add(x.id)}}
+  st.deleted=evs.filter(ev=>/TRASH|DELETE/.test(ev.event_type||"")&&ev.source&&ev.source.type==="file").map(ev=>({id:ev.source.id,by:pes(ev.created_by)}));
+  // relê essas pastas (em paralelo, ao ritmo que a Box permite)
+  const lists=new Map(),total=relist.size;
+  await pool([...relist],async fid=>{
+    try{lists.set(fid,await listFolder(fid))}
+    catch(e){if(e.kind==="http"&&(e.status===404||e.status===403))lists.set(fid,null);else throw e}
+    st.opened++;progress(run,st,total-st.opened)},8);
+  // aplica as diferenças, das pastas de cima para as de baixo
+  const dropTree=id=>{const s=[id];while(s.length){const c=s.pop();for(const k of kids.get(c)||[])s.push(k.id);for(const f of filesBy.get(c)||[])fileById.delete(f.id);filesBy.delete(c);kids.delete(c);fo.delete(c)}};
+  const unlink=(pid,id)=>{const a=kids.get(pid);if(a)kids.set(pid,a.filter(k=>k.id!==id))};
+  const depth=id=>fo.get(id).path.split("/").length,newStarts=[];
+  for(const fid of [...lists.keys()].filter(id=>fo.has(id)).sort((a,b)=>depth(a)-depth(b))){
+    const F=fo.get(fid);if(!F)continue; // já foi retirada com a pasta de cima
+    const list=lists.get(fid);
+    if(list===null){if(!F.root){unlink(F.pid,fid);dropTree(fid)}continue}
+    // ficheiros diretos
+    for(const f of filesBy.get(fid)||[])fileById.delete(f.id);
+    const nf=[];
+    for(const x of list)if(x.type==="file"){const o=fileById.get(x.id);if(o){const a=filesBy.get(o.pid);if(a)filesBy.set(o.pid,a.filter(y=>y.id!==x.id))} // veio de outra pasta
+      const it=fileItem(x,F.path,fid);nf.push(it);fileById.set(x.id,it);st.nF++}
+    filesBy.set(fid,nf);
+    // subpastas: desaparecidas, renomeadas, novas ou movidas
+    const now=new Map();for(const x of list)if(x.type==="folder")now.set(x.id,x);
+    const keep=[],kept=new Set();
+    for(const k of kids.get(fid)||[]){const n=now.get(k.id);if(!n||n.name!==k.path.split("/").pop())dropTree(k.id);else{keep.push(k);kept.add(k.id)}}
+    for(const [id,x] of now){if(kept.has(id))continue;
+      if(fo.has(id)){unlink(fo.get(id).pid,id);dropTree(id)}
+      const it={path:F.path+"/"+x.name,name:"",type:"folder",id,pid:fid};fo.set(id,it);keep.push(it);st.nP++;newStarts.push({id,path:it.path})}
+    kids.set(fid,keep);
   }
+  const itens=[];for(const x of fo.values())if(!x.root)itens.push(x);for(const a of filesBy.values())for(const f of a)itens.push(f);
   if(newStarts.length)await crawl(run,newStarts,itens,st);
-  return{itens,pos};
+  return{itens,pos,full:false};
 }
-async function runScan(full){
-  const run=++scanRun;const b=$("#scanBtn");b.disabled=true;$("#scanUpd").disabled=true;
-  $("#scanMsg").textContent="A ler…";$("#scanProg").style.display="block";$("#scanProg i").style.width="3%";
-  const root=curFolder.path.slice(1).map(p=>p.name).join("/")||"Box";
+// auto=true: atualização automática ao abrir a app (só o que mudou; nunca começa sozinha uma leitura completa)
+async function runScan(full,auto){
+  if(scanBusy)return;scanBusy=true;bgRun++;
+  const run=++scanRun,b=$("#scanBtn");b.disabled=true;$("#scanUpd").disabled=true;
+  $("#scanMsg").textContent=auto?"A procurar alterações desde a última análise…":"A ler…";$("#scanProg").style.display="block";$("#scanProg i").style.width="3%";
+  const rootId=curFolder.id,root=curFolder.path.slice(1).map(p=>p.name).join("/")||"Box";
   const st={nP:0,nF:0,opened:0,retries:0,failed:[],t0:Date.now(),modo:""};RATE.hits=0;
   try{
     try{localStorage.setItem("box_last_folder",JSON.stringify(curFolder))}catch(e){}
-    let prev=null;try{prev=JSON.parse(localStorage.getItem("box_last_listing")||"null")}catch(e){}
+    const prev=await lerListagem(rootId);
+    const fresco=prev&&prev.v===2&&prev.pos&&Date.now()-(prev.tFull||prev.t||0)<7*864e5;
     let res=null;
-    const podeAtualizar=!full&&prev&&prev.rootId===curFolder.id&&prev.pos&&prev.v===2&&Date.now()-(prev.t||0)<14*864e5;
-    if(podeAtualizar){try{res=await updateScan(run,prev,st)}catch(e){if(e.kind==="auth")throw e;res=null}}
-    if(!res){st.opened=0;st.nF=0;st.nP=0;res=await fullScan(run,curFolder.id,root,st)}
-    const nPast=res.itens.filter(x=>x.type==="folder").length,nFich=res.itens.filter(x=>x.type==="file").length;
-    const j={v:2,pasta:root,rootId:curFolder.id,t:Date.now(),quando:new Date().toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"}),itens:res.itens,pos:res.pos,failed:st.failed};
-    // verificação automática do conteúdo (antes de comparar): documentos novos ou alterados e documentos exigidos ainda não lidos
-    let verif=null;
-    {const pf=new Map(prev&&prev.rootId===j.rootId&&prev.v===2?prev.itens.filter(x=>x.type==="file").map(x=>[x.id,x.sha1]):[]);
-     const todo=new Map();const asF=x=>({fid:x.id,sha1:x.sha1,name:x.name,n:x.name,size:x.size??null});
-     if(pf.size)for(const x of j.itens)if(x.type==="file"&&(!pf.has(x.id)||pf.get(x.id)!==x.sha1)){const f=asF(x);if(precisaLer(f))todo.set(f.sha1,f)}
-     for(const e of evalWith(j))for(const i of e.items)for(const f of i.hits)if(todo.size<600&&precisaLer(f))todo.set(f.sha1,f);
-     if(todo.size){const tt=Date.now();try{const r=await checkFiles([...todo.values()],(a,n)=>{$("#scanMsg").textContent=`Pastas lidas. A verificar se os documentos estão em branco… ${a}/${n}`});
-        verif={n:r.done,b:[...todo.values()].filter(x=>{const c=CT[x.sha1];return c&&c.w!=null&&c.w<minPal()&&(x.size||0)<150000}).length,s:Math.round((Date.now()-tt)/1000)}}
-       catch(er){verif={erro:er.message}}}}
-    let diff=null;
-    if(prev&&prev.rootId===j.rootId&&prev.v===2){try{diff=diffListings(prev,j,st.deleted);saveAlt(diff);altSel=0}catch(e){console.warn(e)}}
-    try{localStorage.setItem("box_last_listing",JSON.stringify(j))}catch(e){toast("A listagem é grande demais para ficar guardada neste navegador — descarregue-a em CSV")}
-    scanRun++;// impede atualizações tardias da mensagem
-    const secs=Math.round((Date.now()-st.t0)/1000);
-    $("#scanMsg").textContent=`Concluído em ${secs} s (${st.modo}${st.modo==="só o que mudou"?`: ${st.mudancas} alteração(ões), ${st.opened} pasta(s) relidas`:""}) · ${nPast} pastas, ${nFich} ficheiros${RATE.hits?` · a Box pediu ${RATE.hits} pausa(s)`:""}${st.failed.length?` · ⚠ ${st.failed.length} pasta(s) sem acesso: ${st.failed.slice(0,3).join("; ")}${st.failed.length>3?"…":""}`:""}.`;
-    useListing(j,"a Box");showLast();scanHint();
-    if(verif)$("#scanMsg").textContent+=verif.erro?` · Não foi possível verificar o conteúdo: ${verif.erro}`:` · Conteúdo verificado em ${verif.n} documento(s): ${verif.b} em branco.`;
-    if(verif&&verif.b)toast(`${verif.b} documento(s) em branco — veja “Alterações” e o Relatório`);
-    if(diff){const n=diff.novos.length+diff.alterados.length+diff.apagados.length;$("#scanMsg").textContent+=` Alterações desde ${diff.desde}: ${diff.novos.length} colocado(s), ${diff.alterados.length} substituído(s), ${diff.apagados.length} apagado(s) — veja “Alterações”.`;if(n)toast(`${n} alteração(ões) desde a última análise — veja “Alterações”`)}
-
-    if(!cfg.mods.length)toast("Agora use “Detetar módulos” em Atribuições");
-  }catch(e){scanRun++;$("#scanMsg").textContent="Erro: "+e.message}
-  b.disabled=false;$("#scanUpd").disabled=false;$("#scanProg i").style.width="100%";setTimeout(()=>{$("#scanProg").style.display="none"},900);
+    if(!full&&fresco){try{res=await updateScan(run,prev,st)}catch(e){if(e.kind==="auth")throw e;console.warn(e);res=null}}
+    if(!res&&auto){scanRun++;$("#scanMsg").textContent=prev?"A última leitura completa desta pasta tem mais de 7 dias (ou não foi possível ver o que mudou). Carregue em “Analisar” para a ler outra vez.":"";return}
+    if(!res){st.opened=0;st.nF=0;st.nP=0;res=await fullScan(run,rootId,root,st,full)}
+    const nP=res.itens.reduce((a,x)=>a+(x.type==="folder"?1:0),0),nF=res.itens.length-nP,agora=Date.now();
+    const delBy=Object.assign({},prev&&prev.delBy);for(const d of st.deleted||[])if(d.by)delBy[d.id]=d.by;
+    const dk=Object.keys(delBy);if(dk.length>3000)for(const k of dk.slice(0,dk.length-3000))delete delBy[k];
+    const j={v:2,pasta:root,rootId,t:agora,tFull:res.full?agora:(prev.tFull||prev.t),quando:new Date(agora).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"}),itens:res.itens,pos:res.pos,failed:st.failed,nF,nP,delBy};
+    const d=prev&&prev.v===2?diffFicheiros(prev,j):null;
+    await guardarListagem(j);
+    // contagem inicial para o painel Alterações: o estado antes desta análise (ou este, se for a primeira)
+    if(!(basesIdx()[rootId]||[]).length)await criarBase(prev&&prev.v===2?prev:j,prev&&prev.v===2?"Análise de "+prev.quando:"Primeira análise");
+    scanRun++; // impede atualizações tardias da mensagem
+    useListing(j);showLast();scanHint();
+    const secs=Math.round((agora-st.t0)/1000);
+    let msg=`Concluído em ${secs} s (${st.modo}${res.full?"":`: ${st.mudancas} alteração(ões) registadas pela Box, ${st.opened} pasta(s) relidas`}) · ${nP} pastas, ${nF} ficheiros${RATE.hits?` · a Box pediu ${RATE.hits} pausa(s)`:""}${st.failed.length?` · ⚠ ${st.failed.length} pasta(s) sem acesso: ${st.failed.slice(0,3).join("; ")}${st.failed.length>3?"…":""}`:""}.`;
+    if(d){const n=d.novos.length+d.alterados.length+d.apagados.length;msg+=n?` Desde ${prev.quando}: ${d.novos.length} colocado(s), ${d.alterados.length} substituído(s) ou movido(s), ${d.apagados.length} apagado(s) — veja “Alterações”.`:` Nada mudou desde ${prev.quando}.`;
+      if(n&&!auto)toast(`${n} alteração(ões) desde a última análise — veja “Alterações”`)}
+    $("#scanMsg").textContent=msg;
+    if(!ativos().length&&detetar().size)toast("Agora use “Detetar módulos e UFCD” em Atribuições");
+  }catch(e){scanRun++;$("#scanMsg").textContent="Erro: "+e.message+(e.kind==="auth"?"":" — o que já foi lido ficou guardado: carregue em “Analisar” para continuar de onde ficou.")}
+  finally{scanBusy=false;b.disabled=false;$("#scanUpd").disabled=false;$("#scanProg i").style.width="100%";setTimeout(()=>{if(!scanBusy)$("#scanProg").style.display="none"},900);
+    verificarFundo()}
 }
 $("#scanBtn").onclick=()=>runScan(false);
 $("#scanUpd").onclick=()=>runScan(true);
-function scanHint(){let p=null;try{p=JSON.parse(localStorage.getItem("box_last_listing")||"null")}catch(e){}
-  const ok=p&&p.v===2&&p.pos&&p.rootId===curFolder.id&&Date.now()-(p.t||0)<14*864e5;
-  $("#scanHint").textContent=ok?`Esta pasta já foi lida a ${p.quando}: “Analisar” só volta a abrir as pastas que mudaram desde então (muito mais rápido). “Leitura completa” lê tudo outra vez.`:"A primeira análise de uma pasta lê tudo, uma pasta de cada vez (a Box limita os pedidos por minuto). As análises seguintes só leem o que mudou.";}
-function showLast(){try{const j=JSON.parse(localStorage.getItem("box_last_listing")||"null");if(!j)return;
-  $("#lastScan").style.display="";$("#lastInfo").textContent=`Última análise guardada: ${j.pasta} · ${j.quando} · ${j.itens.filter(x=>x.type==="file").length} ficheiros`}catch(e){}}
-$("#lastScan").onclick=()=>{try{useListing(JSON.parse(localStorage.getItem("box_last_listing")),"a última análise")}catch(e){toast("Sem análise guardada")}};
+function scanHint(){const p=resumos()[curFolder.id],el=$("#scanHint");
+  DB.get("kv","scan|"+curFolder.id).then(part=>{
+    if(part&&part.queue&&part.queue.length&&Date.now()-part.t<48*3600e3&&!scanBusy){el.textContent=`Há uma leitura desta pasta por acabar (${part.opened||0} pastas já lidas): “Analisar” continua de onde ficou.`;return}
+    const ok=p&&p.pos&&Date.now()-(p.tFull||p.t||0)<7*864e5;
+    el.textContent=ok?`Esta pasta foi lida a ${p.quando}: “Analisar” só volta a abrir as pastas que mudaram desde então (segundos). “Leitura completa” lê tudo outra vez.`
+      :p?"A última leitura completa desta pasta tem mais de 7 dias: “Analisar” vai ler tudo outra vez, por segurança."
+      :"A primeira análise de uma pasta lê tudo, uma pasta de cada vez, ao ritmo máximo que a Box permite (cerca de 15 pastas por segundo). Depois disso, só lê o que mudou."});
+  const outro=p&&(!lastListing||lastListing.rootId!==curFolder.id);
+  $("#lastScan").style.display=outro?"":"none";if(outro)$("#lastScan").textContent=`Usar a análise guardada desta pasta (${p.quando})`;}
+function showLast(){const j=lastListing;$("#lastInfo").textContent=j?`Análise carregada: ${j.pasta} · ${j.quando} · ${files.length} ficheiros`:""}
+$("#lastScan").onclick=async()=>{const j=await lerListagem(curFolder.id);if(!j){toast("Sem análise guardada desta pasta");return}useListing(j);showLast();scanHint();carregarRef()};
 $("#dlList").onclick=()=>{if(!lastListing)return;const q=v=>`"${String(v??"").replace(/"/g,'""')}"`;
-  download(`listagem_box_${hoje()}.csv`,"﻿"+["path,name,type,modified_at,id,size,sha1"].concat(lastListing.itens.map(x=>[x.path,x.name,x.type,x.modified_at||"",x.id||"",x.size??"",x.sha1||""].map(q).join(","))).join("\n"),"text/csv;charset=utf-8")};
+  download(`listagem_box_${hoje()}.csv`,"﻿"+["path,name,type,modified_at,id,size,sha1,cmod"].concat(lastListing.itens.map(x=>[x.path,x.name,x.type,x.modified_at||"",x.id||"",x.size??"",x.sha1||"",x.cm||""].map(q).join(","))).join("\n"),"text/csv;charset=utf-8")};
 
 /* ---------- exportar relatório ---------- */
 $("#dlCsv").onclick=()=>download(`relatorio_entregas_${hoje()}.csv`,"﻿"+geralCSV(),"text/csv;charset=utf-8");
@@ -1547,12 +1884,15 @@ $("#gMail").addEventListener("click",e=>{const to=$("#gTo").value.trim();let bod
 $("#dlCfg").onclick=()=>download(`entregas_config_${hoje()}.json`,JSON.stringify(cfg,null,2),"application/json");
 
 /* ---------- init ---------- */
-qualInit();
 try{localStorage.removeItem("box_skip")}catch(e){}
-renderAll();renderRP();renderEnvios();
+qualInit();renderAll();renderRP();renderEnvios();
 $("#gTo").value=cfg.mail.relatorio_para||"";
-showLast();
 loginUI();
+// abre logo com a última análise guardada, sem voltar a ler a Box
+const pronto=(async()=>{try{await migrarListagem;let root="";try{root=localStorage.getItem("box_last_root")||""}catch(e){}
+  if(root){const j=await lerListagem(root);if(j){useListing(j,true);showLast();boxMsg(`Aberta a análise guardada de “${j.pasta}” (${j.quando}): ${files.length} ficheiros e ${folders.length} pastas.`,"ok")}}
+  await carregarRef()}catch(e){console.warn(e)}})();
+textosProntos.then(()=>{if(curTab==="rel")renderReport();if(curTab==="alt")renderAlt()});
 if(window.__goBox)show("box");
 if(SES){gateState("wait");boxGet("users/me",{fields:"name,login"}).then(connected).catch(e=>gateState("login",e.message))}
 else gateState("login",window.__authErr||"");
