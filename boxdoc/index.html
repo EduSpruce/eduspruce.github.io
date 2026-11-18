@@ -169,17 +169,17 @@ button.big{width:100%;padding:13px 18px;font-size:16px}
 
 /* ---------- módulos em cartões (responsivo) ---------- */
 .mlist{display:flex;flex-direction:column;gap:10px}
-.mcard{display:grid;grid-template-columns:minmax(200px,1.3fr) minmax(220px,1.2fr) minmax(200px,1fr) 28px;grid-template-areas:"nome turma prof del" "pasta pasta pasta pasta" "docs docs docs docs";gap:8px 12px;padding:12px 14px;border:1px solid var(--line);border-left:3px solid var(--brand);border-radius:10px;background:#fff;transition:box-shadow .15s,border-color .15s}
+.mcard{display:grid;grid-template-columns:minmax(200px,1.3fr) minmax(220px,1.2fr) minmax(200px,1fr) 28px;grid-template-areas:"nome turma prof del" "pasta pasta prazo prazo" "docs docs docs docs";gap:8px 12px;padding:12px 14px;border:1px solid var(--line);border-left:3px solid var(--brand);border-radius:10px;background:#fff;transition:box-shadow .15s,border-color .15s}
 .mcard:hover{box-shadow:0 4px 14px rgba(16,24,40,.06)}
 .mcard.noprof{border-left-color:#e0a100}
 .mcard label,.mcard .f-docs{display:flex;flex-direction:column;gap:3px;min-width:0}
 .mcard label>span,.mcard .f-docs>span{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
 .mcard .chip{text-transform:none;font-size:12.5px;letter-spacing:0;color:var(--ink);font-weight:400;flex-direction:row}
-.f-nome{grid-area:nome}.f-turma{grid-area:turma}.f-prof{grid-area:prof}.f-pasta{grid-area:pasta}.f-docs{grid-area:docs}
+.f-prazo{grid-area:prazo}.f-nome{grid-area:nome}.f-turma{grid-area:turma}.f-prof{grid-area:prof}.f-pasta{grid-area:pasta}.f-docs{grid-area:docs}
 .f-del{grid-area:del;align-self:start;justify-self:end}
 .f-pasta input{font-size:13px;color:#4a5260}
-@media (max-width:1000px){.mcard{grid-template-columns:1fr 1fr 28px;grid-template-areas:"nome nome del" "turma prof prof" "pasta pasta pasta" "docs docs docs"}}
-@media (max-width:640px){.mcard{grid-template-columns:1fr 28px;grid-template-areas:"nome del" "turma turma" "prof prof" "pasta pasta" "docs docs"}}
+@media (max-width:1000px){.mcard{grid-template-columns:1fr 1fr 28px;grid-template-areas:"nome nome del" "turma prof prof" "pasta pasta prazo" "docs docs docs"}}
+@media (max-width:640px){.mcard{grid-template-columns:1fr 28px;grid-template-areas:"nome del" "turma turma" "prof prof" "pasta pasta" "prazo prazo" "docs docs"}}
 /* tabelas que viram cartões em ecrãs estreitos */
 @media (max-width:760px){
   table.rt thead{display:none}
@@ -444,6 +444,28 @@ th{font-weight:500}
 button.rm{background:#fff;color:var(--bad);border-color:#e3b4b4}button.rm:hover{background:var(--badbg);border-color:var(--bad)}
 .schl.wbg img{background:#fff;border-radius:6px;padding:2px 6px}
 @media (max-width:820px){.lgwrap{flex-direction:column}.lgprev{width:200px}.lgslot{flex-direction:column;align-items:flex-start}}
+.rt .fpb{height:26px;padding:0 9px;font-size:12px;margin-top:5px}.boxlnk{color:inherit;text-decoration:none;border-bottom:1px dashed var(--line2)}.boxlnk:hover{color:var(--brand);border-bottom-color:var(--brand)}
+/* ===================== v1.15 ===================== */
+.bcm{position:fixed;inset:0;background:rgba(10,15,26,.42);display:none;align-items:flex-start;justify-content:center;z-index:900;padding:4vh 16px;overflow:auto}
+.bcm.on{display:flex}body.bcm-open{overflow:hidden}
+.bcm-box{position:relative;background:#fff;border-radius:14px;box-shadow:0 20px 60px rgba(10,15,26,.28);width:min(1180px,100%);padding:26px 28px 30px}
+.bcm-x{position:absolute;top:12px;right:12px;font-size:22px;width:34px;height:34px;border:0;background:none;cursor:pointer;color:var(--muted)}
+.fhd{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;padding-right:30px}.fact{display:flex;gap:6px;flex-wrap:wrap}
+.fh3{margin:22px 0 4px;font-size:15px}.fgraf{width:100%;max-width:760px;height:auto;display:block}
+table.ftab{border-collapse:collapse;width:100%;font-size:13px}table.ftab th,table.ftab td{padding:6px 7px;border-bottom:1px solid #eef1f5;text-align:left;vertical-align:middle}
+.fst{text-align:center!important;width:46px;font-weight:700}.fst.ok{color:var(--ok);background:var(--okbg)}.fst.warn{color:var(--warn);background:var(--warnbg)}.fst.missing,.fst.blank{color:var(--bad);background:var(--badbg)}.fst.disp,.fst.nr{color:#9aa3b5}.fst.atr{box-shadow:inset 0 -3px 0 var(--bad)}.fst a{color:inherit;text-decoration:none}
+.fprob{margin:6px 0 0;padding-left:18px;font-size:13px;line-height:1.55}
+@media print{body.printModal>*:not(#bcModal){display:none!important}body.printModal #bcModal{position:static;display:block;background:none;padding:0}body.printModal .bcm-box{box-shadow:none;width:100%;padding:0}body.printModal .bcm-x,body.printModal .fact{display:none}}
+.palbtn{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 10px;border:1px solid var(--line2);border-radius:8px;background:#fff;color:var(--muted);font-size:13px;cursor:pointer;margin-right:10px}
+.palbtn:hover{border-color:var(--brand);color:var(--ink)}.palbtn kbd{font:11px ui-monospace,monospace;background:#f1f4f8;border:1px solid var(--line);border-radius:4px;padding:1px 5px}
+.bcpal{position:fixed;inset:0;background:rgba(10,15,26,.35);display:none;justify-content:center;align-items:flex-start;padding-top:12vh;z-index:950}.bcpal.on{display:flex}
+.bcpal-box{width:min(680px,94vw);background:#fff;border-radius:14px;box-shadow:0 24px 70px rgba(10,15,26,.32);overflow:hidden}
+.bcpal-box input{width:100%;height:54px!important;border:0!important;border-bottom:1px solid var(--line)!important;border-radius:0!important;box-shadow:none!important;font-size:16px!important;padding:0 18px!important}
+.bcpal-r{max-height:56vh;overflow:auto;padding:6px}.bcpal-i{display:grid;grid-template-columns:86px 1fr auto;gap:10px;align-items:center;padding:9px 12px;border-radius:8px;cursor:pointer}
+.bcpal-i.on,.bcpal-i:hover{background:var(--brandbg)}.bcpal-i .k{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}.bcpal-i .t{font-weight:550;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bcpal-i .s{font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:280px}
+.bcpal-f{font-size:12px;color:var(--muted);padding:8px 14px;border-top:1px solid var(--line);background:#fbfcfd}
+.unmap{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px}.unmap label{display:flex;flex-direction:column;gap:4px;font-weight:600;font-size:13px}
+@media (max-width:820px){.palbtn kbd{display:none}}
 </style>
 </head>
 <body>
@@ -475,7 +497,7 @@ button.rm{background:#fff;color:var(--bad);border-color:#e3b4b4}button.rm:hover{
     <p class="gfoot">Só leitura: a app não altera, move nem apaga nada na Box.</p>
   </div>
 </div>
-<div class="top"><a class="schl" href="https://www.episj.com" target="_blank" rel="noopener" title="Escola Profissional da Ilha de São Jorge"><img src="https://www.episj.com/wp-content/uploads/2024/05/logo_2024_2-mobile.png" alt="Escola Profissional da Ilha de São Jorge" onerror="this.parentNode.style.display='none'"></a><div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="bcgB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f5fb8"/><stop offset=".55" stop-color="#163269"/><stop offset="1" stop-color="#0c1d40"/></linearGradient><linearGradient id="bckB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5cc985"/><stop offset="1" stop-color="#2f9e57"/></linearGradient></defs><rect x="1.5" y="1.5" width="29" height="29" rx="8.5" fill="url(#bcgB)"/><path d="M1.5 12C9 8 20 7 30.5 9.5V10C20 8 9 9.5 1.5 13.5z" fill="#fff" opacity=".10"/><path d="M14.5 6.6 22 10.6 14.5 14.6 7 10.6z" fill="#fff"/><path d="M7 10.6 14.5 14.6V23.4L7 19.4z" fill="#e3ebfa"/><path d="M22 10.6 14.5 14.6V23.4L22 19.4z" fill="#b7c8ea"/><path d="M10.7 8.6 18.2 12.6" stroke="#163269" stroke-opacity=".35" stroke-width="1.1"/><circle cx="23" cy="22.6" r="6.2" fill="url(#bckB)" stroke="#0c1d40" stroke-width="1.6"/><path d="M20.2 22.7l1.9 1.9 3.8-3.9" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Box<b>Check</b></span><span class="ver" data-ver></span></div><span class="sub">Escola Profissional da Ilha de São Jorge</span><span class="grow"></span><label class="anasel" id="anaTop" style="display:none"><span>Análise</span><select id="anaSel" title="Escolha a análise guardada a usar"></select></label><span id="bg" class="bgp" style="display:none"></span><span class="undo"><button id="undoBtn" title="Anular (Ctrl+Z)" disabled>↶ Anular</button><button id="redoBtn" title="Refazer (Ctrl+Shift+Z)" disabled>↷ Refazer</button></span><span id="who" class="who" style="display:none"></span></div>
+<div class="top"><a class="schl" href="https://www.episj.com" target="_blank" rel="noopener" title="Escola Profissional da Ilha de São Jorge"><img src="https://www.episj.com/wp-content/uploads/2024/05/logo_2024_2-mobile.png" alt="Escola Profissional da Ilha de São Jorge" onerror="this.parentNode.style.display='none'"></a><div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="bcgB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f5fb8"/><stop offset=".55" stop-color="#163269"/><stop offset="1" stop-color="#0c1d40"/></linearGradient><linearGradient id="bckB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5cc985"/><stop offset="1" stop-color="#2f9e57"/></linearGradient></defs><rect x="1.5" y="1.5" width="29" height="29" rx="8.5" fill="url(#bcgB)"/><path d="M1.5 12C9 8 20 7 30.5 9.5V10C20 8 9 9.5 1.5 13.5z" fill="#fff" opacity=".10"/><path d="M14.5 6.6 22 10.6 14.5 14.6 7 10.6z" fill="#fff"/><path d="M7 10.6 14.5 14.6V23.4L7 19.4z" fill="#e3ebfa"/><path d="M22 10.6 14.5 14.6V23.4L22 19.4z" fill="#b7c8ea"/><path d="M10.7 8.6 18.2 12.6" stroke="#163269" stroke-opacity=".35" stroke-width="1.1"/><circle cx="23" cy="22.6" r="6.2" fill="url(#bckB)" stroke="#0c1d40" stroke-width="1.6"/><path d="M20.2 22.7l1.9 1.9 3.8-3.9" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Box<b>Check</b></span><span class="ver" data-ver></span></div><span class="sub">Escola Profissional da Ilha de São Jorge</span><span class="grow"></span><button class="palbtn" id="palBtn" title="Pesquisa rápida (Ctrl+K)">⌕ Procurar <kbd>Ctrl K</kbd></button><label class="anasel" id="anaTop" style="display:none"><span>Análise</span><select id="anaSel" title="Escolha a análise guardada a usar"></select></label><span id="bg" class="bgp" style="display:none"></span><span class="undo"><button id="undoBtn" title="Anular (Ctrl+Z)" disabled>↶ Anular</button><button id="redoBtn" title="Refazer (Ctrl+Shift+Z)" disabled>↷ Refazer</button></span><span id="who" class="who" style="display:none"></span></div>
 <div class="shell">
   <nav id="nav" class="side">
     <button data-t="box" class="on"><svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>Gestão Documental</button>
@@ -539,6 +561,16 @@ button.rm{background:#fff;color:var(--bad);border-color:#e3b4b4}button.rm:hover{
     <div id="grid"></div>
   </div>
 
+  <div class="card" id="untisCard">
+    <h2>Importar do Untis</h2>
+    <p class="hint">Preenche a grelha acima com quem dá cada disciplina em cada turma, a partir do horário. No Untis, use <b>Ficheiro › Importação/Exportação › Untis › Exportar ficheiros DIF</b> e escolha aqui, todos de uma vez, o <code>GPU002.TXT</code> (aulas) — ou o <code>GPU001.TXT</code> (horários) — e, se tiver, o <code>GPU003</code> (turmas), <code>GPU004</code> (professores) e <code>GPU006</code> (disciplinas), que trazem os nomes completos. Serve também o GPU002 do Planeador de Horários. As turmas, disciplinas e professores são ligados aos da BoxCheck pelo código, número ou nome; o que não for reconhecido pode ligar à mão (fica memorizado para a próxima vez). Nada é alterado antes de carregar em <b>Aplicar</b>, e pode anular.</p>
+    <div class="row"><label class="b" style="cursor:pointer">Escolher ficheiros GPU…<input type="file" id="unFiles" multiple accept=".txt,.csv,.TXT" style="display:none"></label><span id="unMsg" class="hint" style="margin:0"></span></div>
+    <details style="margin-top:10px"><summary class="hint" style="cursor:pointer;margin:0">Em vez de ficheiros, colar uma lista <code>turma; disciplina; formador</code></summary>
+      <textarea id="unPaste" style="margin-top:8px" placeholder="A04&#9;Matemática&#9;Ana Silva&#10;A04&#9;1544&#9;Bruno Medeiros"></textarea>
+      <div class="row" style="margin-top:8px"><button class="b s" id="unPasteGo">Ler a lista</button></div></details>
+    <div id="unPrev"></div>
+  </div>
+
   <div class="card">
     <h2>Catálogo Nacional de Qualificações</h2>
     <p class="hint">Procura o curso de cada turma (<code>A04 - Mecatrónica Automóvel (25/28)</code> → “Técnico/a de Mecatrónica Automóvel”) em <a href="https://catalogo.snq.gov.pt/" target="_blank" rel="noopener">catalogo.snq.gov.pt</a>, escolhe a versão do referencial em vigor quando a turma começou e traz a lista oficial de <b>UFCD</b> ou <b>UC</b> com as designações. Mostra também as que ainda não têm pasta na Box. Se o curso escolhido não for o certo, troque-o na lista de cada turma.</p>
@@ -553,6 +585,8 @@ button.rm{background:#fff;color:var(--bad);border-color:#e3b4b4}button.rm:hover{
       <label class="grow">Filtrar módulos<input type="text" id="modFilter" placeholder="ex.: A01 Matemática  ·  !prof = sem formador  ·  !exc = exceções"></label>
       <label style="min-width:220px">Mudar o formador dos filtrados<select id="bulkProf"></select></label>
       <button class="b s" id="bulkAssign" style="align-self:flex-end">Aplicar</button>
+      <label style="width:170px">Prazo dos filtrados<input type="date" id="bulkPrazo"></label>
+      <button class="b s" id="bulkPrazoGo" style="align-self:flex-end" title="Define (ou, vazio, apaga) o prazo de entrega de todos os módulos filtrados">Definir prazo</button>
     </div>
     <div id="tbMods" class="mlist"></div>
     <div class="row" style="margin-top:10px">
@@ -681,7 +715,7 @@ button.rm{background:#fff;color:var(--bad);border-color:#e3b4b4}button.rm:hover{
   <div class="card">
     <div class="row">
       <label class="grow">Formador<select id="fProf"></select></label>
-      <label class="grow">Mostrar<select id="fShow"><option value="falta">Só o que falta</option><option value="aviso">O que falta e o que é suspeito</option><option value="desde">Entregue desde o último envio</option><option value="tudo">Tudo (entregue e em falta)</option></select></label>
+      <label class="grow">Mostrar<select id="fShow"><option value="falta">Só o que falta</option><option value="aviso">O que falta e o que é suspeito</option><option value="desde">Entregue desde o último envio</option><option value="tudo">Tudo (entregue e em falta)</option><option value="atraso">Com o prazo ultrapassado</option><option value="errada">Talvez na pasta errada</option><option value="disp">Dispensados (não se aplica)</option></select></label>
       <label class="grow">Procurar módulo/turma<input type="text" id="fTxt" placeholder="ex.: 10A"></label>
     </div>
     <div class="row" style="margin-top:10px">
@@ -752,7 +786,7 @@ button.rm{background:#fff;color:var(--bad);border-color:#e3b4b4}button.rm:hover{
 <section id="env">
   <div class="card">
     <h2>Emails aos formadores</h2>
-    <p class="hint">Campos do modelo: <code>{primeiro_nome}</code> <code>{nome}</code> <code>{ano}</code> <code>{prazo}</code> <code>{total}</code> <code>{lista}</code>.</p>
+    <p class="hint">Campos do modelo: <code>{primeiro_nome}</code> <code>{nome}</code> <code>{ano}</code> <code>{prazo}</code> <code>{total}</code> <code>{lista}</code> <code>{pagina}</code> (endereço da página do formador — só aparece depois de ligar os envios automáticos em Definições; sem ele, a linha é retirada). Nos emails enviados pelo Office 365, cada item da lista leva o link para a pasta na Box; nos PDF, a localização é clicável.</p>
     <div class="row">
       <label class="grow">Assunto<input type="text" id="mSubj"></label>
       <label style="width:150px">Ano letivo<input type="text" id="mAno" placeholder="2025/2026"></label>
@@ -784,6 +818,11 @@ button.rm{background:#fff;color:var(--bad);border-color:#e3b4b4}button.rm:hover{
       <button class="b" id="gSend" style="align-self:flex-end">Enviar com PDF (Office 365)</button><a class="b s" id="gMail" style="text-decoration:none;align-self:flex-end" href="#">Abrir no email</a>
     </div>
     <div class="mailbox" id="geralPrev" style="max-height:260px;overflow:auto"></div>
+  </div>
+  <div class="card">
+    <h2>Dossiê para auditoria e balanço do ano</h2>
+    <p class="hint"><b>Dossiê técnico-pedagógico</b> (EQAVET / IGEC): PDF com capa, índice clicável, resumo por turma, por tipo de documento e por formador, uma página por turma com o estado de cada documento de cada módulo, e anexos com os documentos dispensados (e o motivo) e os que estão a confirmar.<br><b>Balanço do ano letivo</b>: números principais, gráficos por turma, por tipo de documento e por mês, cumprimento por formador (incluindo entregas fora do prazo), efeito dos lembretes e comparação com outros anos analisados.</p>
+    <div class="row"><button class="b" id="dosGo">Dossiê para auditoria (PDF)</button><button class="b s" id="balGo">Balanço do ano letivo (PDF)</button></div>
   </div>
   <div class="card">
     <h2>Mensagens individuais</h2>
@@ -834,6 +873,41 @@ button.rm{background:#fff;color:var(--bad);border-color:#e3b4b4}button.rm:hover{
         <li>Volte aqui e clique em <b>Entrar com a conta Microsoft</b>.</li>
       </ol></details>
   </div>
+  <div class="card" id="autoCard">
+    <h2>Envios automáticos e página do formador</h2>
+    <p class="hint">Um pequeno serviço na sua conta Cloudflare (<code>boxcheck-auto</code>) guarda o último relatório e: <b>1)</b> nos dias e à hora escolhidos, envia sozinho os emails aos formadores com o PDF em anexo (e, se quiser, o relatório geral), pelo Office 365 da escola, sem abrir a BoxCheck; <b>2)</b> dá a cada formador uma <b>página só de leitura</b>, num endereço secreto, com o que lhe falta e o link para cada pasta da Box. O serviço não tem acesso à Box: só recebe o relatório que a BoxCheck publica depois de cada análise. Se o relatório tiver mais dias do que o limite, não envia lembretes e avisa-o.</p>
+    <div class="row"><label class="grow">Endereço do serviço de envios<input type="text" id="auUrl" placeholder="https://boxcheck-auto.joel-cunha83.workers.dev" spellcheck="false"></label><button class="b s" id="auTest" style="align-self:flex-end">Verificar ligação</button></div>
+    <div class="row" style="margin-top:12px;align-items:flex-end">
+      <label class="chip" style="align-self:flex-end"><input type="checkbox" id="auOn"> <b>Ligar os envios automáticos</b></label>
+      <div><span class="hint" style="margin:0 0 4px;display:block">Dias</span><div class="chips" id="auDias"></div></div>
+      <label style="width:110px">Hora<input type="time" id="auHora"></label>
+      <label style="width:190px">Não enviar se a análise tiver mais de (dias)<input type="number" id="auIdade" min="1" max="60"></label>
+      <label style="width:170px">Parar depois de <span class="hint">(opcional)</span><input type="date" id="auFim"></label>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <label class="chip"><input type="checkbox" id="auF"> enviar a cada formador o que lhe falta, com PDF</label>
+      <label class="chip"><input type="checkbox" id="auG"> enviar o relatório geral para <span id="auGto" style="margin-left:4px;font-weight:600"></span></label>
+      <label class="chip"><input type="checkbox" id="auPubAuto"> publicar sozinho depois de cada análise da Box</label>
+    </div>
+    <div class="row" style="margin-top:10px"><label class="grow">Avisar quando os lembretes não forem enviados (relatório antigo) <span class="hint">(por omissão, a sua conta Box)</span><input type="text" id="auAvisar" placeholder="ex.: direcao@episj.com"></label></div>
+    <div class="row" style="margin-top:12px"><button class="b" id="auPub">Publicar agora</button><button class="b s" id="auSendNow">Enviar agora a todos</button><button class="b s" id="auMail">Email de teste</button><button class="b s" id="auCopy">Copiar o código do serviço</button></div>
+    <p class="hint" id="auPage" style="margin:10px 0 0"></p>
+    <div id="auMsg" style="margin-top:10px"></div><div id="auState"></div>
+    <details style="margin-top:14px"><summary class="hint" style="cursor:pointer;margin:0"><b>Como criar o serviço (uma vez, cerca de 15 minutos)</b></summary>
+      <ol class="hint" style="line-height:1.65;margin-top:8px">
+        <li><b>Office 365</b> — em <a href="https://entra.microsoft.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade" target="_blank" rel="noopener">entra.microsoft.com › Registos de aplicações</a>, abra a aplicação <code>BoxCheck</code>:
+          <br>• <b>Permissões de API › Adicionar uma permissão › Microsoft Graph › Permissões de aplicação</b> › <code>Mail.Send</code> › <b>Conceder consentimento de administrador</b>;
+          <br>• <b>Certificados e segredos › Novo segredo do cliente</b> (validade 24 meses) e copie o <b>Valor</b>.
+          <br>Recomendado: limite a aplicação à caixa de onde saem os emails, no PowerShell do Exchange Online: <code>New-ApplicationAccessPolicy -AppId &lt;ID da aplicação&gt; -PolicyScopeGroupId direcao@episj.com -AccessRight RestrictAccess -Description "BoxCheck"</code></li>
+        <li><b>Cloudflare</b> — em <a href="https://dash.cloudflare.com/?to=/:account/workers-and-pages" target="_blank" rel="noopener">dash.cloudflare.com › Workers e Pages</a>: <b>Criar › Worker</b>, nome <code>boxcheck-auto</code>, <b>Implementar</b>. Depois <b>Editar código</b>, apague tudo, cole o código (botão <b>Copiar o código do serviço</b> acima) e <b>Implementar</b>.</li>
+        <li>No serviço, separador <b>Definições</b>:
+          <br>• <b>Associações › Adicionar › Espaço de nomes KV</b>: nome da variável <code>BOXCHECK</code>, espaço <code>boxcheck</code>;
+          <br>• <b>Variáveis e segredos</b>: <code>ADMINS</code> = o email com que entra na Box · <code>MS_TENANT</code> = <code>episj.com</code> · <code>MS_CLIENT_ID</code> = ID da aplicação · <code>MS_FROM</code> = caixa de onde saem os emails · <code>ORIGIN</code> = <code>https://eduspruce.github.io</code> · <code>MS_SECRET</code> = o valor do segredo (tipo <b>Segredo</b>);
+          <br>• <b>Acionadores › Acionadores Cron › Adicionar</b>: <code>0,15,30,45 * * * *</code>.</li>
+        <li>Copie o endereço do serviço (ex.: <code>https://boxcheck-auto.joel-cunha83.workers.dev</code>) para o campo acima, carregue em <b>Verificar ligação</b>, depois em <b>Email de teste</b> e, por fim, em <b>Publicar agora</b>.</li>
+      </ol>
+      <p class="hint">No modelo do email (em Enviar) pode usar <code>{pagina}</code> para pôr o endereço da página do formador onde quiser; se não o usar, os emails automáticos acrescentam-no no fim.</p></details>
+  </div>
   <div class="card">
     <h2>Disposição dos quadros</h2>
     <p class="hint">Todos os quadros podem ser arrastados pela pega <b>⋮⋮</b> que aparece no canto quando passa o rato por cima. Em ecrãs largos (a partir de cerca de 2050 píxeis) há uma segunda coluna à direita (por exemplo, a lista do Relatório); em ecrãs estreitos fica tudo numa coluna. A disposição fica guardada neste navegador.</p>
@@ -865,7 +939,7 @@ button.rm{background:#fff;color:var(--bad);border-color:#e3b4b4}button.rm:hover{
 <script>
 (function(){
 "use strict";
-const VERSAO="1.14"; // versão do BoxCheck — sobe a cada alteração publicada
+const VERSAO="1.15"; // versão do BoxCheck — sobe a cada alteração publicada
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 const $=s=>document.querySelector(s);
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -1080,7 +1154,7 @@ let curTab="box";
 $("#nav").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;show(b.dataset.t)});
 function show(t){curTab=t;document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
   document.querySelectorAll("main>section").forEach(s=>s.classList.toggle("on",s.id===t));
-  if(t==="rel")renderReport(); if(t==="est")renderEst(); if(t==="pas")renderTree(); if(t==="alt")renderAlt(); if(t==="rel"||t==="alt")verificarFundo(); if(t==="env")renderSend(); if(t==="def")renderDef(); if(t==="cop"){$("#cfgTxt").value=JSON.stringify(cfg,null,2);renderRP()}}
+  if(t==="rel")renderReport(); if(t==="est")renderEst(); if(t==="pas")renderTree(); if(t==="alt")renderAlt(); if(t==="rel"||t==="alt")verificarFundo(); if(t==="env")renderSend(); if(t==="def"){renderDef();renderAuto()} if(t==="cop"){$("#cfgTxt").value=JSON.stringify(cfg,null,2);renderRP()}}
 function refreshAll(){renderAll();if(curTab==="rel")renderReport();if(curTab==="est")renderEst();if(curTab==="env")renderSend();if(curTab==="pas")renderTree();if(curTab==="alt")renderAlt();if(curTab==="cop"){$("#cfgTxt").value=JSON.stringify(cfg,null,2);renderRP()}}
 const debounce=(fn,ms)=>{let h;return()=>{clearTimeout(h);h=setTimeout(fn,ms)}};
 
@@ -1112,7 +1186,7 @@ function renderProfs(){
    <td><input type="text" data-k="nome" value="${esc(p.nome)}"></td>
    <td><input type="email" data-k="email" value="${esc(p.email)}"></td>
    <td class="hm" style="color:var(--muted)">${cnt[p.id]||0}</td>
-   <td><button class="x" title="Remover" data-del>×</button></td></tr>`).join("")||`<tr><td colspan="5" class="hint">${cfg.profs.length?"Ninguém corresponde à procura.":"Ainda sem formadores — adicione no formulário acima ou cole uma lista abaixo."}</td></tr>`;
+   <td style="white-space:nowrap"><button class="b s" data-pficha style="height:28px;padding:0 10px" title="Ficha do formador">Ficha</button> <button class="x" title="Remover" data-del>×</button></td></tr>`).join("")||`<tr><td colspan="5" class="hint">${cfg.profs.length?"Ninguém corresponde à procura.":"Ainda sem formadores — adicione no formulário acima ou cole uma lista abaixo."}</td></tr>`;
 }
 $("#tbProfs").addEventListener("input",e=>{const tr=e.target.closest("tr");const p=cfg.profs.find(x=>x.id===tr.dataset.id);p[e.target.dataset.k]=e.target.value;save();if(e.target.dataset.k==="nome")nomesMudaram()});
 const nomesMudaram=debounce(()=>{renderMods();renderGrid()},300);
@@ -1220,6 +1294,7 @@ function renderMods(){
    <label class="f-prof"><span>Formador</span><select data-k="profId"><option value="">↩ segue a grelha${g?` (${esc(profName(g))})`:" (sem formador)"}</option>${m.profId?po.replace(`value="${m.profId}" `,`value="${m.profId}" selected `):po}</select></label>
    <button class="x f-del" title="Remover módulo" data-del>×</button>
    <label class="f-pasta"><span>Designação</span><input type="text" data-des value="${esc(desigOf(m))}" placeholder="ex.: Probabilidade"></label>
+   <label class="f-prazo"><span>Prazo de entrega${m.prazo?"":` <span style="text-transform:none;font-weight:400">· ${cfg.mail.prazo?"geral: "+esc(cfg.mail.prazo):"sem prazo"}</span>`}</span><input type="date" data-k="prazo" value="${esc(m.prazo||"")}"></label>
    <div class="f-docs"><span>Documentos exigidos · pastas: ${esc(m.pasta)}</span><div class="chips">${cfg.docTypes.map(d=>{const on=m.docs.includes(d.id);return `<label class="chip ${on?"on":""}"><input type="checkbox" data-doc="${d.id}" ${on?"checked":""}>${esc(d.nome)}</label>`}).join("")}</div></div>
   </div>`}).join("")+(vis.length>300?`<p class="hint">A mostrar 300 de ${vis.length}. Use o filtro para ver os restantes.</p>`:"")||`<p class="hint">${atv.length?"Nenhum módulo corresponde ao filtro.":"Ainda sem módulos nesta análise."}</p>`;
 }
@@ -1229,6 +1304,9 @@ $("#bulkAssign").onclick=()=>{const pid=$("#bulkProf").value;if(!pid){toast("Esc
   ponto(`Antes de mudar o formador de ${vis.length} módulo(s)`);
   vis.forEach(m=>{m.profId=pid==="__grid"?"":(pid===gridGet(m)?"":pid)});save();renderAll();
   toast(pid==="__grid"?`${vis.length} módulo(s) voltaram a seguir a grelha`:`${vis.length} módulo(s) mudados`)};
+$("#bulkPrazoGo").onclick=()=>{const v=$("#bulkPrazo").value,vis=ativos().filter(modVisible);if(!vis.length)return;
+  ponto(`Antes de mudar o prazo de ${vis.length} módulo(s)`);vis.forEach(m=>{if(v)m.prazo=v;else delete m.prazo});save();renderMods();
+  toast(v?`Prazo ${dataPT(isoData(v))} definido em ${vis.length} módulo(s)`:`Prazo apagado em ${vis.length} módulo(s) — vale o prazo geral`)};
 const modId=m=>(m.ano||"")+"|"+norm(m.turma)+"|"+discCode(m.disc)+"|"+modKey(m.cod);
 function detetar(){
   // só procura módulos nas secções usadas pelos documentos exigidos (ex.: 006, 007, 008, 012); ignora as pastas dos formandos
@@ -1531,6 +1609,36 @@ function qualOf(f,slot,X){
   if(X.inicio&&f.cmod&&f.cmod.slice(0,10)<X.inicio)W.push(`última edição em ${f.cmod.slice(5,7)}/${f.cmod.slice(0,4)}, antes do ano letivo`);
   return W.length?{lvl:"warn",txt:W.slice(0,3).join("; ")}:null;
 }
+/* ---------- v1.15: prazo de cada módulo, ficheiros na pasta errada e links para a Box ---------- */
+// prazo do módulo (aaaa-mm-dd, definido em Atribuições); sem prazo próprio vale o prazo geral de Enviar
+const isoData=v=>{const m=String(v||"").match(/^(\d{4})-(\d\d)-(\d\d)$/);return m?new Date(+m[1],+m[2]-1,+m[3]).getTime():null};
+const prazoDe=m=>isoData(m&&m.prazo)||prazoData();
+// palavras que identificam cada tipo de documento pelo nome do ficheiro (ex.: "planif", "matriz", "enunci")
+const DT_STOP=new Set(["avaliacao","documento","documentos","modulo","outros","diversos","ficha","fichas"]);
+const dtHints=T=>T._h||(T._h=[...new Set([...norm(T.d.nome).replace(/[^a-z0-9 ]/g," ").split(" ").filter(w=>w.length>=5&&!DT_STOP.has(w)).map(w=>w.slice(0,w.length>=7?6:5)),...T.kws])]);
+const temHint=(f,T)=>dtHints(T).some(h=>f.nname.includes(h));
+// documento em falta: há no mesmo módulo, noutra secção/subpasta, um ficheiro com nome deste tipo de documento?
+function pastaErrada(e,T,slot,X){if(!T.sub.length||!dtHints(T).length)return[];const out=[];
+  for(const f of e.modFiles||[]){if(allIn(f.comps,T.sub)||!temHint(f,T))continue;
+    const dono=(e.slots||[]).find(s=>s.T!==T&&s.T.sub.length&&allIn(f.comps,s.T.sub));
+    if(dono&&temHint(f,dono.T))continue; // o nome também serve para o documento da pasta onde está
+    out.push({f,onde:f.rawDir.split("/").slice(-3).join(" > ")});if(out.length>=3)break}
+  return out}
+// id de cada pasta da última análise (caminho → id), para abrir a pasta certa na Box
+let _fidL=null,_fidM=new Map();
+function folderIds(){if(_fidL===lastListing)return _fidM;_fidL=lastListing;_fidM=new Map();
+  if(lastListing)for(const x of lastListing.itens||[])if(x.type==="folder"&&x.id)_fidM.set(x.path.split("/").map(s=>s.trim()).filter(Boolean).join("/"),x.id);
+  return _fidM}
+const boxFolderUrl=id=>id?"https://app.box.com/folder/"+id:"";
+const boxFileUrl=f=>f&&f.fid?"https://app.box.com/file/"+f.fid:"";
+// pasta onde o documento devia estar: a mais funda que exista (subpasta › secção › módulo)
+function linkPasta(e,sub,idx){const F=e.modFolders||[];if(!F.length)return"";const M=folderIds();
+  const by=(arr,longest)=>arr.slice().sort((a,b)=>longest?b.n.length-a.n.length:a.n.length-b.n.length);
+  let c=sub.length?by(F.filter(f=>allIn(f.n,sub)),false):[];
+  if(!c.length&&sub.length)c=by(F.filter(f=>allIn(f.n,[sub[0]])),false);
+  if(!c.length&&sub.length){const up=segs(e.mod.pasta).slice(0,-1);if(up.length)c=by(idx.pick(up,"folders").filter(f=>allIn(f.n,[sub[0]])),false)} // a pasta do módulo não existe: abre a da disciplina nessa secção
+  if(!c.length&&!sub.length)c=by(F,false);
+  for(const r of c){const id=M.get(r.r.join("/"));if(id)return boxFolderUrl(id)}return""}
 function evalCore(idx,mods){
   const out=[];
   const ref=lastEnvio(),refSet=ref?new Set(Object.values(ref.miss).flat()):null;
@@ -1548,7 +1656,7 @@ function evalCore(idx,mods){
       const slot={m,T,hits,sg:sgm+did};
       for(const f of hits)if(!slotOf.has(f))slotOf.set(f,slot);
       slots.push(slot)}
-    out.push({mod:m,slots,modFolders,nFiles:modFiles.length,folder:ms.join(" / ")});
+    out.push({mod:m,slots,modFolders,modFiles,nFiles:modFiles.length,folder:ms.join(" / ")});
   }
   const ck=cfgEvalKey();if(MENTK!==ck){MENT=new Map();MENTK=ck}
   const X=qualCtx(idx,slotOf,mods);
@@ -1575,13 +1683,18 @@ function evalCore(idx,mods){
       if(ref){const was=refSet.has(key);
         if(state==="ok"||state==="warn"){if(was)seg="entregue desde o envio de "+dataPT(ref.t)}
         else seg=was?"pedido a "+dataPT(ref.t)+" — continua em falta":"novo (não constava do envio de "+dataPT(ref.t)+")"}
-      return{doc:d,key,ok:state==="ok"||state==="warn",state,reasons,hits:slot.hits,q,loc,falta:d.nome,pastaObs,seg,since:!!(ref&&seg.startsWith("entregue desde"))}});
-    delete e.slots;delete e.modFolders}
+      const ok=state==="ok"||state==="warn",prazo=prazoDe(m),atraso=!ok&&prazo&&Date.now()>prazo+864e5-1?Math.floor((Date.now()-prazo)/864e5):0;
+      const errada=ok?[]:pastaErrada(e,T,slot,X);
+      return{doc:d,key,ok,state,reasons,hits:slot.hits,q,loc,falta:d.nome,pastaObs,seg,since:!!(ref&&seg.startsWith("entregue desde")),prazo,atraso,errada,link:linkPasta(e,sub,idx)}});
+    // documentos dispensados (não se aplica): saem das contas e ficam à parte
+    const D=cfg.disp||{};e.disp=[];
+    if(Object.keys(D).length){const all=D[m.id+"|*"];e.items=e.items.filter(i=>{const x=D[i.key]||all;if(!x)return true;e.disp.push({...i,disp:x});return false})}
+    delete e.slots;delete e.modFolders;delete e.modFiles}
   return out;
 }
 // o resultado fica guardado enquanto nada mudar (ficheiros, textos lidos, módulos, documentos exigidos, opções)
 let EV=null,EVK=null,_ekRev=-1,_ek="",QF=null;
-function cfgEvalKey(){if(_ekRev!==cfgRev){_ek=JSON.stringify([cfg.docTypes,cfg.mods,cfg.desig,cfg.qual,(cfg.envios||[]).map(v=>v.id),cfg.fp||{}]);_ekRev=cfgRev}return _ek}
+function cfgEvalKey(){if(_ekRev!==cfgRev){_ek=JSON.stringify([cfg.docTypes,cfg.mods,cfg.desig,cfg.qual,(cfg.envios||[]).map(v=>v.id),cfg.fp||{},cfg.disp||{},cfg.mail.prazo,new Date().toDateString()]);_ekRev=cfgRev}return _ek}
 function evaluate(){const idx=getIdx(),ck=cfgEvalKey(),k=filesRev+"|"+txRev+"|"+refRev+"|"+tplRev;
   if(EV&&EVK&&EVK.k===k&&EVK.ck===ck)return EV;
   EV=evalCore(idx,ativos());EVK={k,ck};QF=null;return EV}
@@ -1595,7 +1708,7 @@ function byTeacher(ev){
   arr.sort((a,b)=>b.miss-a.miss||a.p.nome.localeCompare(b.p.nome,"pt"));return arr;
 }
 const motivoBad=i=>{const x=(i.q||[]).find(x=>x.q&&x.q.lvl==="bad");return x?x.q.txt:"sem conteúdo válido"};
-const obsOf=i=>[i.state==="blank"?"o ficheiro entregue não conta: "+i.reasons.join("; "):"",i.pastaObs,i.state==="warn"?"a confirmar: "+i.reasons.join("; "):"",i.seg].filter(Boolean).join(" · ");
+const obsOf=(i,semErrada)=>[i.state==="blank"?"o ficheiro entregue não conta: "+i.reasons.join("; "):"",i.pastaObs,!semErrada&&(i.errada||[]).length?"talvez esteja na pasta errada: "+i.errada.slice(0,2).map(x=>`«${x.f.name}» em ${x.onde}`).join("; "):"",i.state==="warn"?"a confirmar: "+i.reasons.join("; "):"",i.atraso?`prazo ${dataPT(i.prazo)} ultrapassado há ${i.atraso} dia${i.atraso===1?"":"s"}`:"",i.seg].filter(Boolean).join(" · ");
 const ESTADO={ok:"Entregue",warn:"Entregue — a confirmar",blank:"Entregue, mas não conta (vazio ou falso)",missing:"Em falta"};
 
 /* linhas no formato do Excel da escola */
@@ -1603,6 +1716,10 @@ function rowsFor(t,onlyMissing){const r=[];
   for(const e of t.list)for(const i of e.items){if(onlyMissing&&i.ok)continue;
     r.push({turma:e.mod.turma,disc:e.mod.disc,mod:modTitle(e.mod),loc:i.loc,falta:i.falta,obs:obsOf(i),state:i.state,item:i,e})}
   return r;}
+
+// documentos dispensados de um formador, no mesmo formato das linhas do relatório
+function rowsDisp(t){const r=[];for(const e of t.list)for(const i of e.disp||[]){const k=cfg.disp[i.key]?i.key:e.mod.id+"|*";
+    r.push({turma:e.mod.turma,disc:e.mod.disc,mod:modTitle(e.mod),loc:i.loc,falta:i.falta,obs:"",state:"ok",item:{...i,disp:{...i.disp,k}},e})}return r}
 
 /* ---------- envios registados (acompanhamento) ---------- */
 // último envio registado para o(s) ano(s) letivo(s) da análise carregada
@@ -1625,7 +1742,13 @@ function fpBtns(i){const fl=(i.q||[]).filter(x=>x.q),mk=(i.q||[]).filter(x=>x.fp
   if(fl.length&&(i.state==="warn"||i.state==="blank"))h+=`<br><button class="b s fpb" data-on="1" data-k="${esc(JSON.stringify(fl.map(x=>fpKey(x.f))))}" data-t="${esc(fl.map(x=>x.f.name+": "+x.q.txt).join("; "))}">Falso positivo — conta como entregue</button>`;
   if(mk.length)h+=`<br><span class="hint" style="margin:0">Assinalado como falso positivo: ${esc(mk.map(x=>x.f.name+" ("+x.fp+")").join("; "))}</span> <button class="b s fpb" data-on="0" data-k="${esc(JSON.stringify(mk.map(x=>fpKey(x.f))))}">Anular</button>`;
   return h}
-$("#report").addEventListener("click",e=>{const b=e.target.closest(".fpb");if(!b)return;marcarFP(JSON.parse(b.dataset.k),b.dataset.on==="1",b.dataset.t)});
+$("#report").addEventListener("click",e=>{
+  const d=e.target.closest("[data-disp],[data-undisp]");
+  if(d){if(d.dataset.disp){const k=d.dataset.disp,mod=k.endsWith("|*");const mo=prompt(mod?"Nenhum documento deste módulo se aplica. Motivo (fica registado no dossiê):":"Este documento não se aplica a este módulo. Motivo (fica registado no dossiê):",mod?"Módulo não lecionado neste ano letivo":"");if(mo===null)return;
+      cfg.disp=cfg.disp||{};cfg.disp[k]={motivo:mo.trim(),t:Date.now()};save();renderReport();toast(mod?"Módulo dispensado — deixa de contar (pode anular)":"Documento dispensado — deixa de contar (pode anular)")}
+    else{delete (cfg.disp||{})[d.dataset.undisp];save();renderReport();toast("Reposto — volta a contar")}return}
+  const f=e.target.closest("[data-ficha]");if(f){abrirFicha(f.dataset.ficha);return}
+  const b=e.target.closest(".fpb");if(!b||!b.dataset.k)return;marcarFP(JSON.parse(b.dataset.k),b.dataset.on==="1",b.dataset.t)});
 function renderReport(){
   const ev=evaluate(),T=byTeacher(ev);
   const fp=$("#fProf").value;
@@ -1633,6 +1756,7 @@ function renderReport(){
   const tot=T.reduce((a,t)=>a+t.tot,0),ok=T.reduce((a,t)=>a+t.ok,0),profsMiss=T.filter(t=>t.miss>0&&t.p.id!=="_").length;
   const all=ev.flatMap(e=>e.items);
   const nBlank=all.filter(i=>i.state==="blank").length,nWarn=all.filter(i=>i.state==="warn").length,nSince=all.filter(i=>i.since).length;
+  const nAtr=all.filter(i=>i.atraso).length,nErr=all.filter(i=>(i.errada||[]).length).length,nDisp=ev.reduce((a,e)=>a+(e.disp||[]).length,0);
   const ref=lastEnvio();
   const pct=tot?Math.round(ok/tot*100):0;
   $("#tiles").innerHTML=`
@@ -1640,7 +1764,10 @@ function renderReport(){
    <div class="tile"><div class="v" style="color:var(--bad)">${tot-ok}</div><div class="l">itens em falta</div></div>
    <div class="tile"><div class="v">${profsMiss}</div><div class="l">formadores com falhas</div></div>
    ${ref?`<div class="tile"><div class="v" style="color:var(--ok)">${nSince}</div><div class="l">entregues desde o envio de ${dataPT(ref.t)}</div></div>`:""}
-   <div class="tile"><div class="v" style="color:#b26a00">${nBlank+nWarn}</div><div class="l">em branco (${nBlank}) ou a confirmar (${nWarn})</div></div>`;countUp($("#tiles"));
+   <div class="tile"><div class="v" style="color:#b26a00">${nBlank+nWarn}</div><div class="l">em branco (${nBlank}) ou a confirmar (${nWarn})</div></div>
+   ${nAtr?`<div class="tile"><div class="v" style="color:var(--bad)">${nAtr}</div><div class="l">com o prazo ultrapassado</div></div>`:""}
+   ${nErr?`<div class="tile"><div class="v" style="color:#b26a00">${nErr}</div><div class="l">talvez na pasta errada</div></div>`:""}
+   ${nDisp?`<div class="tile"><div class="v" style="color:var(--muted)">${nDisp}</div><div class="l">dispensados (não se aplica)</div></div>`:""}`;countUp($("#tiles"));
   const w=[];
   if(!files.length)w.push(["info","Ainda não carregou a listagem da Box (em Gestão Documental). Sem ela, tudo aparece em falta."]);
   const atv=ativos(),noprof=atv.filter(m=>!profOf(m)).length;if(noprof)w.push(["warn",`${noprof} módulo(s) sem formador atribuído — veja a grelha em Atribuições.`]);
@@ -1649,17 +1776,17 @@ function renderReport(){
   const nfp=Object.keys(cfg.fp||{}).length;if(nfp)w.push(["info",`${nfp} documento(s) assinalados como falso positivo contam como entregues. Para anular, mostre “Tudo” e carregue em “Anular” na linha. Se o formador substituir o ficheiro, a verificação volta a ser feita.`]);
   $("#warns").innerHTML=w.map(([k,t])=>`<div class="msg ${k==="warn"?"bad":"info"}">${esc(t)}</div>`).join("");
   const mode=$("#fShow").value,q=norm($("#fTxt").value),sf=$("#chkFiles").checked;
-  const show=i=>mode==="tudo"||(mode==="desde"?i.since:(!i.ok||(mode==="aviso"&&i.state==="warn")));
+  const show=i=>mode==="tudo"||mode==="disp"||(mode==="desde"?i.since:mode==="atraso"?i.atraso>0:mode==="errada"?(i.errada||[]).length>0:(!i.ok||(mode==="aviso"&&i.state==="warn")));
   let html="";
   for(const t of T){ if(fp&&t.p.id!==fp)continue;
-    const rows=rowsFor(t,false).filter(r=>show(r.item)&&(!q||norm(r.turma+" "+r.disc+" "+r.mod+" "+r.loc).includes(q)));
+    const rows=(mode==="disp"?rowsDisp(t):rowsFor(t,false)).filter(r=>show(r.item)&&(!q||norm(r.turma+" "+r.disc+" "+r.mod+" "+r.loc).includes(q)));
     if(!rows.length)continue;
     const pc=t.tot?Math.round(t.ok/t.tot*100):100;
     html+=`<div class="prof"><div class="hd"><b>${esc(t.p.nome)}</b>${t.p.cod?`<span class="tag" style="background:#eef1f5;color:#4a5260">${esc(t.p.cod)}</span>`:""}<span class="hint" style="margin:0">${esc(t.p.email)}</span><span class="grow"></span>
       <div class="bar"><i style="width:${pc}%"></i></div><span>${t.ok}/${t.tot}</span>
-      ${t.miss?`<span class="tag bad">${t.miss} em falta</span>`:`<span class="tag ok">completo</span>`}${t.miss&&t.p.id!=="_"?`<button class="b s pdfb" data-rpdf="${t.p.id}" title="Exportar em PDF o que este formador tem em falta">PDF</button>`:""}</div>
+      ${t.miss?`<span class="tag bad">${t.miss} em falta</span>`:`<span class="tag ok">completo</span>`}${t.p.id!=="_"?`<button class="b s pdfb" data-ficha="${t.p.id}" title="Ficha do formador: progresso, entregas ao longo do tempo e lembretes">Ficha</button>`:""}${t.miss&&t.p.id!=="_"?`<button class="b s pdfb" data-rpdf="${t.p.id}" title="Exportar em PDF o que este formador tem em falta">PDF</button>`:""}</div>
       <div style="padding:4px 12px 10px;overflow-x:auto"><table class="rtab rt"><thead><tr><th>Turma</th><th>Disciplina</th><th>Módulo/UFCD</th><th>Localização na Box</th><th>O que está em falta</th><th>Observações</th></tr></thead><tbody>
-      ${rows.map(r=>`<tr class="s-${r.state}"><td>${esc(r.turma)}</td><td>${esc(r.disc)}</td><td>${esc(r.mod)}</td><td>${esc(r.loc)}</td><td class="f">${{ok:"✓",warn:"⚠",blank:"✗",missing:"✗"}[r.state]} ${esc(r.falta)}</td><td class="o">${esc(r.obs||(r.state==="ok"?"entregue":""))}${sf&&r.item.hits.length?`<br><b>Ficheiros:</b> ${r.item.hits.map(h=>esc(h.name)).join(", ")}`:""}${fpBtns(r.item)}</td></tr>`).join("")}
+      ${rows.map(r=>`<tr class="s-${r.state}"><td>${esc(r.turma)}</td><td>${esc(r.disc)}</td><td>${esc(r.mod)}</td><td>${r.item.link?`<a href="${r.item.link}" target="_blank" rel="noopener" class="boxlnk" title="Abrir esta pasta na Box">${esc(r.loc)} ↗</a>`:esc(r.loc)}</td><td class="f">${r.item.disp?"–":{ok:"✓",warn:"⚠",blank:"✗",missing:"✗"}[r.state]} ${esc(r.falta)}</td><td class="o">${r.item.disp?`Não se aplica${r.item.disp.motivo?": "+esc(r.item.disp.motivo):""} <span class="hint" style="margin:0">(${dataPT(r.item.disp.t)})</span><br><button class="b s fpb" data-undisp="${esc(r.item.disp.k)}">Repor</button>`:`${esc(obsOf(r.item,true)||(r.state==="ok"?"entregue":""))}${sf&&r.item.hits.length?`<br><b>Ficheiros:</b> ${r.item.hits.map(h=>h.fid?`<a href="${boxFileUrl(h)}" target="_blank" rel="noopener">${esc(h.name)}</a>`:esc(h.name)).join(", ")}`:""}${(r.item.errada||[]).length?`${obsOf(r.item,true)?"<br>":""}Talvez esteja na pasta errada: ${r.item.errada.map(x=>`<a href="${boxFileUrl(x.f)}" target="_blank" rel="noopener" title="Abrir o ficheiro na Box">${esc(x.f.name)}</a> <span class="hint" style="margin:0">em ${esc(x.onde)}</span>`).join("<br>")}`:""}${fpBtns(r.item)}${r.item.ok?"":`<br><button class="b s fpb" data-disp="${esc(r.item.key)}" title="Este documento não se aplica a este módulo: deixa de contar">Não se aplica</button> <button class="b s fpb" data-disp="${esc(r.e.mod.id+"|*")}" title="Nenhum documento se aplica a este módulo (ex.: módulo não lecionado este ano)">Módulo inteiro</button>`}`}</td></tr>`).join("")}
       </tbody></table></div></div>`;}
   $("#report").innerHTML=html||`<div class="card"><p class="hint" style="margin:0">${ativos().length?"Nada a mostrar com estes filtros. 🎉":"Defina primeiro os módulos em Atribuições."}</p></div>`;
 }
@@ -1765,11 +1892,11 @@ $("#tplGo").onclick=async()=>{
 
 /* ---------- send ---------- */
 const anoLetivo=()=>cfg.mail.ano||(()=>{const a=[...getIdx().anos.keys()];return a.length===1?a[0]:"[ano letivo]"})();
-function listText(t){return rowsFor(t,true).map(r=>`• ${r.turma} | ${discShort(r.disc)} | ${r.mod} → ${r.falta}${r.loc?` (${r.loc})`:""}${r.state==="blank"?" — o ficheiro entregue não conta: "+motivoBad(r.item):""}`).join("\n")}
-function fill(tpl,t,semLista){
+function listText(t,links){return rowsFor(t,true).map(r=>`• ${r.turma} | ${discShort(r.disc)} | ${r.mod} → ${r.falta}${r.loc?` (${r.loc})`:""}${r.state==="blank"?" — o ficheiro entregue não conta: "+motivoBad(r.item):""}${(r.item.errada||[]).length?" — talvez esteja na pasta errada: "+r.item.errada[0].f.name+" em "+r.item.errada[0].onde:""}${r.item.prazo&&isoData(r.e.mod.prazo)?" — prazo "+dataPT(r.item.prazo):""}${links&&r.item.link?"\n   "+r.item.link:""}`).join("\n")}
+function fill(tpl,t,semLista,links){
   const first=String(t.p.nome||"").trim().split(/\s+/)[0]||"";
-  let s=tpl.replace(/\{primeiro_nome\}/g,first).replace(/\{nome\}/g,t.p.nome).replace(/\{ano\}/g,anoLetivo()).replace(/\{prazo\}/g,cfg.mail.prazo||"[prazo]").replace(/\{total\}/g,t.miss);
-  s=semLista?s.replace(/[^\n]*\{lista\}[^\n]*\n?/g,"").replace(/\(\d+ item\(ns\)\):/,"(lista em anexo).").replace(/\n{3,}/g,"\n\n"):s.replace(/\{lista\}/g,listText(t));
+  const pg=paginaDe(t.p);let s=tpl.replace(/[^\n]*\{pagina\}[^\n]*\n?/g,x=>pg?x.replace(/\{pagina\}/g,pg):"").replace(/\{primeiro_nome\}/g,first).replace(/\{nome\}/g,t.p.nome).replace(/\{ano\}/g,anoLetivo()).replace(/\{prazo\}/g,cfg.mail.prazo||"[prazo]").replace(/\{total\}/g,t.miss);
+  s=semLista?s.replace(/[^\n]*\{lista\}[^\n]*\n?/g,"").replace(/\(\d+ item\(ns\)\):/,"(lista em anexo).").replace(/\n{3,}/g,"\n\n"):s.replace(/\{lista\}/g,listText(t,links));
   return s;}
 const subj=t=>fill(cfg.mail.subj,t);
 function geralText(){
@@ -2315,7 +2442,7 @@ async function runScan(full,auto){
     let msg=`Concluído em ${secs} s (${st.modo}${res.full?"":`: ${st.mudancas} alteração(ões) registadas pela Box, ${st.opened} pasta(s) relidas`}) · ${nP} pastas, ${nF} ficheiros${RATE.hits?` · a Box pediu ${RATE.hits} pausa(s)`:""}${st.failed.length?` · ⚠ ${st.failed.length} pasta(s) sem acesso: ${st.failed.slice(0,3).join("; ")}${st.failed.length>3?"…":""}`:""}.`;
     if(d){const n=d.novos.length+d.alterados.length+d.apagados.length;msg+=n?` Desde ${prev.quando}: ${d.novos.length} colocado(s), ${d.alterados.length} substituído(s) ou movido(s), ${d.apagados.length} apagado(s) — veja “Alterações”.`:` Nada mudou desde ${prev.quando}.`;
       if(n&&!auto)toast(`${n} alteração(ões) desde a última análise — veja “Alterações”`)}
-    $("#scanMsg").textContent=msg;
+    $("#scanMsg").textContent=msg;autoPublicarDepois();
     if(!ativos().length&&detetar().size)toast("Agora use “Detetar módulos e UFCD” em Atribuições");
   }catch(e){scanRun++;
     if(e.kind==="stop"){$("#scanMsg").textContent=e.full?`Análise parada (${st.opened} pastas lidas). O que já foi lido ficou guardado: “Analisar” continua de onde ficou.`:"Atualização parada. Continua carregada a análise anterior; “Analisar” volta a procurar as alterações.";scanHint();return}
@@ -2504,7 +2631,7 @@ const pdfTxt=s=>String(s??"").replace(/[—–]/g,"-").replace(/[“”«»]/g,'
 const lgFmt=L=>/^data:image\/jpe?g/.test(L.src)?"JPEG":"PNG";
 const lgFit=(L,mw,mh)=>{const r=Math.min(mw/L.w,mh/L.h);return[L.w*r,L.h*r]};
 const PDF_TOP=36,PDF_BOT=28;
-function pdfMoldura(doc,rodape){const n=doc.getNumberOfPages(),W=210,H=297,{main:m,right:r,foot:f}=LOGOS;
+function pdfMoldura(doc,rodape){const n=doc.getNumberOfPages(),W=doc.internal.pageSize.getWidth(),H=doc.internal.pageSize.getHeight(),{main:m,right:r,foot:f}=LOGOS;
   for(let i=1;i<=n;i++){doc.setPage(i);
     if(m){const[w,h]=lgFit(m,62,18);doc.addImage(m.src,lgFmt(m),14,10+(18-h)/2,w,h,"lgMain")}
     if(r){const[w,h]=lgFit(r,58,16);doc.addImage(r.src,lgFmt(r),W-14-w,11+(16-h)/2,w,h,"lgRight")}
@@ -2516,8 +2643,11 @@ function pdfTitulo(doc,titulo,sub){doc.setFont("helvetica","bold");doc.setFontSi
   doc.setFont("helvetica","normal");doc.setFontSize(9.5);doc.setTextColor(95);doc.text(pdfTxt(sub),14,PDF_TOP+12);return PDF_TOP+22}
 const pdfData=()=>new Date().toLocaleDateString("pt-PT");
 const pdfSub=()=>`Ano letivo ${anoLetivo()} · ${pdfData()}${cfg.mail.prazo?" · Prazo de entrega: "+cfg.mail.prazo:""}`;
-function pdfTabela(doc,y,head,body,cols){
-  doc.autoTable({startY:y,head:[head],body,margin:{top:PDF_TOP,bottom:PDF_BOT+2,left:14,right:14},theme:"grid",
+function pdfTabela(doc,y,head,body,cols,links,lc){
+  const L=links&&links.some(Boolean);
+  doc.autoTable({startY:y,head:[head],body,
+    didParseCell:L?d=>{if(d.section==="body"&&d.column.index===lc&&links[d.row.index])d.cell.styles.textColor=[26,95,208]}:undefined,
+    didDrawCell:L?d=>{if(d.section==="body"&&d.column.index===lc&&links[d.row.index])doc.link(d.cell.x,d.cell.y,d.cell.width,d.cell.height,{url:links[d.row.index]})}:undefined,margin:{top:PDF_TOP,bottom:PDF_BOT+2,left:14,right:14},theme:"grid",
     styles:{font:"helvetica",fontSize:8,cellPadding:1.7,overflow:"linebreak",lineColor:[226,230,235],lineWidth:.15,textColor:[40,44,52],valign:"top"},
     headStyles:{fillColor:[26,95,208],textColor:255,fontStyle:"bold",lineColor:[26,95,208]},alternateRowStyles:{fillColor:[246,248,251]},columnStyles:cols||{}});
   return doc.lastAutoTable.finalY}
@@ -2526,9 +2656,11 @@ function pdfFormadorSec(doc,t,y,geral){
   doc.setFont("helvetica","bold");doc.setFontSize(geral?11.5:12.5);doc.setTextColor(25);doc.text(pdfTxt(t.p.nome+(t.p.cod?` (${t.p.cod})`:"")),14,y);
   doc.setFont("helvetica","normal");doc.setFontSize(9);doc.setTextColor(95);
   doc.text(pdfTxt(`${t.p.email?t.p.email+" · ":""}${t.miss} documento(s) em falta · ${t.ok} de ${t.tot} entregue(s)`),14,y+5);
-  const rows=rowsFor(t,true).map(r=>[r.turma,discShort(r.disc),r.mod,r.falta,r.loc||"",r.state==="blank"?"O ficheiro entregue não conta: "+motivoBad(r.item):""].map(pdfTxt));
+  const R=rowsFor(t,true),rows=R.map(r=>[r.turma,discShort(r.disc),r.mod,r.falta,r.loc||"",obsCurta(r.item)].map(pdfTxt));
   return pdfTabela(doc,y+8,["Turma","Disciplina","Módulo/UFCD","Em falta","Localização na Box","Observações"],rows,
-    {0:{cellWidth:19},1:{cellWidth:28},2:{cellWidth:34},3:{cellWidth:31,fontStyle:"bold"},4:{cellWidth:40}})+10}
+    {0:{cellWidth:19},1:{cellWidth:28},2:{cellWidth:34},3:{cellWidth:31,fontStyle:"bold"},4:{cellWidth:40}},R.map(r=>r.item.link),4)+10}
+// observações curtas (PDF e página do formador)
+const obsCurta=i=>[i.state==="blank"?"O ficheiro entregue não conta: "+motivoBad(i):"",(i.errada||[]).length?"Talvez esteja na pasta errada: "+i.errada.map(x=>x.f.name+" (em "+x.onde+")").join("; "):"",i.prazo?(i.atraso?`Prazo ${dataPT(i.prazo)} ultrapassado há ${i.atraso} dia(s)`:`Prazo: ${dataPT(i.prazo)}`):""].filter(Boolean).join(" · ");
 async function pdfFormador(t){const J=await loadPDF(),doc=new J({unit:"mm",format:"a4"});
   const y=pdfTitulo(doc,"Documentação em falta na Box",pdfSub());pdfFormadorSec(doc,t,y,false);
   pdfMoldura(doc,"Escola Profissional da Ilha de São Jorge · BoxCheck");return doc}
@@ -2593,7 +2725,7 @@ async function msEnviar({to,cc,subject,body,anexo}){
     throw new Error(`O Office 365 recusou o envio (${r.status})${m?": "+m:""}`)}}
 const ENV_OK={};
 async function enviarFormador(t){const doc=await pdfFormador(t);
-  await msEnviar({to:t.p.email,cc:msCfg().cc,subject:subj(t),body:fill(cfg.mail.body,t,!msCfg().lista),anexo:{name:pdfNomeF(t),b64:pdfB64(doc)}});
+  await msEnviar({to:t.p.email,cc:msCfg().cc,subject:subj(t),body:fill(cfg.mail.body,t,!msCfg().lista,true),anexo:{name:pdfNomeF(t),b64:pdfB64(doc)}});
   ENV_OK[t.p.id]=Date.now()}
 function sendMsg(h,k){$("#sendMsg").innerHTML=h?`<div class="msg ${k||"ok"}">${h}</div>`:""}
 $("#sendAll").onclick=async e=>{const L=mailCache.filter(t=>t.p.email),sem=mailCache.length-L.length;
@@ -2712,10 +2844,10 @@ function renderEst(){
   barras($("#eQual"),T.filter(t=>t.p.id!=="_").map(t=>{let ok=0,tot=0;for(const e of t.list)for(const i of e.items){if(i.state==="missing")continue;tot++;if(i.state==="ok")ok++}return{nome:t.p.nome,ok,tot}}).filter(r=>r.tot).sort((a,b)=>(b.tot-b.ok)-(a.tot-a.ok)||a.ok/a.tot-b.ok/b.tot),
     "Ainda não há documentos entregues.",12,"sem problemas","vazios, falsos ou a confirmar");
   // 3) entregas fora do prazo (data do ficheiro mais antigo de cada documento entregue vs. prazo definido em Enviar)
-  (()=>{const el=$("#ePrazo"),pz=prazoData();
-    if(!pz){el.innerHTML=`<p class="eempty">Defina o prazo em <b>Enviar</b> (ex.: 27/11/2026) para ver quem entregou depois dele.</p>`;return}
-    $("#ePrazoSub").textContent=`Documentos entregues depois de ${dataPT(pz)} (prazo definido em Enviar), pela data do ficheiro na Box.`;
-    barras(el,T.filter(t=>t.p.id!=="_").map(t=>{let ok=0,tot=0;for(const e of t.list)for(const i of e.items){if(!i.ok)continue;const ds=(i.hits||[]).map(f=>Date.parse(f.date)).filter(x=>x>0);if(!ds.length)continue;tot++;if(Math.min(...ds)<=pz+864e5-1)ok++}return{nome:t.p.nome,ok,tot}}).filter(r=>r.tot).sort((a,b)=>(b.tot-b.ok)-(a.tot-a.ok)),
+  (()=>{const el=$("#ePrazo"),pz=prazoData(),algum=ev.some(e=>e.items.some(i=>i.prazo));
+    if(!algum){el.innerHTML=`<p class="eempty">Defina o prazo em <b>Enviar</b> (ex.: 27/11/2026) ou o prazo de cada módulo em <b>Atribuições</b> para ver quem entregou depois dele.</p>`;return}
+    $("#ePrazoSub").textContent=`Documentos entregues depois do prazo do módulo${pz?` (ou de ${dataPT(pz)}, o prazo geral definido em Enviar)`:""}, pela data do ficheiro na Box.`;
+    barras(el,T.filter(t=>t.p.id!=="_").map(t=>{let ok=0,tot=0;for(const e of t.list)for(const i of e.items){if(!i.ok||!i.prazo)continue;const ds=(i.hits||[]).map(f=>Date.parse(f.date)).filter(x=>x>0);if(!ds.length)continue;tot++;if(Math.min(...ds)<=i.prazo+864e5-1)ok++}return{nome:t.p.nome,ok,tot}}).filter(r=>r.tot).sort((a,b)=>(b.tot-b.ok)-(a.tot-a.ok)),
       "Ainda não há documentos entregues com data.",12,"dentro do prazo","fora do prazo")})();
   // 2) efeito dos lembretes: do que faltava no envio escolhido, quanto já foi entregue
   (()=>{const el=$("#eLemb"),E=(cfg.envios||[]).filter(v=>v.miss&&Object.keys(v.miss).length);
@@ -2838,6 +2970,393 @@ document.querySelector("main").addEventListener("drop",e=>{if(!DRG||!MARK||!MARK
 document.querySelector("main").addEventListener("dragend",()=>{if(!DRG)return;DRG.classList.remove("dragging");DRG.draggable=false;DRG=null;if(MARK)MARK.remove();MARK=null;document.body.classList.remove("arrastar")});
 $("#layReset").onclick=()=>{try{localStorage.removeItem(LAYKEY)}catch(e){}location.reload()};
 prepararDisposicao();
+
+/* =====================================================================================
+   v1.15 — ficha do formador, dossiê de auditoria, balanço do ano, importação do Untis,
+           pesquisa rápida (Ctrl+K), envios automáticos e página do formador
+   ===================================================================================== */
+/* ---------- janela por cima da página ---------- */
+function modal(html,cls){let m=$("#bcModal");
+  if(!m){m=document.createElement("div");m.id="bcModal";m.className="bcm";m.innerHTML=`<div class="bcm-box" role="dialog" aria-modal="true"><button class="x bcm-x" title="Fechar (Esc)">×</button><div class="bcm-c"></div></div>`;document.body.appendChild(m);
+    m.addEventListener("click",e=>{if(e.target===m||e.target.closest(".bcm-x"))fecharModal()})}
+  m.querySelector(".bcm-c").innerHTML=html;m.className="bcm on "+(cls||"");document.body.classList.add("bcm-open");m.querySelector(".bcm-box").scrollTop=0;return m.querySelector(".bcm-c")}
+function fecharModal(){const m=$("#bcModal");if(m)m.classList.remove("on");document.body.classList.remove("bcm-open")}
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#bcModal.on")&&!$("#bcPal.on"))fecharModal()});
+
+/* ---------- ficha do formador ---------- */
+const ST_IC={ok:"✓",warn:"⚠",blank:"✗",missing:"✗",disp:"–",nr:"·"};
+// meses do ano letivo (setembro a agosto) para a linha do tempo; sem ano letivo, os últimos 12 meses
+function mesesAno(){const a=String(anoLetivo()).match(/(20\d\d)/),out=[];
+  let y,m;if(a){y=+a[1];m=8}else{const d=new Date();d.setMonth(d.getMonth()-11);y=d.getFullYear();m=d.getMonth()}
+  for(let i=0;i<12;i++){out.push({y,m});m++;if(m>11){m=0;y++}}return out}
+function estadoDoc(e,did){const i=e.items.find(x=>x.doc.id===did);if(i)return{st:i.state,i};const d=(e.disp||[]).find(x=>x.doc.id===did);return d?{st:"disp",i:d}:{st:"nr"}}
+function abrirFicha(pid){
+  const p=cfg.profs.find(x=>x.id===pid);if(!p){toast("Formador não encontrado");return}
+  const ev=evaluate(),list=ev.filter(e=>profOf(e.mod)===pid).sort((a,b)=>String(a.mod.turma).localeCompare(b.mod.turma,"pt",{numeric:true})||String(a.mod.disc).localeCompare(b.mod.disc,"pt",{numeric:true})||String(a.mod.cod).localeCompare(b.mod.cod,"pt",{numeric:true}));
+  const it=list.flatMap(e=>e.items),tot=it.length,ok=it.filter(i=>i.ok).length,miss=tot-ok,pc=pctTxt(ok,tot);
+  const nWarn=it.filter(i=>i.state==="warn").length,nBlank=it.filter(i=>i.state==="blank").length,nAtr=it.filter(i=>i.atraso).length,nErr=it.filter(i=>(i.errada||[]).length).length,nDisp=list.reduce((a,e)=>a+(e.disp||[]).length,0);
+  const fechados=list.filter(e=>e.items.length&&e.items.every(i=>i.ok)).length,comItens=list.filter(e=>e.items.length).length;
+  // entregas ao longo do ano (data de cada ficheiro que conta)
+  const fs=new Map();for(const i of it)for(const f of i.hits||[])fs.set(f.fid||f.path,f);
+  const ds=[...fs.values()].map(f=>Date.parse(f.date)).filter(x=>x>0),ult=ds.length?Math.max(...ds):0;
+  const M=mesesAno(),cnt=M.map(({y,m})=>ds.filter(t=>{const d=new Date(t);return d.getFullYear()===y&&d.getMonth()===m}).length),mx=Math.max(1,...cnt);
+  const mn=i=>["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"][M[i].m];
+  const W=640,H=130,bw=W/12;
+  const graf=`<svg viewBox="0 0 ${W} ${H+22}" class="fgraf" role="img" aria-label="Ficheiros entregues por mês">${cnt.map((c,i)=>{const h=Math.round(c/mx*(H-18));return`<g><rect x="${i*bw+8}" y="${H-h}" width="${bw-16}" height="${Math.max(h,c?2:0)}" rx="3" fill="var(--brand)" opacity="${c?1:.15}"><title>${mn(i)} ${M[i].y}: ${c} ficheiro(s)</title></rect>${c?`<text x="${i*bw+bw/2}" y="${H-h-4}" text-anchor="middle" font-size="11" fill="#4a5260">${c}</text>`:""}<text x="${i*bw+bw/2}" y="${H+15}" text-anchor="middle" font-size="11" fill="#64708a">${mn(i)}</text></g>`}).join("")}<line x1="0" y1="${H}" x2="${W}" y2="${H}" stroke="#e3e7ee"/></svg>`;
+  // módulos: um quadrado por documento exigido
+  const docs=cfg.docTypes;
+  const mrows=list.map(e=>{const io=e.items.filter(i=>i.ok).length,it2=e.items.length,pcm=pctTxt(io,it2);
+    const cel=docs.map(d=>{if(!e.mod.docs.includes(d.id))return`<td class="fst nr" title="${esc(d.nome)}: não exigido">·</td>`;const x=estadoDoc(e,d.id);
+      const tip=x.st==="disp"?`${d.nome}: não se aplica${x.i.disp.motivo?" — "+x.i.disp.motivo:""}`:x.i?`${d.nome}: ${ESTADO[x.st]}${x.i.atraso?` · prazo ultrapassado há ${x.i.atraso} dia(s)`:""}${x.i.reasons&&x.i.reasons.length?" — "+x.i.reasons.join("; "):""}`:d.nome;
+      return`<td class="fst ${x.st}${x.i&&x.i.atraso?" atr":""}" title="${esc(tip)}">${x.i&&x.i.link&&!x.i.ok?`<a href="${x.i.link}" target="_blank" rel="noopener">${ST_IC[x.st]}</a>`:ST_IC[x.st]}</td>`}).join("");
+    return`<tr><td>${esc(e.mod.turma)}</td><td>${esc(discShort(e.mod.disc))}</td><td>${esc(modTitle(e.mod))}${e.mod.prazo?`<br><span class="hint" style="margin:0">prazo ${dataPT(isoData(e.mod.prazo))}</span>`:""}</td>${cel}<td style="min-width:110px"><div class="bar" style="width:70px;display:inline-block;vertical-align:middle"><i style="width:${pcm}%"></i></div> <span class="hint" style="margin:0">${io}/${it2}</span></td></tr>`}).join("");
+  // lembretes enviados a este formador
+  const okK=new Map();for(const i of it)okK.set(i.key,i.ok);
+  const E=(cfg.envios||[]).filter(v=>v.miss&&v.miss[pid]);
+  const lemb=E.map(v=>{const ks=v.miss[pid],ent=ks.filter(k=>okK.get(k)).length;return`<tr><td>${dataPT(v.t)}</td><td>${esc(v.label||"Envio")}</td><td style="text-align:right">${ks.length}</td><td style="text-align:right">${ent}</td><td><div class="bar" style="width:90px;display:inline-block;vertical-align:middle"><i style="width:${pctTxt(ent,ks.length)}%"></i></div> ${pctTxt(ent,ks.length)}%</td></tr>`}).join("");
+  // documentos com problemas
+  const prob=list.flatMap(e=>e.items.filter(i=>i.state==="warn"||i.state==="blank"||(i.errada||[]).length).map(i=>`<li><b>${esc(modLabel(e.mod))}</b> › ${esc(i.doc.nome)}: ${esc(i.state==="blank"?"não conta — "+i.reasons.join("; "):i.state==="warn"?"a confirmar — "+i.reasons.join("; "):"talvez na pasta errada — "+i.errada.map(x=>x.f.name+" em "+x.onde).join("; "))}</li>`)).join("");
+  const pg=paginaDe(p);
+  const c=modal(`<div class="fhd"><div><div class="hint" style="margin:0;text-transform:uppercase;letter-spacing:.05em;font-weight:600;font-size:11.5px">Ficha do formador</div><h2 style="margin:2px 0 0;font-size:22px">${esc(p.nome)}</h2>
+      <p class="hint" style="margin:2px 0 0">${[p.cod?"Código "+esc(p.cod):"",p.email?esc(p.email):"sem email",`Ano letivo ${esc(anoLetivo())}`].filter(Boolean).join(" · ")}</p></div>
+      <div class="fact">${miss?`<button class="b s" data-fa="pdf">PDF do que falta</button>`:""}<button class="b s" data-fa="rel">Ver no relatório</button><button class="b s" data-fa="print">Imprimir</button>${pg?`<a class="b s" href="${pg}" target="_blank" rel="noopener" style="text-decoration:none">Página do formador ↗</a><button class="b s" data-fa="cplink">Copiar link</button>`:""}</div></div>
+    <div class="tiles" style="margin:16px 0 4px">
+      <div class="tile"><div class="v">${pc}%</div><div class="l">entregue (${ok} de ${tot})</div></div>
+      <div class="tile"><div class="v" style="color:${miss?"var(--bad)":"var(--ok)"}">${miss}</div><div class="l">em falta</div></div>
+      <div class="tile"><div class="v">${fechados}/${comItens}</div><div class="l">módulos fechados</div></div>
+      <div class="tile"><div class="v" style="color:#b26a00">${nWarn+nBlank}</div><div class="l">a confirmar (${nWarn}) ou que não contam (${nBlank})</div></div>
+      ${nAtr?`<div class="tile"><div class="v" style="color:var(--bad)">${nAtr}</div><div class="l">com o prazo ultrapassado</div></div>`:""}
+      ${nErr?`<div class="tile"><div class="v" style="color:#b26a00">${nErr}</div><div class="l">talvez na pasta errada</div></div>`:""}
+      ${nDisp?`<div class="tile"><div class="v" style="color:var(--muted)">${nDisp}</div><div class="l">dispensados</div></div>`:""}
+      <div class="tile"><div class="v" style="font-size:20px">${ult?dataPT(ult):"—"}</div><div class="l">última entrega${ult?` (há ${Math.floor((Date.now()-ult)/864e5)} dias)`:""}</div></div>
+    </div>
+    <h3 class="fh3">Entregas ao longo do ano letivo</h3><p class="hint" style="margin-top:0">Ficheiros que contam para os documentos exigidos, pelo mês da data na Box.</p>${ds.length?graf:`<p class="hint">Ainda sem entregas.</p>`}
+    <h3 class="fh3">Módulos e documentos</h3><p class="hint" style="margin-top:0">✓ entregue · ⚠ a confirmar · ✗ em falta ou não conta · – não se aplica · · não exigido. Num ✗, clique para abrir a pasta na Box.</p>
+    ${list.length?`<div style="overflow-x:auto"><table class="ftab"><thead><tr><th>Turma</th><th>Disciplina</th><th>Módulo/UFCD</th>${docs.map(d=>`<th class="fst" title="${esc(d.nome)}">${esc(d.nome.split(/\s+/)[0].slice(0,10))}</th>`).join("")}<th>Progresso</th></tr></thead><tbody>${mrows}</tbody></table></div>`:`<p class="hint">Sem módulos atribuídos neste ano letivo.</p>`}
+    <h3 class="fh3">Lembretes enviados</h3>${E.length?`<table class="ftab"><thead><tr><th>Data</th><th>Envio</th><th style="text-align:right">Em falta nesse dia</th><th style="text-align:right">Já entregues</th><th>Resposta</th></tr></thead><tbody>${lemb}</tbody></table>`:`<p class="hint">Ainda não foi registado nenhum envio com documentos deste formador.</p>`}
+    ${prob?`<h3 class="fh3">Documentos a rever</h3><ul class="fprob">${prob}</ul>`:""}`,"ficha");
+  c.querySelectorAll("[data-fa]").forEach(b=>b.onclick=()=>{const a=b.dataset.fa;
+    if(a==="pdf"){const t=profT(pid);if(t)baixarPDF(()=>pdfFormador(t),pdfNomeF(t))}
+    if(a==="rel"){fecharModal();show("rel");$("#fProf").value=pid;$("#fShow").value="tudo";renderReport()}
+    if(a==="print"){document.body.classList.add("printModal");window.print();setTimeout(()=>document.body.classList.remove("printModal"),500)}
+    if(a==="cplink")copy(pg)});
+}
+$("#tbProfs").addEventListener("click",e=>{const b=e.target.closest("[data-pficha]");if(b)abrirFicha(b.closest("tr").dataset.id)});
+
+/* ---------- PDF: moldura e gráficos simples ---------- */
+const PDF_COR={ok:[220,245,228],warn:[255,243,205],blank:[253,224,224],missing:[253,224,224],disp:[234,236,240],nr:[255,255,255]};
+const PDF_TX={ok:"OK",warn:"Conf.",blank:"Não conta",missing:"Falta",disp:"N/A",nr:"-"};
+function pdfBarrasH(doc,x,y,w,rows,lw){lw=lw||48;const bh=4.2,gap=2.2;doc.setFontSize(8);
+  for(const r of rows){if(y>doc.internal.pageSize.getHeight()-PDF_BOT-8){doc.addPage();y=PDF_TOP+4;doc.setFontSize(8)}
+    const p=r.tot?r.ok/r.tot:0;doc.setTextColor(60);doc.setFont("helvetica","normal");doc.text(pdfTxt(r.nome).slice(0,34),x,y+3.2);
+    doc.setFillColor(233,237,243);doc.rect(x+lw,y,w-lw-16,bh,"F");const c=p>=.9?[22,163,74]:p>=.6?[26,95,208]:p>=.3?[217,119,6]:[220,38,38];doc.setFillColor(...c);if(p>0)doc.rect(x+lw,y,(w-lw-16)*p,bh,"F");
+    doc.setTextColor(40);doc.text(`${Math.round(p*100)}%`,x+w,y+3.2,{align:"right"});y+=bh+gap}
+  return y}
+function pdfBarrasV(doc,x,y,w,h,vals,labels){const mx=Math.max(1,...vals),bw=w/vals.length;doc.setDrawColor(220);doc.line(x,y+h,x+w,y+h);doc.setFontSize(7.5);
+  vals.forEach((v,i)=>{const bh=v/mx*(h-6);doc.setFillColor(26,95,208);if(v)doc.rect(x+i*bw+1.5,y+h-bh,bw-3,bh,"F");doc.setTextColor(90);
+    if(v)doc.text(String(v),x+i*bw+bw/2,y+h-bh-1.2,{align:"center"});doc.text(labels[i],x+i*bw+bw/2,y+h+4,{align:"center"})});return y+h+8}
+function pdfKpis(doc,y,kpis){const W=doc.internal.pageSize.getWidth(),n=Math.min(4,kpis.length),gw=(W-28-(n-1)*4)/n;
+  kpis.forEach((k,i)=>{const r=Math.floor(i/n),c=i%n,x=14+c*(gw+4),yy=y+r*22;doc.setDrawColor(226,230,235);doc.setFillColor(248,249,251);doc.roundedRect(x,yy,gw,18,2,2,"FD");
+    doc.setFont("helvetica","bold");doc.setFontSize(14);doc.setTextColor(...(k.c||[22,40,80]));doc.text(pdfTxt(k.v),x+4,yy+8);
+    doc.setFont("helvetica","normal");doc.setFontSize(7.5);doc.setTextColor(100);doc.text(pdfTxt(k.l),x+4,yy+14)});
+  return y+Math.ceil(kpis.length/n)*22+4}
+function pdfH(doc,y,t,need){if(y>doc.internal.pageSize.getHeight()-PDF_BOT-(need||30)){doc.addPage();y=PDF_TOP+4}doc.setFont("helvetica","bold");doc.setFontSize(12);doc.setTextColor(22,40,80);doc.text(pdfTxt(t),14,y);return y+5}
+// resumo por turma, por tipo de documento e por formador (dossiê e balanço)
+function resumoAno(){const ev=evaluate(),T=byTeacher(ev),all=ev.flatMap(e=>e.items);
+  const tot=all.length,ok=all.filter(i=>i.ok).length,warn=all.filter(i=>i.state==="warn").length,blank=all.filter(i=>i.state==="blank").length,disp=ev.reduce((a,e)=>a+(e.disp||[]).length,0);
+  const comItens=ev.filter(e=>e.items.length),fechados=comItens.filter(e=>e.items.every(i=>i.ok)).length;
+  const turmas=agrupar(ev,e=>e.mod.turma||"(sem turma)").sort((a,b)=>a.nome.localeCompare(b.nome,"pt",{numeric:true}));
+  const tipos=cfg.docTypes.map(d=>{let o=0,t=0;for(const i of all)if(i.doc.id===d.id){t++;if(i.ok)o++}return{nome:d.nome,ok:o,tot:t}}).filter(r=>r.tot);
+  return{ev,T,all,tot,ok,warn,blank,disp,miss:tot-ok,fechados,nMods:comItens.length,turmas,tipos}}
+const pdfFonte=()=>lastListing?`Análise da Box: "${lastListing.pasta}" (${lastListing.quando})`:"Sem análise da Box carregada";
+
+/* ---------- dossiê para auditoria (EQAVET / IGEC) ---------- */
+async function pdfDossie(){const J=await loadPDF(),doc=new J({unit:"mm",format:"a4",orientation:"landscape"}),W=297,R=resumoAno(),docs=cfg.docTypes;
+  // capa
+  doc.setFont("helvetica","bold");doc.setFontSize(11);doc.setTextColor(26,95,208);doc.text(pdfTxt("ESCOLA PROFISSIONAL DA ILHA DE SÃO JORGE"),14,62);
+  doc.setFontSize(26);doc.setTextColor(22,40,80);doc.text(pdfTxt("Dossiê técnico-pedagógico"),14,76);doc.setFontSize(17);doc.setFont("helvetica","normal");doc.text(pdfTxt("Verificação da documentação entregue na Box"),14,86);
+  doc.setFontSize(11);doc.setTextColor(80);doc.text(pdfTxt(`Ano letivo ${anoLetivo()}  ·  Emitido a ${pdfData()}`),14,98);doc.text(pdfTxt(pdfFonte()),14,105);
+  let y=pdfKpis(doc,118,[{v:pctTxt(R.ok,R.tot)+"%",l:"documentação entregue"},{v:`${R.ok} / ${R.tot}`,l:"documentos exigidos entregues"},{v:`${R.fechados} / ${R.nMods}`,l:"módulos/UFCD/UC completos"},{v:String(R.turmas.length),l:"turmas"},
+    {v:String(R.miss),l:"em falta ou que não contam",c:[220,38,38]},{v:String(R.warn),l:"a confirmar",c:[180,83,9]},{v:String(R.disp),l:"dispensados (não se aplica)",c:[100,112,138]},{v:String(R.T.filter(t=>t.p.id!=="_").length),l:"formadores"}]);
+  doc.setFontSize(8.5);doc.setTextColor(110);doc.text(pdfTxt("Legenda: OK = entregue · Conf. = entregue, a confirmar · Falta = em falta · Não conta = ficheiro vazio, modelo por preencher ou texto de enchimento · N/A = não se aplica (motivo no Anexo A) · - = não exigido."),14,y+4,{maxWidth:W-28});
+  // índice (preenchido no fim)
+  doc.addPage();const pIdx=doc.getNumberOfPages();
+  // resumo
+  doc.addPage();y=pdfTitulo(doc,"1. Resumo",`Ano letivo ${anoLetivo()} · ${pdfFonte()}`);const sec=[["1. Resumo",doc.getNumberOfPages()]];
+  y=pdfH(doc,y,"Por turma");
+  y=pdfTabela(doc,y,["Turma","Documentos exigidos","Entregues","Em falta","Entregue"],R.turmas.map(t=>[t.nome,String(t.tot),String(t.ok),String(t.tot-t.ok),pctTxt(t.ok,t.tot)+"%"].map(pdfTxt)),{1:{halign:"right"},2:{halign:"right"},3:{halign:"right"},4:{halign:"right"}})+8;
+  y=pdfH(doc,y,"Por tipo de documento");
+  y=pdfTabela(doc,y,["Documento","Exigidos","Entregues","Em falta","Entregue"],R.tipos.map(t=>[t.nome,String(t.tot),String(t.ok),String(t.tot-t.ok),pctTxt(t.ok,t.tot)+"%"].map(pdfTxt)),{1:{halign:"right"},2:{halign:"right"},3:{halign:"right"},4:{halign:"right"}})+8;
+  y=pdfH(doc,y,"Por formador");
+  pdfTabela(doc,y,["Formador","Exigidos","Entregues","Em falta","Entregue"],R.T.filter(t=>t.tot).map(t=>[t.p.nome,String(t.tot),String(t.ok),String(t.miss),pctTxt(t.ok,t.tot)+"%"].map(pdfTxt)),{1:{halign:"right"},2:{halign:"right"},3:{halign:"right"},4:{halign:"right"}});
+  // uma secção por turma
+  const porT=new Map();for(const e of R.ev){const k=e.mod.turma||"(sem turma)";if(!porT.has(k))porT.set(k,[]);porT.get(k).push(e)}
+  const tks=[...porT.keys()].sort((a,b)=>a.localeCompare(b,"pt",{numeric:true}));let n=2;
+  for(const tk of tks){const L=porT.get(tk).sort((a,b)=>String(a.mod.disc).localeCompare(b.mod.disc,"pt",{numeric:true})||String(a.mod.cod).localeCompare(b.mod.cod,"pt",{numeric:true}));
+    const io=L.reduce((a,e)=>a+e.items.filter(i=>i.ok).length,0),it=L.reduce((a,e)=>a+e.items.length,0);
+    doc.addPage();sec.push([`${n}. Turma ${tk}`,doc.getNumberOfPages()]);
+    y=pdfTitulo(doc,`${n++}. Turma ${tk}`,`${L.length} módulos/UFCD/UC · ${io} de ${it} documentos entregues (${pctTxt(io,it)}%) · Ano letivo ${anoLetivo()}`);
+    const st=[],body=L.map(e=>{const s=docs.map(d=>e.mod.docs.includes(d.id)?estadoDoc(e,d.id).st:"nr");st.push(s);const o=e.items.filter(i=>i.ok).length;
+      return[discShort(e.mod.disc),modTitle(e.mod),profName(profOf(e.mod))||"(sem formador)",...s.map(x=>PDF_TX[x]),e.items.length?pctTxt(o,e.items.length)+"%":"N/A"].map(pdfTxt)});
+    const dw=Math.max(14,Math.min(24,(W-28-36-60-36-14)/Math.max(1,docs.length))),cols={0:{cellWidth:36},1:{cellWidth:60},2:{cellWidth:36}};docs.forEach((d,i)=>cols[3+i]={cellWidth:dw,halign:"center"});cols[3+docs.length]={halign:"right"};
+    doc.autoTable({startY:y,head:[["Disciplina","Módulo/UFCD/UC","Formador",...docs.map(d=>pdfTxt(d.nome)),"Entregue"]],body,margin:{top:PDF_TOP,bottom:PDF_BOT+2,left:14,right:14},theme:"grid",
+      styles:{font:"helvetica",fontSize:7.5,cellPadding:1.5,overflow:"linebreak",lineColor:[226,230,235],lineWidth:.15,textColor:[40,44,52],valign:"middle"},
+      headStyles:{fillColor:[26,95,208],textColor:255,fontStyle:"bold",fontSize:7,halign:"center"},columnStyles:cols,
+      didParseCell:d=>{if(d.section==="body"&&d.column.index>=3&&d.column.index<3+docs.length){const x=st[d.row.index][d.column.index-3];d.cell.styles.fillColor=PDF_COR[x];if(x==="missing"||x==="blank")d.cell.styles.textColor=[185,28,28];if(x==="ok")d.cell.styles.textColor=[21,128,61]}}})}
+  // anexos
+  const disp=R.ev.flatMap(e=>(e.disp||[]).map(i=>[e.mod.turma,discShort(e.mod.disc),modTitle(e.mod),i.doc.nome,i.disp.motivo||"(sem motivo)",dataPT(i.disp.t)].map(pdfTxt)));
+  doc.addPage();sec.push(["Anexo A. Documentos dispensados (não se aplica)",doc.getNumberOfPages()]);
+  y=pdfTitulo(doc,"Anexo A. Documentos dispensados","Documentos que não se aplicam ao módulo, com o motivo registado na BoxCheck");
+  if(disp.length)pdfTabela(doc,y,["Turma","Disciplina","Módulo/UFCD","Documento","Motivo","Registado em"],disp,{4:{cellWidth:90}});else{doc.setFontSize(10);doc.setTextColor(90);doc.text("Nenhum documento dispensado.",14,y)}
+  const conf=R.ev.flatMap(e=>e.items.filter(i=>i.state==="warn").map(i=>[e.mod.turma,discShort(e.mod.disc),modTitle(e.mod),i.doc.nome,profName(profOf(e.mod)),i.reasons.join("; ")].map(pdfTxt)));
+  doc.addPage();sec.push(["Anexo B. Documentos a confirmar",doc.getNumberOfPages()]);
+  y=pdfTitulo(doc,"Anexo B. Documentos a confirmar","Entregues, mas com sinais a verificar (conteúdo diferente do esperado, texto repetido de outro módulo, etc.)");
+  if(conf.length)pdfTabela(doc,y,["Turma","Disciplina","Módulo/UFCD","Documento","Formador","Motivo"],conf,{5:{cellWidth:95}});else{doc.setFontSize(10);doc.setTextColor(90);doc.text("Nenhum documento a confirmar.",14,y)}
+  // índice
+  doc.setPage(pIdx);y=pdfTitulo(doc,"Índice",`Ano letivo ${anoLetivo()}`);doc.setFontSize(10);
+  for(const [t,pg] of sec){if(y>210-PDF_BOT-6)break;doc.setTextColor(30);doc.text(pdfTxt(t),18,y);doc.setTextColor(26,95,208);doc.text(String(pg),W-18,y,{align:"right"});doc.link(14,y-4,W-28,6,{pageNumber:pg});
+    doc.setDrawColor(230);doc.line(18+doc.getTextWidth(pdfTxt(t))+2,y-1,W-26,y-1);y+=6.5}
+  pdfMoldura(doc,"Escola Profissional da Ilha de São Jorge · BoxCheck · Dossiê técnico-pedagógico");return doc}
+
+/* ---------- balanço do ano letivo ---------- */
+async function pdfBalanco(){const J=await loadPDF(),doc=new J({unit:"mm",format:"a4"}),R=resumoAno();
+  let y=pdfTitulo(doc,`Balanço do ano letivo ${anoLetivo()}`,`Documentação técnico-pedagógica entregue na Box · emitido a ${pdfData()}`);doc.setFontSize(8.5);doc.text(pdfTxt(pdfFonte()),14,y-4.5,{maxWidth:182});y+=2;
+  const fp=R.T.filter(t=>t.p.id!=="_"&&t.tot),cumpr=fp.filter(t=>!t.miss).length;
+  y=pdfKpis(doc,y,[{v:pctTxt(R.ok,R.tot)+"%",l:"documentação entregue"},{v:`${R.ok} / ${R.tot}`,l:"entregues / exigidos"},{v:`${R.fechados} / ${R.nMods}`,l:"módulos completos"},{v:`${cumpr} / ${fp.length}`,l:"formadores com tudo"},
+    {v:String(R.miss),l:"em falta ou que não contam",c:[220,38,38]},{v:String(R.warn),l:"a confirmar",c:[180,83,9]},{v:String(R.disp),l:"dispensados",c:[100,112,138]},{v:String((cfg.envios||[]).length),l:"envios de lembretes registados"}]);
+  y=pdfH(doc,y+2,"Entregue por turma",20);y=pdfBarrasH(doc,14,y,182,R.turmas)+6;
+  y=pdfH(doc,y,"Entregue por tipo de documento",20);y=pdfBarrasH(doc,14,y,182,R.tipos)+6;
+  // entregas por mês
+  const fs=new Map();for(const i of R.all)for(const f of i.hits||[])fs.set(f.fid||f.path,f);
+  const ds=[...fs.values()].map(f=>Date.parse(f.date)).filter(x=>x>0),M=mesesAno(),NM=["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
+  const cnt=M.map(({y:yy,m})=>ds.filter(t=>{const d=new Date(t);return d.getFullYear()===yy&&d.getMonth()===m}).length);
+  y=pdfH(doc,y,"Ficheiros entregues por mês",60);y=pdfBarrasV(doc,18,y+2,174,42,cnt,M.map(x=>NM[x.m]))+4;
+  // por formador
+  y=pdfH(doc,y,"Por formador",30);
+  const lin=fp.map(t=>{let fora=0,cp=0,u=0;for(const e of t.list)for(const i of e.items){for(const f of i.hits||[]){const d=Date.parse(f.date);if(d>u)u=d}
+      if(!i.ok||!i.prazo)continue;const d0=(i.hits||[]).map(f=>Date.parse(f.date)).filter(x=>x>0);if(!d0.length)continue;cp++;if(Math.min(...d0)>i.prazo+864e5-1)fora++}
+    return[t.p.nome,String(t.tot),String(t.ok),pctTxt(t.ok,t.tot)+"%",cp?`${fora} de ${cp}`:"-",u?dataPT(u):"-"].map(pdfTxt)}).sort((a,b)=>parseInt(b[3])-parseInt(a[3]));
+  y=pdfTabela(doc,y,["Formador","Exigidos","Entregues","Entregue","Fora do prazo","Última entrega"],lin,{1:{halign:"right"},2:{halign:"right"},3:{halign:"right"},4:{halign:"right"},5:{halign:"right"}})+8;
+  // lembretes
+  const okK=new Map();for(const i of R.all)okK.set(i.key,i.ok);
+  const env=(cfg.envios||[]).filter(v=>v.miss).map(v=>{const ks=Object.values(v.miss).flat(),ent=ks.filter(k=>okK.get(k)).length;return[dataPT(v.t),v.label||"Envio",String(ks.length),String(ent),pctTxt(ent,ks.length)+"%"].map(pdfTxt)});
+  y=pdfH(doc,y,"Efeito dos lembretes",30);
+  if(env.length)y=pdfTabela(doc,y,["Data","Envio","Em falta nesse dia","Já entregues","Resposta"],env,{2:{halign:"right"},3:{halign:"right"},4:{halign:"right"}})+8;else{doc.setFontSize(9);doc.setTextColor(90);doc.text("Nenhum envio registado.",14,y+2);y+=10}
+  // comparação com outros anos letivos (análises guardadas)
+  const Rs=resumos(),anos=Object.values(Rs).filter(r=>r&&r.n).map(r=>({ano:anoDe(r.pasta)||r.pasta,n:r.n,q:r.quando})).sort((a,b)=>String(a.ano).localeCompare(String(b.ano)));
+  if(anos.length>1){y=pdfH(doc,y,"Ficheiros na Box por ano letivo (análises guardadas)",30);y=pdfTabela(doc,y,["Ano letivo / pasta","Ficheiros","Analisado em"],anos.map(a=>[a.ano,String(a.n),a.q||""].map(pdfTxt)),{1:{halign:"right"}})+8}
+  // disciplinas mais atrasadas
+  const dis=agrupar(R.ev,e=>discShort(e.mod.disc)||"(sem disciplina)").filter(r=>r.tot-r.ok>0).sort((a,b)=>a.ok/a.tot-b.ok/b.tot).slice(0,12);
+  if(dis.length){y=pdfH(doc,y,"Disciplinas com mais documentação em falta",20);pdfBarrasH(doc,14,y,182,dis,60)}
+  pdfMoldura(doc,"Escola Profissional da Ilha de São Jorge · BoxCheck · Balanço do ano letivo");return doc}
+const nomeAno=()=>anoLetivo().replace("/","-");
+$("#dosGo").onclick=()=>baixarPDF(pdfDossie,ficheiroNome(`Dossiê técnico-pedagógico - ${nomeAno()} - ${hoje()}.pdf`));
+$("#balGo").onclick=()=>baixarPDF(pdfBalanco,ficheiroNome(`Balanço do ano letivo - ${nomeAno()}.pdf`));
+
+/* ---------- importar atribuições do Untis ---------- */
+// ficheiros de intercâmbio do Untis (GPU001 horários, GPU002 aulas, GPU003 turmas, GPU004 professores, GPU006 disciplinas)
+function lerDIF(text){const rows=[];
+  for(const line of String(text).replace(/^﻿/,"").split(/\r?\n/)){if(!line.trim())continue;const out=[];let cur="",q=false;const sepPV=!line.includes(",")&&line.includes(";");
+    for(let i=0;i<line.length;i++){const ch=line[i];if(q){if(ch==='"'){if(line[i+1]==='"'){cur+='"';i++}else q=false}else cur+=ch}else if(ch==='"')q=true;else if(ch===","||(ch===";"&&sepPV)||ch==="\t"){out.push(cur);cur=""}else cur+=ch}
+    out.push(cur);rows.push(out.map(x=>x.trim()))}
+  return rows}
+async function lerTexto(file){const buf=await file.arrayBuffer();try{return new TextDecoder("utf-8",{fatal:true}).decode(buf)}catch(e){return new TextDecoder("windows-1252").decode(buf)}}
+let UN=null;
+const unCfg=()=>cfg.untis||(cfg.untis={sub:{},tch:{},cls:{}});
+function unMontar(files,colado){
+  const get=n=>{for(const k in files)if(new RegExp("GPU0*"+n+"(\\D|$)","i").test(k))return lerDIF(files[k]);return null};
+  const nomes=n=>{const m=new Map(),g=get(n);if(g)for(const r of g)if(r[0])m.set(r[0],r[1]||"");return m};
+  const nC=nomes(3),nS=nomes(6),nT=new Map(),eT=new Map();
+  const g4=get(4);if(g4)for(const r of g4){if(!r[0])continue;nT.set(r[0],r[1]||"");const em=r.find(x=>/^\S+@\S+\.\S+$/.test(x));if(em)eT.set(r[0],em);
+}
+  const L=[];
+  const g2=get(2),g1=get(1);
+  if(g2)for(const r of g2){if(!r[4]||!r[6])continue;L.push({c:r[4],t:r[5]||"",s:r[6],h:parseFloat(String(r[1]).replace(",","."))||1})}
+  else if(g1)for(const r of g1){if(!r[1]||!r[3])continue;L.push({c:r[1],t:r[2]||"",s:r[3],h:1})}
+  for(const r of colado){if(r.length<2)continue;L.push({c:r[0],s:r[1],t:r[2]||"",h:1,nome:true})}
+  return{L,nC,nS,nT,eT}}
+// liga cada turma, disciplina e professor do Untis à turma, disciplina e formador da BoxCheck
+function unTurma(c,turmas){const K=unCfg().cls[c];if(K&&turmas.includes(K))return K;const n=norm(c),long=norm((UN.nC.get(c))||"");
+  return turmas.find(t=>norm(t)===n)||turmas.find(t=>{const a=norm(t);return a.startsWith(n+" ")||a.startsWith(n+"-")||a.split(/\s*-\s*/)[0]===n})||(long?turmas.find(t=>norm(t).includes(long)||long.includes(norm(discShort(t)))):null)||null}
+function unDisc(s,discs){const K=unCfg().sub[s];if(K){const d=discs.find(x=>discCode(x)===K);if(d)return d}
+  const long=UN.nS.get(s)||(UN&&UN.L.some(l=>l.nome&&l.s===s)?s:""),dig=(String(s)+" "+long).match(/\b(\d{3,5})\b/);
+  if(dig){const d=discs.find(x=>discCode(x)===dig[1]);if(d)return d}
+  const a=norm(long||s).replace(/[^a-z0-9 ]/g," ").trim(),sh=norm(s).replace(/[^a-z0-9]/g,"");let best=null,bs=0;
+  for(const d of discs){const b=norm(discShort(d)).replace(/[^a-z0-9 ]/g," ").trim(),bc=b.replace(/\s/g,"");let sc=0;
+    if(a&&b===a)sc=100;else if(a.length>3&&(b.startsWith(a)||a.startsWith(b)))sc=80;else if(a.length>3&&(b.includes(a)||a.includes(b)))sc=60;
+    else if(sh.length>=2&&bc.startsWith(sh))sc=50;else if(sh.length>=2&&b.split(" ").map(w=>w[0]).join("")===sh)sc=45;
+    if(sc>bs){bs=sc;best=d}}
+  return bs>=45?best:null}
+function unProf(t){if(!t)return null;const K=unCfg().tch[t];if(K&&cfg.profs.some(p=>p.id===K))return cfg.profs.find(p=>p.id===K);
+  const long=UN.nT.get(t)||"",em=UN.eT.get(t)||"";
+  return cfg.profs.find(p=>p.cod&&norm(p.cod)===norm(t))||(em?cfg.profs.find(p=>norm(p.email)===norm(em)):null)||cfg.profs.find(p=>norm(p.nome)===norm(t)||(long&&norm(p.nome)===norm(long)))
+    ||(long?cfg.profs.find(p=>{const a=norm(p.nome).split(" "),b=norm(long).split(" ");return a.length>1&&b.length>1&&a[0]===b[0]&&a[a.length-1]===b[b.length-1]}):null)||null}
+function unCalc(){const rows=gridRows(),turmas=[...new Set(rows.map(r=>r.turma))];
+  const discsDe=new Map();for(const r of rows){if(!discsDe.has(r.turma))discsDe.set(r.turma,[]);discsDe.get(r.turma).push(r.disc)}
+  const prop=new Map(),semT=new Map(),semD=new Map(),semP=new Map();
+  for(const l of UN.L){const tu=unTurma(l.c,turmas);if(!tu){semT.set(l.c,(semT.get(l.c)||0)+1);continue}
+    const d=unDisc(l.s,discsDe.get(tu)||[]);if(!d){const o=semD.get(l.s)||{n:0,turmas:new Set()};o.n++;o.turmas.add(tu);semD.set(l.s,o);continue}
+    const r=rows.find(x=>x.turma===tu&&x.disc===d);if(!r)continue;
+    const p=l.nome?(cfg.profs.find(x=>norm(x.nome)===norm(l.t))||null):unProf(l.t);if(!p&&l.t)semP.set(l.t,(semP.get(l.t)||0)+1);
+    const k=r.k;let o=prop.get(k);if(!o)prop.set(k,o={r,h:new Map()});const id=p?p.id:"?"+l.t;o.h.set(id,(o.h.get(id)||0)+l.h)}
+  const out=[];for(const [k,o] of prop){const best=[...o.h.entries()].sort((a,b)=>b[1]-a[1]);const [id]=best[0];
+    out.push({k,r:o.r,id,novo:id.startsWith("?")?id.slice(1):"",outros:best.slice(1).map(x=>x[0]),atual:gridGet(o.r.ref)})}
+  out.sort((a,b)=>a.r.turma.localeCompare(b.r.turma,"pt",{numeric:true})||a.r.disc.localeCompare(b.r.disc,"pt",{numeric:true}));
+  return{out,semT,semD,semP,rows}}
+const unNomeP=id=>id.startsWith("?")?(UN.nT.get(id.slice(1))||id.slice(1))+" (novo)":profName(id);
+function unRender(){const el=$("#unPrev");if(!UN){el.innerHTML="";return}
+  if(!UN.L.length){el.innerHTML=`<div class="msg bad">Não encontrei aulas nos ficheiros. Escolha o GPU002.TXT (aulas) ou o GPU001.TXT (horários) exportados do Untis.</div>`;return}
+  if(!gridRows().length){el.innerHTML=`<div class="msg bad">Primeiro carregue a análise da Box e detete os módulos — as turmas e disciplinas vêm de lá.</div>`;return}
+  const C=unCalc(),subst=$("#unSubst")&&$("#unSubst").checked;UN.C=C;
+  const muda=C.out.filter(x=>x.id!==x.atual&&(subst||!x.atual)),igual=C.out.filter(x=>x.id===x.atual).length,conflito=C.out.filter(x=>x.atual&&x.id!==x.atual).length;
+  const discsAll=[...new Map(C.rows.map(r=>[discCode(r.disc),r.disc])).entries()].sort((a,b)=>a[1].localeCompare(b[1],"pt",{numeric:true}));
+  const turmasAll=[...new Set(C.rows.map(r=>r.turma))];
+  el.innerHTML=`<div class="msg ok" style="margin-top:12px">${UN.L.length} aulas lidas · ${C.out.length} disciplinas de turmas reconhecidas · <b>${muda.length}</b> atribuição(ões) a fazer · ${igual} já iguais${conflito?` · ${conflito} com outro formador na BoxCheck${subst?" (vão ser substituídas)":" (ficam como estão)"}`:""}</div>
+    ${C.semT.size?`<h3 style="margin:14px 0 6px">Turmas do Untis sem correspondência</h3><div class="unmap">${[...C.semT.keys()].map(c=>`<label>${esc(c)}${UN.nC.get(c)?` <span class="hint" style="margin:0">${esc(UN.nC.get(c))}</span>`:""}<select data-unc="${esc(c)}"><option value="">— ignorar —</option>${turmasAll.map(t=>`<option>${esc(t)}</option>`).join("")}</select></label>`).join("")}</div>`:""}
+    ${C.semD.size?`<h3 style="margin:14px 0 6px">Disciplinas do Untis sem correspondência</h3><div class="unmap">${[...C.semD.entries()].map(([s,o])=>`<label>${esc(s)}${UN.nS.get(s)?` <span class="hint" style="margin:0">${esc(UN.nS.get(s))}</span>`:""} <span class="hint" style="margin:0">· ${[...o.turmas].slice(0,3).map(esc).join(", ")}</span><select data-uns="${esc(s)}"><option value="">— ignorar —</option>${discsAll.map(([c,d])=>`<option value="${esc(c)}">${esc(d)}</option>`).join("")}</select></label>`).join("")}</div>`:""}
+    ${C.semP.size?`<h3 style="margin:14px 0 6px">Professores do Untis que não estão nos formadores</h3><div class="unmap">${[...C.semP.keys()].map(t=>`<label>${esc(t)}${UN.nT.get(t)?` <span class="hint" style="margin:0">${esc(UN.nT.get(t))}</span>`:""}<select data-unt="${esc(t)}"><option value="">➕ criar formador novo</option>${profOpts("","")}</select></label>`).join("")}</div>`:""}
+    <div class="row" style="margin:14px 0 8px"><label class="chip"><input type="checkbox" id="unSubst" ${subst?"checked":""}> substituir também as que já têm outro formador</label><span class="grow"></span><button class="b" id="unApply" ${muda.length?"":"disabled"}>Aplicar ${muda.length} atribuição(ões)</button></div>
+    ${C.out.length?`<div style="max-height:420px;overflow:auto"><table class="rt"><thead><tr><th>Turma</th><th>Disciplina</th><th>No Untis</th><th>Na BoxCheck agora</th><th></th></tr></thead><tbody>${C.out.map(x=>`<tr${x.id!==x.atual&&(subst||!x.atual)?` style="background:var(--brandbg)"`:""}><td>${esc(x.r.turma)}</td><td>${esc(x.r.disc)}</td><td><b>${esc(unNomeP(x.id))}</b>${x.outros.length?`<br><span class="hint" style="margin:0">também: ${x.outros.map(o=>esc(unNomeP(o))).join(", ")}</span>`:""}</td><td>${esc(profName(x.atual)||"—")}</td><td>${x.id===x.atual?`<span class="tag ok">igual</span>`:x.atual&&!subst?`<span class="tag" style="background:var(--warnbg);color:var(--warn)">diferente</span>`:`<span class="tag" style="background:var(--brandbg);color:var(--brand)">a atribuir</span>`}</td></tr>`).join("")}</tbody></table></div>`:""}`;
+  const pend=new Set(muda.map(x=>x.k));
+  $("#unSubst").onchange=unRender;
+  el.querySelectorAll("[data-unc]").forEach(s=>s.onchange=()=>{const u=unCfg();if(s.value)u.cls[s.dataset.unc]=s.value;else delete u.cls[s.dataset.unc];save();unRender()});
+  el.querySelectorAll("[data-uns]").forEach(s=>s.onchange=()=>{const u=unCfg();if(s.value)u.sub[s.dataset.uns]=s.value;else delete u.sub[s.dataset.uns];save();unRender()});
+  el.querySelectorAll("[data-unt]").forEach(s=>s.onchange=()=>{const u=unCfg();if(s.value)u.tch[s.dataset.unt]=s.value;else delete u.tch[s.dataset.unt];save();unRender()});
+  $("#unApply").onclick=()=>{ponto("Antes de importar as atribuições do Untis");let n=0,novos=0;const criado=new Map();
+    for(const x of UN.C.out){if(!pend.has(x.k))continue;let id=x.id;
+      if(id.startsWith("?")){const t=id.slice(1);if(!t)continue;if(!criado.has(t)){const p={id:uid(),cod:t,nome:UN.nT.get(t)||t,email:UN.eT.get(t)||""};cfg.profs.push(p);unCfg().tch[t]=p.id;criado.set(t,p.id);novos++}id=criado.get(t)}
+      cfg.grid[x.k]=id;x.r.mods.forEach(m=>{if(m.profId===id)m.profId=""});n++}
+    cfg.profs.sort((a,b)=>a.nome.localeCompare(b.nome,"pt"));save();renderAll();unRender();
+    $("#unMsg").textContent=`${n} atribuição(ões) feitas${novos?`, ${novos} formador(es) novo(s) criados (acrescente-lhes o email em Formadores)`:""}. Pode anular.`;toast("Atribuições do Untis importadas")};
+}
+$("#unFiles").addEventListener("change",async e=>{const fl=[...e.target.files];if(!fl.length)return;const files={};for(const f of fl)files[f.name]=await lerTexto(f);
+  UN=unMontar(files,[]);UN.files=Object.keys(files);$("#unMsg").textContent=`Lidos: ${UN.files.join(", ")}`;e.target.value="";unRender()});
+$("#unPasteGo").onclick=()=>{const rows=$("#unPaste").value.split(/\r?\n/).map(l=>l.split(/\t|;/).map(x=>x.trim())).filter(r=>r.length>=3&&r[0]);
+  if(!rows.length){toast("Cole linhas com turma; disciplina; formador");return}UN=unMontar({},rows);$("#unMsg").textContent=`${rows.length} linha(s) coladas`;unRender()};
+
+/* ---------- pesquisa rápida (Ctrl+K) ---------- */
+const PAL={sel:0,res:[]};
+function palItens(){const I=[],add=(k,t,s,run)=>I.push({k,t,s,run,h:norm(t+" "+(s||""))});
+  document.querySelectorAll("#nav button").forEach(b=>add("Ir para",b.textContent.trim(),"",()=>show(b.dataset.t)));
+  add("Ação","Analisar a pasta da Box","Gestão Documental",()=>{show("box");$("#scanBtn").click()});
+  add("Ação","Ler o conteúdo dos documentos","Relatório",()=>{show("rel");$("#qGo").click()});
+  add("Ação","Exportar o relatório geral em PDF","",()=>baixarPDF(pdfGeral,pdfNomeG()));
+  add("Ação","Dossiê técnico-pedagógico (PDF para auditoria)","EQAVET / IGEC",()=>$("#dosGo").click());
+  add("Ação","Balanço do ano letivo (PDF)","",()=>$("#balGo").click());
+  add("Ação","Gerar Excel de emails","Enviar",()=>{show("env");$("#xlsGo").click()});
+  add("Ação","Importar atribuições do Untis","Atribuições",()=>{show("config");$("#untisCard").scrollIntoView({behavior:"smooth"})});
+  add("Ação","Envios automáticos e página do formador","Definições",()=>{show("def");$("#autoCard").scrollIntoView({behavior:"smooth"})});
+  if(cfg.auto&&cfg.auto.url)add("Ação","Publicar o relatório agora","envios automáticos",()=>publicar());
+  add("Ver","Documentos com o prazo ultrapassado","Relatório",()=>{show("rel");$("#fShow").value="atraso";$("#fProf").value="";renderReport()});
+  add("Ver","Ficheiros talvez na pasta errada","Relatório",()=>{show("rel");$("#fShow").value="errada";$("#fProf").value="";renderReport()});
+  add("Ver","Documentos dispensados","Relatório",()=>{show("rel");$("#fShow").value="disp";$("#fProf").value="";renderReport()});
+  const T=byTeacher(evaluate()),mp=new Map(T.map(t=>[t.p.id,t]));
+  for(const p of cfg.profs){const t=mp.get(p.id);add("Formador",p.nome,[p.cod,p.email,t?`${t.miss} em falta · ${pctTxt(t.ok,t.tot)}%`:""].filter(Boolean).join(" · "),()=>abrirFicha(p.id))}
+  const at=ativos(),turmas=[...new Set(at.map(m=>m.turma).filter(Boolean))],discs=[...new Set(at.map(m=>discShort(m.disc)).filter(Boolean))];
+  for(const t of turmas)add("Turma",t,"ver no relatório",()=>{show("rel");$("#fProf").value="";$("#fTxt").value=t;$("#fShow").value="tudo";renderReport()});
+  for(const d of discs)add("Disciplina",d,"ver no relatório",()=>{show("rel");$("#fProf").value="";$("#fTxt").value=d;$("#fShow").value="tudo";renderReport()});
+  for(const m of at.slice(0,4000))add("Módulo",modTitle(m),`${m.turma} · ${discShort(m.disc)} · ${profName(profOf(m))||"sem formador"}`,()=>{show("config");$("#modFilter").value=[m.turma,codCurto(m.cod)].join(" ");renderMods();$("#tbMods").scrollIntoView({behavior:"smooth",block:"start"})});
+  return I}
+function palAbrir(){let el=$("#bcPal");
+  if(!el){el=document.createElement("div");el.id="bcPal";el.className="bcpal";el.innerHTML=`<div class="bcpal-box" role="dialog" aria-label="Pesquisa rápida"><input type="text" id="palQ" placeholder="Procurar formador, turma, disciplina, módulo ou ação…" autocomplete="off" spellcheck="false"><div id="palR" class="bcpal-r"></div><div class="bcpal-f">↑↓ escolher · Enter abrir · Esc fechar</div></div>`;document.body.appendChild(el);
+    el.addEventListener("click",e=>{if(e.target===el)palFechar();const r=e.target.closest("[data-pi]");if(r){PAL.sel=+r.dataset.pi;palIr()}});
+    $("#palQ").addEventListener("input",palFiltrar);
+    $("#palQ").addEventListener("keydown",e=>{if(e.key==="ArrowDown"){e.preventDefault();PAL.sel=Math.min(PAL.res.length-1,PAL.sel+1);palDesenhar()}else if(e.key==="ArrowUp"){e.preventDefault();PAL.sel=Math.max(0,PAL.sel-1);palDesenhar()}else if(e.key==="Enter"){e.preventDefault();palIr()}else if(e.key==="Escape"){e.preventDefault();palFechar()}})}
+  PAL.itens=palItens();el.classList.add("on");$("#palQ").value="";palFiltrar();setTimeout(()=>$("#palQ").focus(),0)}
+function palFechar(){const el=$("#bcPal");if(el)el.classList.remove("on")}
+function palFiltrar(){const q=norm($("#palQ").value),ws=q.split(" ").filter(Boolean);
+  PAL.res=(ws.length?PAL.itens.filter(i=>ws.every(w=>i.h.includes(w))).sort((a,b)=>(b.h.startsWith(ws[0])?1:0)-(a.h.startsWith(ws[0])?1:0)):PAL.itens.filter(i=>i.k!=="Módulo"&&i.k!=="Disciplina")).slice(0,60);
+  PAL.sel=0;palDesenhar()}
+function palDesenhar(){$("#palR").innerHTML=PAL.res.map((i,n)=>`<div class="bcpal-i${n===PAL.sel?" on":""}" data-pi="${n}"><span class="k">${esc(i.k)}</span><span class="t">${esc(i.t)}</span><span class="s">${esc(i.s||"")}</span></div>`).join("")||`<p class="hint" style="padding:14px">Nada encontrado.</p>`;
+  const on=$("#palR .on");if(on)on.scrollIntoView({block:"nearest"})}
+function palIr(){const i=PAL.res[PAL.sel];if(!i)return;palFechar();fecharModal();try{i.run()}catch(e){toast(e.message)}}
+document.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&!e.shiftKey&&!e.altKey&&e.key.toLowerCase()==="k"){e.preventDefault();$("#bcPal.on")?palFechar():palAbrir()}});
+$("#palBtn").onclick=palAbrir;
+
+/* ---------- envios automáticos e página do formador ---------- */
+const AUTO0={url:"",ativo:false,dias:[1],hora:"08:30",maxIdade:7,formadores:true,geral:false,pub:true,avisar:"",fim:""};
+const auCfg=()=>{cfg.auto=Object.assign({},AUTO0,cfg.auto||{});return cfg.auto};
+const auUrl=()=>String((cfg.auto&&cfg.auto.url)||"").trim().replace(/\/+$/,"");
+function paginaDe(p){const u=auUrl();return u&&p&&p.tok?u+"/f/"+p.tok:""}
+const novoTok=()=>{const a=new Uint8Array(18);crypto.getRandomValues(a);return btoa(String.fromCharCode(...a)).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")};
+async function auFetch(path,opt){const u=auUrl();if(!u)throw new Error("Indique primeiro o endereço do serviço de envios.");if(!SES)throw new Error("Entre primeiro na Box (a publicação usa a sua sessão da Box para provar quem é).");
+  opt=opt||{};opt.headers=Object.assign({Authorization:"Bearer "+await accessToken()},opt.headers||{});
+  let r;try{r=await fetch(u+path,opt)}catch(e){throw new Error("Não foi possível contactar o serviço ("+u+"). Confirme o endereço e que o serviço está publicado.")}
+  const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.erro||("o serviço respondeu "+r.status));return j}
+function auMsg(h,k){$("#auMsg").innerHTML=h?`<div class="msg ${k||"ok"}">${h}</div>`:""}
+let auBusy=false;
+async function publicar(quiet){if(auBusy)return;const A=auCfg();if(!auUrl()){if(!quiet)toast("Indique o endereço do serviço em Definições");return}
+  if(!lastListing&&!quiet&&!confirm("Ainda não há nenhuma análise da Box carregada. Publicar mesmo assim?"))return;
+  auBusy=true;const b=$("#auPub");if(b)b.disabled=true;
+  try{auMsg("A preparar o relatório…","warn");
+    let mud=false;for(const p of cfg.profs)if(!p.tok){p.tok=novoTok();mud=true}if(mud)save();
+    const T=byTeacher(evaluate()).filter(t=>t.p.id!=="_"),lista=!!msCfg().lista;
+    const temPag=/\{pagina\}/.test(cfg.mail.body);
+    const F=T.map(t=>{let corpo=fill(cfg.mail.body,t,!lista,true);const pg=paginaDe(t.p);if(pg&&!temPag)corpo+=`\n\nPode consultar a qualquer momento a lista atualizada do que lhe falta, com o link para cada pasta da Box, em:\n${pg}`;
+      return{tok:t.p.tok,nome:t.p.nome,email:t.p.email||"",miss:t.miss,ok:t.ok,tot:t.tot,assunto:subj(t),corpo,pdfNome:pdfNomeF(t),
+        itens:rowsFor(t,true).map(r=>({turma:r.turma,disc:discShort(r.disc),mod:r.mod,falta:r.falta,loc:r.loc,link:r.item.link||"",obs:obsCurta(r.item)}))}});
+    const miss={};let n=0;for(const t of T){const k=[];for(const e of t.list)for(const i of e.items)if(!i.ok)k.push(i.key);if(k.length){miss[t.p.id]=k;n+=k.length}}
+    const tot=T.reduce((a,t)=>a+t.tot,0),ok=T.reduce((a,t)=>a+t.ok,0);
+    const snap={v:1,t:lastListing?lastListing.t:Date.now(),publicado:Date.now(),ano:anoLetivo(),prazo:cfg.mail.prazo||"",escola:"Escola Profissional da Ilha de São Jorge",formadores:F,
+      geral:{para:cfg.mail.relatorio_para||"",assunto:"Relatório de documentação não entregue — "+pdfData(),corpo:`${geralText().split("\n").slice(0,2).join("\n")}\n\nSegue em anexo o relatório completo, em PDF.\n\nEnviado automaticamente pela BoxCheck.`,pdfNome:pdfNomeG()},
+      agenda:{ativo:!!A.ativo,dias:A.dias,hora:A.hora,tz:"Atlantic/Azores",maxIdade:+A.maxIdade||7,formadores:A.formadores!==false,geral:!!A.geral,avisar:A.avisar||"",fim:A.fim||"",cc:msCfg().cc||""},
+      resumo:{tot,ok}};
+    const body=await new Response(new Blob([JSON.stringify(snap)]).stream().pipeThrough(new CompressionStream("gzip"))).arrayBuffer();
+    await auFetch("/publicar",{method:"POST",headers:{"Content-Type":"application/gzip"},body});
+    // PDF: só os que mudaram desde a última publicação
+    const H=lsJ("boxcheck_auto_pdf",{}),hs=s=>String(fnv(s));let up=0;
+    const alvo=F.filter(f=>f.miss>0&&f.email);
+    for(let i=0;i<alvo.length;i++){const f=alvo[i],t=T.find(x=>x.p.tok===f.tok),h=hs(JSON.stringify([f.itens,f.nome,anoLetivo(),cfg.mail.prazo,Object.keys(LOGOS)]));if(H[f.tok]===h)continue;
+      auMsg(`A enviar os PDF para o serviço… ${i+1} de ${alvo.length}`,"warn");
+      const doc=await pdfFormador(t);await auFetch("/pdf/"+f.tok,{method:"POST",headers:{"Content-Type":"text/plain"},body:pdfB64(doc)});H[f.tok]=h;up++}
+    if(A.geral&&cfg.mail.relatorio_para){auMsg("A enviar o PDF do relatório geral…","warn");const doc=await pdfGeral();await auFetch("/pdf/geral",{method:"POST",headers:{"Content-Type":"text/plain"},body:pdfB64(doc)})}
+    try{localStorage.setItem("boxcheck_auto_pdf",JSON.stringify(H))}catch(e){}
+    const M=lsJ("boxcheck_auto_miss",{});M[snap.t]={miss,n,ano:cfg.mail.ano,anoRef:anoRef(),prazo:cfg.mail.prazo};const ks=Object.keys(M).sort().slice(-6),M2={};ks.forEach(k=>M2[k]=M[k]);try{localStorage.setItem("boxcheck_auto_miss",JSON.stringify(M2))}catch(e){}
+    A.ultimaPub=Date.now();save();
+    auMsg(`Publicado às ${new Date().toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"})}: ${F.length} formadores${up?`, ${up} PDF atualizado(s)`:""}. As páginas dos formadores já mostram este relatório.`);
+    auEstado(true)}
+  catch(e){auMsg(esc(e.message),"bad");if(quiet)console.warn("publicação automática:",e)}
+  finally{auBusy=false;if(b)b.disabled=false}}
+let auH=null;
+function autoPublicarDepois(){const A=cfg.auto;if(!A||!A.pub||!auUrl()||!SES)return;clearTimeout(auH);auH=setTimeout(()=>publicar(true),20000)}
+const DIAS=["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
+function proximoEnvio(A){if(!A.ativo||!A.dias.length)return"";const [hh,mm]=String(A.hora||"08:30").split(":").map(Number);const d=new Date();
+  for(let i=0;i<8;i++){const x=new Date(d.getFullYear(),d.getMonth(),d.getDate()+i,hh,mm);if(x>d&&A.dias.includes(x.getDay())&&(!A.fim||x<=new Date(A.fim+"T23:59")))return x.toLocaleString("pt-PT",{weekday:"long",day:"numeric",month:"long",hour:"2-digit",minute:"2-digit"})}return""}
+async function auEstado(quiet){const el=$("#auState");if(!auUrl()){el.innerHTML="";return}
+  try{const j=await auFetch("/estado");const A=auCfg(),px=proximoEnvio(A);
+    // regista na app os envios automáticos já feitos (para o acompanhamento e o "efeito dos lembretes")
+    const M=lsJ("boxcheck_auto_miss",{}),reg0=A.regAte||0;let novo=0;
+    for(const r of (j.runs||[]).slice().reverse()){if(r.tipo!=="enviado"||(A.regAte||0)>=r.t)continue;const m=M[r.snapT];
+      if(m&&(r.enviados||[]).length){cfg.envios=[{id:uid(),t:r.t,label:"Envio automático",miss:m.miss,n:m.n,ano:m.ano,anoRef:m.anoRef,prazo:m.prazo},...(cfg.envios||[])].slice(0,30);novo++}A.regAte=r.t}
+    if(novo){save();renderEnvios()}else if((A.regAte||0)!==reg0)save();
+    el.innerHTML=`<div class="msg ${j.ms?"ok":"bad"}">Serviço ligado (v${esc(j.versao)}) · entrou como ${esc(j.quem)}${j.ms?` · emails saem de <b>${esc(j.from)}</b>`:" · <b>falta configurar o Office 365 no serviço</b> (MS_TENANT, MS_CLIENT_ID, MS_SECRET, MS_FROM)"}<br>
+      Último relatório publicado: ${j.snapT?`análise de ${new Date(j.snapT).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"})} (publicado ${new Date(j.recebido).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"})})`:"<b>nenhum</b> — carregue em “Publicar agora”"}
+      ${A.ativo?`<br>Próximo envio automático: <b>${esc(px||"—")}</b>`:"<br>Envios automáticos desligados (as páginas dos formadores funcionam na mesma)."}${j.job?`<br>Envio a decorrer: ${j.job.feitos} de ${j.job.total}.`:""}</div>
+      ${(j.runs||[]).length?`<table class="rt" style="margin-top:8px"><thead><tr><th>Quando</th><th>O que aconteceu</th></tr></thead><tbody>${j.runs.slice(0,10).map(r=>`<tr><td>${new Date(r.t).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"})}</td><td>${r.tipo==="adiado"?`Não enviou: ${esc(r.motivo)}`:`${esc(r.label||"Envio")}: ${(r.enviados||[]).length} email(s)${(r.falhas||[]).length?` · <span style="color:var(--bad)">${r.falhas.length} falha(s): ${esc(r.falhas.slice(0,2).map(f=>f.erro).join("; "))}</span>`:""}`}</td></tr>`).join("")}</tbody></table>`:""}`}
+  catch(e){el.innerHTML=quiet?"":`<div class="msg bad">${esc(e.message)}</div>`}}
+function renderAuto(){const A=auCfg();$("#auUrl").value=A.url||"";$("#auOn").checked=!!A.ativo;$("#auHora").value=A.hora||"08:30";$("#auIdade").value=A.maxIdade||7;
+  $("#auF").checked=A.formadores!==false;$("#auG").checked=!!A.geral;$("#auPubAuto").checked=!!A.pub;$("#auAvisar").value=A.avisar||"";$("#auFim").value=A.fim||"";
+  $("#auGto").textContent=cfg.mail.relatorio_para||"(defina em Enviar › Relatório geral)";
+  $("#auDias").innerHTML=[1,2,3,4,5,6,0].map(d=>`<label class="chip ${A.dias.includes(d)?"on":""}"><input type="checkbox" data-audia="${d}" ${A.dias.includes(d)?"checked":""}>${DIAS[d]}</label>`).join("");
+  $("#auPage").innerHTML=cfg.profs.length&&auUrl()?`${cfg.profs.filter(p=>p.tok).length} de ${cfg.profs.length} formadores com página. Cada página só mostra o que falta a esse formador; o endereço é secreto (não se adivinha). <button class="b s" id="auNovosTok" style="height:28px;padding:0 10px">Gerar endereços novos</button>`:"";
+  const nt=$("#auNovosTok");if(nt)nt.onclick=()=>{if(!confirm("Os endereços antigos das páginas deixam de funcionar. Continuar?"))return;cfg.profs.forEach(p=>p.tok=novoTok());try{localStorage.removeItem("boxcheck_auto_pdf")}catch(e){}save();renderAuto();publicar()};
+  auEstado(true)}
+$("#auUrl").addEventListener("change",e=>{auCfg().url=e.target.value.trim().replace(/\/+$/,"");save();renderAuto()});
+$("#auOn").addEventListener("change",e=>{auCfg().ativo=e.target.checked;save();renderAuto();if(auUrl())publicar()});
+$("#auHora").addEventListener("change",e=>{auCfg().hora=e.target.value||"08:30";save();renderAuto()});
+$("#auIdade").addEventListener("change",e=>{auCfg().maxIdade=Math.max(1,+e.target.value||7);save()});
+$("#auF").addEventListener("change",e=>{auCfg().formadores=e.target.checked;save()});
+$("#auG").addEventListener("change",e=>{auCfg().geral=e.target.checked;save()});
+$("#auPubAuto").addEventListener("change",e=>{auCfg().pub=e.target.checked;save()});
+$("#auAvisar").addEventListener("change",e=>{auCfg().avisar=e.target.value.trim();save()});
+$("#auFim").addEventListener("change",e=>{auCfg().fim=e.target.value;save();renderAuto()});
+$("#auDias").addEventListener("change",e=>{const c=e.target.closest("[data-audia]");if(!c)return;const A=auCfg(),d=+c.dataset.audia;A.dias=c.checked?[...new Set([...A.dias,d])]:A.dias.filter(x=>x!==d);save();renderAuto()});
+$("#auPub").onclick=()=>publicar();
+$("#auTest").onclick=async()=>{auMsg("A verificar…","warn");try{await auEstado();auMsg("")}catch(e){auMsg(esc(e.message),"bad")}};
+$("#auMail").onclick=async()=>{auMsg("A enviar o email de teste…","warn");try{const j=await auFetch("/testar",{method:"POST"});auMsg(`Email de teste enviado para ${esc(j.para)}. Veja a caixa de correio.`)}catch(e){auMsg(esc(e.message),"bad")}};
+$("#auSendNow").onclick=async()=>{if(!confirm("Enviar agora os emails a todos os formadores com documentos em falta, a partir do serviço (com o último relatório publicado)?"))return;
+  try{await publicar();const j=await auFetch("/enviar-agora",{method:"POST"});auMsg(`Envio iniciado: ${j.total} email(s). Saem em lotes de 30, de 15 em 15 minutos se forem muitos.`);setTimeout(()=>auEstado(true),8000)}catch(e){auMsg(esc(e.message),"bad")}};
+$("#auCopy").onclick=async()=>{try{const t=await (await fetch("worker-auto.js",{cache:"no-store"})).text();await copy(t)}catch(e){toast("Abra o código em worker-auto.js e copie-o à mão")}};
 
 /* ---------- init ---------- */
 try{localStorage.removeItem("box_skip")}catch(e){}
