@@ -591,6 +591,29 @@ body.esch #esMsg{padding:16px}
 .rc-amg button:hover{outline:2px solid var(--c);outline-offset:1px}
 .rc-leg{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--muted);margin-top:12px}.rc-leg b{width:14px;height:14px;border-radius:4px;display:inline-block;background:#f3f5f9}
 @media (max-width:820px){.rc-vis{order:3}}
+/* RoomCheck 1.3: responsivo */
+.rc-scroll{scroll-snap-type:x proximity;scroll-padding-left:52px}.rc-grid>.rc-dia{scroll-snap-align:start}
+.rc-md{overflow:hidden}.rc-mes.fit .rc-md{min-height:0}
+@media (max-width:1100px){.rc-bar{gap:10px}.rc-bar>.grow{display:none}.rc-esps{width:100%}}
+@media (max-width:700px){
+  .rc-scroll{scroll-padding-left:40px;margin:0 -4px}
+  .rc-bar{display:grid;grid-template-columns:1fr;gap:8px}.rc-vis{width:100%;order:0}.rc-vis button{flex:1}
+  .rc-nav{display:grid;grid-template-columns:auto auto auto 1fr;gap:6px}.rc-nav b{text-align:right}
+  .rc-grid{grid-template-columns:40px repeat(var(--nd),calc((100vw - 92px)/2.15));min-width:0}
+  .rc-grid.rc-3{grid-template-columns:40px repeat(var(--nd),calc(100vw - 104px))}
+  .rc-horas .rc-tp{right:3px}.rc-horas .rc-tp b{font-size:10.5px}.rc-horas .rc-tp em{font-size:9.5px}.rc-horas .rc-alm{font-size:8.5px;right:2px}
+  .rc-bl{font-size:11px;padding:2px 4px}
+  .rc-mes{grid-template-columns:repeat(var(--nd),minmax(0,1fr));min-width:0;gap:3px}
+  .rc-mes .rc-cab{font-size:11.5px;padding:2px 0}
+  .rc-md{min-height:64px;padding:3px;border-radius:7px;gap:2px}
+  .rc-mdn{font-size:12px;padding:0 4px}
+  .rc-mc{padding:1px 3px;font-size:10px;border-left-width:2px}.rc-mc span{display:none}
+  .rc-mais{font-size:10px;padding:0 2px}
+  .rc-ano{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}.rc-am{padding:8px 6px 6px}.rc-amg{gap:2px}.rc-amg button{font-size:10px;border-radius:4px}
+  .rc-leg{flex-wrap:wrap}
+  .rc-dwb{padding:14px 16px}
+}
+@media (max-width:420px){.rc-ano{grid-template-columns:1fr 1fr}}
 #tFse::placeholder,#tbTur [data-k=fse]::placeholder{text-transform:none}
 .rc-tps{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:13px}.rc-tps .b.s{height:30px;padding:0 9px;font-size:12px;font-variant-numeric:tabular-nums}
 .rc-tps .b.s.on{background:color-mix(in srgb,var(--brand) 12%,#fff);border-color:var(--brand);color:var(--brand)}
@@ -1527,7 +1550,7 @@ body.temfundos nav.side{padding-bottom:16px}
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.17"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.18"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo BoxCheck
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -4389,7 +4412,7 @@ loginUI();
 /* ---------- módulo RoomCheck: reservas do Auditório e dos Laboratórios de Informática 1 e 2 ----------
    Guardado neste navegador ("roomcheck") e na nuvem da EPISJ 360 (nome "rc"), junto por reserva: em cada uma vence a alteração mais recente
    (as canceladas ficam marcadas x:1 durante 90 dias para não voltarem de outro computador). Nada vai para a Box. */
-const RC_VER="1.2";
+const RC_VER="1.3";
 document.querySelectorAll("[data-rcver]").forEach(el=>el.textContent="v"+RC_VER);
 const RC_ESP0=[{id:"auditorio",n:"Auditório",sg:"Aud.",c:"#7c3aed",on:1},{id:"lab1",n:"Laboratório de Informática 1",sg:"LI1",c:"#0e7490",on:1},{id:"lab2",n:"Laboratório de Informática 2",sg:"LI2",c:"#c2410c",on:1}];
 let RC=(()=>{let o=null;try{o=JSON.parse(localStorage.getItem("roomcheck")||"null")}catch(e){}
@@ -4444,7 +4467,7 @@ function rcMapa(){const hoje=rcHoje(),E=RC.esp.filter(e=>e.on),esps=RCV.esp==="t
   const n=RC.cfg.sab?6:5,dias=[...Array(n)].map((_,i)=>rcMais(RCV.sem,i));const A=rcAtivas();
   if(!RC.cfg.sab&&A.some(r=>r.d===rcMais(RCV.sem,5)))dias.push(rcMais(RCV.sem,5));
   const T=rcTempos();let H0=T[0][0],H1=T[T.length-1][1];A.forEach(r=>{if(dias.includes(r.d)&&esps.some(e=>e.id===r.e)){H0=Math.min(H0,Math.floor(r.h0/30)*30);H1=Math.max(H1,Math.ceil(r.h1/30)*30)}});
-  const PX=1.15,alt=(H1-H0)*PX,estreito=esps.length>1,fim=rcMais(RCV.sem,dias.length-1);
+  const PX=rcPx(H1-H0,46),alt=(H1-H0)*PX,estreito=esps.length>1,fim=rcMais(RCV.sem,dias.length-1);
   $("#rcEsps").innerHTML=`<button class="rc-chip${RCV.esp==="todos"?" on":""}" data-rcesp="todos">Todos</button>`+E.map(e=>`<button class="rc-chip${RCV.esp===e.id?" on":""}" data-rcesp="${esc(e.id)}" style="--c:${esc(e.c)}"><i></i>${esc(e.n)}</button>`).join("");
   $("#rcSem").textContent=rcData(RCV.sem).toLocaleDateString("pt-PT",{day:"numeric",month:"short"})+" – "+rcData(fim).toLocaleDateString("pt-PT",{day:"numeric",month:"short",year:"numeric"});
   const horas=[];for(let m=Math.ceil(H0/60)*60;m<=H1;m+=60)if(m<T[0][0]-15||m>T[T.length-1][1]+15)horas.push(m); // horas só fora dos tempos letivos
@@ -4467,9 +4490,16 @@ function rcMapa(){const hoje=rcHoje(),E=RC.esp.filter(e=>e.on),esps=RCV.esp==="t
     let h0=H0+Math.floor((m-H0)/30)*30;if(d===hoje&&h0+30<=ag)h0=Math.ceil(ag/15)*15;
     rcNova({e:l.dataset.rce,d,h0,h1:Math.min(1439,h0+90)})});
   document.querySelectorAll("#rcMapa [data-rcr],#rcMapa [data-rcv]").forEach(b=>b.onclick=()=>{if(rcArrastou){rcArrastou=false;return}rcVer(RC.res[b.dataset.rcr||b.dataset.rcv])});
-  document.querySelectorAll("#rcGrid .rc-bl").forEach(b=>b.addEventListener("pointerdown",ev=>rcArrastar(ev,b,{H0,PX,T,hoje})))}
+  document.querySelectorAll("#rcGrid .rc-bl").forEach(b=>b.addEventListener("pointerdown",ev=>rcArrastar(ev,b,{H0,PX,T,hoje})));
+  const sc=$("#rcGrid").closest(".rc-scroll"),dh=$("#rcGrid .rc-dia.hoje");if(sc&&dh&&sc.scrollWidth>sc.clientWidth+4&&sc.dataset.sem!==RCV.sem){sc.dataset.sem=RCV.sem;sc.scrollLeft=Math.max(0,dh.offsetLeft-(window.innerWidth<700?40:52))}}
 /* RoomCheck 1.2: arrastar uma reserva para outra hora, dia ou espaço; nas que se repetem, pergunta se é só este dia ou todas */
 let rcArrastou=false;
+/* RoomCheck 1.3: o mapa ocupa a altura que o ecrã tem livre (e volta a desenhar-se quando a janela muda de tamanho) */
+function rcLivre(cab){const g=$("#rcGrid");if(!g||!g.offsetParent)return 0;const top=g.getBoundingClientRect().top+window.scrollY;
+  return Math.max(0,window.innerHeight-top-cab-28)} // 28 = margem do cartão por baixo
+function rcPx(min,cab){const h=rcLivre(cab),pq=window.innerWidth<700;if(!h)return 1.15;return Math.max(pq?.85:.9,Math.min(2.6,h/min))}
+let rcRsz=0,rcLarg=window.innerWidth;
+window.addEventListener("resize",()=>{clearTimeout(rcRsz);rcRsz=setTimeout(()=>{if(curTab==="rcMapa"&&!document.querySelector(".rc-bl.arr")){rcMapa()}rcLarg=window.innerWidth},150)});
 function rcArrastar(ev,el,o){if(ev.button!==0)return;const r=RC.res[el.dataset.rcr];if(!r||r.d<o.hoje)return;
   const dur=r.h1-r.h0,y0=ev.clientY,x0=ev.clientX,lane0=el.parentNode,top0=parseFloat(el.style.top),dy=y0-el.getBoundingClientRect().top;
   let ativo=false,alvo=null,dica=null;
@@ -4527,7 +4557,9 @@ function rcMesAno(E,esps){const hoje=rcHoje(),A=rcAtivas(),ids=new Set(esps.map(
       h+=`<div class="rc-md${d.slice(0,7)!==pre?" fora":""}${d===hoje?" hoje":""}${d<hoje?" pas":""}" data-rcmd="${d}"><button class="rc-mdn" data-rcir="${d}" title="Ver a semana">${rcData(d).getDate()}</button>
         ${L.slice(0,max).map(r=>{const e=rcE(r.e);return `<button class="rc-mc" data-rcr="${esc(r.id)}" style="--c:${esc(e.c)}" title="${esc(e.n+" · "+rcHm(r.h0)+"–"+rcHm(r.h1)+" · "+r.p+(r.t?" · "+r.t:""))}"><b>${rcHm(r.h0)}</b><span>${um?"":esc(e.sg)+" · "}${esc(r.p)}</span></button>`}).join("")}
         ${L.length>max?`<button class="rc-mais" data-rcir="${d}">+${L.length-max} mais</button>`:""}</div>`}
-    $("#rcGrid").innerHTML=h+`</div>`}
+    $("#rcGrid").innerHTML=h+`</div>`;
+    const sem=Math.round((rcData(fimM)-rcData(ini))/864e5/7)+1,lv=rcLivre(30),mn=window.innerWidth<700?64:104;
+    const rh=Math.floor((lv-30-sem*6)/sem);if(rh>mn){const g=$("#rcGrid .rc-mes");g.classList.add("fit");g.style.gridTemplateRows=`auto repeat(${sem},${rh}px)`}}
   else{const a0=ref.getMonth()>=8?y:y-1;$("#rcSem").textContent="Ano letivo "+a0+"/"+(a0+1);const tot=T.reduce((s,t)=>s+t[1]-t[0],0)*esps.length||1;
     let h=`<div class="rc-ano" style="--c:${esc(cor)}">`;
     for(let k=0;k<12;k++){const ym=new Date(a0,8+k,1),yy=ym.getFullYear(),m=ym.getMonth(),pre=rcIso(ym).slice(0,7),nd=comSab(pre)?6:5,ini=rcSeg(pre+"-01"),fimM=rcIso(new Date(yy,m+1,0));
