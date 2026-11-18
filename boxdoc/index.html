@@ -68,6 +68,7 @@ button.x:hover{color:var(--bad)}
 .it{font-size:13px;padding:3px 9px;border-radius:6px;border:1px solid}
 .it.ok{background:var(--okbg);border-color:#bfe0c1;color:#1f5a22}
 .it.bad{background:var(--badbg);border-color:#f2c3bd;color:#8c1d16}
+.it.warn{background:var(--warnbg);border-color:#f0d9a8;color:#7a4f00}
 .files{font-size:12px;color:var(--muted);margin-top:4px}
 .msg{padding:9px 12px;border-radius:7px;font-size:14px;margin:10px 0 0}
 .msg.ok{background:var(--okbg);color:#1f5a22} .msg.bad{background:var(--badbg);color:#8c1d16} .msg.info{background:#e8f0fb;color:#1c3f72}
@@ -350,13 +351,24 @@ button.big{width:100%;padding:13px 18px;font-size:16px}
   <div class="card">
     <div class="row">
       <label class="grow">Professor<select id="fProf"></select></label>
-      <label class="grow">Mostrar<select id="fShow"><option value="falta">Só o que falta</option><option value="tudo">Tudo (entregue e em falta)</option></select></label>
+      <label class="grow">Mostrar<select id="fShow"><option value="falta">Só o que falta</option><option value="aviso">O que falta e o que é suspeito</option><option value="tudo">Tudo (entregue e em falta)</option></select></label>
       <label class="grow">Procurar módulo/turma<input type="text" id="fTxt" placeholder="ex.: 10A"></label>
     </div>
     <div class="row" style="margin-top:10px">
       <label class="chip" id="chkFilesWrap"><input type="checkbox" id="chkFiles"> mostrar ficheiros encontrados</label>
     </div>
     <div id="warns"></div>
+  </div>
+  <div class="card">
+    <h2>Verificar o conteúdo dos documentos</h2>
+    <p class="hint">Lê o texto de cada documento entregue (só leitura, pela Box) e assinala os que estão <b>em branco ou quase vazios</b>. Também assinala ficheiros de 0 bytes e, se quiser, o <b>mesmo ficheiro colocado em vários módulos</b> (ex.: o modelo copiado sem preencher). Documentos digitalizados (imagens) não têm texto: aparecem como “a confirmar”, não como em branco. Os resultados ficam guardados — só os ficheiros novos ou alterados são lidos outra vez.</p>
+    <div class="row">
+      <label style="width:230px">Mínimo de palavras para contar como preenchido<input type="number" id="qMin" min="1" style="width:100%"></label>
+      <label class="chip" style="align-self:flex-end"><input type="checkbox" id="qDup"> assinalar ficheiros repetidos</label>
+      <button class="b" id="qGo" style="align-self:flex-end">Verificar conteúdo</button>
+      <span id="qMsg" class="hint" style="margin:0;align-self:flex-end"></span>
+    </div>
+    <div class="prog" id="qProg"><i></i></div>
   </div>
   <div id="report"></div>
 </section>
@@ -409,7 +421,7 @@ button.big{width:100%;padding:13px 18px;font-size:16px}
 <script>
 (function(){
 "use strict";
-const VERSAO="0.1"; // versão do BoxCheck — sobe a cada alteração publicada
+const VERSAO="0.2"; // versão do BoxCheck — sobe a cada alteração publicada
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 const $=s=>document.querySelector(s);
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -611,6 +623,7 @@ function ingestRows(head,rows,source){
 function applyCols(){
   const ip=+$("#colPath").value,inn=+$("#colName").value,id=+$("#colDate").value,it=+$("#colType").value;
   files=[];folders=[];
+  const hx=k=>rawHead.findIndex(h=>norm(h)===k),iId=hx("id"),iSz=hx("size"),iSh=hx("sha1");
   for(const r of rawRows){
     let p=(r[ip]||"").replace(/\\/g,"/").trim(); const nm=inn>=0?(r[inn]||"").trim():"";
     if(!p&&!nm)continue;
@@ -619,7 +632,8 @@ function applyCols(){
     const name=segs[segs.length-1]; const rawDir=segs.slice(0,-1).join("/");
     const isFolder=it>=0?/folder|pasta/i.test(r[it]||""):!/\.[a-z0-9]{1,6}$/i.test(name);
     if(isFolder){folders.push(segs.join("/"));continue}
-    files.push({path:segs.join("/"),rawDir,comps:segs.slice(0,-1).map(norm),name,nname:norm(name),date:id>=0?(r[id]||""):""});
+    files.push({path:segs.join("/"),rawDir,comps:segs.slice(0,-1).map(norm),name,nname:norm(name),date:id>=0?(r[id]||""):"",
+      fid:iId>=0?String(r[iId]||""):"",size:iSz>=0&&r[iSz]!==""&&r[iSz]!=null?+r[iSz]:null,sha1:iSh>=0?String(r[iSh]||""):""});
   }
   renderPreview();
 }
@@ -638,8 +652,23 @@ $("#parsePaste").onclick=()=>{const t=$("#csvPaste").value;if(t.trim())ingest(t,
 const segs=s=>String(s||"").split("/").map(norm).filter(Boolean);
 function segMatch(c,s){return c===s||(c.startsWith(s)&&/[\s\-(_.]/.test(c[s.length]))}
 function allIn(comps,ss){return ss.every(s=>comps.some(c=>segMatch(c,s)))}
+/* ---------- qualidade dos ficheiros (em branco, vazios, repetidos) ---------- */
+let CT={};try{CT=JSON.parse(localStorage.getItem("boxcheck_texto")||"{}")}catch(e){}
+const minPal=()=>Math.max(1,+(cfg.qual&&cfg.qual.min)||40);
+const dupOn=()=>!(cfg.qual&&cfg.qual.dup===false);
+function qualOf(f,dupMap){
+  if(f.size===0)return{lvl:"bad",txt:"ficheiro vazio (0 bytes)"};
+  const c=f.sha1&&CT[f.sha1];
+  if(c&&c.w!=null&&c.w<minPal()){
+    if((f.size||0)<150000)return{lvl:"bad",txt:`em branco ou quase vazio (${c.w} palavra${c.w===1?"":"s"})`};
+    return{lvl:"warn",txt:"sem texto — pode ser um documento digitalizado; confirme"}}
+  if(dupOn()&&f.sha1&&dupMap){const o=(dupMap.get(f.sha1)||[]).filter(x=>x.rawDir!==f.rawDir);
+    if(o.length)return{lvl:"warn",txt:`ficheiro idêntico a ${o.length} outro(s), ex.: ${o[0].path}`}}
+  return null;
+}
 function evaluate(){
   const out=[];
+  const dupMap=new Map();for(const f of files)if(f.sha1&&f.size>0){if(!dupMap.has(f.sha1))dupMap.set(f.sha1,[]);dupMap.get(f.sha1).push(f)}
   for(const m of cfg.mods){
     const ms=segs(m.pasta);const folder=ms.join(" / ");
     const modFiles=ms.length?files.filter(f=>allIn(f.comps,ms)):[];
@@ -651,7 +680,13 @@ function evaluate(){
         if(kws.length&&!kws.some(k=>f.nname.includes(k)))return false;
         if(exts.length){const e=(f.nname.match(/\.([a-z0-9]+)$/)||[])[1]||"";if(!exts.includes(e))return false}
         return true});
-      items.push({doc:d,ok:hits.length>=(d.min||1),hits});}
+      const q=hits.map(f=>({f,q:qualOf(f,dupMap)}));
+      const good=q.filter(x=>!x.q||x.q.lvl!=="bad"),clean=q.filter(x=>!x.q);
+      const need=d.min||1;let state,reasons=[];
+      if(good.length>=need){state=clean.length>=need?"ok":"warn";if(state==="warn")reasons=good.filter(x=>x.q).map(x=>`${x.f.name}: ${x.q.txt}`)}
+      else if(hits.length){state="blank";reasons=q.filter(x=>x.q&&x.q.lvl==="bad").map(x=>`${x.f.name}: ${x.q.txt}`)}
+      else state="missing";
+      items.push({doc:d,ok:state==="ok"||state==="warn",state,reasons,hits});}
     out.push({mod:m,items,nFiles:modFiles.length,folder});
   }
   return out;
@@ -672,12 +707,13 @@ function renderReport(){
   const fp=$("#fProf").value;
   $("#fProf").innerHTML=`<option value="">Todos</option>`+T.map(t=>`<option value="${t.p.id}" ${t.p.id===fp?"selected":""}>${esc(t.p.nome)}</option>`).join("");
   const tot=T.reduce((a,t)=>a+t.tot,0),ok=T.reduce((a,t)=>a+t.ok,0),profsMiss=T.filter(t=>t.miss>0).length;
+  const nBlank=ev.reduce((a,e)=>a+e.items.filter(i=>i.state==="blank").length,0),nWarn=ev.reduce((a,e)=>a+e.items.filter(i=>i.state==="warn").length,0);
   const pct=tot?Math.round(ok/tot*100):0;
   $("#tiles").innerHTML=`
    <div class="tile"><div class="v">${pct}%</div><div class="l">documentação entregue</div></div>
    <div class="tile"><div class="v" style="color:var(--bad)">${tot-ok}</div><div class="l">documentos em falta</div></div>
    <div class="tile"><div class="v">${profsMiss} / ${T.filter(t=>t.p.id!=="_").length}</div><div class="l">professores com falhas</div></div>
-   <div class="tile"><div class="v">${files.length}</div><div class="l">ficheiros na listagem da Box</div></div>`;countUp($("#tiles"));
+   <div class="tile"><div class="v" style="color:#b26a00">${nBlank+nWarn}</div><div class="l">em branco (${nBlank}) ou a confirmar (${nWarn})</div></div>`;countUp($("#tiles"));
   const w=[];
   if(!files.length)w.push(["info","Ainda não carregou a listagem da Box (em Dados da Box). Sem ela, tudo aparece em falta."]);
   const empty=ev.filter(e=>e.folder&&e.nFiles===0);
@@ -685,26 +721,77 @@ function renderReport(){
   const nofolder=ev.filter(e=>!e.folder);if(nofolder.length)w.push(["warn",`${nofolder.length} módulo(s) sem pasta definida.`]);
   const noprof=cfg.mods.filter(m=>!m.profId).length;if(noprof)w.push(["warn",`${noprof} módulo(s) sem professor atribuído.`]);
   $("#warns").innerHTML=w.map(([k,t])=>`<div class="msg ${k==="warn"?"bad":"info"}">${esc(t)}</div>`).join("");
-  const showAll=$("#fShow").value==="tudo",q=norm($("#fTxt").value),sf=$("#chkFiles").checked;
+  const mode=$("#fShow").value,showAll=mode==="tudo",q=norm($("#fTxt").value),sf=$("#chkFiles").checked;
+  const show=i=>showAll||!i.ok||(mode==="aviso"&&i.state==="warn");
   let html="";
   for(const t of T){ if(fp&&t.p.id!==fp)continue;
-    const mods=t.list.filter(e=>(!q||norm(modLabel(e.mod)+" "+e.mod.pasta).includes(q))&&(showAll||e.items.some(i=>!i.ok)));
+    const mods=t.list.filter(e=>(!q||norm(modLabel(e.mod)+" "+e.mod.pasta).includes(q))&&e.items.some(show));
     if(!mods.length&&!showAll)continue;
     const pc=t.tot?Math.round(t.ok/t.tot*100):100;
     html+=`<div class="prof"><div class="hd"><b>${esc(t.p.nome)}</b>${t.p.cod?`<span class="tag" style="background:#eef1f5;color:#4a5260">${esc(t.p.cod)}</span>`:""}<span class="hint" style="margin:0">${esc(t.p.email)}</span><span class="grow"></span>
       <div class="bar"><i style="width:${pc}%"></i></div><span>${t.ok}/${t.tot}</span>
       ${t.miss?`<span class="tag bad">${t.miss} em falta</span>`:`<span class="tag ok">completo</span>`}</div>`;
-    for(const e of mods){const its=showAll?e.items:e.items.filter(i=>!i.ok);
+    for(const e of mods){const its=e.items.filter(show);
       html+=`<div class="mod"><div class="t">${esc(modLabel(e.mod))} <span class="hint" style="font-weight:400">— ${esc(e.mod.pasta||"sem pasta")} · ${e.nFiles} ficheiro(s)</span></div>
-      <div class="items">${its.map(i=>`<span class="it ${i.ok?"ok":"bad"}">${i.ok?"✓":"✗"} ${esc(i.doc.nome)}${i.doc.min>1?` (${i.hits.length}/${i.doc.min})`:""}</span>`).join("")}</div>
+      <div class="items">${its.map(i=>`<span class="it ${{ok:"ok",warn:"warn",blank:"bad",missing:"bad"}[i.state]}" title="${esc(i.reasons.join("\n"))}">${{ok:"✓",warn:"⚠",blank:"✗",missing:"✗"}[i.state]} ${esc(i.doc.nome)}${i.state==="blank"?" (em branco)":""}${i.doc.min>1?` (${i.hits.length}/${i.doc.min})`:""}</span>`).join("")}</div>
+      ${its.filter(i=>i.reasons.length).map(i=>`<div class="files" style="color:${i.state==="blank"?"var(--bad)":"#8a5a00"}">${i.state==="blank"?"✗":"⚠"} <b>${esc(i.doc.nome)}:</b> ${i.reasons.map(esc).join(" · ")}</div>`).join("")}
       ${sf?e.items.filter(i=>i.hits.length).map(i=>`<div class="files"><b>${esc(i.doc.nome)}:</b> ${i.hits.map(h=>esc(h.name)).join(", ")}</div>`).join(""):""}</div>`;}
     if(!mods.length)html+=`<div class="mod hint">Sem módulos para mostrar.</div>`;
     html+=`</div>`;}
   $("#report").innerHTML=html||`<div class="card"><p class="hint" style="margin:0">${cfg.mods.length?"Nada em falta com estes filtros. 🎉":"Defina primeiro os módulos em Atribuições."}</p></div>`;
 }
 
+/* ---------- verificação do conteúdo (só leitura) ---------- */
+function qualInit(){cfg.qual=cfg.qual||{min:40,dup:true};$("#qMin").value=cfg.qual.min;$("#qDup").checked=cfg.qual.dup!==false}
+$("#qMin").addEventListener("change",e=>{cfg.qual=cfg.qual||{};cfg.qual.min=Math.max(1,+e.target.value||40);save();renderReport()});
+$("#qDup").addEventListener("change",e=>{cfg.qual=cfg.qual||{};cfg.qual.dup=e.target.checked;save();renderReport()});
+// pedido de leitura a um endereço da Box (API ou servidor de conteúdos), só GET
+async function boxRaw(url,hints,asText){
+  const h=new URL(url).hostname;if(!/(^|\.)box\.com$|(^|\.)boxcloud\.com$/.test(h))throw new Error("endereço inesperado");
+  for(let t=0;t<5;t++){const tok=await accessToken();const H={Authorization:"Bearer "+tok};if(hints)H["x-rep-hints"]=hints;
+    let r;try{r=await fetch(url,{method:"GET",headers:H})}catch(e){throw new Error("rede")}
+    if(r.status===202){await new Promise(s=>setTimeout(s,1500));continue}
+    if(r.status===429||r.status>=500){await new Promise(s=>setTimeout(s,800*2**t));continue}
+    if(r.status===401&&SES&&SES.mode==="oauth"&&t===0){await accessToken(true);continue}
+    if(!r.ok)throw new Error("Box "+r.status);
+    return asText?r.text():r.json()}
+  throw new Error("Box ocupada");
+}
+async function wordsOf(fid){
+  const info=await boxRaw(`https://api.box.com/2.0/files/${fid}?fields=representations`,"[extracted_text]");
+  let rep=((info.representations||{}).entries||[]).find(x=>x.representation==="extracted_text");
+  if(!rep)return{w:null,err:"sem texto disponível para este tipo"};
+  for(let i=0;i<12&&rep.status&&rep.status.state!=="success"&&rep.status.state!=="viewable";i++){
+    if(rep.status.state==="error")return{w:null,err:"a Box não conseguiu ler o texto"};
+    if(i)await new Promise(s=>setTimeout(s,1500));
+    const st=await boxRaw(rep.info.url);rep={...rep,...st};}
+  if(rep.status&&rep.status.state!=="success"&&rep.status.state!=="viewable")return{w:null,err:"texto ainda não disponível"};
+  const txt=await boxRaw(rep.content.url_template.replace("{+asset_path}",""),null,true);
+  const w=(txt.normalize("NFC").match(/[\p{L}\p{N}]{2,}/gu)||[]).length;
+  return{w};
+}
+const TEXT_EXT=/\.(pdf|docx?|odt|rtf|pptx?|odp|xlsx?|ods|txt)$/i;
+$("#qGo").onclick=async()=>{
+  if(!SES){toast("Entre primeiro na Box");return}
+  const ev=evaluate();const todo=new Map();
+  for(const e of ev)for(const i of e.items)for(const f of i.hits)if(f.fid&&f.sha1&&TEXT_EXT.test(f.name)&&!(CT[f.sha1]&&CT[f.sha1].w!=null)&&f.size!==0)todo.set(f.sha1,f);
+  if(!files.some(f=>f.fid)){$("#qMsg").textContent="Faça uma nova análise em Dados da Box (a listagem antiga não tem os dados necessários).";return}
+  const list=[...todo.values()];
+  if(!list.length){$("#qMsg").textContent="Todos os documentos já foram verificados.";renderReport();return}
+  const b=$("#qGo");b.disabled=true;$("#qProg").style.display="block";$("#qProg i").style.width="2%";
+  let done=0,err=0,idx=0;const t0=Date.now();
+  const worker=async()=>{while(idx<list.length){const f=list[idx++];
+    try{const r=await wordsOf(f.fid);if(r.w!=null)CT[f.sha1]={w:r.w,t:Date.now()};else err++}catch(e){err++}
+    done++;$("#qMsg").textContent=`A ler o texto… ${done}/${list.length}`;$("#qProg i").style.width=Math.max(2,Math.round(done/list.length*100))+"%";}};
+  await Promise.all(Array.from({length:Math.min(6,list.length)},worker));
+  try{localStorage.setItem("boxcheck_texto",JSON.stringify(CT))}catch(e){}
+  b.disabled=false;setTimeout(()=>{$("#qProg").style.display="none"},800);
+  $("#qMsg").textContent=`Concluído em ${Math.round((Date.now()-t0)/1000)} s: ${done-err} documento(s) lidos${err?`, ${err} sem texto disponível (não foram avaliados)`:""}.`;
+  renderReport();
+};
+
 /* ---------- send ---------- */
-function missingFor(t){return t.list.map(e=>({m:e.mod,miss:e.items.filter(i=>!i.ok).map(i=>i.doc.nome)})).filter(x=>x.miss.length)}
+function missingFor(t){return t.list.map(e=>({m:e.mod,miss:e.items.filter(i=>!i.ok).map(i=>i.doc.nome+(i.state==="blank"?" (o ficheiro entregue está em branco)":""))})).filter(x=>x.miss.length)}
 function listText(t){return missingFor(t).map(x=>`• ${modLabel(x.m)}: ${x.miss.join(", ")}`).join("\n")}
 function geralText(){
   const T=byTeacher(evaluate());const d=new Date().toLocaleDateString("pt-PT");
@@ -713,12 +800,14 @@ function geralText(){
   s+=`Entregue: ${ok}/${tot} (${tot?Math.round(ok/tot*100):0}%) · Em falta: ${tot-ok}\n\n`;
   for(const t of T){if(!t.miss)continue;s+=`${t.p.nome}${t.p.email?" <"+t.p.email+">":""} — ${t.miss} em falta\n${listText(t)}\n\n`}
   const done=T.filter(t=>!t.miss&&t.tot);if(done.length)s+=`Com tudo entregue: ${done.map(t=>t.p.nome).join(", ")}\n`;
+  const conf=[];for(const t of T)for(const e of t.list)for(const i of e.items)if(i.state==="warn")conf.push(`• ${t.p.nome} — ${modLabel(e.mod)}: ${i.doc.nome} (${i.reasons.join("; ")})`);
+  if(conf.length)s+=`\nA CONFIRMAR (${conf.length}):\n${conf.join("\n")}\n`;
   return s;
 }
 function geralCSV(){
   const T=byTeacher(evaluate());const q=v=>`"${String(v??"").replace(/"/g,'""')}"`;
   const rows=[["Código","Professor","Email","Módulo","Turma","Pasta","Documento","Estado"]];
-  for(const t of T)for(const e of t.list)for(const i of e.items)rows.push([t.p.cod||"",t.p.nome,t.p.email,e.mod.nome,e.mod.turma,e.mod.pasta,i.doc.nome,i.ok?"Entregue":"Em falta"]);
+  for(const t of T)for(const e of t.list)for(const i of e.items)rows.push([t.p.cod||"",t.p.nome,t.p.email,e.mod.nome,e.mod.turma,e.mod.pasta,i.doc.nome,({ok:"Entregue",warn:"Entregue — a confirmar",blank:"Entregue em branco",missing:"Em falta"})[i.state]]);
   return rows.map(r=>r.map(q).join(";")).join("\n");
 }
 function fill(tpl,t){return tpl.replace(/\{nome\}/g,t.p.nome).replace(/\{lista\}/g,listText(t)).replace(/\{prazo\}/g,cfg.mail.prazo||"[prazo]").replace(/\{total\}/g,t.miss)}
@@ -871,7 +960,7 @@ async function boxGet(path,params){
 }
 async function listFolder(id){
   let out=[],marker=null;
-  do{const p={fields:"id,type,name,modified_at",limit:1000,usemarker:"true"};if(marker)p.marker=marker;
+  do{const p={fields:"id,type,name,modified_at,size,sha1",limit:1000,usemarker:"true"};if(marker)p.marker=marker;
     const j=await boxGet(`folders/${id}/items`,p);out=out.concat(j.entries||[]);marker=j.next_marker||null}while(marker);
   return out;
 }
@@ -929,7 +1018,7 @@ $("#subfolders").addEventListener("click",e=>{const c=e.target.closest("[data-fi
 let lastListing=null;
 function useListing(j,label){
   lastListing=j;
-  ingestRows(["path","name","type","modified_at"],j.itens.map(x=>[x.path,x.name,x.type,x.modified_at||""]),label);
+  ingestRows(["path","name","type","modified_at","id","size","sha1"],j.itens.map(x=>[x.path,x.name,x.type,x.modified_at||"",x.id||"",x.size??"",x.sha1||""]),label);
   boxMsg(`${files.length} ficheiros e ${folders.length} pastas de “${j.pasta}” (${j.quando}).`,"ok");
   $("#dlList").style.display="";
 }
@@ -950,7 +1039,7 @@ $("#scanBtn").onclick=async()=>{
         while(active<CONC&&queue.length){const f=queue.shift();active++;
           listFolder(f.id).then(list=>{for(const x of list){
               if(x.type==="folder"){if(skipped(x.name)){nS++;continue}const p=f.path+"/"+x.name;itens.push({path:p,name:"",type:"folder"});queue.push({id:x.id,path:p});nP++}
-              else if(x.type==="file"){itens.push({path:f.path,name:x.name,type:"file",modified_at:x.modified_at||""});nF++}}})
+              else if(x.type==="file"){itens.push({path:f.path,name:x.name,type:"file",modified_at:x.modified_at||"",id:x.id,size:x.size,sha1:x.sha1||""});nF++}}})
           .catch(e=>{err=e}).finally(()=>{active--;$("#scanMsg").textContent=`A ler… ${nP} pastas, ${nF} ficheiros${nS?` · ${nS} saltadas`:""} · ${queue.length+active} por ler`;
             const done=nP+1-(queue.length+active),pct=Math.max(3,Math.min(99,Math.round(done/(nP+1)*100)));$("#scanProg i").style.width=pct+"%";pump()})}
       };pump();});
@@ -967,7 +1056,7 @@ function showLast(){try{const j=JSON.parse(localStorage.getItem("box_last_listin
   $("#lastScan").style.display="";$("#lastInfo").textContent=`Última análise guardada: ${j.pasta} · ${j.quando} · ${j.itens.filter(x=>x.type==="file").length} ficheiros`}catch(e){}}
 $("#lastScan").onclick=()=>{try{useListing(JSON.parse(localStorage.getItem("box_last_listing")),"a última análise")}catch(e){toast("Sem análise guardada")}};
 $("#dlList").onclick=()=>{if(!lastListing)return;const q=v=>`"${String(v??"").replace(/"/g,'""')}"`;
-  download(`listagem_box_${hoje()}.csv`,"﻿"+["path,name,type,modified_at"].concat(lastListing.itens.map(x=>[x.path,x.name,x.type,x.modified_at||""].map(q).join(","))).join("\n"),"text/csv;charset=utf-8")};
+  download(`listagem_box_${hoje()}.csv`,"﻿"+["path,name,type,modified_at,id,size,sha1"].concat(lastListing.itens.map(x=>[x.path,x.name,x.type,x.modified_at||"",x.id||"",x.size??"",x.sha1||""].map(q).join(","))).join("\n"),"text/csv;charset=utf-8")};
 
 /* ---------- exportar relatório ---------- */
 $("#dlCsv").onclick=()=>download(`relatorio_entregas_${hoje()}.csv`,"﻿"+geralCSV(),"text/csv;charset=utf-8");
@@ -979,6 +1068,7 @@ $("#gMail").addEventListener("click",e=>{const to=$("#gTo").value.trim();let bod
 $("#dlCfg").onclick=()=>download(`entregas_config_${hoje()}.json`,JSON.stringify(cfg,null,2),"application/json");
 
 /* ---------- init ---------- */
+qualInit();
 try{$("#skipDirs").value=localStorage.getItem("box_skip")||""}catch(e){}
 renderAll();
 $("#gTo").value=cfg.mail.relatorio_para||"";
