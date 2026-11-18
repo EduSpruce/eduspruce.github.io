@@ -1560,7 +1560,7 @@ body.esch.temfundos #esFr{height:calc(100vh - 116px);height:calc(100dvh - 116px)
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.19"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.20"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -4512,9 +4512,11 @@ function rcMapa(){const hoje=rcHoje(),E=RC.esp.filter(e=>e.on),esps=RCV.esp==="t
 let rcArrastou=false;
 /* RoomCheck 1.3: o mapa ocupa a altura que o ecrã tem livre (e volta a desenhar-se quando a janela muda de tamanho) */
 function rcLivre(cab){const g=$("#rcGrid");if(!g||!g.offsetParent)return 0;const top=g.getBoundingClientRect().top+window.scrollY;
-  return Math.max(0,window.innerHeight-top-cab-28)} // 28 = margem do cartão por baixo
+  const f=$("#fundos"),fh=f&&!f.hidden&&getComputedStyle(f).display!=="none"&&getComputedStyle(f).position==="fixed"?f.getBoundingClientRect().height:0; // 0.9.20: a barra dos logótipos fixa em baixo tapa o fim do mapa
+  return Math.max(0,window.innerHeight-top-cab-28-fh)} // 28 = margem do cartão por baixo
 function rcPx(min,cab){const h=rcLivre(cab),pq=window.innerWidth<700;if(!h)return 1.15;return Math.max(pq?.85:.9,Math.min(2.6,h/min))}
 let rcRsz=0,rcLarg=window.innerWidth;
+{const fb=$("#fundos");if(fb&&window.MutationObserver)new MutationObserver(()=>{if(curTab==="rcMapa"){clearTimeout(rcRsz);rcRsz=setTimeout(rcMapa,60)}}).observe(fb,{attributes:true,attributeFilter:["hidden"]})}
 window.addEventListener("resize",()=>{clearTimeout(rcRsz);rcRsz=setTimeout(()=>{if(curTab==="rcMapa"&&!document.querySelector(".rc-bl.arr")){rcMapa()}rcLarg=window.innerWidth},150)});
 function rcArrastar(ev,el,o){if(ev.button!==0)return;const r=RC.res[el.dataset.rcr];if(!r||r.d<o.hoje)return;
   const dur=r.h1-r.h0,y0=ev.clientY,x0=ev.clientX,lane0=el.parentNode,top0=parseFloat(el.style.top),dy=y0-el.getBoundingClientRect().top;
