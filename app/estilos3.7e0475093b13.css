@@ -979,3 +979,18 @@ html body.est-sge .cpm-gl{border-radius:0}
 @media print{html body .cpm-grd{display:none}}
 /* Classificações e Pautas (Coord. PROFIJ): caixas centradas por baixo de cada coluna */
 html body #view td>.pz-n{display:block;margin-left:auto!important;margin-right:auto!important}
+/* ===================== indicador gravacao largura fixa ===================== */
+/* O indicador «A guardar…/Guardado» do cabeçalho mudava de largura (16 px → 10 px → 16 px) a cada gravação e isso obrigava
+   o cabeçalho inteiro a reorganizar-se duas vezes por cada nota escrita. Com largura mínima fixa, gravar já não mexe na barra. */
+html body #saveSt{min-width:16px;justify-content:center}
+/* ===================== inicio-ecras-pequenos ===================== */
+/* Início em ecrãs mais pequenos: ver app/265-inicio-ecras-pequenos.js */
+html body #view .inlay.fav-esq{grid-template-areas:"hero side" "main side" "fav side"!important;grid-template-rows:auto auto 1fr!important}
+html body #view .inlay.fav-esq .in-fav{position:static!important;align-self:start}
+html body #view .inlay.fav-esq .in-main{align-self:start}
+html body #view .tij2{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:16px;row-gap:0;grid-auto-rows:4px;grid-auto-flow:row dense;align-items:start}
+html body #view .tij2>*{align-self:start;min-width:0}
+html body #view .tij2>.cdown,html body #view .tij2>.diaprof{grid-column:1/-1}
+html body #view .tij2>.wgph{grid-row-end:span 20;margin:0 0 16px}
+/* cabeçalho dos Favoritos: a dica passa para baixo em vez de ficar cortada */
+html body #view .wfav>.row{flex-wrap:wrap;row-gap:2px}
