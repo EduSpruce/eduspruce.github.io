@@ -563,7 +563,7 @@ th{font-weight:500}
     <p class="hint">Árvore de todas as pastas da última análise, com o número de ficheiros em cada uma (na própria pasta e no total, incluindo as subpastas). As pastas sem nenhum ficheiro aparecem a vermelho.</p>
     <div class="row">
       <label class="grow">Procurar pasta<input type="text" id="pTxt" placeholder="ex.: Matemática"></label>
-      <label style="width:180px">Abrir até ao nível<select id="pLvl"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option><option value="99">Tudo</option></select></label>
+      <label style="width:180px">Abrir até ao nível<select id="pLvl"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="99" selected>Tudo</option></select></label>
       <label class="grow">Mostrar<select id="pShow"><option value="tudo">Todas as pastas</option><option value="vazias">Só pastas vazias (lista)</option></select></label>
     </div>
     <div class="row" style="margin-top:10px">
@@ -685,7 +685,7 @@ th{font-weight:500}
 <script>
 (function(){
 "use strict";
-const VERSAO="1.8"; // versão do BoxCheck — sobe a cada alteração publicada
+const VERSAO="1.9"; // versão do BoxCheck — sobe a cada alteração publicada
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 const $=s=>document.querySelector(s);
 const uid=()=>Math.random().toString(36).slice(2,9);
