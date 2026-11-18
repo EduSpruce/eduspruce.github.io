@@ -158,6 +158,35 @@ button.big{width:100%;padding:13px 18px;font-size:16px}
 .top .grow{flex:1}
 .ver{font-size:11px;font-weight:600;color:var(--brand);background:var(--brandbg);border-radius:999px;padding:2px 8px;letter-spacing:.02em;margin-left:2px}
 .gver{display:inline-block;margin:0 0 8px}
+
+/* ---------- módulos em cartões (responsivo) ---------- */
+.mlist{display:flex;flex-direction:column;gap:10px}
+.mcard{display:grid;grid-template-columns:minmax(200px,1.3fr) minmax(220px,1.2fr) minmax(200px,1fr) 28px;grid-template-areas:"nome turma prof del" "pasta pasta pasta pasta" "docs docs docs docs";gap:8px 12px;padding:12px 14px;border:1px solid var(--line);border-left:3px solid var(--brand);border-radius:10px;background:#fff;transition:box-shadow .15s,border-color .15s}
+.mcard:hover{box-shadow:0 4px 14px rgba(16,24,40,.06)}
+.mcard.noprof{border-left-color:#e0a100}
+.mcard label,.mcard .f-docs{display:flex;flex-direction:column;gap:3px;min-width:0}
+.mcard label>span,.mcard .f-docs>span{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.mcard .chip{text-transform:none;font-size:12.5px;letter-spacing:0;color:var(--ink);font-weight:400;flex-direction:row}
+.f-nome{grid-area:nome}.f-turma{grid-area:turma}.f-prof{grid-area:prof}.f-pasta{grid-area:pasta}.f-docs{grid-area:docs}
+.f-del{grid-area:del;align-self:start;justify-self:end}
+.f-pasta input{font-size:13px;color:#4a5260}
+@media (max-width:1000px){.mcard{grid-template-columns:1fr 1fr 28px;grid-template-areas:"nome nome del" "turma prof prof" "pasta pasta pasta" "docs docs docs"}}
+@media (max-width:640px){.mcard{grid-template-columns:1fr 28px;grid-template-areas:"nome del" "turma turma" "prof prof" "pasta pasta" "docs docs"}}
+/* tabelas que viram cartões em ecrãs estreitos */
+@media (max-width:760px){
+  table.rt thead{display:none}
+  table.rt,table.rt tbody,table.rt tr,table.rt td{display:block;width:100%}
+  table.rt tr{border:1px solid var(--line);border-radius:10px;padding:8px 36px 8px 10px;margin-bottom:8px;position:relative}
+  table.rt td{border:0;padding:4px 0}
+  table.rt td:last-child{position:absolute;top:4px;right:4px;width:auto}
+  table.rt td.hm{display:none}
+  .row{flex-direction:column;align-items:stretch}
+  .row>label,.row>button,.row>a{width:100%!important}
+  .tiles{grid-template-columns:1fr 1fr}
+  .prof .hd{gap:8px}
+  .bar{width:90px}
+  #profForm label{width:100%!important}
+}
 </style>
 </head>
 <body>
@@ -217,7 +246,7 @@ button.big{width:100%;padding:13px 18px;font-size:16px}
     <div class="row" style="margin-bottom:10px">
       <label class="grow">Procurar<input type="text" id="profFilter" placeholder="código, nome ou email"></label>
     </div>
-    <table>
+    <table class="rt">
       <thead><tr><th style="width:130px">Código</th><th>Nome</th><th>Email</th><th class="hm">Módulos atribuídos</th><th></th></tr></thead>
       <tbody id="tbProfs"></tbody>
     </table>
@@ -236,7 +265,7 @@ button.big{width:100%;padding:13px 18px;font-size:16px}
   <div class="card">
     <h2>Tipos de documento exigidos</h2>
     <p class="hint">Cada linha é um documento que cada módulo deve ter. A app considera-o <b>entregue</b> se encontrar um ficheiro cujo caminho contenha as pastas do módulo <b>e</b> a secção do DTP indicada (ex.: <code>006</code> = “006 - Planificações”), cujo nome contenha uma das palavras-chave e tenha uma das extensões. Campos vazios aceitam qualquer valor. Maiúsculas e acentos são ignorados.</p>
-    <table>
+    <table class="rt">
       <thead><tr><th>Documento</th><th>Secção / pasta</th><th>Palavras-chave (separadas por vírgula)</th><th class="hm">Extensões</th><th class="hm">Mín.</th><th></th></tr></thead>
       <tbody id="tbDocs"></tbody>
     </table>
@@ -255,10 +284,7 @@ button.big{width:100%;padding:13px 18px;font-size:16px}
       <label style="min-width:200px">Atribuir os filtrados a<select id="bulkProf"></select></label>
       <button class="b s" id="bulkAssign" style="align-self:flex-end">Atribuir</button>
     </div>
-    <table>
-      <thead><tr><th style="width:18%">Módulo</th><th style="width:9%">Turma</th><th style="width:17%">Professor</th><th style="width:26%">Pastas do módulo</th><th>Documentos exigidos</th><th></th></tr></thead>
-      <tbody id="tbMods"></tbody>
-    </table>
+    <div id="tbMods" class="mlist"></div>
     <div class="row" style="margin-top:10px">
       <button class="b s" id="addMod">+ Módulo</button>
     </div>
@@ -421,7 +447,7 @@ button.big{width:100%;padding:13px 18px;font-size:16px}
 <script>
 (function(){
 "use strict";
-const VERSAO="0.2"; // versão do BoxCheck — sobe a cada alteração publicada
+const VERSAO="0.3"; // versão do BoxCheck — sobe a cada alteração publicada
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 const $=s=>document.querySelector(s);
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -531,13 +557,14 @@ function renderMods(){
   $("#bulkProf").innerHTML=profOpts("");
   const vis=cfg.mods.filter(modVisible);
   $("#detMsg").textContent=cfg.mods.length?`${vis.length} de ${cfg.mods.length} módulo(s) visíveis · ${cfg.mods.filter(m=>!m.profId).length} sem professor`:"";
-  $("#tbMods").innerHTML=vis.slice(0,400).map(m=>`<tr data-id="${m.id}">
-   <td><input type="text" data-k="nome" value="${esc(m.nome)}"></td>
-   <td><input type="text" data-k="turma" value="${esc(m.turma)}"></td>
-   <td><select data-k="profId">${profOpts(m.profId)}</select></td>
-   <td><input type="text" data-k="pasta" value="${esc(m.pasta)}" placeholder="caminho/da/pasta"></td>
-   <td><div class="chips">${cfg.docTypes.map(d=>{const on=m.docs.includes(d.id);return `<label class="chip ${on?"on":""}"><input type="checkbox" data-doc="${d.id}" ${on?"checked":""}>${esc(d.nome)}</label>`}).join("")}</div></td>
-   <td><button class="x" title="Remover" data-del>×</button></td></tr>`).join("")+(vis.length>400?`<tr><td colspan="6" class="hint">A mostrar 400 de ${vis.length}. Use o filtro para ver os restantes.</td></tr>`:"")||`<tr><td colspan="6" class="hint">${cfg.mods.length?"Nenhum módulo corresponde ao filtro.":"Ainda sem módulos. Detete-os na listagem da Box, adicione um a um ou importe em lote."}</td></tr>`;
+  $("#tbMods").innerHTML=vis.slice(0,400).map(m=>`<div class="mcard${m.profId?"":" noprof"}" data-id="${m.id}">
+   <label class="f-nome"><span>Módulo</span><input type="text" data-k="nome" value="${esc(m.nome)}"></label>
+   <label class="f-turma"><span>Turma</span><input type="text" data-k="turma" value="${esc(m.turma)}" title="${esc(m.turma)}"></label>
+   <label class="f-prof"><span>Professor</span><select data-k="profId">${profOpts(m.profId)}</select></label>
+   <button class="x f-del" title="Remover módulo" data-del>×</button>
+   <label class="f-pasta"><span>Pastas do módulo</span><input type="text" data-k="pasta" value="${esc(m.pasta)}" placeholder="caminho/da/pasta" title="${esc(m.pasta)}"></label>
+   <div class="f-docs"><span>Documentos exigidos</span><div class="chips">${cfg.docTypes.map(d=>{const on=m.docs.includes(d.id);return `<label class="chip ${on?"on":""}"><input type="checkbox" data-doc="${d.id}" ${on?"checked":""}>${esc(d.nome)}</label>`}).join("")}</div></div>
+  </div>`).join("")+(vis.length>400?`<p class="hint">A mostrar 400 de ${vis.length}. Use o filtro para ver os restantes.</p>`:"")||`<p class="hint">${cfg.mods.length?"Nenhum módulo corresponde ao filtro.":"Ainda sem módulos. Detete-os na listagem da Box, adicione um a um ou importe em lote."}</p>`;
 }
 $("#modFilter").addEventListener("input",renderMods);
 $("#bulkAssign").onclick=()=>{const pid=$("#bulkProf").value;if(!pid){toast("Escolha um professor");return}
@@ -561,12 +588,12 @@ $("#detect").onclick=()=>{
   cfg.mods.sort((a,b)=>(a.turma+a.nome).localeCompare(b.turma+b.nome,"pt",{numeric:true}));
   save();renderAll();toast(n?`${n} módulo(s) novos detetados`:"Nenhum módulo novo encontrado");
 };
-$("#tbMods").addEventListener("input",e=>{const tr=e.target.closest("tr");if(!tr)return;const m=cfg.mods.find(x=>x.id===tr.dataset.id);
+$("#tbMods").addEventListener("input",e=>{const tr=e.target.closest("[data-id]");if(!tr)return;const m=cfg.mods.find(x=>x.id===tr.dataset.id);
   if(e.target.dataset.doc){const id=e.target.dataset.doc;if(e.target.checked){if(!m.docs.includes(id))m.docs.push(id)}else m.docs=m.docs.filter(x=>x!==id);e.target.parentElement.classList.toggle("on",e.target.checked)}
   else m[e.target.dataset.k]=e.target.value;
-  save(); if(e.target.dataset.k==="profId")renderProfs();});
-$("#tbMods").addEventListener("change",e=>{if(e.target.tagName==="SELECT")$("#tbMods").dispatchEvent(new Event("input"))});
-$("#tbMods").addEventListener("click",e=>{if(!e.target.hasAttribute("data-del"))return;const id=e.target.closest("tr").dataset.id;cfg.mods=cfg.mods.filter(x=>x.id!==id);save();renderAll()});
+  save(); if(e.target.dataset.k==="profId"){renderProfs();tr.classList.toggle("noprof",!m.profId)}});
+
+$("#tbMods").addEventListener("click",e=>{if(!e.target.hasAttribute("data-del"))return;const id=e.target.closest("[data-id]").dataset.id;cfg.mods=cfg.mods.filter(x=>x.id!==id);save();renderAll()});
 $("#addMod").onclick=()=>{cfg.mods.push({id:uid(),nome:"",turma:"",profId:"",pasta:"",docs:cfg.docTypes.map(d=>d.id)});save();renderMods()};
 
 $("#doBulk").onclick=()=>{
