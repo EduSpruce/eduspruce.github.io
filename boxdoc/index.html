@@ -399,12 +399,32 @@ input[type=checkbox],input[type=radio]{accent-color:var(--brand)}
 th{font-weight:500}
 @media (max-width:820px){.schl img{height:24px}.schl{padding-right:10px}}
 @media (max-width:520px){.schl{display:none}}
+.lgwrap{display:flex;gap:22px;align-items:flex-start;margin-top:14px}
+.lgprev{width:230px;flex:none;text-align:center}.lgprev p{margin:10px 0 0;font-weight:600;color:#3d434b;font-size:13.5px}
+.lgpage{aspect-ratio:1/1.3;border:1px solid var(--line);border-radius:4px;box-shadow:0 2px 6px rgba(16,24,40,.08);background:#fff;padding:12px 14px;display:flex;flex-direction:column}
+.lghd{display:flex;align-items:center;gap:8px;height:30px}.lghd img{max-height:28px;max-width:70px;display:block}
+.lgL,.lgR{flex:none;display:flex;align-items:center}.lgT{flex:1;display:flex;flex-direction:column;gap:4px;align-items:center}.lgT i{height:4px;background:#d9dee5;border-radius:2px;width:60%}.lgT i+i{width:42%}
+.lgln{margin-top:22px;display:flex;flex-direction:column;gap:7px}.lgln i{height:3px;background:#dfe3e8;border-radius:2px;width:100%}
+.lgft{margin-top:auto;border-top:1px solid var(--line);padding-top:8px;display:flex;justify-content:center;min-height:30px}.lgft img{max-height:22px;max-width:120px}
+.lgph{font-size:10px;font-weight:600;letter-spacing:.06em;color:#6f7680;border:1.5px dashed #c9cfd8;border-radius:3px;padding:3px 7px}
+.lgslots{flex:1;display:flex;flex-direction:column;gap:14px;min-width:0}
+.lgslot{display:flex;gap:20px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:14px 16px;background:#fff}
+.lgslot.main{background:#f3f9fb;border-color:#9fc9d6}.lgslot.drag{outline:2px dashed var(--brand);outline-offset:2px}
+.lgbox{width:170px;height:112px;flex:none;border:1px solid #c9cfd8;border-radius:4px;display:flex;align-items:center;justify-content:center;background:#fff;cursor:pointer;padding:10px}
+.lgbox img{max-width:100%;max-height:100%;display:block}.lgbox.vazio{border:2px dashed #c9cfd8;flex-direction:column;gap:6px;color:#4a5260;font-weight:600;font-size:13px}
+.lgbox.vazio svg{width:30px;height:30px;stroke:#4a5260;fill:none;stroke-width:1.8}
+.lgslot h4{margin:0;font-size:15.5px;display:flex;align-items:center;gap:8px}.lgslot .opt{font-size:12px;font-weight:600;background:#e2f0f6;color:#0b5a75;border-radius:4px;padding:1px 7px}
+.lgslot p{margin:6px 0 10px;color:#4a5260;font-size:13.5px}
+.lgslot .row button svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;vertical-align:-2px;margin-right:6px}
+button.rm{background:#fff;color:var(--bad);border-color:#e3b4b4}button.rm:hover{background:var(--badbg);border-color:var(--bad)}
+.schl.wbg img{background:#fff;border-radius:6px;padding:2px 6px}
+@media (max-width:820px){.lgwrap{flex-direction:column}.lgprev{width:200px}.lgslot{flex-direction:column;align-items:flex-start}}
 </style>
 </head>
 <body>
 <div id="gate" class="gate">
   <div class="gcard">
-    <img class="gschl" src="https://www.episj.com/wp-content/uploads/2024/05/logo_2024_2-mobile.png" alt="Escola Profissional da Ilha de São Jorge" onerror="this.remove()">
+    <img class="gschl" src="https://www.episj.com/wp-content/uploads/2024/05/logo_2024_2-mobile.png" alt="Escola Profissional da Ilha de São Jorge" onerror="this.style.display='none'">
     <div class="glogo"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="bcgA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f5fb8"/><stop offset=".55" stop-color="#163269"/><stop offset="1" stop-color="#0c1d40"/></linearGradient><linearGradient id="bckA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5cc985"/><stop offset="1" stop-color="#2f9e57"/></linearGradient></defs><rect x="1.5" y="1.5" width="29" height="29" rx="8.5" fill="url(#bcgA)"/><path d="M1.5 12C9 8 20 7 30.5 9.5V10C20 8 9 9.5 1.5 13.5z" fill="#fff" opacity=".10"/><path d="M14.5 6.6 22 10.6 14.5 14.6 7 10.6z" fill="#fff"/><path d="M7 10.6 14.5 14.6V23.4L7 19.4z" fill="#e3ebfa"/><path d="M22 10.6 14.5 14.6V23.4L22 19.4z" fill="#b7c8ea"/><path d="M10.7 8.6 18.2 12.6" stroke="#163269" stroke-opacity=".35" stroke-width="1.1"/><circle cx="23" cy="22.6" r="6.2" fill="url(#bckA)" stroke="#0c1d40" stroke-width="1.6"/><path d="M20.2 22.7l1.9 1.9 3.8-3.9" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
     <h1>Box<b>Check</b></h1><div class="ver gver" data-ver></div>
     <p class="gsub">Escola Profissional da Ilha de São Jorge<br><span>Controlo de entregas de documentação</span></p>
@@ -430,7 +450,7 @@ th{font-weight:500}
     <p class="gfoot">Só leitura: a app não altera, move nem apaga nada na Box.</p>
   </div>
 </div>
-<div class="top"><a class="schl" href="https://www.episj.com" target="_blank" rel="noopener" title="Escola Profissional da Ilha de São Jorge"><img src="https://www.episj.com/wp-content/uploads/2024/05/logo_2024_2-mobile.png" alt="Escola Profissional da Ilha de São Jorge" onerror="this.parentNode.remove()"></a><div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="bcgB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f5fb8"/><stop offset=".55" stop-color="#163269"/><stop offset="1" stop-color="#0c1d40"/></linearGradient><linearGradient id="bckB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5cc985"/><stop offset="1" stop-color="#2f9e57"/></linearGradient></defs><rect x="1.5" y="1.5" width="29" height="29" rx="8.5" fill="url(#bcgB)"/><path d="M1.5 12C9 8 20 7 30.5 9.5V10C20 8 9 9.5 1.5 13.5z" fill="#fff" opacity=".10"/><path d="M14.5 6.6 22 10.6 14.5 14.6 7 10.6z" fill="#fff"/><path d="M7 10.6 14.5 14.6V23.4L7 19.4z" fill="#e3ebfa"/><path d="M22 10.6 14.5 14.6V23.4L22 19.4z" fill="#b7c8ea"/><path d="M10.7 8.6 18.2 12.6" stroke="#163269" stroke-opacity=".35" stroke-width="1.1"/><circle cx="23" cy="22.6" r="6.2" fill="url(#bckB)" stroke="#0c1d40" stroke-width="1.6"/><path d="M20.2 22.7l1.9 1.9 3.8-3.9" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Box<b>Check</b></span><span class="ver" data-ver></span></div><span class="sub">Escola Profissional da Ilha de São Jorge</span><span class="grow"></span><label class="anasel" id="anaTop" style="display:none"><span>Análise</span><select id="anaSel" title="Escolha a análise guardada a usar"></select></label><span id="bg" class="bgp" style="display:none"></span><span class="undo"><button id="undoBtn" title="Anular (Ctrl+Z)" disabled>↶ Anular</button><button id="redoBtn" title="Refazer (Ctrl+Shift+Z)" disabled>↷ Refazer</button></span><span id="who" class="who" style="display:none"></span></div>
+<div class="top"><a class="schl" href="https://www.episj.com" target="_blank" rel="noopener" title="Escola Profissional da Ilha de São Jorge"><img src="https://www.episj.com/wp-content/uploads/2024/05/logo_2024_2-mobile.png" alt="Escola Profissional da Ilha de São Jorge" onerror="this.parentNode.style.display='none'"></a><div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="bcgB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f5fb8"/><stop offset=".55" stop-color="#163269"/><stop offset="1" stop-color="#0c1d40"/></linearGradient><linearGradient id="bckB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5cc985"/><stop offset="1" stop-color="#2f9e57"/></linearGradient></defs><rect x="1.5" y="1.5" width="29" height="29" rx="8.5" fill="url(#bcgB)"/><path d="M1.5 12C9 8 20 7 30.5 9.5V10C20 8 9 9.5 1.5 13.5z" fill="#fff" opacity=".10"/><path d="M14.5 6.6 22 10.6 14.5 14.6 7 10.6z" fill="#fff"/><path d="M7 10.6 14.5 14.6V23.4L7 19.4z" fill="#e3ebfa"/><path d="M22 10.6 14.5 14.6V23.4L22 19.4z" fill="#b7c8ea"/><path d="M10.7 8.6 18.2 12.6" stroke="#163269" stroke-opacity=".35" stroke-width="1.1"/><circle cx="23" cy="22.6" r="6.2" fill="url(#bckB)" stroke="#0c1d40" stroke-width="1.6"/><path d="M20.2 22.7l1.9 1.9 3.8-3.9" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Box<b>Check</b></span><span class="ver" data-ver></span></div><span class="sub">Escola Profissional da Ilha de São Jorge</span><span class="grow"></span><label class="anasel" id="anaTop" style="display:none"><span>Análise</span><select id="anaSel" title="Escolha a análise guardada a usar"></select></label><span id="bg" class="bgp" style="display:none"></span><span class="undo"><button id="undoBtn" title="Anular (Ctrl+Z)" disabled>↶ Anular</button><button id="redoBtn" title="Refazer (Ctrl+Shift+Z)" disabled>↷ Refazer</button></span><span id="who" class="who" style="display:none"></span></div>
 <div class="shell">
   <nav id="nav" class="side">
     <button data-t="box" class="on"><svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>Dados da Box</button>
@@ -441,6 +461,7 @@ th{font-weight:500}
     <button data-t="rel"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 15l2 2 4-4"/></svg>Relatório</button>
     <button data-t="est"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 6-6"/></svg>Estatísticas</button>
     <button data-t="env"><svg viewBox="0 0 24 24"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>Enviar</button>
+    <button data-t="def"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Definições</button>
     <button data-t="cop"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>Guardar / carregar</button>
     <div class="foot">BoxCheck <span data-ver></span> — ferramenta interna da Escola Profissional da Ilha de São Jorge. Só leitura: não altera nada na Box.<br>Não é um produto da Box, Inc.</div>
   </nav>
@@ -486,7 +507,8 @@ th{font-weight:500}
       <span id="detMsg" class="hint" style="margin:0"></span>
     </div>
     <div class="row" style="margin-bottom:10px">
-      <label class="grow">Procurar turma ou disciplina<input type="text" id="gFilter" placeholder="ex.: A01 ou Matemática"></label>
+      <label class="grow">Procurar turma ou disciplina<input type="text" id="gFilter" placeholder="ex.: A01 ou Matemática ou nome do formador"></label>
+      <label style="min-width:240px">Formador<select id="gProf"></select></label>
       <label class="chip" style="align-self:flex-end"><input type="checkbox" id="gEmpty"> só sem formador</label>
     </div>
     <div id="grid"></div>
@@ -709,18 +731,62 @@ th{font-weight:500}
       <button class="b s" id="cpTxt">Copiar relatório (texto)</button>
       <button class="b s" id="cpCsv">Copiar relatório (CSV)</button>
       <button class="b s" id="dlCsv">Descarregar Excel (CSV)</button>
-      <button class="b s" id="prRep">Imprimir / guardar PDF</button>
+      <button class="b s" id="prRep">Descarregar PDF</button>
     </div>
     <div class="row" style="margin-top:10px">
       <label class="grow">Enviar o relatório geral para<input type="text" id="gTo" placeholder="direcao@escola.pt"></label>
-      <a class="b" id="gMail" style="text-decoration:none;align-self:flex-end" href="#">Abrir no email</a>
+      <button class="b" id="gSend" style="align-self:flex-end">Enviar com PDF (Office 365)</button><a class="b s" id="gMail" style="text-decoration:none;align-self:flex-end" href="#">Abrir no email</a>
     </div>
     <div class="mailbox" id="geralPrev" style="max-height:260px;overflow:auto"></div>
   </div>
   <div class="card">
     <h2>Mensagens individuais</h2>
-    <p class="hint">“Abrir no email” abre o seu programa de email (Outlook, Mail, Gmail…) com a mensagem já escrita — só tem de carregar em Enviar.</p>
+    <p class="hint"><b>Enviar com PDF</b> envia logo pelo Office 365, com o relatório do formador em PDF em anexo (configure em <b>Definições</b>). “Abrir no email” abre o seu programa de email com a mensagem já escrita e descarrega o PDF para o anexar à mão.</p>
+    <div class="row" style="margin-bottom:12px;background:#f6f8fb;border:1px solid var(--line);border-radius:10px;padding:10px 12px">
+      <label class="grow">Formador<select id="mProf"></select></label>
+      <button class="b" id="sendAll" style="align-self:flex-end">Enviar a todos com PDF</button>
+      <label class="chip" style="align-self:flex-end"><input type="checkbox" id="sendReg" checked> registar o envio</label>
+    </div>
+    <div id="sendMsg"></div>
     <div id="mails"></div>
+  </div>
+</section>
+
+<!-- DEFINIÇÕES -->
+<section id="def">
+  <div class="card">
+    <h2>Logótipos dos Documentos</h2>
+    <div class="lgwrap">
+      <div class="lgprev"><div class="lgpage">
+        <div class="lghd"><span class="lgL" id="lgPvMain"></span><span class="lgT"><i></i><i></i></span><span class="lgR" id="lgPvRight"></span></div>
+        <div class="lgln"><i style="width:62%"></i><i></i><i></i><i style="width:85%"></i><i></i><i style="width:70%"></i><i></i><i style="width:55%"></i></div>
+        <div class="lgft"><span id="lgPvFoot"></span></div>
+      </div><p>Assim fica num documento</p></div>
+      <div class="lgslots" id="lgSlots"></div>
+    </div>
+    <p class="hint" style="margin:14px 0 0"><b>PNG com fundo transparente, JPG ou SVG</b> — toque numa caixa ou arraste a imagem para cima dela. As imagens são reduzidas e guardadas na sua conta (e incluídas na cópia de segurança).</p>
+    <input type="file" id="lgFile" accept="image/png,image/jpeg,image/svg+xml,.png,.jpg,.jpeg,.svg" style="display:none">
+  </div>
+  <div class="card">
+    <h2>Envio pelo Office 365</h2>
+    <p class="hint">Com esta ligação, o BoxCheck envia os emails <b>a partir da sua conta da escola</b>, com o relatório em <b>PDF em anexo</b> — sem abrir o programa de email. Os emails ficam nos seus Itens Enviados. A app só pede permissão para <b>enviar email em seu nome</b> (e ler o seu nome); não lê a sua caixa de correio.</p>
+    <div class="row">
+      <label class="grow">ID da aplicação (cliente)<input type="text" id="msClient" placeholder="ex.: 1a2b3c4d-…" spellcheck="false"></label>
+      <label class="grow">ID do diretório (inquilino) ou domínio<input type="text" id="msTenant" placeholder="ex.: episj.com ou 5e6f7a8b-…" spellcheck="false"></label>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <label class="grow">Enviar sempre com cópia (CC) para <span class="hint">(opcional)</span><input type="text" id="msCc" placeholder="ex.: secretaria@episj.com"></label>
+      <label class="chip" style="align-self:flex-end"><input type="checkbox" id="msLista"> pôr também a lista no corpo do email</label>
+    </div>
+    <div class="row" style="margin-top:12px"><button class="b" id="msLogin">Entrar com a conta Microsoft</button><button class="b s" id="msLogout" style="display:none">Terminar sessão Microsoft</button><span id="msState" class="hint" style="margin:0"></span></div>
+    <details style="margin-top:14px"><summary class="hint" style="cursor:pointer;margin:0"><b>Como criar a ligação (uma vez, como administrador)</b></summary>
+      <ol class="hint" style="line-height:1.6;margin-top:8px">
+        <li>Abra <a href="https://entra.microsoft.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade" target="_blank" rel="noopener">entra.microsoft.com › Registos de aplicações</a> e clique em <b>Novo registo</b>.</li>
+        <li>Nome: <code>BoxCheck</code> · Tipos de conta: <b>Só contas neste diretório organizacional</b> · URI de redirecionamento: plataforma <b>Aplicação de página única (SPA)</b> com <code id="msRedir"></code>. Clique em <b>Registar</b>.</li>
+        <li>Copie o <b>ID da aplicação (cliente)</b> e o <b>ID do diretório (inquilino)</b> para os campos acima.</li>
+        <li>Em <b>Permissões de API › Adicionar uma permissão › Microsoft Graph › Permissões delegadas</b>, escolha <code>Mail.Send</code> (o <code>User.Read</code> já vem). Clique em <b>Conceder consentimento de administrador</b>.</li>
+        <li>Volte aqui e clique em <b>Entrar com a conta Microsoft</b>.</li>
+      </ol></details>
   </div>
 </section>
 
@@ -748,7 +814,7 @@ th{font-weight:500}
 <script>
 (function(){
 "use strict";
-const VERSAO="1.11"; // versão do BoxCheck — sobe a cada alteração publicada
+const VERSAO="1.12"; // versão do BoxCheck — sobe a cada alteração publicada
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 const $=s=>document.querySelector(s);
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -772,6 +838,8 @@ const OLD_BODY="Caro(a) {nome},\n\nNa verificação das pastas da Box, constatei
 const defaultCfg=()=>({schema:2,docTypes:dtpTypes(),profs:[],mods:[],grid:{},desig:{},envios:[],
   mail:{subj:MAIL_SUBJ,prazo:"",ano:"",body:MAIL_BODY,relatorio_para:""},qual:{min:40,dup:true}});
 let cfg=load()||defaultCfg();
+const LGKEY="boxcheck_logos"; // logótipos dos documentos (guardados à parte: não entram no histórico de anular)
+let LOGOS=(()=>{try{return JSON.parse(localStorage.getItem(LGKEY)||"{}")||{}}catch(e){return{}}})();
 let files=[]; // {path, rawDir, comps, name, nname, date, fid, size, sha1}
 let folders=[]; // caminhos de pastas (para detetar módulos e saber se uma pasta existe)
 let rawRows=null, rawHead=null;
@@ -951,7 +1019,7 @@ let curTab="box";
 $("#nav").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;show(b.dataset.t)});
 function show(t){curTab=t;document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
   document.querySelectorAll("main>section").forEach(s=>s.classList.toggle("on",s.id===t));
-  if(t==="rel")renderReport(); if(t==="est")renderEst(); if(t==="pas")renderTree(); if(t==="alt")renderAlt(); if(t==="rel"||t==="alt")verificarFundo(); if(t==="env")renderSend(); if(t==="cop"){$("#cfgTxt").value=JSON.stringify(cfg,null,2);renderRP()}}
+  if(t==="rel")renderReport(); if(t==="est")renderEst(); if(t==="pas")renderTree(); if(t==="alt")renderAlt(); if(t==="rel"||t==="alt")verificarFundo(); if(t==="env")renderSend(); if(t==="def")renderDef(); if(t==="cop"){$("#cfgTxt").value=JSON.stringify(cfg,null,2);renderRP()}}
 function refreshAll(){renderAll();if(curTab==="rel")renderReport();if(curTab==="est")renderEst();if(curTab==="env")renderSend();if(curTab==="pas")renderTree();if(curTab==="alt")renderAlt();if(curTab==="cop"){$("#cfgTxt").value=JSON.stringify(cfg,null,2);renderRP()}}
 const debounce=(fn,ms)=>{let h;return()=>{clearTimeout(h);h=setTimeout(fn,ms)}};
 
@@ -1043,9 +1111,10 @@ function gridRows(){
   return [...map.values()].sort((a,b)=>a.ano.localeCompare(b.ano)||a.turma.localeCompare(b.turma,"pt",{numeric:true})||a.disc.localeCompare(b.disc,"pt",{numeric:true}));
 }
 function renderGrid(){
-  const q=norm($("#gFilter").value),only=$("#gEmpty").checked;
+  const q=norm($("#gFilter").value),only=$("#gEmpty").checked,gp=$("#gProf"),pf=gp.value;
+  gp.innerHTML=profOpts(pf,`<option value="">Todos os formadores</option>`);gp.value=cfg.profs.some(p=>p.id===pf)?pf:"";const pid=gp.value;
   const all=gridRows(),multi=new Set(all.map(r=>r.ano)).size>1;
-  const rows=all.filter(r=>(!q||norm(r.turma+" "+r.disc+" "+r.ano).includes(q))&&(!only||!gridGet(r.ref)));
+  const rows=all.filter(r=>(!q||q.split(" ").every(w=>norm(r.turma+" "+r.disc+" "+r.ano+" "+profName(gridGet(r.ref))).includes(w)))&&(!only||!gridGet(r.ref))&&(!pid||gridGet(r.ref)===pid||r.mods.some(m=>profOf(m)===pid)));
   let html="",last=null;
   for(const r of rows){
     const tk=r.ano+"|"+r.turma;
@@ -1059,7 +1128,7 @@ function renderGrid(){
   $("#anoInfo").innerHTML=anos.length?`Ano letivo da análise carregada: <b>${esc(anos.join(", "))}</b>${outros?` · ${outros} módulo(s) de outros anos letivos estão guardados, mas não aparecem aqui nem no relatório`:""}`:(outros?`${outros} módulo(s) de outras análises não aparecem aqui`:"");
   $("#grid").innerHTML=(all.length?`<p class="hint">${all.length} disciplinas em ${new Set(all.map(r=>r.ano+"|"+r.turma)).size} turmas · ${sem} sem formador</p>`:"")+(html||`<p class="hint">${all.length?"Nada corresponde ao filtro.":"Ainda sem módulos nesta análise: carregue a listagem da Box e clique em “Detetar módulos e UFCD”."}</p>`);
 }
-$("#gFilter").addEventListener("input",renderGrid);$("#gEmpty").addEventListener("change",renderGrid);
+$("#gFilter").addEventListener("input",renderGrid);$("#gEmpty").addEventListener("change",renderGrid);$("#gProf").addEventListener("change",renderGrid);
 $("#grid").addEventListener("change",e=>{if(!e.target.matches("[data-grid]"))return;const k=e.target.closest("[data-g]").dataset.g,v=e.target.value;
   const row=gridRows().find(r=>r.k===k);if(!row)return;const leg=legKey(row.ref);
   if(v)cfg.grid[k]=v;else if(k!==leg&&cfg.grid[leg])cfg.grid[k]="";else delete cfg.grid[k];
@@ -1596,15 +1665,25 @@ $("#mReset").onclick=()=>{cfg.mail.subj=MAIL_SUBJ;cfg.mail.body=MAIL_BODY;save()
 function renderSend(){$("#mSubj").value=cfg.mail.subj;$("#mPrazo").value=cfg.mail.prazo||"";$("#mAno").value=cfg.mail.ano||"";$("#mAno").placeholder=anoLetivo();$("#mBody").value=cfg.mail.body;$("#gTo").value=cfg.mail.relatorio_para||"";$("#geralPrev").textContent=geralText();renderMails();renderEnvios()}
 let mailCache=[];
 function renderMails(){
-  const T=byTeacher(evaluate()).filter(t=>t.miss&&t.p.id!=="_");mailCache=T;
-  $("#mails").innerHTML=T.map((t,i)=>{const body=fill(cfg.mail.body,t);
-    let mb=body;if(mb.length>1800)mb=fill(cfg.mail.body,t,true)+"\n\n[A lista completa está no Excel de emails — anexe-o.]";
-    const href=`mailto:${encodeURIComponent(t.p.email)}?subject=${encodeURIComponent(subj(t))}&body=${encodeURIComponent(mb)}`;
-    return `<div class="prof"><div class="hd"><b>${esc(t.p.nome)}</b><span>${esc(t.p.email||"(sem email)")}</span><span class="grow"></span><span class="tag bad">${t.miss} em falta</span>
-     <button class="b s" data-cp="${i}">Copiar mensagem</button>${t.p.email?`<a class="b" style="text-decoration:none" href="${href}">Abrir no email</a>`:""}</div>
-     <div class="mailbox" style="margin:10px 14px 14px;max-height:260px;overflow:auto">${esc(body)}</div></div>`}).join("")||`<p class="hint">Nenhum formador com documentação em falta.</p>`;
+  const all=byTeacher(evaluate()).filter(t=>t.miss&&t.p.id!=="_"),sel=$("#mProf"),v=sel.value;
+  sel.innerHTML=`<option value="">Todos os formadores com documentos em falta (${all.length})</option>`+all.slice().sort((a,b)=>a.p.nome.localeCompare(b.p.nome,"pt")).map(t=>`<option value="${t.p.id}">${esc(t.p.nome)} — ${t.miss} em falta</option>`).join("");
+  sel.value=all.some(t=>t.p.id===v)?v:"";
+  const T=sel.value?all.filter(t=>t.p.id===sel.value):all;mailCache=T;
+  const ne=T.filter(t=>t.p.email).length;$("#sendAll").textContent=sel.value?"Enviar a este formador com PDF":`Enviar a todos com PDF (${ne})`;$("#sendAll").disabled=!ne;
+  $("#mails").innerHTML=`<p class="hint" id="msWho"></p>`+(T.map((t,i)=>{const body=fill(cfg.mail.body,t);
+    let mb=fill(cfg.mail.body,t,true);
+    const href=`mailto:${encodeURIComponent(t.p.email)}?subject=${encodeURIComponent(subj(t))}&body=${encodeURIComponent(mb)}`,ok=ENV_OK[t.p.id];
+    return `<div class="prof"><div class="hd"><b>${esc(t.p.nome)}</b><span>${esc(t.p.email||"(sem email)")}</span><span class="grow"></span>${ok?`<span class="tag ok">✓ enviado às ${new Date(ok).toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"})}</span>`:""}<span class="tag bad">${t.miss} em falta</span>
+     <button class="b s" data-cp="${i}">Copiar mensagem</button><button class="b s" data-pdf="${i}">PDF</button>${t.p.email?`<a class="b s" style="text-decoration:none" data-mt="${i}" href="${href}">Abrir no email</a><button class="b" data-send="${i}">Enviar com PDF</button>`:""}</div>
+     <div class="mailbox" style="margin:10px 14px 14px;max-height:260px;overflow:auto">${esc(msCfg().lista?body:mb)}</div></div>`}).join("")||`<p class="hint">Nenhum formador com documentação em falta.</p>`);
+  msUI(true);
 }
-$("#mails").addEventListener("click",e=>{const b=e.target.closest("[data-cp]");if(!b)return;const t=mailCache[+b.dataset.cp];copy(`Para: ${t.p.email}\nAssunto: ${subj(t)}\n\n${fill(cfg.mail.body,t)}`)});
+$("#mails").addEventListener("click",async e=>{const b=e.target.closest("[data-cp],[data-pdf],[data-mt],[data-send]");if(!b)return;
+  if(b.dataset.cp){const t=mailCache[+b.dataset.cp];copy(`Para: ${t.p.email}\nAssunto: ${subj(t)}\n\n${fill(cfg.mail.body,t)}`);return}
+  if(b.dataset.pdf){const t=mailCache[+b.dataset.pdf];baixarPDF(()=>pdfFormador(t),pdfNomeF(t));return}
+  if(b.dataset.mt){const t=mailCache[+b.dataset.mt];baixarPDF(()=>pdfFormador(t),pdfNomeF(t));toast("PDF descarregado — anexe-o ao email");return}
+  if(b.dataset.send){const t=mailCache[+b.dataset.send];b.disabled=true;b.textContent="A enviar…";
+    try{await enviarFormador(t);toast("Enviado para "+t.p.email);renderMails()}catch(x){sendMsg(esc(t.p.nome)+": "+esc(msErro(x)),"bad");b.disabled=false;b.textContent="Enviar com PDF"}}});
 $("#cpTxt").onclick=()=>copy(geralText());
 $("#cpCsv").onclick=()=>copy(geralCSV());
 
@@ -1639,7 +1718,8 @@ $("#regGo").onclick=()=>registarEnvio("Envio registado");
 
 /* ---------- save/load ---------- */
 $("#cpCfg").onclick=()=>copy(JSON.stringify(cfg,null,2));
-function loadCfgText(t){try{const c=JSON.parse(t);if(!c.docTypes||!c.mods||!c.profs)throw 0;ponto("Antes de carregar uma configuração");cfg=c;migrate();save();refreshAll();$("#cfgMsg").innerHTML=`<div class="msg ok">Configuração carregada: ${c.profs.length} formadores, ${c.mods.length} módulos. (Pode voltar atrás em Pontos de restauro.)</div>`}catch(e){$("#cfgMsg").innerHTML=`<div class="msg bad">O texto não é uma configuração válida.</div>`}}
+function loadCfgText(t){try{const c=JSON.parse(t);if(!c.docTypes||!c.mods||!c.profs)throw 0;
+  if(c.logos){LOGOS=c.logos;delete c.logos;try{localStorage.setItem(LGKEY,JSON.stringify(LOGOS))}catch(e){}aplicarLogos()}ponto("Antes de carregar uma configuração");cfg=c;migrate();save();refreshAll();$("#cfgMsg").innerHTML=`<div class="msg ok">Configuração carregada: ${c.profs.length} formadores, ${c.mods.length} módulos. (Pode voltar atrás em Pontos de restauro.)</div>`}catch(e){$("#cfgMsg").innerHTML=`<div class="msg bad">O texto não é uma configuração válida.</div>`}}
 $("#loadCfg").onclick=()=>loadCfgText($("#cfgTxt").value);
 $("#fileCfg").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{$("#cfgTxt").value=r.result;loadCfgText(r.result)};r.readAsText(f)};
 let resetArm=false;
@@ -2183,7 +2263,7 @@ function nuvemUI(){const el=$("#nuvemMsg");if(!el)return;
   el.innerHTML=NUV.ultimo?`<div class="msg ok">☁ Tudo guardado na nuvem às ${new Date(NUV.ultimo).toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"})} — noutro computador basta entrar com a Box.</div>`:NUV.ativo?`<div class="msg ok">☁ Guardado na nuvem — noutro computador basta entrar com a Box.</div>`:""}
 // configuração e o resto do estado (pequeno): enviado alguns segundos depois de cada alteração
 function estadoAtual(){let root="";try{root=localStorage.getItem("box_last_root")||""}catch(e){}
-  return{cfg:JSON.stringify(cfg),pontos:rpList(),tpl:TPL,folder:curFolder,root,bases:basesIdx(),resumos:resumos()}}
+  return{cfg:JSON.stringify(cfg),logos:LOGOS,pontos:rpList(),tpl:TPL,folder:curFolder,root,bases:basesIdx(),resumos:resumos()}}
 let nuvH=null;
 function nuvemAgendar(){if(NUV.ativo===false||!SES||NUV.ocupado)return;clearTimeout(nuvH);nuvH=setTimeout(()=>nuvemPut("estado",estadoAtual(),cfgT()||Date.now()),8000)}
 function nuvemListagem(j){if(!SES)return;nuvemPut("L_"+j.rootId,j,j.t).then(()=>nuvemAgendar())}
@@ -2209,6 +2289,7 @@ async function nuvemTrazer(){
       cfg=JSON.parse(e.cfg);migrate();lastJSON=JSON.stringify(cfg);cfgRev++;persist(lastJSON);
       try{localStorage.setItem("boxcheck_cfg_t",String(E.t));
         const rp=rpList(),ts=new Set(rp.map(p=>p.t));const juntos=rp.concat((e.pontos||[]).filter(p=>!ts.has(p.t))).sort((a,b)=>b.t-a.t).slice(0,25);localStorage.setItem(RPKEY,JSON.stringify(juntos));
+        if(e.logos&&typeof e.logos==="object"){LOGOS=e.logos;localStorage.setItem(LGKEY,JSON.stringify(LOGOS));aplicarLogos()}
         if(e.tpl&&e.tpl.itens){TPL=e.tpl;tplRev++;localStorage.setItem("boxcheck_modelos",JSON.stringify(TPL))}
         if(e.bases){const bi=basesIdx();for(const k in e.bases)if(!bi[k]||!bi[k].length)bi[k]=e.bases[k];localStorage.setItem("box_bases",JSON.stringify(bi))}
         if(e.folder&&e.folder.id&&curFolder.id==="0"){curFolder=e.folder;localStorage.setItem("box_last_folder",JSON.stringify(curFolder))}
@@ -2240,14 +2321,179 @@ async function nuvemTrazer(){
   if(mudou){refreshAll();renderRP();showLast();scanHint();await carregarRef();toast("Trazida da nuvem a informação guardada noutro computador")}
   return mudou}
 
+/* ---------- logótipos dos documentos (Definições) ---------- */
+const LG_SLOTS=[{k:"main",t:"Logotipo Principal",d:"Canto superior esquerdo de todos os documentos e no Início."},
+  {k:"right",t:"Canto Superior Direito",opt:1,d:"Por exemplo, o logótipo do agrupamento, da Secretaria Regional ou de um programa (Erasmus+, Eco-Escolas)."},
+  {k:"foot",t:"Centrado no Rodapé",opt:1,d:"Por exemplo, os logótipos de financiamento ou de parceiros, ao fundo de cada página."}];
+const IC_UP=`<svg viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg>`;
+const IC_DEL=`<svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M6 6l1 14a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-14M10 11v6M14 11v6"/></svg>`;
+const IC_IMG=`<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg>`;
+let lgAlvo="main";
+function guardarLogos(){try{localStorage.setItem(LGKEY,JSON.stringify(LOGOS))}catch(e){toast("Não foi possível guardar a imagem neste navegador (é grande demais?)")}marcarCfg();aplicarLogos();renderDef()}
+function aplicarLogos(){const m=LOGOS.main;
+  const top=document.querySelector(".top .schl"),ti=top&&top.querySelector("img"),gi=document.querySelector(".gschl");
+  if(ti){if(!ti.dataset.orig)ti.dataset.orig=ti.src;ti.src=m?m.src:ti.dataset.orig;top.classList.toggle("wbg",!!(m&&m.bg));if(m)top.style.display=""}
+  if(gi){if(!gi.dataset.orig)gi.dataset.orig=gi.src;gi.src=m?m.src:gi.dataset.orig;if(m)gi.style.display=""}}
+function lerImagem(file){return new Promise((ok,ko)=>{
+  const svg=/svg/.test(file.type)||/\.svg$/i.test(file.name),jpg=/jpe?g/.test(file.type)||/\.jpe?g$/i.test(file.name);
+  if(!svg&&!jpg&&!/png/.test(file.type)&&!/\.png$/i.test(file.name))return ko(new Error("Use uma imagem PNG, JPG ou SVG."));
+  const fr=new FileReader();fr.onerror=()=>ko(new Error("Não foi possível ler o ficheiro."));
+  fr.onload=()=>{const img=new Image();img.onerror=()=>ko(new Error("Não foi possível ler a imagem."));
+    img.onload=()=>{let w=img.naturalWidth||600,h=img.naturalHeight||300;const max=svg?1400:1000,r=svg?max/Math.max(w,h):Math.min(1,max/Math.max(w,h));
+      w=Math.max(1,Math.round(w*r));h=Math.max(1,Math.round(h*r));const c=document.createElement("canvas");c.width=w;c.height=h;const x=c.getContext("2d");
+      if(jpg){x.fillStyle="#fff";x.fillRect(0,0,w,h)}x.drawImage(img,0,0,w,h);
+      ok({src:c.toDataURL(jpg?"image/jpeg":"image/png",.9),w,h,nome:file.name})};
+    img.src=fr.result};fr.readAsDataURL(file)})}
+async function porLogo(k,file){try{const L=await lerImagem(file);if(k==="main"&&LOGOS.main)L.bg=LOGOS.main.bg;LOGOS[k]=L;guardarLogos();toast("Logótipo guardado")}catch(e){toast(e.message)}}
+function renderDef(){
+  $("#lgSlots").innerHTML=LG_SLOTS.map(S=>{const L=LOGOS[S.k];
+    return `<div class="lgslot${S.k==="main"?" main":""}" data-lg="${S.k}">
+      <div class="lgbox${L?"":" vazio"}" data-lgpick title="Escolher imagem">${L?`<img src="${L.src}" alt="">`:`${IC_IMG}Escolher`}</div>
+      <div class="grow"><h4>${S.t}${S.opt?`<span class="opt">opcional</span>`:""}</h4><p>${S.d}</p>
+      <div class="row">${L?`<button class="b${S.k==="main"?"":" s"}" data-lgpick>${IC_UP}Substituir</button><button class="b rm" data-lgdel>${IC_DEL}Remover</button>`:`<button class="b s" data-lgpick>${IC_UP}Escolher Imagem</button>`}</div>
+      ${S.k==="main"&&L?`<label class="chip" style="margin-top:10px;display:inline-flex;border:0;background:none;padding:0;font-weight:600"><input type="checkbox" data-lgbg ${L.bg?"checked":""}> Fundo branco (para logótipos escuros no modo escuro)</label>`:""}</div></div>`}).join("");
+  const im=(k,ph)=>LOGOS[k]?`<img src="${LOGOS[k].src}" alt="">`:(ph?`<span class="lgph">${ph}</span>`:"");
+  $("#lgPvMain").innerHTML=im("main","LOGO");$("#lgPvRight").innerHTML=im("right","OPCIONAL");$("#lgPvFoot").innerHTML=im("foot","OPCIONAL");
+  const c=msCfg();$("#msClient").value=c.clientId||"";$("#msTenant").value=c.tenant||"";$("#msCc").value=c.cc||"";$("#msLista").checked=!!c.lista;$("#msRedir").textContent=MS_REDIR;
+  msUI(true)}
+$("#lgSlots").addEventListener("click",e=>{const sl=e.target.closest("[data-lg]");if(!sl)return;const k=sl.dataset.lg;
+  if(e.target.closest("[data-lgpick]")){lgAlvo=k;$("#lgFile").value="";$("#lgFile").click()}
+  else if(e.target.closest("[data-lgdel]")){delete LOGOS[k];guardarLogos();toast("Logótipo removido")}});
+$("#lgSlots").addEventListener("change",e=>{if(!e.target.matches("[data-lgbg]")||!LOGOS.main)return;LOGOS.main.bg=e.target.checked;guardarLogos()});
+$("#lgFile").addEventListener("change",e=>{const f=e.target.files[0];if(f)porLogo(lgAlvo,f)});
+["dragenter","dragover"].forEach(ev=>$("#lgSlots").addEventListener(ev,e=>{const sl=e.target.closest("[data-lg]");if(!sl)return;e.preventDefault();sl.classList.add("drag")}));
+$("#lgSlots").addEventListener("dragleave",e=>{const sl=e.target.closest("[data-lg]");if(sl&&!sl.contains(e.relatedTarget))sl.classList.remove("drag")});
+aplicarLogos();
+$("#lgSlots").addEventListener("drop",e=>{const sl=e.target.closest("[data-lg]");if(!sl)return;e.preventDefault();sl.classList.remove("drag");const f=e.dataTransfer.files[0];if(f)porLogo(sl.dataset.lg,f)});
+
+/* ---------- PDF (relatório por formador e geral) ---------- */
+function loadScript(src){return new Promise((ok,ko)=>{const s=document.createElement("script");s.src=src;s.onload=ok;s.onerror=()=>ko(new Error("Não foi possível carregar "+src.split("/").pop()+" (sem internet?)"));document.head.appendChild(s)})}
+let PDFJ=null;
+async function loadPDF(){if(!PDFJ){if(!window.jspdf)await loadScript("lib/jspdf.umd.min.js");await loadScript("lib/jspdf.plugin.autotable.min.js");PDFJ=window.jspdf.jsPDF}return PDFJ}
+// as fontes base do PDF só têm caracteres latinos: troca os tipográficos por equivalentes simples
+const pdfTxt=s=>String(s??"").replace(/[—–]/g,"-").replace(/[“”«»]/g,'"').replace(/[‘’]/g,"'").replace(/…/g,"...").replace(/[›→]/g,">").replace(/•/g,"-").replace(/⚠/g,"!").replace(/[^\x00-\xff]/g,"");
+const lgFmt=L=>/^data:image\/jpe?g/.test(L.src)?"JPEG":"PNG";
+const lgFit=(L,mw,mh)=>{const r=Math.min(mw/L.w,mh/L.h);return[L.w*r,L.h*r]};
+const PDF_TOP=36,PDF_BOT=28;
+function pdfMoldura(doc,rodape){const n=doc.getNumberOfPages(),W=210,H=297,{main:m,right:r,foot:f}=LOGOS;
+  for(let i=1;i<=n;i++){doc.setPage(i);
+    if(m){const[w,h]=lgFit(m,62,18);doc.addImage(m.src,lgFmt(m),14,10+(18-h)/2,w,h,"lgMain")}
+    if(r){const[w,h]=lgFit(r,58,16);doc.addImage(r.src,lgFmt(r),W-14-w,11+(16-h)/2,w,h,"lgRight")}
+    doc.setDrawColor(222,226,231);doc.setLineWidth(.2);if(m||r)doc.line(14,31,W-14,31);doc.line(14,H-PDF_BOT+3,W-14,H-PDF_BOT+3);
+    if(f){const[w,h]=lgFit(f,120,13);doc.addImage(f.src,lgFmt(f),(W-w)/2,H-PDF_BOT+5+(13-h)/2,w,h,"lgFoot")}
+    doc.setFont("helvetica","normal");doc.setFontSize(7.5);doc.setTextColor(130);
+    doc.text(pdfTxt(rodape),14,H-7);doc.text(`Página ${i} de ${n}`,W-14,H-7,{align:"right"})}}
+function pdfTitulo(doc,titulo,sub){doc.setFont("helvetica","bold");doc.setFontSize(16);doc.setTextColor(22,40,80);doc.text(pdfTxt(titulo),14,PDF_TOP+6);
+  doc.setFont("helvetica","normal");doc.setFontSize(9.5);doc.setTextColor(95);doc.text(pdfTxt(sub),14,PDF_TOP+12);return PDF_TOP+22}
+const pdfData=()=>new Date().toLocaleDateString("pt-PT");
+const pdfSub=()=>`Ano letivo ${anoLetivo()} · ${pdfData()}${cfg.mail.prazo?" · Prazo de entrega: "+cfg.mail.prazo:""}`;
+function pdfTabela(doc,y,head,body,cols){
+  doc.autoTable({startY:y,head:[head],body,margin:{top:PDF_TOP,bottom:PDF_BOT+2,left:14,right:14},theme:"grid",
+    styles:{font:"helvetica",fontSize:8,cellPadding:1.7,overflow:"linebreak",lineColor:[226,230,235],lineWidth:.15,textColor:[40,44,52],valign:"top"},
+    headStyles:{fillColor:[26,95,208],textColor:255,fontStyle:"bold",lineColor:[26,95,208]},alternateRowStyles:{fillColor:[246,248,251]},columnStyles:cols||{}});
+  return doc.lastAutoTable.finalY}
+function pdfFormadorSec(doc,t,y,geral){
+  if(y>297-PDF_BOT-30){doc.addPage();y=PDF_TOP+4}
+  doc.setFont("helvetica","bold");doc.setFontSize(geral?11.5:12.5);doc.setTextColor(25);doc.text(pdfTxt(t.p.nome+(t.p.cod?` (${t.p.cod})`:"")),14,y);
+  doc.setFont("helvetica","normal");doc.setFontSize(9);doc.setTextColor(95);
+  doc.text(pdfTxt(`${t.p.email?t.p.email+" · ":""}${t.miss} documento(s) em falta · ${t.ok} de ${t.tot} entregue(s)`),14,y+5);
+  const rows=rowsFor(t,true).map(r=>[r.turma,discShort(r.disc),r.mod,r.falta,r.loc||"",r.state==="blank"?"O ficheiro entregue não conta: "+motivoBad(r.item):""].map(pdfTxt));
+  return pdfTabela(doc,y+8,["Turma","Disciplina","Módulo/UFCD","Em falta","Localização na Box","Observações"],rows,
+    {0:{cellWidth:19},1:{cellWidth:28},2:{cellWidth:34},3:{cellWidth:31,fontStyle:"bold"},4:{cellWidth:40}})+10}
+async function pdfFormador(t){const J=await loadPDF(),doc=new J({unit:"mm",format:"a4"});
+  const y=pdfTitulo(doc,"Documentação em falta na Box",pdfSub());pdfFormadorSec(doc,t,y,false);
+  pdfMoldura(doc,"Escola Profissional da Ilha de São Jorge · BoxCheck");return doc}
+async function pdfGeral(){const J=await loadPDF(),doc=new J({unit:"mm",format:"a4"}),T=byTeacher(evaluate());
+  const tot=T.reduce((a,t)=>a+t.tot,0),ok=T.reduce((a,t)=>a+t.ok,0);
+  let y=pdfTitulo(doc,"Relatório de documentação não entregue",pdfSub()+` · Entregue: ${ok}/${tot} (${tot?Math.round(ok/tot*100):0}%) · Em falta: ${tot-ok}`);
+  const res=T.filter(t=>t.tot).map(t=>[t.p.nome,t.p.email||"",String(t.miss),`${t.tot?Math.round(t.ok/t.tot*100):0}%`].map(pdfTxt));
+  doc.setFont("helvetica","bold");doc.setFontSize(11.5);doc.setTextColor(25);doc.text("Resumo por formador",14,y);
+  y=pdfTabela(doc,y+3,["Formador","Email","Em falta","Entregue"],res,{2:{halign:"right",cellWidth:20},3:{halign:"right",cellWidth:20}})+12;
+  for(const t of T)if(t.miss)y=pdfFormadorSec(doc,t,y,true);
+  pdfMoldura(doc,"Escola Profissional da Ilha de São Jorge · BoxCheck · Relatório geral");return doc}
+const ficheiroNome=s=>String(s).replace(/[\\/:*?"<>|]+/g,"-").replace(/\s+/g," ").trim();
+const pdfNomeF=t=>ficheiroNome(`Documentos em falta - ${t.p.nome} - ${anoLetivo().replace("/","-")}.pdf`);
+const pdfNomeG=()=>ficheiroNome(`Relatório de documentação não entregue - ${hoje()}.pdf`);
+const pdfB64=doc=>{const b=new Uint8Array(doc.output("arraybuffer"));let s="";for(let i=0;i<b.length;i+=0x8000)s+=String.fromCharCode.apply(null,b.subarray(i,i+0x8000));return btoa(s)};
+async function baixarPDF(fn,nome){try{const d=await fn();d.save(nome)}catch(e){toast(e.message||"Não foi possível gerar o PDF")}}
+
+/* ---------- Office 365 (Microsoft Graph, só Mail.Send) ---------- */
+const msCfg=()=>cfg.ms||(cfg.ms={clientId:"",tenant:"",cc:"",lista:false});
+const MS_REDIR=location.origin+location.pathname.replace(/[^/]*$/,"")+"ms.html";
+const MS_SCOPES=["Mail.Send","User.Read"];
+let MSAL=null,MSACC=null;
+async function msInit(){const c=msCfg(),id=(c.clientId||"").trim(),ten=(c.tenant||"").trim();
+  if(!id||!ten)throw new Error("Falta ligar o Office 365: em Definições, indique o ID da aplicação e o ID do diretório.");
+  const k=id+"|"+ten;if(MSAL&&MSAL._k===k)return MSAL;
+  if(!window.msal)await loadScript("lib/msal-browser.min.js");
+  const p=new msal.PublicClientApplication({auth:{clientId:id,authority:"https://login.microsoftonline.com/"+ten,redirectUri:MS_REDIR,navigateToLoginRequestUrl:false},cache:{cacheLocation:"localStorage"}});
+  await p.initialize();p._k=k;MSAL=p;MSACC=p.getActiveAccount()||p.getAllAccounts()[0]||null;return p}
+async function msLoginPopup(){const p=await msInit();const r=await p.loginPopup({scopes:MS_SCOPES,prompt:"select_account",redirectUri:MS_REDIR});MSACC=r.account;p.setActiveAccount(r.account);msUI();return r.accessToken}
+async function msToken(){const p=await msInit();
+  if(MSACC){try{return (await p.acquireTokenSilent({scopes:MS_SCOPES,account:MSACC})).accessToken}catch(e){}}
+  return msLoginPopup()}
+function msErro(e){const m=String(e&&(e.errorMessage||e.message)||e);
+  if(/popup_window_error|BrowserAuthError: popup/i.test(m))return "O navegador bloqueou a janela de login da Microsoft — permita pop-ups para este site.";
+  if(/user_cancelled/i.test(m))return "Login cancelado.";
+  if(/AADSTS50011/.test(m))return "O endereço de redirecionamento não está registado na aplicação do Entra. Registe exatamente: "+MS_REDIR;
+  if(/AADSTS700016|AADSTS90002/.test(m))return "ID da aplicação ou do diretório errado.";
+  if(/AADSTS65001|consent/i.test(m))return "Falta o consentimento do administrador para Mail.Send (Entra › Permissões de API).";
+  return m}
+function msUI(quiet){const st=$("#msState"),li=$("#msLogin"),lo=$("#msLogout");if(!st)return;const c=msCfg();
+  if(!c.clientId||!c.tenant){st.textContent="Ainda não configurado.";li.style.display="";lo.style.display="none";return}
+  if(quiet&&!MSAL){msInit().then(()=>msUI()).catch(()=>{});}
+  if(MSACC){st.innerHTML=`<span class="tag ok">ligado</span> ${esc(MSACC.name||"")} &lt;${esc(MSACC.username||"")}&gt;`;li.style.display="none";lo.style.display=""}
+  else{st.textContent="Não ligado.";li.style.display="";lo.style.display="none"}
+  const g=$("#msWho");if(g)g.innerHTML=MSACC?`Os emails saem de <b>${esc(MSACC.username)}</b>.`:(c.clientId?`Office 365 configurado — ao enviar pede-lhe para entrar.`:`Para enviar com PDF em anexo, ligue o Office 365 em <b>Definições</b>.`)}
+[["#msClient","clientId"],["#msTenant","tenant"],["#msCc","cc"]].forEach(([s,k])=>$(s).addEventListener("change",e=>{msCfg()[k]=e.target.value.trim();save();MSAL=null;MSACC=null;msUI(true)}));
+$("#msLista").addEventListener("change",e=>{msCfg().lista=e.target.checked;save()});
+$("#msLogin").onclick=async()=>{try{await msLoginPopup();toast("Ligado ao Office 365")}catch(e){$("#msState").textContent=msErro(e)}};
+$("#msLogout").onclick=async()=>{try{const p=await msInit();await p.clearCache({account:MSACC})}catch(e){}MSACC=null;msUI();toast("Sessão Microsoft terminada neste navegador")};
+async function msEnviar({to,cc,subject,body,anexo}){
+  const rec=s=>String(s||"").split(/[;,]/).map(x=>x.trim()).filter(Boolean).map(address=>({emailAddress:{address}}));
+  if(!rec(to).length)throw new Error("Sem endereço de email.");
+  const message={subject,body:{contentType:"Text",content:body},toRecipients:rec(to)};
+  if(rec(cc).length)message.ccRecipients=rec(cc);
+  if(anexo)message.attachments=[{"@odata.type":"#microsoft.graph.fileAttachment",name:anexo.name,contentType:"application/pdf",contentBytes:anexo.b64}];
+  for(let t=0;;t++){const tok=await msToken();
+    const r=await fetch("https://graph.microsoft.com/v1.0/me/sendMail",{method:"POST",headers:{Authorization:"Bearer "+tok,"Content-Type":"application/json"},body:JSON.stringify({message,saveToSentItems:true})});
+    if(r.status===202)return;
+    if((r.status===429||r.status>=500)&&t<3){await new Promise(ok=>setTimeout(ok,(+r.headers.get("Retry-After")||3)*1000));continue}
+    let m="";try{m=(await r.json()).error.message}catch(e){}
+    if(r.status===401&&t<1){MSACC=null;continue}
+    throw new Error(`O Office 365 recusou o envio (${r.status})${m?": "+m:""}`)}}
+const ENV_OK={};
+async function enviarFormador(t){const doc=await pdfFormador(t);
+  await msEnviar({to:t.p.email,cc:msCfg().cc,subject:subj(t),body:fill(cfg.mail.body,t,!msCfg().lista),anexo:{name:pdfNomeF(t),b64:pdfB64(doc)}});
+  ENV_OK[t.p.id]=Date.now()}
+function sendMsg(h,k){$("#sendMsg").innerHTML=h?`<div class="msg ${k||"ok"}">${h}</div>`:""}
+$("#sendAll").onclick=async e=>{const L=mailCache.filter(t=>t.p.email),sem=mailCache.length-L.length;
+  if(!L.length){sendMsg("Nenhum formador com email para enviar.","bad");return}
+  if(!confirm(`Enviar ${L.length} email(s) com o PDF em anexo, a partir da sua conta Office 365?${sem?`\n(${sem} formador(es) sem email ficam de fora.)`:""}`))return;
+  const btn=e.currentTarget;btn.disabled=true;const falhas=[];let n=0;
+  try{await msToken()}catch(x){sendMsg(esc(msErro(x)),"bad");btn.disabled=false;return}
+  for(const t of L){sendMsg(`A enviar ${n+falhas.length+1} de ${L.length}: ${esc(t.p.nome)}…`,"warn");
+    try{await enviarFormador(t);n++}catch(x){falhas.push(`${esc(t.p.nome)}: ${esc(msErro(x))}`)}
+    await new Promise(ok=>setTimeout(ok,400))}
+  btn.disabled=false;renderMails();
+  if(n&&$("#sendReg").checked)registarEnvio("Envio por email com PDF (Office 365)");
+  sendMsg(`${n} email(s) enviado(s) com PDF em anexo.${falhas.length?`<br><b>Não enviados (${falhas.length}):</b><br>${falhas.join("<br>")}`:""}`,falhas.length?"warn":"ok")};
+$("#mProf").addEventListener("change",renderMails);
+$("#gSend").onclick=async e=>{const to=$("#gTo").value.trim();if(!to){toast("Escreva para quem enviar o relatório geral");$("#gTo").focus();return}
+  const btn=e.currentTarget;btn.disabled=true;sendMsg("A enviar o relatório geral…","warn");
+  try{const doc=await pdfGeral(),txt=geralText().split("\n").slice(0,2).join("\n");
+    await msEnviar({to,cc:msCfg().cc,subject:"Relatório de documentação não entregue — "+pdfData(),body:`${txt}\n\nSegue em anexo o relatório completo, em PDF.\n\nCom os melhores cumprimentos,`,anexo:{name:pdfNomeG(),b64:pdfB64(doc)}});
+    sendMsg(`Relatório geral enviado para ${esc(to)}, com o PDF em anexo.`)}
+  catch(x){sendMsg(esc(msErro(x)),"bad")}finally{btn.disabled=false}};
+
 /* ---------- exportar relatório ---------- */
 $("#dlCsv").onclick=()=>download(`relatorio_entregas_${hoje()}.csv`,"﻿"+geralCSV(),"text/csv;charset=utf-8");
-$("#prRep").onclick=()=>printText("Relatório de documentação não entregue",geralText());
+$("#prRep").onclick=()=>baixarPDF(pdfGeral,pdfNomeG());
 $("#gTo").addEventListener("input",e=>{cfg.mail.relatorio_para=e.target.value;save()});
 $("#gMail").addEventListener("click",e=>{const to=$("#gTo").value.trim();let body=geralText();
   if(body.length>1800)body=body.slice(0,1800)+"\n\n[…relatório cortado — anexe o ficheiro “Descarregar Excel (CSV)” para a versão completa]";
   e.currentTarget.href=`mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent("Relatório de documentação não entregue — "+new Date().toLocaleDateString("pt-PT"))}&body=${encodeURIComponent(body)}`});
-$("#dlCfg").onclick=()=>download(`entregas_config_${hoje()}.json`,JSON.stringify(cfg,null,2),"application/json");
+$("#dlCfg").onclick=()=>download(`entregas_config_${hoje()}.json`,JSON.stringify(Object.keys(LOGOS).length?{...cfg,logos:LOGOS}:cfg,null,2),"application/json");
 
 $("#csvToggle").onclick=()=>{const b=$("#csvBody"),open=b.style.display==="none";b.style.display=open?"":"none";$("#csvToggle").setAttribute("aria-expanded",open)};
 /* ---------- estatísticas e gráficos animados ---------- */
