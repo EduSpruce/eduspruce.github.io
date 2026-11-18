@@ -1460,7 +1460,7 @@ body.temfundos nav.side{padding-bottom:16px}
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.9"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.10"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo BoxCheck
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -4463,7 +4463,7 @@ async function guideEntrar(tok){
   if(EU.provisorio)setTimeout(()=>toast("Perfis provisórios: falta atualizar o serviço de avisos na Cloudflare"),800);
   pubUI()}
 function whoUI(){const n=EU.nome||EU.email,ini=n.split(/\s+/).filter(Boolean).map(w=>w[0]).slice(0,2).join("").toUpperCase();
-  $("#who").innerHTML=`<span class="av">${esc(ini)}</span><span title="${esc(EU.email)}">${esc(n)}</span><span class="pf${EU.admin?" adm":""}" title="${esc(EU.admin?"Administrador da EPISJ 360":"Perfil da conta")}">${esc(EU.perfilNome||PERFIL_CURTO[EU.perfil]||"")}</span><a href="#" id="whoOut">Terminar sessão</a>`;
+  $("#who").innerHTML=`<span class="av">${esc(ini)}</span><span title="${esc(EU.email)}">${esc(n)}</span><span class="pf${EU.admin?" adm":""}" title="${esc(EU.admin?"Administrador da EPISJ 360 — perfil: "+(EU.perfilNome||PERFIL_CURTO[EU.perfil]||""):"Perfil da conta")}">${esc(EU.admin?"Administrador":(EU.perfilNome||PERFIL_CURTO[EU.perfil]||""))}</span><a href="#" id="whoOut">Terminar sessão</a>`;
   $("#who").style.display="flex";$("#whoOut").onclick=e=>{e.preventDefault();guideSair()}}
 async function guideSair(){if(SES)logout(true);try{const p=await msInit();await p.clearCache({account:MSACC})}catch(e){}MSACC=null;EU=null;location.reload()}
 
