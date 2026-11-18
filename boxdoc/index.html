@@ -459,6 +459,10 @@ button.rm{background:#fff;color:var(--bad);border-color:#e3b4b4}button.rm:hover{
 .prProf>div:first-child{display:flex;gap:10px;align-items:center;background:#f6f8fb;padding:8px 12px;font-weight:600;flex-wrap:wrap}
 .prProf table td,.prProf table th{padding:6px 10px;border-top:1px solid var(--line);font-size:13px;text-align:left;vertical-align:top}
 .prProf table th{font-size:12px;color:var(--muted);font-weight:600}
+.fsz{display:flex;margin-right:10px;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:#fff}
+.fsz button{font:inherit;font-size:12.5px;border:0;background:#fff;color:#3d434b;padding:5px 10px;cursor:pointer;font-weight:600}
+.fsz button:hover:not(:disabled){background:#f2f5fa}.fsz button:disabled{color:#b8bec7;cursor:default}
+.fsz #fszVal{font-weight:500;min-width:48px;border-left:1px solid var(--line);border-right:1px solid var(--line);color:var(--muted)}
 </style>
 </head>
 <body>
@@ -490,7 +494,7 @@ button.rm{background:#fff;color:var(--bad);border-color:#e3b4b4}button.rm:hover{
     <p class="gfoot">Só leitura: a app não altera, move nem apaga nada na Box.</p>
   </div>
 </div>
-<div class="top"><a class="schl" href="https://www.episj.com" target="_blank" rel="noopener" title="Escola Profissional da Ilha de São Jorge"><img src="https://www.episj.com/wp-content/uploads/2024/05/logo_2024_2-mobile.png" alt="Escola Profissional da Ilha de São Jorge" onerror="this.parentNode.style.display='none'"></a><div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="bcgB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f5fb8"/><stop offset=".55" stop-color="#163269"/><stop offset="1" stop-color="#0c1d40"/></linearGradient><linearGradient id="bckB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5cc985"/><stop offset="1" stop-color="#2f9e57"/></linearGradient></defs><rect x="1.5" y="1.5" width="29" height="29" rx="8.5" fill="url(#bcgB)"/><path d="M1.5 12C9 8 20 7 30.5 9.5V10C20 8 9 9.5 1.5 13.5z" fill="#fff" opacity=".10"/><path d="M14.5 6.6 22 10.6 14.5 14.6 7 10.6z" fill="#fff"/><path d="M7 10.6 14.5 14.6V23.4L7 19.4z" fill="#e3ebfa"/><path d="M22 10.6 14.5 14.6V23.4L22 19.4z" fill="#b7c8ea"/><path d="M10.7 8.6 18.2 12.6" stroke="#163269" stroke-opacity=".35" stroke-width="1.1"/><circle cx="23" cy="22.6" r="6.2" fill="url(#bckB)" stroke="#0c1d40" stroke-width="1.6"/><path d="M20.2 22.7l1.9 1.9 3.8-3.9" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Box<b>Check</b></span><span class="ver" data-ver></span></div><span class="sub">Escola Profissional da Ilha de São Jorge</span><span class="grow"></span><label class="anasel" id="anaTop" style="display:none"><span>Análise</span><select id="anaSel" title="Escolha a análise guardada a usar"></select></label><span id="bg" class="bgp" style="display:none"></span><span class="undo"><button id="undoBtn" title="Anular (Ctrl+Z)" disabled>↶ Anular</button><button id="redoBtn" title="Refazer (Ctrl+Shift+Z)" disabled>↷ Refazer</button></span><span id="who" class="who" style="display:none"></span></div>
+<div class="top"><a class="schl" href="https://www.episj.com" target="_blank" rel="noopener" title="Escola Profissional da Ilha de São Jorge"><img src="https://www.episj.com/wp-content/uploads/2024/05/logo_2024_2-mobile.png" alt="Escola Profissional da Ilha de São Jorge" onerror="this.parentNode.style.display='none'"></a><div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="bcgB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f5fb8"/><stop offset=".55" stop-color="#163269"/><stop offset="1" stop-color="#0c1d40"/></linearGradient><linearGradient id="bckB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5cc985"/><stop offset="1" stop-color="#2f9e57"/></linearGradient></defs><rect x="1.5" y="1.5" width="29" height="29" rx="8.5" fill="url(#bcgB)"/><path d="M1.5 12C9 8 20 7 30.5 9.5V10C20 8 9 9.5 1.5 13.5z" fill="#fff" opacity=".10"/><path d="M14.5 6.6 22 10.6 14.5 14.6 7 10.6z" fill="#fff"/><path d="M7 10.6 14.5 14.6V23.4L7 19.4z" fill="#e3ebfa"/><path d="M22 10.6 14.5 14.6V23.4L22 19.4z" fill="#b7c8ea"/><path d="M10.7 8.6 18.2 12.6" stroke="#163269" stroke-opacity=".35" stroke-width="1.1"/><circle cx="23" cy="22.6" r="6.2" fill="url(#bckB)" stroke="#0c1d40" stroke-width="1.6"/><path d="M20.2 22.7l1.9 1.9 3.8-3.9" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Box<b>Check</b></span><span class="ver" data-ver></span></div><span class="sub">Escola Profissional da Ilha de São Jorge</span><span class="grow"></span><label class="anasel" id="anaTop" style="display:none"><span>Análise</span><select id="anaSel" title="Escolha a análise guardada a usar"></select></label><span id="bg" class="bgp" style="display:none"></span><span class="fsz" title="Tamanho da letra"><button id="fszMenos" aria-label="Diminuir a letra">A−</button><button id="fszVal" title="Repor o tamanho normal">100%</button><button id="fszMais" aria-label="Aumentar a letra">A+</button></span><span class="undo"><button id="undoBtn" title="Anular (Ctrl+Z)" disabled>↶ Anular</button><button id="redoBtn" title="Refazer (Ctrl+Shift+Z)" disabled>↷ Refazer</button></span><span id="who" class="who" style="display:none"></span></div>
 <div class="shell">
   <nav id="nav" class="side">
     <button data-t="box" class="on"><svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>Gestão Documental</button>
@@ -954,7 +958,7 @@ button.rm{background:#fff;color:var(--bad);border-color:#e3b4b4}button.rm:hover{
 <script>
 (function(){
 "use strict";
-const VERSAO="1.15"; // versão do BoxCheck — sobe a cada alteração publicada
+const VERSAO="1.16"; // versão do BoxCheck — sobe a cada alteração publicada
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 const $=s=>document.querySelector(s);
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -3234,6 +3238,19 @@ $("#prSend").onclick=async e=>{const p=prCur();if(!p)return;const id=$("#prAv").
   try{const r=await enviarLista(lista,true,(i,n,x)=>prMsg(`A enviar ${i} de ${n}${x.g?": "+esc(x.g.p.nome):""}…`,"info"));
     prMsg(`${r.n} email(s) enviado(s).${r.falhas.length?`<br><b>Não enviados:</b><br>${r.falhas.map(esc).join("<br>")}`:""}`,r.falhas.length?"bad":"ok")}
   finally{btn.disabled=false;renderRes(p);renderProx()}};
+
+
+/* ---------- tamanho da letra (+/−), guardado neste navegador ---------- */
+const FSZ=[80,90,100,110,120,130,140,150,165,180];
+let fsz=(()=>{const v=+lsJ("boxcheck_letra",100);return FSZ.includes(v)?v:100})();
+function aplicarLetra(){document.body.style.zoom=fsz===100?"":String(fsz/100);$("#fszVal").textContent=fsz+"%";
+  $("#fszMenos").disabled=fsz===FSZ[0];$("#fszMais").disabled=fsz===FSZ[FSZ.length-1];try{localStorage.setItem("boxcheck_letra",String(fsz))}catch(e){}
+  if(typeof curTab!=="undefined"&&curTab==="est")setTimeout(()=>{try{linhaTempo($("#eTime"))}catch(e){}},50)}
+$("#fszMais").onclick=()=>{const i=FSZ.indexOf(fsz);if(i<FSZ.length-1){fsz=FSZ[i+1];aplicarLetra()}};
+$("#fszMenos").onclick=()=>{const i=FSZ.indexOf(fsz);if(i>0){fsz=FSZ[i-1];aplicarLetra()}};
+$("#fszVal").onclick=()=>{fsz=100;aplicarLetra()};
+addEventListener("keydown",e=>{if(!(e.ctrlKey||e.metaKey)||!e.altKey)return;if(e.key==="+"||e.key==="="){e.preventDefault();$("#fszMais").click()}else if(e.key==="-"){e.preventDefault();$("#fszMenos").click()}else if(e.key==="0"){e.preventDefault();$("#fszVal").click()}});
+aplicarLetra();
 
 /* ---------- init ---------- */
 try{localStorage.removeItem("box_skip")}catch(e){}
