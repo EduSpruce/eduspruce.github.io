@@ -204,20 +204,26 @@ button.big{width:100%;padding:13px 18px;font-size:16px}
   <div class="card">
     <h2>Professores</h2>
     <p class="hint">Registe aqui os professores e os respetivos emails. Depois atribui-lhes os módulos em <b>Atribuições</b>, e o email é usado em <b>Enviar</b>.</p>
+    <form id="profForm" class="row" style="background:#f6f8fb;border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:14px" autocomplete="off">
+      <label style="width:130px">Código interno<input type="text" id="pCod" placeholder="ex.: 0123"></label>
+      <label class="grow">Nome<input type="text" id="pNome" placeholder="Nome do professor" required></label>
+      <label class="grow">Email<input type="email" id="pEmail" placeholder="nome@escola.pt"></label>
+      <button class="b" type="submit" style="align-self:flex-end">Adicionar professor</button>
+    </form>
+    <div id="pFormMsg"></div>
     <div class="row" style="margin-bottom:10px">
-      <label class="grow">Procurar<input type="text" id="profFilter" placeholder="nome ou email"></label>
-      <button class="b" id="addProf" style="align-self:flex-end">+ Professor</button>
+      <label class="grow">Procurar<input type="text" id="profFilter" placeholder="código, nome ou email"></label>
     </div>
     <table>
-      <thead><tr><th>Nome</th><th>Email</th><th class="hm">Módulos atribuídos</th><th></th></tr></thead>
+      <thead><tr><th style="width:130px">Código</th><th>Nome</th><th>Email</th><th class="hm">Módulos atribuídos</th><th></th></tr></thead>
       <tbody id="tbProfs"></tbody>
     </table>
     <div id="profWarn"></div>
   </div>
   <div class="card">
     <h2>Colar uma lista de professores</h2>
-    <p class="hint">Copie duas colunas do Excel (nome e email) e cole aqui, um professor por linha. Também serve <code>Nome;email</code> ou <code>Nome, email</code>. Quem já existir (mesmo nome ou email) é atualizado, não duplicado.</p>
-    <textarea id="profBulk" placeholder="Ana Silva&#9;ana.silva@escola.pt&#10;Bruno Medeiros&#9;bruno.medeiros@escola.pt"></textarea>
+    <p class="hint">Copie do Excel as colunas <b>código, nome e email</b> (ou só nome e email) e cole aqui, um professor por linha. Também serve <code>código;nome;email</code>. Quem já existir (mesmo código, email ou nome) é atualizado, não duplicado.</p>
+    <textarea id="profBulk" placeholder="0123&#9;Ana Silva&#9;ana.silva@escola.pt&#10;0456&#9;Bruno Medeiros&#9;bruno.medeiros@escola.pt"></textarea>
     <div class="row" style="margin-top:8px"><button class="b" id="profImport">Adicionar professores</button><span id="profMsg" class="hint" style="margin:0"></span></div>
   </div>
 </section>
@@ -455,37 +461,50 @@ $("#addDoc").onclick=()=>{const d={id:uid(),nome:"Novo documento",subpasta:"",pa
 
 function renderProfs(){
   const q=norm(($("#profFilter")||{}).value||"");
-  const list=cfg.profs.filter(p=>!q||norm(p.nome+" "+p.email).includes(q));
+  const list=cfg.profs.filter(p=>!q||norm((p.cod||"")+" "+p.nome+" "+p.email).includes(q));
   const semMail=cfg.profs.filter(p=>!/\S+@\S+\.\S+/.test(p.email||"")).length;
   const wEl=$("#profWarn");if(wEl)wEl.innerHTML=cfg.profs.length?(semMail?`<div class="msg bad">${semMail} professor(es) sem email válido — não vão receber mensagens.</div>`:`<div class="msg ok">${cfg.profs.length} professor(es), todos com email.</div>`):"";
   $("#tbProfs").innerHTML=list.map(p=>`<tr data-id="${p.id}">
+   <td><input type="text" data-k="cod" value="${esc(p.cod||"")}"></td>
    <td><input type="text" data-k="nome" value="${esc(p.nome)}"></td>
    <td><input type="email" data-k="email" value="${esc(p.email)}"></td>
    <td class="hm" style="color:var(--muted)">${cfg.mods.filter(m=>m.profId===p.id).length}</td>
-   <td><button class="x" title="Remover" data-del>×</button></td></tr>`).join("")||`<tr><td colspan="4" class="hint">${cfg.profs.length?"Ninguém corresponde à procura.":"Ainda sem professores — adicione um a um ou cole uma lista abaixo."}</td></tr>`;
+   <td><button class="x" title="Remover" data-del>×</button></td></tr>`).join("")||`<tr><td colspan="5" class="hint">${cfg.profs.length?"Ninguém corresponde à procura.":"Ainda sem professores — adicione no formulário acima ou cole uma lista abaixo."}</td></tr>`;
 }
 $("#tbProfs").addEventListener("input",e=>{const tr=e.target.closest("tr");const p=cfg.profs.find(x=>x.id===tr.dataset.id);p[e.target.dataset.k]=e.target.value;save();if(e.target.dataset.k==="nome")renderMods()});
 $("#tbProfs").addEventListener("click",e=>{if(!e.target.hasAttribute("data-del"))return;const id=e.target.closest("tr").dataset.id;cfg.profs=cfg.profs.filter(x=>x.id!==id);cfg.mods.forEach(m=>{if(m.profId===id)m.profId=""});save();renderAll()});
-$("#addProf").onclick=()=>{cfg.profs.push({id:uid(),nome:"",email:""});save();renderProfs();const ins=$("#tbProfs").querySelectorAll("tr:last-child input");ins[0]&&ins[0].focus()};
+$("#profForm").addEventListener("input",()=>{$("#pFormMsg").innerHTML=""});
+$("#profForm").addEventListener("submit",e=>{e.preventDefault();
+  const cod=$("#pCod").value.trim(),nome=$("#pNome").value.trim(),email=$("#pEmail").value.trim();
+  const msg=(t,k)=>{$("#pFormMsg").innerHTML=`<div class="msg ${k}" style="margin:0 0 12px">${esc(t)}</div>`};
+  if(!nome){msg("Indique o nome do professor.","bad");$("#pNome").focus();return}
+  if(email&&!/^\S+@\S+\.\S+$/.test(email)){msg("O email não parece válido.","bad");$("#pEmail").focus();return}
+  const dup=cfg.profs.find(p=>(cod&&norm(p.cod)===norm(cod))||(email&&norm(p.email)===norm(email)));
+  if(dup){msg(`Já existe um professor com ${cod&&norm(dup.cod)===norm(cod)?"esse código":"esse email"}: ${dup.nome}.`,"bad");return}
+  cfg.profs.push({id:uid(),cod,nome,email});cfg.profs.sort((a,b)=>a.nome.localeCompare(b.nome,"pt"));save();renderAll();
+  msg(`${nome} adicionado(a).`,"ok");$("#profForm").reset();$("#pCod").focus();});
 
 $("#profFilter").addEventListener("input",renderProfs);
 $("#profImport").onclick=()=>{
   let add=0,upd=0,bad=0;
   for(const l of $("#profBulk").value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean)){
     const em=(l.match(/[^\s;,<>"]+@[^\s;,<>"]+\.[^\s;,<>"]+/)||[])[0]||"";
-    let nm=l.replace(em,"").replace(/[<>"]/g,"").split(/\t|;|,/).map(x=>x.trim()).filter(Boolean).join(" ").trim();
-    if(!em&&(/^(nome|name|professor(es)?)$/i.test(nm)||/e-?mail/i.test(l)))continue; // linha de cabeçalho
+    if(!em&&(/e-?mail|c[oó]digo/i.test(l)||/^(nome|name|professor(es)?)$/i.test(l.trim())))continue; // linha de cabeçalho
+    let parts=l.replace(em,"").replace(/[<>"]/g,"").split(/\t|;|,/).map(x=>x.trim()).filter(Boolean);
+    // código interno: primeira coluna curta, sem espaços e com algarismos (ex.: 0123, P045)
+    let cod="";if(parts.length>=2&&/^[\w.\-\/]{1,12}$/.test(parts[0])&&/\d/.test(parts[0])){cod=parts.shift()}
+    let nm=parts.join(" ").trim();
     if(!nm&&!em){bad++;continue}
     if(!nm)nm=em.split("@")[0];
-    const ex=cfg.profs.find(p=>(em&&norm(p.email)===norm(em))||norm(p.nome)===norm(nm));
-    if(ex){if(em)ex.email=em;if(nm&&!ex.nome)ex.nome=nm;upd++}else{cfg.profs.push({id:uid(),nome:nm,email:em});add++}
+    const ex=cfg.profs.find(p=>(cod&&p.cod&&norm(p.cod)===norm(cod))||(em&&norm(p.email)===norm(em))||norm(p.nome)===norm(nm));
+    if(ex){if(em)ex.email=em;if(cod)ex.cod=cod;if(nm)ex.nome=ex.nome||nm;upd++}else{cfg.profs.push({id:uid(),cod,nome:nm,email:em});add++}
   }
   cfg.profs.sort((a,b)=>a.nome.localeCompare(b.nome,"pt"));
   save();renderAll();
   $("#profMsg").textContent=`${add} adicionado(s), ${upd} atualizado(s)${bad?`, ${bad} linha(s) ignorada(s)`:""}.`;
   if(add||upd)$("#profBulk").value="";
 };
-function profOpts(sel){return `<option value="">— escolher —</option>`+cfg.profs.slice().sort((a,b)=>a.nome.localeCompare(b.nome,"pt")).map(p=>`<option value="${p.id}" ${p.id===sel?"selected":""}>${esc(p.nome||"(sem nome)")}</option>`).join("")}
+function profOpts(sel){return `<option value="">— escolher —</option>`+cfg.profs.slice().sort((a,b)=>a.nome.localeCompare(b.nome,"pt")).map(p=>`<option value="${p.id}" ${p.id===sel?"selected":""}>${esc(p.nome||"(sem nome)")}${p.cod?` (${esc(p.cod)})`:""}</option>`).join("")}
 function modVisible(m){const q=norm($("#modFilter").value);if(!q)return true;
   const noProf=q.includes("!prof");const rest=q.replace("!prof","").trim();
   if(noProf&&m.profId)return false;
@@ -668,7 +687,7 @@ function renderReport(){
     const mods=t.list.filter(e=>(!q||norm(modLabel(e.mod)+" "+e.mod.pasta).includes(q))&&(showAll||e.items.some(i=>!i.ok)));
     if(!mods.length&&!showAll)continue;
     const pc=t.tot?Math.round(t.ok/t.tot*100):100;
-    html+=`<div class="prof"><div class="hd"><b>${esc(t.p.nome)}</b><span class="hint" style="margin:0">${esc(t.p.email)}</span><span class="grow"></span>
+    html+=`<div class="prof"><div class="hd"><b>${esc(t.p.nome)}</b>${t.p.cod?`<span class="tag" style="background:#eef1f5;color:#4a5260">${esc(t.p.cod)}</span>`:""}<span class="hint" style="margin:0">${esc(t.p.email)}</span><span class="grow"></span>
       <div class="bar"><i style="width:${pc}%"></i></div><span>${t.ok}/${t.tot}</span>
       ${t.miss?`<span class="tag bad">${t.miss} em falta</span>`:`<span class="tag ok">completo</span>`}</div>`;
     for(const e of mods){const its=showAll?e.items:e.items.filter(i=>!i.ok);
@@ -694,8 +713,8 @@ function geralText(){
 }
 function geralCSV(){
   const T=byTeacher(evaluate());const q=v=>`"${String(v??"").replace(/"/g,'""')}"`;
-  const rows=[["Professor","Email","Módulo","Turma","Pasta","Documento","Estado"]];
-  for(const t of T)for(const e of t.list)for(const i of e.items)rows.push([t.p.nome,t.p.email,e.mod.nome,e.mod.turma,e.mod.pasta,i.doc.nome,i.ok?"Entregue":"Em falta"]);
+  const rows=[["Código","Professor","Email","Módulo","Turma","Pasta","Documento","Estado"]];
+  for(const t of T)for(const e of t.list)for(const i of e.items)rows.push([t.p.cod||"",t.p.nome,t.p.email,e.mod.nome,e.mod.turma,e.mod.pasta,i.doc.nome,i.ok?"Entregue":"Em falta"]);
   return rows.map(r=>r.map(q).join(";")).join("\n");
 }
 function fill(tpl,t){return tpl.replace(/\{nome\}/g,t.p.nome).replace(/\{lista\}/g,listText(t)).replace(/\{prazo\}/g,cfg.mail.prazo||"[prazo]").replace(/\{total\}/g,t.miss)}
