@@ -364,6 +364,7 @@ details.altp>summary{grid-template-columns:minmax(220px,1.6fr) repeat(5,minmax(6
             <div class="row">
         <button class="b" id="scanBtn">Analisar esta pasta e subpastas</button>
         <button class="b s" id="scanUpd" title="Volta a ler todas as pastas, uma a uma">Leitura completa</button>
+        <button class="b s" id="scanStop" style="display:none;color:var(--bad)" title="Para a análise; o que já foi lido fica guardado">■ Parar análise</button>
         <button class="b s" id="tplGo" title="Lê os ficheiros desta pasta e passa a usá-los como modelos oficiais da escola">Usar esta pasta como modelos oficiais</button>
         <span id="scanMsg" class="hint" style="margin:0"></span>
       </div>
@@ -546,7 +547,7 @@ details.altp>summary{grid-template-columns:minmax(220px,1.6fr) repeat(5,minmax(6
 <script>
 (function(){
 "use strict";
-const VERSAO="1.1"; // versão do BoxCheck — sobe a cada alteração publicada
+const VERSAO="1.2"; // versão do BoxCheck — sobe a cada alteração publicada
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 const $=s=>document.querySelector(s);
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -1093,6 +1094,10 @@ function qualCtx(idx,slotOf,mods){
   return{bySha,lsh,sib,tpls,tplSha,ref,inicio};
 }
 // devolve null (nada a apontar), {lvl:"bad"} (não conta como entregue) ou {lvl:"warn"} (conta, mas fica "a confirmar")
+// falsos positivos: o diretor confirma que um ficheiro assinalado é válido (fica ligado a esta versão do ficheiro)
+const fpKey=f=>(f.fid||f.name)+"|"+(f.sha1||"");
+function marcarFP(keys,on,txt){cfg.fp=cfg.fp||{};for(const k of keys){if(on)cfg.fp[k]={t:Date.now(),txt:txt||""};else delete cfg.fp[k]}save();renderAll();if(curTab==="rel")renderReport();if(curTab==="alt")renderAlt();
+  toast(on?"Assinalado como falso positivo — passa a contar como entregue (pode anular)":"Anulado — o aviso volta a aparecer")}
 function qualOf(f,slot,X){
   if(f.size===0)return{lvl:"bad",txt:"ficheiro vazio (0 bytes)"};
   if(f.sha1&&X.tplSha.has(f.sha1))return{lvl:"bad",txt:`é o modelo «${X.tplSha.get(f.sha1)}» por preencher (ficheiro igual ao modelo)`};
@@ -1149,7 +1154,8 @@ function evalCore(idx,mods){
   // 2.ª passagem: estado de cada documento exigido
   for(const e of out){const m=e.mod;
     e.items=e.slots.map(slot=>{const T=slot.T,d=T.d,sub=T.sub;
-      const q=slot.hits.map(f=>({f,q:qualOf(f,slot,X)}));
+      const FP=cfg.fp||{};
+      const q=slot.hits.map(f=>{const r=qualOf(f,slot,X);if(r&&FP[fpKey(f)])return{f,q:null,fp:r.txt};return{f,q:r}});
       const good=q.filter(x=>!x.q||x.q.lvl!=="bad"),clean=q.filter(x=>!x.q);
       let state,reasons=[];
       if(good.length>=T.need){state=clean.length>=T.need?"ok":"warn";if(state==="warn")reasons=good.filter(x=>x.q).map(x=>`${x.f.name}: ${x.q.txt}`)}
@@ -1174,7 +1180,7 @@ function evalCore(idx,mods){
 }
 // o resultado fica guardado enquanto nada mudar (ficheiros, textos lidos, módulos, documentos exigidos, opções)
 let EV=null,EVK=null,_ekRev=-1,_ek="",QF=null;
-function cfgEvalKey(){if(_ekRev!==cfgRev){_ek=JSON.stringify([cfg.docTypes,cfg.mods,cfg.desig,cfg.qual,(cfg.envios||[]).map(v=>v.id)]);_ekRev=cfgRev}return _ek}
+function cfgEvalKey(){if(_ekRev!==cfgRev){_ek=JSON.stringify([cfg.docTypes,cfg.mods,cfg.desig,cfg.qual,(cfg.envios||[]).map(v=>v.id),cfg.fp||{}]);_ekRev=cfgRev}return _ek}
 function evaluate(){const idx=getIdx(),ck=cfgEvalKey(),k=filesRev+"|"+txRev+"|"+refRev+"|"+tplRev;
   if(EV&&EVK&&EVK.k===k&&EVK.ck===ck)return EV;
   EV=evalCore(idx,ativos());EVK={k,ck};QF=null;return EV}
@@ -1214,6 +1220,11 @@ $("#envios").addEventListener("click",e=>{const b=e.target.closest("[data-envdel
 
 /* ---------- report ---------- */
 ["#fProf","#fShow","#fTxt","#chkFiles"].forEach(s=>$(s).addEventListener("input",renderReport));
+function fpBtns(i){const fl=(i.q||[]).filter(x=>x.q),mk=(i.q||[]).filter(x=>x.fp);let h="";
+  if(fl.length&&(i.state==="warn"||i.state==="blank"))h+=`<br><button class="b s fpb" data-on="1" data-k="${esc(JSON.stringify(fl.map(x=>fpKey(x.f))))}" data-t="${esc(fl.map(x=>x.f.name+": "+x.q.txt).join("; "))}">Falso positivo — conta como entregue</button>`;
+  if(mk.length)h+=`<br><span class="hint" style="margin:0">Assinalado como falso positivo: ${esc(mk.map(x=>x.f.name+" ("+x.fp+")").join("; "))}</span> <button class="b s fpb" data-on="0" data-k="${esc(JSON.stringify(mk.map(x=>fpKey(x.f))))}">Anular</button>`;
+  return h}
+$("#report").addEventListener("click",e=>{const b=e.target.closest(".fpb");if(!b)return;marcarFP(JSON.parse(b.dataset.k),b.dataset.on==="1",b.dataset.t)});
 function renderReport(){
   const ev=evaluate(),T=byTeacher(ev);
   const fp=$("#fProf").value;
@@ -1234,6 +1245,7 @@ function renderReport(){
   const atv=ativos(),noprof=atv.filter(m=>!profOf(m)).length;if(noprof)w.push(["warn",`${noprof} módulo(s) sem formador atribuído — veja a grelha em Atribuições.`]);
   const outros=cfg.mods.length-atv.length;if(outros&&files.length)w.push(["info",`${outros} módulo(s) de outros anos letivos não entram neste relatório (só contam os do ano da análise carregada).`]);
   const pend=porLer().length;if(pend)w.push(["info",`Falta ler o conteúdo de ${pend} documento(s)${bgOn?" — a leitura está a correr em segundo plano e o relatório atualiza-se sozinho":SES?" — clique em “Ler os documentos agora”":" — entre na Box para os ler"}. Até lá, esses documentos contam como entregues.`]);
+  const nfp=Object.keys(cfg.fp||{}).length;if(nfp)w.push(["info",`${nfp} documento(s) assinalados como falso positivo contam como entregues. Para anular, mostre “Tudo” e carregue em “Anular” na linha. Se o formador substituir o ficheiro, a verificação volta a ser feita.`]);
   $("#warns").innerHTML=w.map(([k,t])=>`<div class="msg ${k==="warn"?"bad":"info"}">${esc(t)}</div>`).join("");
   const mode=$("#fShow").value,q=norm($("#fTxt").value),sf=$("#chkFiles").checked;
   const show=i=>mode==="tudo"||(mode==="desde"?i.since:(!i.ok||(mode==="aviso"&&i.state==="warn")));
@@ -1246,7 +1258,7 @@ function renderReport(){
       <div class="bar"><i style="width:${pc}%"></i></div><span>${t.ok}/${t.tot}</span>
       ${t.miss?`<span class="tag bad">${t.miss} em falta</span>`:`<span class="tag ok">completo</span>`}</div>
       <div style="padding:4px 12px 10px;overflow-x:auto"><table class="rtab rt"><thead><tr><th>Turma</th><th>Disciplina</th><th>Módulo/UFCD</th><th>Localização na Box</th><th>O que está em falta</th><th>Observações</th></tr></thead><tbody>
-      ${rows.map(r=>`<tr class="s-${r.state}"><td>${esc(r.turma)}</td><td>${esc(r.disc)}</td><td>${esc(r.mod)}</td><td>${esc(r.loc)}</td><td class="f">${{ok:"✓",warn:"⚠",blank:"✗",missing:"✗"}[r.state]} ${esc(r.falta)}</td><td class="o">${esc(r.obs||(r.state==="ok"?"entregue":""))}${sf&&r.item.hits.length?`<br><b>Ficheiros:</b> ${r.item.hits.map(h=>esc(h.name)).join(", ")}`:""}</td></tr>`).join("")}
+      ${rows.map(r=>`<tr class="s-${r.state}"><td>${esc(r.turma)}</td><td>${esc(r.disc)}</td><td>${esc(r.mod)}</td><td>${esc(r.loc)}</td><td class="f">${{ok:"✓",warn:"⚠",blank:"✗",missing:"✗"}[r.state]} ${esc(r.falta)}</td><td class="o">${esc(r.obs||(r.state==="ok"?"entregue":""))}${sf&&r.item.hits.length?`<br><b>Ficheiros:</b> ${r.item.hits.map(h=>esc(h.name)).join(", ")}`:""}${fpBtns(r.item)}</td></tr>`).join("")}
       </tbody></table></div></div>`;}
   $("#report").innerHTML=html||`<div class="card"><p class="hint" style="margin:0">${ativos().length?"Nada a mostrar com estes filtros. 🎉":"Defina primeiro os módulos em Atribuições."}</p></div>`;
 }
@@ -1733,7 +1745,7 @@ function useListing(j,quiet){
 let scanRun=0,scanBusy=false;
 const pool=async(items,fn,n)=>{let i=0;await Promise.all(Array.from({length:Math.min(n,items.length)},async()=>{while(i<items.length){const x=items[i++];await fn(x)}}))};
 const fileItem=(x,path,pid)=>({path,name:x.name,type:"file",modified_at:x.modified_at||"",cm:x.content_modified_at||"",id:x.id,pid,size:x.size,sha1:x.sha1||"",by:byOf(x),cb:cbOf(x)});
-function progress(run,st,pending){if(run!==scanRun)return;
+function progress(run,st,pending){if(run!==scanRun||st.stop)return;
   const sec=(Date.now()-st.t0)/1000,o=st.opened,mm=Math.floor(sec/60),ss=String(Math.floor(sec%60)).padStart(2,"0"),rate=(o-(st.o0||0))/Math.max(sec,1);
   const falta=pending>0&&sec>8&&rate>0?Math.ceil(pending/rate/60):0;
   $("#scanMsg").textContent=`${mm}:${ss} · ${st.modo} · abertas ${o} de ${o+pending} pastas · ${st.nF} ficheiros · ${sec>3?rate.toFixed(1):"…"} pastas/s${falta?` · falta pelo menos ${falta} min`:""}${RATE.hits?` · ${RATE.hits} pausa(s) pedidas pela Box`:""}${RATE.pauseUntil>Date.now()?" · em pausa":""}${st.retries?` · ${st.retries} repetição(ões)`:""}`;
@@ -1746,7 +1758,8 @@ async function crawl(run,starts,itens,st,ck){
     DB.put("kv",ck.key,{t:Date.now(),rootId:ck.rootId,root:ck.root,pos:ck.pos,opened:st.opened,itens:itens.slice(),queue:[...queue,...infl.values()]}).finally(()=>{saving=false})};
   await new Promise(resolve=>{
     const pump=()=>{
-      if(st.fatal||(!queue.length&&!active)){resolve();return}
+      if(st.fatal||st.stop){if(!active)resolve();return}
+      if(!queue.length&&!active){resolve();return}
       while(active<16&&queue.length){const f=queue.shift();active++;infl.set(f.id,f);
         listFolder(f.id).then(list=>{st.opened++;for(const x of list){
             if(x.type==="folder"){const p=f.path+"/"+x.name;itens.push({path:p,name:"",type:"folder",id:x.id,pid:f.id});queue.push({id:x.id,path:p});st.nP++}
@@ -1759,6 +1772,8 @@ async function crawl(run,starts,itens,st,ck){
         .finally(()=>{active--;infl.delete(f.id);progress(run,st,queue.length+active);checkpoint();pump()})}
     };pump();});
   if(st.fatal)throw st.fatal;
+  if(st.stop){if(ck)await DB.put("kv",ck.key,{t:Date.now(),rootId:ck.rootId,root:ck.root,pos:ck.pos,opened:st.opened,itens:itens.slice(),queue:queue.slice()});
+    const er=new Error("parada");er.kind="stop";er.full=!!ck;throw er}
 }
 async function streamNow(){try{return (await boxGet("events",{stream_position:"now"})).next_stream_position||null}catch(e){return null}}
 async function fullScan(run,rootId,root,st,fresh){
@@ -1793,6 +1808,7 @@ async function updateScan(run,prev,st){
   // relê essas pastas (em paralelo, ao ritmo que a Box permite)
   const lists=new Map(),total=relist.size;
   await pool([...relist],async fid=>{
+    if(st.stop){const er=new Error("parada");er.kind="stop";throw er}
     try{lists.set(fid,await listFolder(fid))}
     catch(e){if(e.kind==="http"&&(e.status===404||e.status===403))lists.set(fid,null);else throw e}
     st.opened++;progress(run,st,total-st.opened)},8);
@@ -1829,14 +1845,15 @@ async function runScan(full,auto){
   const run=++scanRun,b=$("#scanBtn");b.disabled=true;$("#scanUpd").disabled=true;
   $("#scanMsg").textContent=auto?"A procurar alterações desde a última análise…":"A ler…";$("#scanProg").style.display="block";$("#scanProg i").style.width="3%";
   const rootId=curFolder.id,root=curFolder.path.slice(1).map(p=>p.name).join("/")||"Box";
-  const st={nP:0,nF:0,opened:0,retries:0,failed:[],t0:Date.now(),modo:""};RATE.hits=0;
+  const st={nP:0,nF:0,opened:0,retries:0,failed:[],t0:Date.now(),modo:""};RATE.hits=0;curSt=st;$("#scanStop").style.display="";$("#scanStop").disabled=false;
   try{
     try{localStorage.setItem("box_last_folder",JSON.stringify(curFolder))}catch(e){}
     const prev=await lerListagem(rootId);
     const fresco=prev&&prev.v===2&&prev.pos&&Date.now()-(prev.tFull||prev.t||0)<7*864e5;
     let res=null;
-    if(!full&&fresco){try{res=await updateScan(run,prev,st)}catch(e){if(e.kind==="auth")throw e;console.warn(e);res=null}}
+    if(!full&&fresco){try{res=await updateScan(run,prev,st)}catch(e){if(e.kind==="auth"||e.kind==="stop")throw e;console.warn(e);res=null}}
     if(!res&&auto){scanRun++;$("#scanMsg").textContent=prev?"A última leitura completa desta pasta tem mais de 7 dias (ou não foi possível ver o que mudou). Carregue em “Analisar” para a ler outra vez.":"";return}
+    if(st.stop){const er=new Error("parada");er.kind="stop";throw er}
     if(!res){st.opened=0;st.nF=0;st.nP=0;res=await fullScan(run,rootId,root,st,full)}
     const nP=res.itens.reduce((a,x)=>a+(x.type==="folder"?1:0),0),nF=res.itens.length-nP,agora=Date.now();
     const delBy=Object.assign({},prev&&prev.delBy);for(const d of st.deleted||[])if(d.by)delBy[d.id]=d.by;
@@ -1854,10 +1871,14 @@ async function runScan(full,auto){
       if(n&&!auto)toast(`${n} alteração(ões) desde a última análise — veja “Alterações”`)}
     $("#scanMsg").textContent=msg;
     if(!ativos().length&&detetar().size)toast("Agora use “Detetar módulos e UFCD” em Atribuições");
-  }catch(e){scanRun++;$("#scanMsg").textContent="Erro: "+e.message+(e.kind==="auth"?"":" — o que já foi lido ficou guardado: carregue em “Analisar” para continuar de onde ficou.")}
-  finally{scanBusy=false;b.disabled=false;$("#scanUpd").disabled=false;$("#scanProg i").style.width="100%";setTimeout(()=>{if(!scanBusy)$("#scanProg").style.display="none"},900);
+  }catch(e){scanRun++;
+    if(e.kind==="stop"){$("#scanMsg").textContent=e.full?`Análise parada (${st.opened} pastas lidas). O que já foi lido ficou guardado: “Analisar” continua de onde ficou.`:"Atualização parada. Continua carregada a análise anterior; “Analisar” volta a procurar as alterações.";scanHint();return}
+    $("#scanMsg").textContent="Erro: "+e.message+(e.kind==="auth"?"":" — o que já foi lido ficou guardado: carregue em “Analisar” para continuar de onde ficou.")}
+  finally{scanBusy=false;curSt=null;$("#scanStop").style.display="none";b.disabled=false;$("#scanUpd").disabled=false;$("#scanProg i").style.width="100%";setTimeout(()=>{if(!scanBusy)$("#scanProg").style.display="none"},900);
     verificarFundo()}
 }
+let curSt=null;
+$("#scanStop").onclick=()=>{if(!curSt)return;curSt.stop=true;bgRun++;$("#scanStop").disabled=true;$("#scanMsg").textContent="A parar… (a terminar os pedidos que já estavam a meio)"};
 $("#scanBtn").onclick=()=>runScan(false);
 $("#scanUpd").onclick=()=>runScan(true);
 function scanHint(){const p=resumos()[curFolder.id],el=$("#scanHint");
