@@ -158,6 +158,22 @@ button.big{width:100%;padding:13px 18px;font-size:16px}
 .gcard #wkSet,.gcard #devTok{text-align:left}
 .gfoot{margin:22px 0 0;font-size:12px;color:var(--muted)}
 .gwait{display:flex;align-items:center;justify-content:center;gap:10px;color:var(--muted);padding:14px 0}
+/* EPISJ 360 0.9.13: barra de progresso dos módulos no ecrã de entrada */
+.gwait{flex-direction:column;align-items:stretch;gap:9px;padding:10px 0 2px}
+.gprog{height:10px;border-radius:999px;background:#e6edf8;overflow:hidden;box-shadow:inset 0 1px 2px rgba(16,24,40,.08)}
+.gprog i{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,var(--brand),#3db166);position:relative;overflow:hidden}
+.gprog i::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);transform:translateX(-100%);animation:gpBrilho 1.3s linear infinite}
+@keyframes gpBrilho{to{transform:translateX(100%)}}
+.gpinfo{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:13.5px;color:var(--muted);text-align:left}
+.gpinfo b{font-variant-numeric:tabular-nums;color:var(--brand);font-size:15px;font-weight:700}
+.gpmods{list-style:none;margin:4px 0 0;padding:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px;text-align:left}
+.gpmods li{display:flex;align-items:center;gap:7px;font-size:13px;padding:6px 9px;border:1px solid var(--line);border-radius:9px;background:#fbfcfe;transition:background .25s,border-color .25s}
+.gpmods li{min-width:0;white-space:nowrap}.gpmods li em{margin-left:auto;font-style:normal;font-size:11px;color:var(--muted);overflow:hidden;text-overflow:ellipsis}
+.gpmods .ic{width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;border-radius:50%;flex:none}
+.gpmods .ic .spin{width:13px;height:13px;border-width:2px}
+.gpmods li.ok{border-color:#bfe6cc;background:#f1faf4}.gpmods li.ok .ic{background:#3db166;color:#fff}
+.gpmods li.erro{border-color:#f3c7c7;background:#fdf3f3}.gpmods li.erro .ic{background:#d64545;color:#fff}
+.gpmods li.off .ic,.gpmods li.bg .ic{background:#dfe5ef;color:#56607a}
 .spin{width:18px;height:18px;border:2.5px solid #d6e2f7;border-top-color:var(--brand);border-radius:50%;animation:rot .8s linear infinite;display:inline-block}
 @keyframes rot{to{transform:rotate(360deg)}}
 .who{display:flex;align-items:center;gap:10px;font-size:13.5px;color:#3d434b}
@@ -680,7 +696,7 @@ body.temfundos nav.side{padding-bottom:16px}
     <div class="glogo"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><radialGradient id="gdgA" cx=".5" cy=".42" r=".72"><stop offset="0" stop-color="#1d3f86"/><stop offset=".6" stop-color="#163269"/><stop offset="1" stop-color="#0a1736"/></radialGradient><linearGradient id="gdkA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7bdc9f"/><stop offset=".5" stop-color="#3db166"/><stop offset="1" stop-color="#2f9e57"/></linearGradient></defs><path d="M31.00 16.00L30.98 21.65L30.91 23.45L30.79 24.74L30.63 25.77L30.42 26.63L30.16 27.37L29.85 28.01L29.48 28.57L29.06 29.06L28.57 29.48L28.01 29.85L27.37 30.16L26.63 30.42L25.77 30.63L24.74 30.79L23.45 30.91L21.65 30.98L16.00 31.00L10.35 30.98L8.55 30.91L7.26 30.79L6.23 30.63L5.37 30.42L4.63 30.16L3.99 29.85L3.43 29.48L2.94 29.06L2.52 28.57L2.15 28.01L1.84 27.37L1.58 26.63L1.37 25.77L1.21 24.74L1.09 23.45L1.02 21.65L1.00 16.00L1.02 10.35L1.09 8.55L1.21 7.26L1.37 6.23L1.58 5.37L1.84 4.63L2.15 3.99L2.52 3.43L2.94 2.94L3.43 2.52L3.99 2.15L4.63 1.84L5.37 1.58L6.23 1.37L7.26 1.21L8.55 1.09L10.35 1.02L16.00 1.00L21.65 1.02L23.45 1.09L24.74 1.21L25.77 1.37L26.63 1.58L27.37 1.84L28.01 2.15L28.57 2.52L29.06 2.94L29.48 3.43L29.85 3.99L30.16 4.63L30.42 5.37L30.63 6.23L30.79 7.26L30.91 8.55L30.98 10.35z" fill="url(#gdgA)"/><circle cx="16" cy="16" r="10.8" fill="none" stroke="#3db166" stroke-opacity=".2" stroke-width="4"/><path d="M23.23 7.97A10.8 10.8 0 1 1 8.77 7.97" fill="none" stroke="url(#gdkA)" stroke-width="1.7" stroke-linecap="round"/><path d="M10.74 6.20L6.61 6.69L9.82 10.26z" fill="url(#gdkA)"/><image href="data:image/png;base64,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" x="9.80" y="11.03" width="12.4" height="9.94" preserveAspectRatio="xMidYMid meet"/><text x="16.6" y="7.3" text-anchor="middle" font-family="-apple-system,system-ui,Segoe UI,Arial,sans-serif" font-size="3.4" font-weight="800" fill="#5cc985" letter-spacing="-.15">360</text></svg></div>
     <h1>EPISJ <b>360</b></h1><div class="ver gver" data-ver></div>
     <p class="gsub">A escola toda num só lugar<br><span>Escola Profissional da Ilha de São Jorge</span></p>
-    <div id="gateWait" class="gwait" style="display:none"><span class="spin"></span> <span id="gateWaitTxt">A entrar…</span></div>
+    <div id="gateWait" class="gwait" style="display:none"><div class="gprog" id="gpBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-labelledby="gateWaitTxt"><i id="gpFill"></i></div><div class="gpinfo"><span id="gateWaitTxt">A entrar…</span><b id="gpPct">0%</b></div><ul class="gpmods" id="gpMods" aria-live="polite"></ul></div>
     <div id="gateLogin">
       <button class="b big msbtn" id="msGo"><svg viewBox="0 0 21 21" aria-hidden="true"><rect x="1" y="1" width="9" height="9" fill="#f25022"/><rect x="11" y="1" width="9" height="9" fill="#7fba00"/><rect x="1" y="11" width="9" height="9" fill="#00a4ef"/><rect x="11" y="11" width="9" height="9" fill="#ffb900"/></svg>Entrar com o Office 365 da escola</button>
       <p class="hint" style="margin:10px 0 0">Use a sua conta da escola (a mesma do email e do Teams). Cada conta tem o seu perfil: <b>Direção Executiva</b>, <b>Direção Pedagógica</b>, <b>Professor</b> ou <b>Formando</b>.</p>
@@ -1463,7 +1479,7 @@ body.temfundos nav.side{padding-bottom:16px}
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.12"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.13"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo BoxCheck
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -2782,6 +2798,20 @@ function boxEstado(st,msg){$("#boxWait").style.display=st==="wait"?"block":"none
 function boxArrancar(){loginUI();
   if(SES){boxEstado("wait");boxGet("users/me",{fields:"name,login"}).then(connected).catch(e=>boxEstado("login",e.message))}
   else boxEstado("login",window.__authErr||"")}
+/* EPISJ 360 0.9.13 — barra de progresso 0–100% enquanto os módulos carregam */
+const GP={alvo:0,v:0,raf:0,mods:{}};
+const GP_MODS=[["escola","Escola"],["boxcheck","BoxCheck"],["eduschedule","EduSchedule"],["roomcheck","RoomCheck"]];
+const GP_EST={wait:"",ok:"",erro:"com erro",off:"por ligar",bg:"em fundo"};
+function gpDesenhar(){const d=GP.alvo-GP.v;GP.v=Math.abs(d)<.3?GP.alvo:GP.v+d*.14;const p=Math.round(GP.v);
+  $("#gpFill").style.width=GP.v+"%";$("#gpPct").textContent=p+"%";$("#gpBar").setAttribute("aria-valuenow",p);
+  GP.raf=GP.v!==GP.alvo?requestAnimationFrame(gpDesenhar):0}
+function prog(p,txt){if(txt)$("#gateWaitTxt").textContent=txt;GP.alvo=Math.max(GP.alvo,Math.min(100,p));if(!GP.raf)GP.raf=requestAnimationFrame(gpDesenhar)}
+function gpPasso(p,txt){if(!$("#gate").classList.contains("off"))prog(p,txt)} // só mexe na barra enquanto o ecrã de entrada está visível
+function progMod(id,st){if(st)GP.mods[id]=st;else delete GP.mods[id];
+  $("#gpMods").innerHTML=GP_MODS.filter(([m])=>GP.mods[m]).map(([m,n])=>{const e=GP.mods[m];
+    return `<li class="${e}"><span class="ic">${e==="ok"?"✓":e==="erro"?"!":e==="wait"?'<span class="spin"></span>':"–"}</span>${n}<em>${GP_EST[e]||""}</em></li>`}).join("")}
+const gpAte=(p,ms)=>Promise.race([p,new Promise((_,r)=>setTimeout(()=>r(Object.assign(new Error("demorou demasiado"),{tempo:true})),ms))]);
+const gpEspera=ms=>new Promise(r=>setTimeout(r,ms));
 function gateState(st,msg,txt){if(txt)$("#gateWaitTxt").textContent=txt;
   $("#gate").classList.toggle("off",st==="off");
   $("#gateWait").style.display=st==="wait"?"flex":"none";
@@ -2797,7 +2827,12 @@ function connected(me){
   $("#boxBrowse").style.display="block";
   // ao entrar: procura sozinha o que mudou desde a última análise (poucos pedidos) e continua a leitura dos documentos
   nuvemUI();
-  pronto.then(()=>nuvemTrazer()).then(()=>avTrazerNuvem()).then(()=>rcTrazer(false)).then(()=>esTrazerNuvem()).then(()=>{guidePubAgendar();return browse(curFolder.id,curFolder.path)}).then(()=>{if(lastListing&&lastListing.rootId===curFolder.id)runScan(false,true);else verificarFundo()});
+  const sinc=pronto.then(()=>{gpPasso(80,"BoxCheck: a trazer análises e atribuições…");return nuvemTrazer()})
+    .then(()=>{gpPasso(85,"BoxCheck: a trazer prazos e avisos…");return avTrazerNuvem()})
+    .then(()=>{gpPasso(89,"RoomCheck: a trazer as reservas…");return rcTrazer(false)})
+    .then(()=>{gpPasso(94,"A sincronizar a Escola e o EduSchedule…");return esTrazerNuvem()});
+  sinc.then(()=>{guidePubAgendar();return browse(curFolder.id,curFolder.path)}).then(()=>{if(lastListing&&lastListing.rootId===curFolder.id)runScan(false,true);else verificarFundo()});
+  return sinc; // 0.9.13: o arranque espera por isto para chegar aos 100%
 }
 function logout(revoke,msg){
   const old=SES;SES=null;saveSes();bgRun++;
@@ -4492,23 +4527,23 @@ async function guideApi(path,opts,again){opts=opts||{};const tok=await guideTok(
   const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.erro||("o serviço respondeu "+r.status));return j}
 
 async function guideArranque(){
-  gateState("wait","","A entrar…");
+  gateState("wait","");prog(4,"A ligar ao serviço da EPISJ 360…");
   try{const r=await fetch(srvUrl()+"/guide/config",{cache:"no-store"});if(r.ok){const j=await r.json();if(j.clientId&&j.tenant){GMS={clientId:j.clientId,tenant:j.tenant};try{localStorage.setItem("guide_ms",JSON.stringify(GMS))}catch(e){}}}}catch(e){}
   const {id,ten}=msIds();
   if(!id||!ten){$("#msSetup").style.display="";$("#msSetup").open=true;$("#msGo").disabled=true;gateState("login","");return}
-  $("#msSetup").style.display="none";$("#msGo").disabled=false;
-  try{const p=await msInit();
+  $("#msSetup").style.display="none";$("#msGo").disabled=false;prog(14,"A ligar ao Office 365…");
+  try{const p=await msInit();prog(22,"A confirmar a sessão…");
     if(MSACC){try{const t=(await p.acquireTokenSilent({scopes:LOGIN_SCOPES,account:MSACC})).accessToken;return guideEntrar(t)}catch(e){}}}
   catch(e){gateState("login",msErro(e));return}
   gateState("login","")}
-$("#msGo").onclick=async()=>{try{const p=await msInit();gateState("wait","","A entrar…");
+$("#msGo").onclick=async()=>{try{const p=await msInit();gateState("wait","");prog(22,"À espera do Office 365…");
     const r=await p.loginPopup({scopes:LOGIN_SCOPES,prompt:"select_account",redirectUri:MS_REDIR});MSACC=r.account;p.setActiveAccount(r.account);await guideEntrar(r.accessToken)}
   catch(e){gateState("login",msErro(e))}};
 $("#gMsSave").onclick=()=>{const id=$("#gMsClient").value.trim(),ten=$("#gMsTenant").value.trim();if(!id||!ten){toast("Preencha os dois campos");return}
   GMS={clientId:id,tenant:ten};try{localStorage.setItem("guide_ms",JSON.stringify(GMS))}catch(e){}MSAL=null;guideArranque()};
 
 async function guideEntrar(tok){
-  gateState("wait","","A confirmar o perfil…");
+  gateState("wait","");prog(30,"A confirmar o perfil…");
   let r=null,j={};
   try{r=await fetch(srvUrl()+"/guide/eu",{headers:{Authorization:"Bearer "+tok},cache:"no-store"});j=await r.json().catch(()=>({}))}catch(e){}
   const servicoNovo=r&&(r.ok||j.semPerfil||/Microsoft|Office 365|MS_TENANT|perfil/i.test(j.erro||""));
@@ -4518,13 +4553,36 @@ async function guideEntrar(tok){
     if(!(cfg.profs.length||cfg.mods.length)){gateState("login","O serviço da EPISJ 360 ainda não conhece os perfis (falta atualizar o serviço de avisos na Cloudflare). Fale com a Direção.");return}
     EU={email:String(MSACC&&MSACC.username||"").toLowerCase(),nome:MSACC&&(MSACC.name||MSACC.username)||"",perfil:"dexec",perfilNome:"Direção Executiva",admin:true,vis:null,provisorio:true}}
   window.__guideLogin=EU.email;
-  whoUI();gateState("off");aplicarPerfil();
-  if(soLeitura())await carregarPublico();
-  else{if(podePublicar()&&!cfg.profs.length&&!escData().turmas.length&&!SES)await carregarPublico(); // computador novo da Direção: mostra o publicado até ligar a Box
-    if(podeVer("box"))boxArrancar();else loginUI()}
+  prog(40,"Perfil: "+(EU.admin?"Administrador":(EU.perfilNome||PERFIL_CURTO[EU.perfil]||"")));
+  whoUI();aplicarPerfil();
+  await guideCarregarModulos();
+  prog(100,"Pronto!");await gpEspera(GP.v<99?650:350);
+  gateState("off");
   if(window.__goBox&&podeVer("box"))show("box");
   if(EU.provisorio)setTimeout(()=>toast("Perfis provisórios: falta atualizar o serviço de avisos na Cloudflare"),800);
   pubUI()}
+// 0.9.13: carrega os módulos um a um, com a barra de 0 a 100%; nenhum passo prende a entrada (há sempre um limite de tempo)
+async function guideCarregarModulos(){
+  const vis=new Set(GP_MODS.map(([m])=>m).filter(m=>primeiroPermitido(m)));
+  vis.forEach(m=>progMod(m,"wait"));
+  const fim=(m,st)=>{if(vis.has(m))progMod(m,st)};
+  // Escola (e, para quem só lê, também o que a Direção publicou do EduSchedule)
+  prog(46,"A carregar a Escola…");
+  try{if(soLeitura())await gpAte(carregarPublico(),20000);
+    else if(podePublicar()&&!cfg.profs.length&&!escData().turmas.length&&!SES)await gpAte(carregarPublico(),20000); // computador novo da Direção: mostra o publicado até ligar a Box
+    fim("escola","ok")}catch(e){fim("escola",e.tempo?"bg":"erro")}
+  prog(56,"A carregar o EduSchedule…");
+  try{await gpAte(esdPronto,10000);fim("eduschedule","ok")}catch(e){fim("eduschedule",e.tempo?"bg":"erro")}
+  prog(64,"A carregar o BoxCheck…");
+  try{await gpAte(pronto,15000)}catch(e){}
+  if(soLeitura()){fim("boxcheck","ok");fim("roomcheck","ok");return}
+  if(!podeVer("box")){loginUI();fim("boxcheck","ok");fim("roomcheck","ok");return}
+  if(!SES){boxArrancar();fim("boxcheck","off");fim("roomcheck","ok");return} // sem sessão da Box: fica tudo o que está guardado neste computador
+  loginUI();boxEstado("wait");prog(70,"BoxCheck: a ligar à Box…");
+  const pMe=boxGet("users/me",{fields:"name,login"});pMe.catch(e=>boxEstado("login",e.message)); // como antes: se a Box falhar, pede para voltar a ligar
+  const pBox=pMe.then(me=>{gpPasso(76,"BoxCheck: ligado à Box");return connected(me)});pBox.catch(()=>{});
+  try{await gpAte(pBox,45000);fim("boxcheck","ok");fim("roomcheck","ok");fim("escola","ok");fim("eduschedule","ok")}
+  catch(e){fim("boxcheck",e.tempo?"bg":"erro");fim("roomcheck",e.tempo?"bg":"ok")}}
 function whoUI(){const n=EU.nome||EU.email,ini=n.split(/\s+/).filter(Boolean).map(w=>w[0]).slice(0,2).join("").toUpperCase();
   $("#who").innerHTML=`<span class="av">${esc(ini)}</span><span title="${esc(EU.email)}">${esc(n)}</span><span class="pf${EU.admin?" adm":""}" title="${esc(EU.admin?"Administrador da EPISJ 360 — perfil: "+(EU.perfilNome||PERFIL_CURTO[EU.perfil]||""):"Perfil da conta")}">${esc(EU.admin?"Administrador":(EU.perfilNome||PERFIL_CURTO[EU.perfil]||""))}</span><a href="#" id="whoOut">Terminar sessão</a>`;
   $("#who").style.display="flex";$("#whoOut").onclick=e=>{e.preventDefault();guideSair()}}
