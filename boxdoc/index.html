@@ -838,6 +838,14 @@ button.rm{background:#fff;color:var(--bad);border-color:#e3b4b4}button.rm:hover{
     <h3 style="margin:16px 0 6px;font-size:15px">Próximos envios</h3>
     <div id="avProx"></div>
     <div class="row" style="margin-top:10px"><button class="b s" id="avAgora">Enviar já os avisos que estão na hora</button></div>
+    <h3 style="margin:18px 0 6px;font-size:15px">Com o computador desligado</h3>
+    <p class="hint">Depois de criar o <b>serviço de avisos</b> na Cloudflare (instruções no guia), os avisos saem de hora a hora mesmo sem nenhum computador ligado. A app envia-lhe o plano sempre que muda alguma coisa ou faz uma análise.</p>
+    <div class="row">
+      <label class="chip" style="align-self:center"><input type="checkbox" id="srvOn"> <b>Enviar pelo serviço de avisos</b></label>
+      <label class="grow">Endereço do serviço<input type="text" id="srvUrl" spellcheck="false"></label>
+      <label class="grow">Os emails saem de<input type="text" id="srvFrom" placeholder="direcao@escola.pt" spellcheck="false"></label>
+    </div>
+    <div class="row" style="margin-top:8px"><a class="b s" id="srvLigar" target="_blank" rel="noopener" style="text-decoration:none">Ligar a Box ao serviço</a><button class="b s" id="srvTest">Enviar o plano agora e ver o estado</button></div>
   </div>
   <div class="card" id="praEd" style="display:none">
     <h2 id="praEdT">Prazo</h2>
@@ -958,7 +966,7 @@ button.rm{background:#fff;color:var(--bad);border-color:#e3b4b4}button.rm:hover{
 <script>
 (function(){
 "use strict";
-const VERSAO="1.16"; // versão do BoxCheck — sobe a cada alteração publicada
+const VERSAO="1.17"; // versão do BoxCheck — sobe a cada alteração publicada
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 const $=s=>document.querySelector(s);
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -2460,7 +2468,7 @@ $("#dlList").onclick=()=>{if(!lastListing)return;const q=v=>`"${String(v??"").re
 const NUV={ativo:null,ultimo:0,erro:"",ocupado:false};
 const nuvT=()=>lsJ("boxcheck_nuvem",{});
 function nuvSetT(k,t){const o=nuvT();o[k]=t;try{localStorage.setItem("boxcheck_nuvem",JSON.stringify(o))}catch(e){}}
-function marcarCfg(){try{localStorage.setItem("boxcheck_cfg_t",String(Date.now()))}catch(e){}nuvemAgendar()}
+function marcarCfg(){try{localStorage.setItem("boxcheck_cfg_t",String(Date.now()))}catch(e){}nuvemAgendar();try{agendarPlano()}catch(e){}}
 const cfgT=()=>+(localStorage.getItem("boxcheck_cfg_t")||0);
 async function gz(obj){const s=new Blob([JSON.stringify(obj)]).stream().pipeThrough(new CompressionStream("gzip"));return new Response(s).arrayBuffer()}
 async function ungz(buf){const s=new Blob([buf]).stream().pipeThrough(new DecompressionStream("gzip"));return JSON.parse(await new Response(s).text())}
@@ -2940,7 +2948,7 @@ const TIPOS_MOD=[["mod","Módulos"],["uc","UC"],["ufcd","UFCD"]];
 function tipoMod(m){const n=norm(m.cod||m.nome||"");
   if(/^uc\s*\d/.test(n))return "uc";if(/^ufcd/.test(n))return "ufcd";if(/^(modulo|mod\.?)\s*/.test(n))return "mod";
   if(/^\d{4}(?!\d)/.test(n))return "ufcd";return "mod"}
-const avCfg=()=>{cfg.avisosCfg=Object.assign({auto:false,hora:"09:00",para:""},cfg.avisosCfg||{});return cfg.avisosCfg};
+const avCfg=()=>{cfg.avisosCfg=Object.assign({auto:false,hora:"09:00",para:"",servidor:false,url:"",remetente:""},cfg.avisosCfg||{});return cfg.avisosCfg};
 const prazos=()=>cfg.prazos||(cfg.prazos=[]);
 const AV_MAX=3;
 const AVISO_TPL=[
@@ -3063,7 +3071,9 @@ async function enviarLista(lista,manual,onProg){let n=0;const falhas=[];
   avGuardar();return{n,falhas}}
 // corre sozinho: depois de cada análise e de 20 em 20 minutos com a app aberta
 async function correrAvisos(forcar){
-  if(AVBUSY)return;const A=avCfg();if(!A.auto&&!forcar)return;
+  if(AVBUSY)return;const A=avCfg();
+  if(A.servidor){enviarPlano();return} // quem envia é o serviço de avisos
+  if(!A.auto&&!forcar)return;
   if(!prazos().some(p=>p.ativo))return;
   if(!analiseFresca()){if(SES&&!scanBusy&&lastListing&&lastListing.rootId===curFolder.id&&!forcar){runScan(false,true)}
     if(!forcar){AVMSG="";avEstadoUI();return}}
@@ -3091,6 +3101,7 @@ function avEstadoUI(){const el=$("#avEstado");if(!el)return;const A=avCfg();let 
   const semE=[...new Set(prazos().filter(p=>p.ativo).flatMap(p=>prazoPorProf(prazoItens(p)).filter(g=>g.p.id!=="_"&&!g.p.email&&(g.c.falta||g.c.pendente)).map(g=>g.p.nome)))];
   if(semE.length)h+=`<div class="msg bad">Sem email registado (não recebem avisos): ${esc(semE.join(", "))} — acrescente-o em Formadores.</div>`;
   if(AVMSG)h+=`<div class="msg info">${esc(AVMSG)}</div>`;
+  if(A.servidor)h=srvEstadoHTML()+h.replace(/Envio automático (ligado|desligado)/,"Envio a partir deste navegador desligado (usa o serviço)");
   el.innerHTML=h;const li=$("#avMsIn");if(li)li.onclick=async e=>{e.preventDefault();try{await msLoginPopup();avEstadoUI();correrAvisos()}catch(x){AVMSG=msErro(x);avEstadoUI()}}}
 function renderProx(){const el=$("#avProx");if(!el)return;const agora=Date.now(),rows=[];
   for(const p of prazos()){if(!p.ativo)continue;
@@ -3102,7 +3113,7 @@ function renderProx(){const el=$("#avProx");if(!el)return;const agora=Date.now()
     const n=r.agora?dev.filter(x=>x.a&&x.a.id===r.a.id).length:destinatarios(r.p,r.a,prazoItens(r.p)).length;
     return `<tr><td>${r.agora?`<span class="tag warn">na hora</span>`:esc(new Date(r.t).toLocaleString("pt-PT",{weekday:"short",day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}))}</td><td>${esc(r.p.nome)}</td><td>${esc(r.a.nome)}</td><td>${r.agora?`${n} por enviar`:`${n} formador(es), se fosse hoje`}</td></tr>`}).join("")}</tbody></table>`}
 function renderPrazos(){
-  const A=avCfg();$("#avAuto").checked=!!A.auto;$("#avHora").value=A.hora||"09:00";$("#avPara").value=A.para||cfg.mail.relatorio_para||"";
+  const A=avCfg();srvUI();if(A.servidor&&SES&&Date.now()-SRV.t>120e3){SRV.t=Date.now();srvEstado()}$("#avAuto").checked=!!A.auto;$("#avHora").value=A.hora||"09:00";$("#avPara").value=A.para||cfg.mail.relatorio_para||"";
   const P=prazos(),el=$("#praItens");
   el.innerHTML=P.length?P.map(p=>{const L=prazoItens(p),c=contar(L),inc=prazoPorProf(L).filter(g=>g.p.id!=="_"&&(g.c.falta||g.c.atraso||g.c.pendente)).length,fim=fimPrazo(p),dd=diasEntre(Date.now(),fim);
     const quando=isNaN(fim)?"sem data":dd>0?`faltam ${dd} dia(s)`:dd===0?"termina hoje":`terminou há ${-dd} dia(s)`;
@@ -3167,7 +3178,7 @@ function renderRes(p){$("#praRes").style.display="";const agora=Date.now(),L=pra
   $("#prAv").innerHTML=(p.avisos||[]).map(a=>`<option value="${a.id}">${esc(a.nome)}</option>`).join("")+(p.resumo?`<option value="resumo">Resumo para mim (direção)</option>`:"");
   const LG=AVL.filter(x=>x.prazo===p.id).slice(-60).reverse();
   $("#prLog").innerHTML=LG.length?`<table class="rt"><thead><tr><th>Data</th><th>Aviso</th><th>Formador</th><th>Itens</th><th>Resultado</th></tr></thead><tbody>${LG.map(x=>{const a=(p.avisos||[]).find(y=>y.id===x.aviso);
-    return `<tr><td>${esc(new Date(x.t).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"}))}</td><td>${esc(x.aviso==="resumo"?"Resumo":a?a.nome:"(aviso removido)")}${x.manual?" · manual":" · automático"}</td><td>${esc(x.nome||"")}</td><td>${x.n||""}</td><td>${x.ok?`<span class="tag ok">enviado</span>`:`<span class="tag bad">falhou</span> ${esc(x.err||"")}`}</td></tr>`}).join("")}</tbody></table>`:`<p class="hint">Ainda não foi enviado nenhum aviso deste prazo.</p>`}
+    return `<tr><td>${esc(new Date(x.t).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"}))}</td><td>${esc(x.aviso==="resumo"?"Resumo":a?a.nome:"(aviso removido)")}${x.manual?" · manual":x.servidor?" · serviço de avisos":" · automático"}</td><td>${esc(x.nome||"")}</td><td>${x.n||""}</td><td>${x.ok?`<span class="tag ok">enviado</span>`:`<span class="tag bad">falhou</span> ${esc(x.err||"")}`}</td></tr>`}).join("")}</tbody></table>`:`<p class="hint">Ainda não foi enviado nenhum aviso deste prazo.</p>`}
 function prazoCSV(p){const L=prazoItens(p),qq=v=>`"${String(v??"").replace(/"/g,'""')}"`;
   const h=["Formador","Email","Turma","Disciplina","Módulo/UC/UFCD","Documento","Estado","Entregue em","Dias de atraso"];
   return [h.map(qq).join(";"),...L.map(x=>{const p2=cfg.profs.find(y=>y.id===x.pid)||{nome:"(sem formador)",email:""};
@@ -3239,6 +3250,58 @@ $("#prSend").onclick=async e=>{const p=prCur();if(!p)return;const id=$("#prAv").
     prMsg(`${r.n} email(s) enviado(s).${r.falhas.length?`<br><b>Não enviados:</b><br>${r.falhas.map(esc).join("<br>")}`:""}`,r.falhas.length?"bad":"ok")}
   finally{btn.disabled=false;renderRes(p);renderProx()}};
 
+
+
+/* ---------- serviço de avisos na Cloudflare: envia com o computador desligado (v1.17) ---------- */
+const AVISOS_WORKER="https://boxcheck-avisos.joel-cunha83.workers.dev";
+const srvUrl=()=>String(avCfg().url||AVISOS_WORKER).trim().replace(/\/+$/,"");
+let SRV={estado:null,box:"",erro:"",t:0,enviado:0},srvH=null,srvJaLigado=false;
+function planoAvisos(){
+  const A=avCfg(),idx=getIdx(),L=lastListing||{itens:[]},fmap=new Map(),fpai=new Map(),fich=new Map();
+  for(const x of L.itens||[]){if(x.type==="folder"){fmap.set(x.path.split("/").map(s=>s.trim()).filter(Boolean).join("/"),x.id);fpai.set(x.id,x.pid)}else fich.set(x.id,x.pid)}
+  const cadeia=id=>{const out=[];let c=id;for(let i=0;c&&i<20;i++){out.push(c);c=fpai.get(c)}return out};
+  const itens={},prz=[],[h,mi]=horaEnvio();
+  for(const p of prazos()){if(!p.ativo||!pd(p.data))continue;const ks=[];
+    for(const x of prazoItens(p)){const k=x.i.key;ks.push(k);if(itens[k])continue;const d=x.i.doc,sub=segs(d.subpasta),ms=segs(x.m.pasta);
+      const ids=new Set(idx.pick(ms.concat(sub),"folders").map(r=>fmap.get(r.r.join("/"))).filter(Boolean));
+      const roots=[...ids].filter(id=>!ids.has(fpai.get(id)));
+      itens[k]={prof:x.pid,need:Math.max(1,d.min||1),kws:splitList(d.palavras),exts:splitList(d.ext),roots,
+        files:(x.i.hits||[]).filter(f=>f.fid).map(f=>({id:f.fid,ca:f.ca||f.date||"",nm:f.name,pids:cadeia(fich.get(f.fid))})),
+        bad:(x.i.q||[]).filter(y=>y.q&&y.q.lvl==="bad").map(y=>y.f.fid).filter(Boolean),
+        linha:`• ${x.m.turma} | ${discShort(x.m.disc)} | ${modTitle(x.m)} → ${d.nome}`,loc:x.i.loc||""}}
+    const docs=(p.docs||[]).map(id=>(cfg.docTypes.find(d=>d.id===id)||{}).nome).filter(Boolean),dd=pd(p.data);
+    prz.push({id:p.id,nome:p.nome,prazoPT:prazoPT(p),fim:fimPrazo(p),documentos:docs.length?docs.join(", ").replace(/, ([^,]*)$/," e $1").toLowerCase():"a documentação pedida",
+      resumo:!!p.resumo,para:(A.para||cfg.mail.relatorio_para||"").trim(),resumoT:new Date(dd[0],dd[1],dd[2]+1,h,mi).getTime(),itens:ks,
+      avisos:(p.avisos||[]).map(a=>({id:a.id,nome:a.nome,ativo:!!a.ativo,dest:a.dest||"falta",quando:a.quando,subj:a.subj,body:a.body,occ:ocorrencias(p,a)}))})}
+  return{v:1,t:Date.now(),servidor:!!A.servidor,tz:Intl.DateTimeFormat().resolvedOptions().timeZone||"Atlantic/Azores",pos:L.pos||null,rootId:L.rootId||"",ano:anoLetivo(),
+    from:(A.remetente||(MSACC&&MSACC.username)||"").trim(),cc:msCfg().cc||"",profs:cfg.profs.map(p=>({id:p.id,nome:p.nome,email:p.email||""})),itens,prazos:prz,
+    log:AVL.filter(x=>x.ok&&!x.servidor).slice(-1500)}}
+async function srvPedido(caminho,corpo){const w=srvUrl();if(!SES)throw new Error("Entre com a Box primeiro.");
+  let r;try{r=await fetch(w+caminho,{method:corpo?"POST":"GET",headers:{Authorization:"Bearer "+await accessToken(),...(corpo?{"Content-Type":"application/json"}:{})},body:corpo?JSON.stringify(corpo):undefined})}
+  catch(e){throw new Error("Não foi possível contactar o serviço de avisos ("+w+"). Já o criou na Cloudflare?")}
+  const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.erro||("o serviço respondeu "+r.status));return j}
+function srvGuardarResposta(j){SRV.estado=j.estado||null;SRV.box=j.box||"";SRV.erro="";SRV.t=Date.now();if(j.log&&avJuntar(j.log)&&curTab==="pra")renderPrazos()}
+async function enviarPlano(){const A=avCfg();if(!A.servidor&&!srvJaLigado)return;if(!lastListing)return;
+  try{const j=await srvPedido("/plano",planoAvisos());srvGuardarResposta(j);SRV.enviado=Date.now();srvJaLigado=!!A.servidor}
+  catch(e){SRV.erro=e.message}finally{avEstadoUI()}}
+function agendarPlano(){const A=avCfg();if(!A.servidor&&!srvJaLigado)return;clearTimeout(srvH);srvH=setTimeout(enviarPlano,15000)}
+async function srvEstado(){try{srvGuardarResposta(await srvPedido("/estado"))}catch(e){SRV.erro=e.message}avEstadoUI()}
+function srvEstadoHTML(){const A=avCfg();if(!A.servidor)return "";
+  if(SRV.erro)return `<div class="msg bad">Serviço de avisos: ${esc(SRV.erro)}</div>`;
+  const e=SRV.estado;if(!e)return `<div class="msg info">Serviço de avisos ligado — a confirmar o estado…</div>`;
+  const hm=t=>t?new Date(t).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"}):"nunca";
+  return `<div class="msg ${e.erro?"bad":"ok"}">☁ Os avisos saem pelo <b>serviço de avisos</b>, de hora a hora, mesmo com o computador desligado (Box: ${esc(SRV.box)}). Última verificação: ${hm(e.ultimo)} · plano recebido: ${hm(e.planoT)}${e.porEnviar?` · ${e.porEnviar} por enviar na próxima hora`:""}${e.erro?`<br>${esc(e.erro)}`:""}</div>`}
+
+$("#srvUrl").placeholder=AVISOS_WORKER;
+function srvUI(){const A=avCfg();$("#srvOn").checked=!!A.servidor;if(document.activeElement!==$("#srvUrl"))$("#srvUrl").value=A.url||"";if(document.activeElement!==$("#srvFrom"))$("#srvFrom").value=A.remetente||"";$("#srvFrom").placeholder=(MSACC&&MSACC.username)||"direcao@escola.pt";$("#srvLigar").href=srvUrl()+"/ligar"}
+$("#srvOn").onchange=async e=>{const A=avCfg();
+  if(e.target.checked){if(!(A.remetente||(MSACC&&MSACC.username))){toast("Indique o email de onde saem os avisos");e.target.checked=false;$("#srvFrom").focus();return}
+    if(!confirm("Passar a enviar os avisos pelo serviço de avisos (Cloudflare)?\n\nOs avisos saem de hora a hora mesmo com o computador desligado. Este navegador deixa de os enviar."))
+      {e.target.checked=false;return}}
+  A.servidor=e.target.checked;save();srvJaLigado=true;await enviarPlano();if(!A.servidor)srvJaLigado=false;renderPrazos()};
+$("#srvUrl").onchange=e=>{avCfg().url=e.target.value.trim();save();srvUI()};
+$("#srvFrom").onchange=e=>{avCfg().remetente=e.target.value.trim();save()};
+$("#srvTest").onclick=async e=>{e.currentTarget.disabled=true;srvJaLigado=true;try{await enviarPlano();if(!SRV.erro)await srvEstado();toast(SRV.erro?"Serviço de avisos: erro":"Plano enviado ao serviço de avisos")}finally{e.currentTarget.disabled=false;if(!avCfg().servidor)srvJaLigado=false}};
 
 /* ---------- tamanho da letra (+/−), guardado neste navegador ---------- */
 const FSZ=[80,90,100,110,120,130,140,150,165,180];
