@@ -557,6 +557,47 @@ body.esch #esMsg{padding:16px}
 .rc-lanes>i.t{border-top:1px solid var(--line)}
 .rc-lanes>b.rc-int{position:absolute;left:0;right:0;z-index:0;pointer-events:none;border-radius:4px;background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--line) 55%,transparent) 0 1px,transparent 1px 6px),color-mix(in srgb,var(--line) 35%,transparent)}
 .rc-lanes>b.rc-int.alm{background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--muted) 22%,transparent) 0 1px,transparent 1px 6px),color-mix(in srgb,var(--line) 60%,transparent)}
+/* ===================== EPISJ 360 0.9.21: widgets do Painel da escola ===================== */
+.wg-top{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.wg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;align-items:start}
+.wg{border:1px solid var(--line);border-radius:12px;background:var(--card,#fff);padding:12px 14px 14px;min-width:0;box-shadow:0 1px 2px rgba(16,24,40,.04);animation:fadeUp .25s ease}
+.wg-h{display:flex;align-items:center;gap:8px;margin-bottom:10px}.wg-h>b{font-size:14px;flex:1;min-width:0}
+.wg-m{width:20px;height:20px;border-radius:6px;background:var(--mc);color:#fff;font-size:11px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.wg-x{border:0;background:none;color:var(--muted);font-size:18px;line-height:1;cursor:pointer;padding:0 4px;border-radius:6px;opacity:0;transition:opacity .15s}
+.wg:hover .wg-x,.wg-x:focus-visible{opacity:1}.wg-x:hover{background:#f1f4f9;color:var(--ink)}
+@media (hover:none){.wg-x{opacity:.6}}
+.wg-c{font-size:13.5px;display:flex;flex-direction:column;gap:6px}
+.wg-big{font-size:30px;font-weight:700;letter-spacing:-.03em;line-height:1.05;font-variant-numeric:tabular-nums}.wg-big.sm{font-size:19px;letter-spacing:-.01em}
+.wg-bar{height:8px;border-radius:999px;background:#edf1f7;overflow:hidden;flex:1;min-width:40px}.wg-bar i{display:block;height:100%;border-radius:inherit;background:var(--mc,var(--brand));transition:width .5s}
+.wg-t{margin:0;line-height:1.45}.wg-sub{font-size:12px;color:var(--muted);margin:0}.wg-w{color:var(--warn,#b45309)}
+.wg-vz{margin:0;color:var(--muted);line-height:1.45}
+.wg-ir{align-self:flex-start;border:0;background:none;padding:2px 0;font:inherit;font-size:12.5px;font-weight:600;color:var(--brand);cursor:pointer}.wg-ir:hover{text-decoration:underline}
+.wg-row{display:flex;align-items:center;gap:10px}.wg-row>b{min-width:34px;text-align:right;font-variant-numeric:tabular-nums}
+.wg-k{width:110px;flex:none;font-size:12.5px}.wg-k2{margin:4px 0 0;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.wg-el{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.wg-lst{display:flex;flex-direction:column}.wg-li{display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid #eef1f5;min-width:0}.wg-li:first-child{border-top:0}
+.wg-li.col{flex-direction:column;align-items:stretch;gap:1px}.wg-li.ag{background:color-mix(in srgb,var(--brand) 7%,transparent);border-radius:6px;padding-left:6px}
+.wg-li .b.s{height:26px;padding:0 9px;font-size:12px;flex:none}
+.wg-tag{font-style:normal;font-size:11px;font-weight:600;padding:1px 7px;border-radius:999px;background:#eef1f6;color:#56607a;white-space:nowrap;margin-left:4px}
+.wg-tag.w{background:var(--warnbg,#fff4d6);color:var(--warn,#8a5a00)}.wg-tag.o{background:var(--okbg,#e7f6ec);color:var(--ok,#15803d)}.wg-tag.b{background:var(--badbg,#fdecec);color:var(--bad,#b91c1c)}
+.wg-okm{padding:10px 12px;border-radius:9px;background:var(--okbg,#e7f6ec);color:var(--ok,#15803d);font-weight:500}
+.wg-ns{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.wg-n{background:#f6f8fb;border-radius:9px;padding:8px 10px}.wg-n b{display:block;font-size:22px;font-variant-numeric:tabular-nums}.wg-n span{font-size:11.5px;color:var(--muted)}.wg-n.w b{color:var(--warn,#b45309)}
+.wg-code{font-size:11.5px;background:#f3f5f9;padding:1px 6px;border-radius:5px;white-space:nowrap}
+.wg-mini{width:70px;flex:none;display:flex}.wg-bad{color:var(--bad,#b91c1c);min-width:22px;text-align:right}
+.wg-dot{width:9px;height:9px;border-radius:50%;flex:none;display:inline-block;margin-right:4px}
+.wg-nr{width:20px;height:20px;border-radius:50%;background:var(--brand);color:#fff;font-size:11px;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.wg-spark{display:flex;align-items:flex-end;gap:3px;height:34px}.wg-spark i{flex:1;background:color-mix(in srgb,var(--bad,#dc2626) 55%,#fff);border-radius:3px 3px 0 0}
+.wg-scr{max-height:230px;overflow:auto;display:flex;flex-direction:column;gap:5px;padding-right:4px}
+.wg-esp{display:grid;grid-template-columns:auto repeat(var(--n),1fr);gap:3px;align-items:center}
+.wg-esp>b{font-size:11.5px;color:var(--c);padding-right:6px;white-space:nowrap}.wg-esp>i{height:22px;border-radius:4px;background:#eef2f7}
+.wg-esp>i.hd{height:auto;background:none;font-style:normal;font-size:9.5px;color:var(--muted);text-align:center;font-variant-numeric:tabular-nums}.wg-esp>i.hd.ag{color:var(--brand);font-weight:700}
+.wg-esp>i.oc{background:var(--c);cursor:pointer}.wg-esp>i.ps{opacity:.45}.wg-esp>i.oc:hover{outline:2px solid var(--c);outline-offset:1px}
+.wg-none{padding:20px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:12px}
+.wg-pg{margin:0 0 12px}.wg-ph{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13.5px;margin:0 0 4px}
+.rc-f .wg-op,.wg-op{display:flex;flex-direction:row;align-items:flex-start;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:9px;margin:0 0 5px;cursor:pointer;font-weight:400}
+.wg-op input{margin-top:3px}.wg-op b{display:block;font-size:13.5px}.wg-op small{display:block;color:var(--muted);font-size:12px;line-height:1.35}.wg-op.off{opacity:.5;cursor:default}
+.wg-op:has(input:checked){border-color:var(--brand);background:color-mix(in srgb,var(--brand) 5%,#fff)}
+@media (max-width:700px){.wg-grid{grid-template-columns:1fr}.wg-k{width:86px}}
 /* RoomCheck 1.1: vistas de semana, mês e ano */
 .rc-bl{touch-action:none}.rc-bl.arr{opacity:.92;box-shadow:0 8px 22px rgba(16,24,40,.22);z-index:5;cursor:grabbing;transition:none}
 .rc-bl.arr.mau{outline:2px dashed var(--bad);background:color-mix(in srgb,var(--bad) 10%,#fff)}
@@ -719,6 +760,7 @@ body.esch #subbar{display:none}
 .row>label:not(.chip)>input[type=date]{min-width:150px}
 
 main>section#esch{max-width:none}
+main>section#esc{max-width:none}
 /* RoomCheck 0.9.6 — largura toda e adaptável a qualquer ecrã */
 main>section#rcMapa,main>section#rcLista,main>section#rcEsp{max-width:none}
 #rcMapa>.cols,#rcLista>.cols,#rcEsp>.cols{display:flex;flex-direction:column}
@@ -843,6 +885,10 @@ body.esch.temfundos #esFr{height:calc(100vh - 116px);height:calc(100dvh - 116px)
     <div class="tiles" id="escTiles"></div>
     <div id="escAvisos"></div>
     <div id="pubBox" class="row" style="display:none;margin-top:12px;align-items:center"><button class="b s" id="pubGo" title="Envia as turmas, os professores e os horários para os perfis Professor e Formando verem (só leitura)">Publicar para professores e formandos</button><span id="pubMsg" class="hint" style="margin:0"></span></div>
+  </div>
+  <div class="card wg-card" id="wgCard">
+    <div class="wg-top"><div><h2 style="margin:0">Widgets</h2><p class="hint" style="margin:2px 0 0">Resumo dos módulos ligados — <span id="wgConta"></span>.</p></div><span class="grow"></span><button class="b s" id="wgEsc">Escolher widgets</button></div>
+    <div class="wg-grid" id="wgGrid"></div>
   </div>
 </section>
 
@@ -1560,7 +1606,7 @@ body.esch.temfundos #esFr{height:calc(100vh - 116px);height:calc(100dvh - 116px)
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.21"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.22"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -4076,11 +4122,196 @@ function renderEscPainel(){const e=escData(),a=anoAtivo(),T=turmasDoAno(a);
   if(semDT)av.push(`${semDT} turma(s) deste ano sem diretor de turma.`);
   if(semCnq)av.push(`${semCnq} curso(s) ainda não ligados ao Catálogo Nacional de Qualificações.`);
   if(semMail)av.push(`${semMail} professor(es) sem email — não recebem os avisos do Box360.`);
-  $("#escAvisos").innerHTML=av.length?av.map(t=>`<div class="msg info" style="margin:0 0 8px">${t}</div>`).join(""):`<div class="msg ok" style="margin:0">Tudo em ordem para ${esc(a.nome)}.</div>`}
+  $("#escAvisos").innerHTML=av.length?av.map(t=>`<div class="msg info" style="margin:0 0 8px">${t}</div>`).join(""):`<div class="msg ok" style="margin:0">Tudo em ordem para ${esc(a.nome)}.</div>`;
+  try{renderWidgets()}catch(e){}} // 0.9.21
 $("#escNome").addEventListener("change",e=>{escData().nome=e.target.value.trim()||"Escola Profissional da Ilha de São Jorge";save();esRecarregar()});
 $("#escTiles").addEventListener("click",e=>{const b=e.target.closest("[data-ir]");if(!b)return;if(b.dataset.ir==="esch")mostrarModulo("eduschedule",true);else show(b.dataset.ir)});
 $("#escImport").onclick=()=>escImportarBox();
 $("#escImport2").onclick=()=>escImportarBox();
+
+/* ===================== EPISJ 360 0.9.21: widgets do Painel da escola ===================== */
+// 20 widgets; cada um só aparece se o seu módulo estiver ligado. Cada pessoa escolhe os que vê (fica guardado neste navegador).
+const WG_KEY="guide_widgets",WG_PADRAO=["ano","incompletas","profs","entregas","prazo","top","horario","agora","esphoje","proxres","meudia"];
+const WG_MOD={escola:{l:"E",c:"#1d4fb8",n:"Escola360"},boxcheck:{l:"B",c:"#0b7fd1",n:"Box360"},eduschedule:{l:"H",c:"#7c3aed",n:"Horário360"},roomcheck:{l:"S",c:"#2f9e57",n:"Sala360"}};
+let WG_SEL=(()=>{try{const v=JSON.parse(localStorage.getItem(WG_KEY)||"null");return Array.isArray(v)?v:WG_PADRAO.slice()}catch(e){return WG_PADRAO.slice()}})();
+const wgGuardar=()=>{try{localStorage.setItem(WG_KEY,JSON.stringify(WG_SEL))}catch(e){}};
+const modOn=m=>!MODS_OFF.includes(m)&&!!primeiroPermitido(m);
+const wgAgora=()=>{const n=new Date();return n.getHours()*60+n.getMinutes()};
+const wgPct=(a,b)=>b?Math.round(a*100/b):0;
+const wgBarra=(p,cor)=>`<div class="wg-bar"><i style="width:${Math.max(0,Math.min(100,p))}%${cor?";background:"+cor:""}"></i></div>`;
+const wgVazio=t=>`<p class="wg-vz">${t}</p>`;
+const wgIr=(t,txt)=>`<button class="wg-ir" data-wgir="${t}">${txt||"Abrir"} →</button>`;
+const wgDM=s=>{const d=rcData(s);return d.toLocaleDateString("pt-PT",{day:"numeric",month:"short"}).replace(".","")};
+const wgDias=s=>Math.round((rcData(s)-rcData(rcHoje()))/864e5);
+const wgHa=t=>{const m=Math.round((Date.now()-t)/6e4);return m<1?"agora mesmo":m<60?"há "+m+" min":m<1440?"há "+Math.round(m/60)+" h":m<2880?"ontem":"há "+Math.round(m/1440)+" dias"};
+const wgNum=(v,l,cl)=>`<div class="wg-n${cl?" "+cl:""}"><b>${v}</b><span>${l}</span></div>`;
+function wgEval(){try{if(!lastListing)return null;const ev=evaluate();return ev&&ev.length?ev:null}catch(e){return null}}
+const wgSemBox=()=>wgVazio(`Ainda não há análise da Box neste computador.`)+wgIr("box","Abrir a Gestão Documental");
+function wgEu(){const em=String(EU&&EU.email||"").toLowerCase();return em?cfg.profs.find(p=>String(p.email||"").toLowerCase()===em)||null:null}
+// aulas de um dia (índice 0 = segunda) no horário do ano ativo; filtro opcional por professor do Horário360
+function wgAulas(st,dia,tid){const les=new Map((st.lessons||[]).map(l=>[l.id,l])),TT=new Map((st.teachers||[]).map(t=>[t.id,t])),CC=new Map((st.classes||[]).map(c=>[c.id,c])),SS=new Map((st.subjects||[]).map(x=>[x.id,x])),RR=new Map((st.rooms||[]).map(x=>[x.id,x])),out=[];
+  for(const cd of st.cards||[]){if(cd.day!==dia)continue;const l=les.get(cd.lessonId);if(!l)continue;
+    (l.linhas||[]).forEach((x,i)=>{if(tid&&x.t!==tid)return;const s=SS.get(x.s)||{},rr=(cd.rx&&cd.rx[0])||cd.r||[],sala=RR.get(rr[i])||RR.get(x.r);
+      out.push({p0:cd.period,len:cd.len||1,s:s.short||s.name||"—",cor:s.color||"#2f5fb8",prof:(TT.get(x.t)||{}).short||(TT.get(x.t)||{}).name||"",turmas:(l.classIds||[]).map(id=>(CC.get(id)||{}).name).filter(Boolean).join(", "),sala:sala?sala.name:""})})}
+  return out.sort((a,b)=>a.p0-b.p0)}
+const wgPer=(st,i)=>{const p=(st.periods||[])[i]||{};return{a:rcMin(p.start),b:rcMin(p.end),l:p.start||String(i+1)}};
+
+const WIDGETS=[
+ {id:"ano",mod:"escola",nome:"Progresso do ano letivo",desc:"Quanto já passou do ano, semanas que faltam e a próxima interrupção",r(){
+   const a=anoAtivo(),h=rcHoje(),ini=a.inicio||a.ini+"-09-01",fim=a.fim||(a.ini+1)+"-06-30",tot=Math.max(1,(rcData(fim)-rcData(ini))/864e5),dec=Math.min(tot,Math.max(0,(rcData(h)-rcData(ini))/864e5)),p=wgPct(dec,tot);
+   const F=(a.ferias||[]).filter(x=>x.de&&x.ate).sort((x,y)=>x.de.localeCompare(y.de)),ag=F.find(x=>x.de<=h&&x.ate>=h),px=F.find(x=>x.de>h);
+   const sem=Math.max(0,Math.ceil(wgDias(fim)/7));
+   return `<div class="wg-big">${h<ini?"—":p+"%"}</div>${wgBarra(h<ini?0:p)}
+     <p class="wg-t">${h<ini?`Começa a <b>${wgDM(ini)}</b> (daqui a ${wgDias(ini)} dias).`:h>fim?`Terminou a ${wgDM(fim)}.`:`Faltam <b>${sem}</b> semana${sem===1?"":"s"} — termina a ${wgDM(fim)}.`}</p>
+     <p class="wg-t">${ag?`🏖 Agora: <b>${esc(ag.nome||"interrupção")}</b>, até ${wgDM(ag.ate)}.`:px?`Próxima interrupção: <b>${esc(px.nome||"interrupção")}</b>, de ${wgDM(px.de)} a ${wgDM(px.ate)} (daqui a ${wgDias(px.de)} dias).`:`Sem interrupções marcadas. `+wgIr("anos","Marcar")}</p>`}},
+ {id:"anocur",mod:"escola",nome:"Turmas por ano curricular",desc:"Quantas turmas há no 1.º, 2.º e 3.º ano e quais terminam este ano",r(){
+   const a=anoAtivo(),T=turmasDoAno(a);if(!T.length)return wgVazio("Ainda não há turmas neste ano letivo.")+wgIr("tur","Criar turmas");
+   const G=new Map();T.forEach(t=>{const k=anoCurricular(t,a)||"sem ano de início";(G.get(k)||G.set(k,[]).get(k)).push(t)});const mx=Math.max(...[...G.values()].map(x=>x.length));
+   const fim=T.filter(t=>t.anoFim===a.ini+1);
+   return [...G.entries()].sort().map(([k,L])=>`<div class="wg-row"><span class="wg-k">${esc(k)}</span>${wgBarra(L.length*100/mx)}<b>${L.length}</b></div><div class="wg-sub">${L.map(t=>esc(t.cod)).join(" · ")}</div>`).join("")
+     +`<p class="wg-t">${fim.length?`Terminam este ano: <b>${fim.map(t=>esc(t.cod)).join(", ")}</b>`:"Nenhuma turma termina este ano."}</p>`}},
+ {id:"incompletas",mod:"escola",nome:"Turmas com dados por completar",desc:"Turmas sem curso, sem diretor de turma ou sem código FSE",r(){
+   const T=turmasDoAno();if(!T.length)return wgVazio("Ainda não há turmas neste ano letivo.")+wgIr("tur","Criar turmas");
+   const L=T.map(t=>({t,f:[!cursoById(t.cursoId)&&"curso",!t.dt&&"diretor de turma",!t.fse&&"código FSE"].filter(Boolean)})).filter(x=>x.f.length);
+   if(!L.length)return `<div class="wg-okm">✓ Todas as ${T.length} turmas têm curso, diretor de turma e código FSE.</div>`;
+   return `<p class="wg-t"><b>${L.length}</b> de ${T.length} turmas por completar:</p><div class="wg-lst">${L.map(x=>`<div class="wg-li"><b>${esc(x.t.cod)}</b><span>${x.f.map(f=>`<i class="wg-tag w">sem ${f}</i>`).join("")}</span></div>`).join("")}</div>`+wgIr("tur","Completar em Turmas")}},
+ {id:"fse",mod:"escola",nome:"Projetos FSE",desc:"Turmas agrupadas pelo código da operação do Fundo Social Europeu",r(){
+   const T=turmasDoAno();if(!T.length)return wgVazio("Ainda não há turmas neste ano letivo.");
+   const G=new Map(),sem=[];T.forEach(t=>{if(!t.fse){sem.push(t);return}(G.get(t.fse)||G.set(t.fse,[]).get(t.fse)).push(t)});
+   return (G.size?`<div class="wg-lst">${[...G.entries()].sort().map(([k,L])=>`<div class="wg-li"><code class="wg-code">${esc(k)}</code><span>${L.map(t=>esc(t.cod)).join(", ")}</span></div>`).join("")}</div>`:wgVazio("Nenhuma turma tem código FSE."))
+     +(sem.length?`<p class="wg-t wg-w">Sem código: <b>${sem.map(t=>esc(t.cod)).join(", ")}</b> ${wgIr("tur","Juntar")}</p>`:"")}},
+ {id:"cnq",mod:"escola",nome:"Cursos e Catálogo",desc:"Cursos por ligar ao Catálogo Nacional de Qualificações ou com UFCD opcionais por escolher",r(){
+   const C=escData().cursos;if(!C.length)return wgVazio("Ainda não há cursos.")+wgIr("cur","Criar cursos");
+   const L=C.map(c=>{const it=c.itens||[],op=it.filter(i=>i.opc),es=new Set(c.opcEsc||[]),hE=hSoma(op.filter(i=>es.has(i.cod))),req=c.opcH||0;
+     return{c,p:!c.qual?"por ligar ao Catálogo":op.length&&req&&hE<req?`opcionais: ${hE} h de ${req} h`:""}}).filter(x=>x.p);
+   if(!L.length)return `<div class="wg-okm">✓ Os ${C.length} cursos estão ligados ao Catálogo e com as opcionais escolhidas.</div>`;
+   return `<div class="wg-lst">${L.map(x=>`<div class="wg-li"><span class="wg-el">${esc(x.c.nome)}</span><i class="wg-tag w">${esc(x.p)}</i></div>`).join("")}</div>`+wgIr("cur","Abrir Cursos")}},
+ {id:"profs",mod:"escola",nome:"Professores",desc:"Total, sem email do Office 365 (não conseguem entrar) e diretores de turma",r(){
+   const P=cfg.profs,sem=P.filter(p=>!/\S+@\S+\.\S+/.test(p.email||"")),T=turmasDoAno(),dts=new Set(T.map(t=>t.dt).filter(Boolean));
+   return `<div class="wg-ns">${wgNum(P.length,"professores")}${wgNum(sem.length,"sem email",sem.length?"w":"")}${wgNum(dts.size,"diretores de turma")}</div>`
+     +(sem.length?`<p class="wg-t wg-w">Sem email (não entram na EPISJ 360 nem recebem avisos): ${sem.slice(0,6).map(p=>esc(p.nome)).join(", ")}${sem.length>6?` e mais ${sem.length-6}`:""}</p>`:"")+wgIr("prof","Abrir Professores")}},
+ {id:"entregas",mod:"boxcheck",nome:"Entregas do ano",desc:"Percentagem entregue face ao previsto e como evoluiu nos últimos envios",r(){
+   const ev=wgEval();if(!ev)return wgSemBox();const all=ev.flatMap(e=>e.items),ok=all.filter(i=>i.ok).length,p=wgPct(ok,all.length);
+   const n={warn:all.filter(i=>i.state==="warn").length,blank:all.filter(i=>i.state==="blank").length,miss:all.filter(i=>i.state==="missing").length};
+   const E=(cfg.envios||[]).slice(0,8).reverse(),mx=Math.max(1,...E.map(x=>x.n||0));
+   return `<div class="wg-big">${p}%</div>${wgBarra(p,"var(--ok,#16a34a)")}<p class="wg-t"><b>${ok}</b> de ${all.length} documentos entregues · <b>${n.miss}</b> em falta${n.blank?` · ${n.blank} vazios`:""}${n.warn?` · ${n.warn} a confirmar`:""}</p>`
+     +(E.length>1?`<div class="wg-spark" title="Documentos em falta em cada envio registado">${E.map(x=>`<i style="height:${Math.max(6,(x.n||0)*100/mx)}%" title="${esc(new Date(x.t).toLocaleDateString("pt-PT"))}: ${x.n} em falta"></i>`).join("")}</div><p class="wg-sub">Em falta nos últimos ${E.length} envios registados</p>`:"")+wgIr("rel","Ver o relatório")}},
+ {id:"prazo",mod:"boxcheck",nome:"Próximo prazo",desc:"Nome, data, dias que faltam e quantos documentos ainda faltam",r(){
+   const agora=Date.now(),P=prazos().filter(p=>p.ativo&&pd(p.data)&&fimPrazo(p)>=agora).sort((a,b)=>fimPrazo(a)-fimPrazo(b));
+   if(!P.length)return wgVazio("Não há prazos por cumprir.")+wgIr("pra","Marcar prazos");const p=P[0],d=wgDias(p.data),ev=wgEval();
+   let h=`<div class="wg-big sm">${esc(p.nome||"Prazo")}</div><p class="wg-t">até <b>${wgDM(p.data)}</b> — ${d<=0?"<b>termina hoje</b>":d===1?"falta <b>1 dia</b>":`faltam <b>${d} dias</b>`}</p>`;
+   if(ev){const c=contar(prazoItens(p)),tot=c.prazo+c.atraso+c.falta+c.pendente,ok=c.prazo+c.atraso;h+=wgBarra(wgPct(ok,tot),"var(--ok,#16a34a)")+`<p class="wg-t"><b>${ok}</b> de ${tot} entregues · <b>${c.pendente+c.falta}</b> por entregar</p>`}
+   if(P.length>1)h+=`<p class="wg-sub">Depois: ${P.slice(1,3).map(x=>esc(x.nome||"prazo")+" ("+wgDM(x.data)+")").join(" · ")}</p>`;return h+wgIr("pra","Abrir Prazos")}},
+ {id:"top",mod:"boxcheck",nome:"Quem mais falta entregar",desc:"Os 5 professores com mais documentos em falta, com atalho para avisar",r(){
+   const ev=wgEval();if(!ev)return wgSemBox();const T=byTeacher(ev).filter(t=>t.p.id!=="_"&&t.miss>0).slice(0,5);
+   if(!T.length)return `<div class="wg-okm">✓ Ninguém tem documentos em falta.</div>`;
+   return `<div class="wg-lst">${T.map(t=>`<div class="wg-li"><span class="wg-el">${esc(t.p.nome)}</span><span class="wg-mini">${wgBarra(wgPct(t.ok,t.tot),"var(--ok,#16a34a)")}</span><b class="wg-bad">${t.miss}</b></div>`).join("")}</div>`+wgIr("env","Enviar avisos")}},
+ {id:"turmasbox",mod:"boxcheck",nome:"Turmas mais atrasadas",desc:"Percentagem de entregas por turma, da mais baixa para a mais alta",r(){
+   const ev=wgEval();if(!ev)return wgSemBox();const G=new Map();ev.forEach(e=>{const k=e.mod.turma||"(sem turma)",g=G.get(k)||G.set(k,{ok:0,t:0}).get(k);e.items.forEach(i=>{g.t++;if(i.ok)g.ok++})});
+   const L=[...G.entries()].filter(([,g])=>g.t).map(([k,g])=>({k,p:wgPct(g.ok,g.t),g})).sort((a,b)=>a.p-b.p).slice(0,8);if(!L.length)return wgVazio("Sem documentos atribuídos.");
+   return L.map(x=>`<div class="wg-row"><span class="wg-k wg-el" title="${esc(x.k)}">${esc(x.k.split(/\s+-\s+/)[0])}</span>${wgBarra(x.p,x.p<50?"var(--bad,#dc2626)":x.p<80?"var(--warn,#d97706)":"var(--ok,#16a34a)")}<b>${x.p}%</b></div>`).join("")+wgIr("rel","Ver o relatório")}},
+ {id:"ultimas",mod:"boxcheck",nome:"Últimas entregas",desc:"Os últimos ficheiros que chegaram à Box, quem os entregou e quando",r(){
+   if(!lastListing)return wgSemBox();const F=(lastListing.itens||[]).filter(x=>x.type==="file").map(x=>({x,t:Date.parse(x.ca||x.modified_at||"")||0})).filter(o=>o.t).sort((a,b)=>b.t-a.t).slice(0,7);
+   if(!F.length)return wgVazio("Sem ficheiros na análise.");
+   return `<div class="wg-lst">${F.map(({x,t})=>{const pp=String(x.path||"").split("/").filter(Boolean);return `<div class="wg-li col"><span class="wg-el"><b>${esc(x.name)}</b></span><span class="wg-sub">${esc(x.by||"")}${x.by?" · ":""}${esc(pp.slice(-2).join(" › "))} · ${wgHa(t)}</span></div>`}).join("")}</div>`
+     +`<p class="wg-sub">Análise de ${wgHa(lastListing.t||Date.now())}.</p>`}},
+ {id:"avisos",mod:"boxcheck",nome:"Avisos automáticos",desc:"Próximos envios marcados e os últimos enviados (com os que falharam)",r(){
+   const agora=Date.now(),R=[];for(const p of prazos()){if(!p.ativo)continue;for(const a of p.avisos||[]){if(!a.ativo)continue;const t=proxima(p,a,agora);if(t)R.push({t,p,a})}}R.sort((a,b)=>a.t-b.t);
+   const U=AVL.slice(-4).reverse(),fmt=t=>new Date(t).toLocaleString("pt-PT",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
+   return `<p class="wg-k2">Próximos</p>${R.length?`<div class="wg-lst">${R.slice(0,3).map(r=>`<div class="wg-li"><span class="wg-el">${esc(r.p.nome||"Prazo")}</span><span class="wg-sub">${fmt(r.t)}</span></div>`).join("")}</div>`:wgVazio("Sem envios marcados.")}
+     <p class="wg-k2">Últimos</p>${U.length?`<div class="wg-lst">${U.map(x=>`<div class="wg-li"><span class="wg-el">${esc(x.nome||"")}</span><i class="wg-tag ${x.ok?"o":"b"}">${x.ok?"enviado":"falhou"}</i><span class="wg-sub">${fmt(x.t)}</span></div>`).join("")}</div>`:wgVazio("Ainda não saiu nenhum aviso deste computador.")}
+     <p class="wg-sub">${avCfg().servidor?"☁ Enviados pelo serviço da EPISJ 360, mesmo com o computador desligado.":avCfg().auto?"Enviados a partir deste navegador.":"Envio automático desligado."}</p>`+wgIr("pra","Abrir Prazos")}},
+ {id:"estbox",mod:"boxcheck",nome:"Estado da Box",desc:"Ligação à Box, última análise, pastas excluídas e serviço de avisos",r(){
+   const nF=lastListing?(lastListing.itens||[]).filter(x=>x.type==="file").length:0,ex=Object.keys(cfg.excluir||{}).length,A=avCfg(),e=SRV.estado;
+   return `<div class="wg-lst">
+     <div class="wg-li"><span>Ligação à Box</span><i class="wg-tag ${SES?"o":"w"}">${SES?"ligada":"por ligar"}</i></div>
+     <div class="wg-li"><span>Última análise</span><b>${lastListing?wgHa(lastListing.t||0):"—"}</b></div>
+     <div class="wg-li"><span>Ficheiros analisados</span><b>${nF}</b></div>
+     <div class="wg-li"><span>Pastas excluídas</span><b>${ex}</b></div>
+     <div class="wg-li"><span>Serviço de avisos</span><i class="wg-tag ${A.servidor?(SRV.erro||e&&e.erro?"b":"o"):""}">${A.servidor?(SRV.erro||e&&e.erro?"com erro":"ligado"):"não usado"}</i></div>
+     ${A.servidor&&e?`<div class="wg-li"><span>Última verificação</span><b>${e.ultimo?wgHa(e.ultimo):"—"}</b></div>`:""}</div>`+wgIr("box","Abrir a Gestão Documental")}},
+ {id:"horario",mod:"eduschedule",nome:"Estado dos horários",desc:"Turmas com horário completo, tempos por colocar e se já foi publicado",r(){
+   const st=mhEstado();if(!st)return wgVazio(`Ainda não há horário para ${esc(anoAtivo().nome)}.`)+wgIr("esch","Abrir o Horário360");
+   const C=st.cards||[],pos=C.filter(c=>c.day!=null).length,les=new Map((st.lessons||[]).map(l=>[l.id,l])),falta=new Map();
+   C.filter(c=>c.day==null).forEach(c=>{const l=les.get(c.lessonId);(l&&l.classIds||[]).forEach(id=>falta.set(id,(falta.get(id)||0)+(c.len||1)))});
+   const CL=st.classes||[],compl=CL.filter(c=>!falta.get(c.id)).length,nm=new Map(CL.map(c=>[c.id,c.name]));
+   return `<div class="wg-big">${wgPct(pos,C.length)}%</div>${wgBarra(wgPct(pos,C.length),"#7c3aed")}<p class="wg-t"><b>${pos}</b> de ${C.length} blocos colocados · <b>${compl}</b> de ${CL.length} turmas completas</p>`
+     +(falta.size?`<p class="wg-sub">Por colocar: ${[...falta.entries()].sort((a,b)=>b[1]-a[1]).slice(0,6).map(([id,n])=>`${esc(nm.get(id)||"?")} (${n})`).join(" · ")}</p>`:"")
+     +`<p class="wg-t">${podePublicar()?(PUBT?`Publicado ${wgHa(PUBT)}.`:`<span class="wg-w">Ainda não publicado para professores e formandos.</span>`):""}</p>`+wgIr("esch","Abrir o Horário360")}},
+ {id:"agora",mod:"eduschedule",nome:"Agora na escola",desc:"O tempo letivo em curso, as aulas a decorrer e as salas ocupadas",r(){
+   const st=mhEstado();if(!st)return wgVazio("Ainda não há horário publicado.");const dia=(new Date().getDay()+6)%7,D=st.days||[];
+   if(dia>=D.length)return wgVazio("Hoje não há aulas. Bom fim de semana!");
+   const P=(st.periods||[]).map((_,i)=>wgPer(st,i)),m=wgAgora(),pi=P.findIndex(p=>m>=p.a&&m<p.b);
+   if(pi<0){const nx=P.findIndex(p=>p.a>m);return wgVazio(nx<0?"As aulas de hoje já terminaram.":m<(P[0]||{}).a?`As aulas começam às <b>${rcHm(P[0].a)}</b>.`:`Intervalo — o próximo tempo começa às <b>${rcHm(P[nx].a)}</b>.`)}
+   const L=wgAulas(st,dia).filter(x=>pi>=x.p0&&pi<x.p0+x.len),salas=new Set(L.map(x=>x.sala).filter(Boolean));
+   return `<p class="wg-t"><b>${rcHm(P[pi].a)}–${rcHm(P[pi].b)}</b> · ${L.length} aula${L.length===1?"":"s"} · ${salas.size} sala${salas.size===1?"":"s"} ocupada${salas.size===1?"":"s"}</p>`
+     +(L.length?`<div class="wg-lst">${L.slice(0,8).map(x=>`<div class="wg-li"><i class="wg-dot" style="background:${esc(x.cor)}"></i><b>${esc(x.turmas||"—")}</b><span class="wg-el">${esc(x.s)}${x.prof?" · "+esc(x.prof):""}</span><span class="wg-sub">${esc(x.sala)}</span></div>`).join("")}</div>`:wgVazio("Sem aulas neste tempo."))}},
+ {id:"carga",mod:"eduschedule",nome:"Carga dos professores",desc:"Tempos semanais colocados por professor, com a média da escola",r(){
+   const st=mhEstado();if(!st)return wgVazio("Ainda não há horário.");const les=new Map((st.lessons||[]).map(l=>[l.id,l])),M=new Map();
+   for(const c of st.cards||[]){if(c.day==null)continue;const l=les.get(c.lessonId);if(!l)continue;new Set((l.linhas||[]).map(x=>x.t).filter(Boolean)).forEach(t=>M.set(t,(M.get(t)||0)+(c.len||1)))}
+   const T=(st.teachers||[]).map(t=>({n:t.name+(t.short?" ("+t.short+")":""),v:M.get(t.id)||0})).sort((a,b)=>b.v-a.v);if(!T.length)return wgVazio("Sem professores no horário.");
+   const mx=Math.max(1,T[0].v),med=T.reduce((s,t)=>s+t.v,0)/T.length;
+   return `<p class="wg-t">Média: <b>${med.toFixed(1)}</b> tempos por semana</p><div class="wg-scr">${T.map(t=>`<div class="wg-row"><span class="wg-k wg-el" title="${esc(t.n)}">${esc(t.n)}</span>${wgBarra(t.v*100/mx,t.v>med*1.25?"var(--warn,#d97706)":t.v<med*.6?"#94a3b8":"#7c3aed")}<b>${t.v}</b></div>`).join("")}</div>`}},
+ {id:"esphoje",mod:"roomcheck",nome:"Espaços hoje",desc:"Cada espaço com os tempos do dia, livres ou ocupados",r(){
+   const h=rcHoje(),T=rcTempos(),E=RC.esp.filter(e=>e.on),A=rcAtivas().filter(r=>r.d===h),m=wgAgora();if(!E.length)return wgVazio("Sem espaços reserváveis.");
+   return `<div class="wg-esp" style="--n:${T.length}"><span></span>${T.map(t=>`<i class="hd${m>=t[0]&&m<t[1]?" ag":""}">${rcHm(t[0])}</i>`).join("")}
+     ${E.map(e=>`<b style="--c:${esc(e.c)}" title="${esc(e.n)}">${esc(e.sg||e.n)}</b>${T.map(t=>{const r=A.find(r=>r.e===e.id&&r.h0<t[1]&&r.h1>t[0]);return `<i class="${r?"oc":""}${t[1]<=m?" ps":""}" style="--c:${esc(e.c)}" ${r?`data-wgrc="${esc(r.id)}" title="${esc(r.p+(r.t?" · "+r.t:""))}"`:`title="Livre"`}></i>`}).join("")}`).join("")}</div>
+     <p class="wg-sub">${A.length?A.length+" reserva"+(A.length>1?"s":"")+" hoje · clique num tempo ocupado para ver":"Sem reservas hoje — tudo livre."}</p>`+wgIr("rcMapa","Abrir o mapa")}},
+ {id:"proxres",mod:"roomcheck",nome:"Próximas reservas",desc:"As próximas 5 reservas de espaços",r(){
+   const h=rcHoje(),m=wgAgora(),L=rcAtivas().filter(r=>r.d>h||(r.d===h&&r.h1>m)).sort((a,b)=>a.d.localeCompare(b.d)||a.h0-b.h0).slice(0,5);
+   if(!L.length)return wgVazio("Não há reservas marcadas.")+wgIr("rcMapa","Reservar");
+   return `<div class="wg-lst">${L.map(r=>{const e=rcE(r.e);return `<div class="wg-li"><i class="wg-dot" style="background:${esc(e.c)}"></i><span class="wg-el"><b>${esc(e.sg||e.n)}</b> · ${r.d===h?"hoje":esc(rcDia(r.d,{weekday:"short",day:"numeric",month:"short"}))} · ${rcHm(r.h0)}–${rcHm(r.h1)}<br><span class="wg-sub">${esc(r.p)}${r.t?" · "+esc(r.t):""}</span></span><button class="b s" data-wgrc="${esc(r.id)}">Ver</button></div>`}).join("")}</div>`}},
+ {id:"ocup",mod:"roomcheck",nome:"Ocupação da semana",desc:"Percentagem dos tempos letivos ocupados em cada espaço nesta semana",r(){
+   const s0=rcSeg(rcHoje()),dias=[0,1,2,3,4].map(i=>rcMais(s0,i)),T=rcTempos(),tm=T.reduce((s,t)=>s+t[1]-t[0],0)*dias.length,A=rcAtivas().filter(r=>dias.includes(r.d)),E=RC.esp.filter(e=>e.on);
+   const L=E.map(e=>{let oc=0;A.filter(r=>r.e===e.id).forEach(r=>T.forEach(t=>{oc+=Math.max(0,Math.min(r.h1,t[1])-Math.max(r.h0,t[0]))}));return{e,p:wgPct(oc,tm),n:A.filter(r=>r.e===e.id).length}}).sort((a,b)=>b.p-a.p);
+   return L.map(x=>`<div class="wg-row"><span class="wg-k wg-el" title="${esc(x.e.n)}"><i class="wg-dot" style="background:${esc(x.e.c)}"></i>${esc(x.e.n)}</span>${wgBarra(x.p,x.e.c)}<b>${x.p}%</b></div>`).join("")
+     +`<p class="wg-sub">Semana de ${wgDM(dias[0])} a ${wgDM(dias[4])} · ${A.length} reserva${A.length===1?"":"s"}</p>`+wgIr("rcMapa","Abrir o mapa")}},
+ {id:"meudia",mod:"escola",nome:"O meu dia",desc:"Professor: as aulas de hoje, as entregas e as reservas. Direção: os 3 alertas mais urgentes",r(){
+   const pf=perfilAtual(),h=rcHoje(),m=wgAgora();
+   if(pf==="prof"||pf==="form"){const me=wgEu(),st=modOn("eduschedule")?mhEstado():null,dia=(new Date().getDay()+6)%7;let out="";
+     if(st&&pf==="prof"){const t=me&&(st.teachers||[]).find(t=>t.id===me.id||(ESD.mapaT||{})[t.id]===me.id),L=t?wgAulas(st,dia,t.id):[];
+       out+=`<p class="wg-k2">Aulas de hoje</p>`+(L.length?`<div class="wg-lst">${L.map(x=>{const a=wgPer(st,x.p0),b=wgPer(st,x.p0+x.len-1);return `<div class="wg-li${m>=a.a&&m<b.b?" ag":""}"><b>${rcHm(a.a)}</b><span class="wg-el">${esc(x.s)} · ${esc(x.turmas)}</span><span class="wg-sub">${esc(x.sala)}</span></div>`}).join("")}</div>`:wgVazio(t?"Sem aulas hoje.":"Não encontrei o seu horário."))}
+     if(modOn("boxcheck")&&pf==="prof")out+=`<p class="wg-k2">Entregas</p>`+wgIr("meu","Ver o que me falta entregar");
+     if(modOn("roomcheck")){const R=rcAtivas().filter(r=>(me&&r.pid===me.id||r.p===(EU&&EU.nome))&&(r.d>h||(r.d===h&&r.h1>m))).sort((a,b)=>a.d.localeCompare(b.d)||a.h0-b.h0).slice(0,3);
+       out+=`<p class="wg-k2">As minhas reservas</p>`+(R.length?`<div class="wg-lst">${R.map(r=>`<div class="wg-li"><i class="wg-dot" style="background:${esc(rcE(r.e).c)}"></i><span class="wg-el">${esc(rcE(r.e).n)} · ${r.d===h?"hoje":esc(rcDia(r.d,{weekday:"short",day:"numeric"}))} · ${rcHm(r.h0)}</span></div>`).join("")}</div>`:wgVazio("Sem reservas marcadas."))}
+     return out||wgVazio("Nada para mostrar hoje.")}
+   // Direção: os 3 alertas mais urgentes de todos os módulos
+   const al=[];const T=turmasDoAno();
+   if(modOn("boxcheck")){const P=prazos().filter(p=>p.ativo&&pd(p.data)&&fimPrazo(p)>=Date.now()).sort((a,b)=>fimPrazo(a)-fimPrazo(b))[0];
+     if(P){const d=wgDias(P.data);let falta="";try{if(lastListing){const c=contar(prazoItens(P));falta=c.pendente+c.falta}}catch(e){}if(d<=14&&falta!==0)al.push({u:100-d,t:`Prazo <b>${esc(P.nome||"")}</b> ${d<=0?"termina hoje":"em "+d+" dia"+(d===1?"":"s")}${falta?` — ${falta} documentos por entregar`:""}`,ir:"pra"})}
+     if(!SES)al.push({u:40,t:"A Box não está ligada neste computador.",ir:"box"})}
+   if(modOn("eduschedule")){const st=mhEstado();if(!st)al.push({u:55,t:`Ainda não há horário para ${esc(anoAtivo().nome)}.`,ir:"esch"});else{const f=(st.cards||[]).filter(c=>c.day==null).length;if(f)al.push({u:60,t:`${f} bloco${f>1?"s":""} do horário por colocar.`,ir:"esch"})}}
+   if(modOn("roomcheck")){const A=rcAtivas().filter(r=>r.d===h&&r.h1>m);if(A.length)al.push({u:30,t:`${A.length} reserva${A.length>1?"s":""} de espaços ainda hoje.`,ir:"rcMapa"})}
+   const inc=T.filter(t=>!cursoById(t.cursoId)||!t.dt||!t.fse).length;if(inc)al.push({u:45,t:`${inc} turma${inc>1?"s":""} com dados por completar.`,ir:"tur"});
+   const sm=cfg.profs.filter(p=>!/\S+@\S+\.\S+/.test(p.email||"")).length;if(sm)al.push({u:50,t:`${sm} professor${sm>1?"es":""} sem email — não conseguem entrar.`,ir:"prof"});
+   al.sort((a,b)=>b.u-a.u);
+   return `<p class="wg-t">Bom dia${EU&&EU.nome?", "+esc(EU.nome.split(/\s+/)[0]):""}! ${al.length?"O mais urgente:":""}</p>`+(al.length?`<div class="wg-lst">${al.slice(0,3).map((a,i)=>`<div class="wg-li"><b class="wg-nr">${i+1}</b><span style="flex:1;min-width:0;line-height:1.35">${a.t}</span><button class="b s" data-wgir="${a.ir}">Ver</button></div>`).join("")}</div>`:`<div class="wg-okm">✓ Nada urgente — está tudo em dia.</div>`)}}
+];
+
+function wgVisiveis(){return WIDGETS.filter(w=>modOn(w.mod))}
+function renderWidgets(){const g=$("#wgGrid");if(!g||!window.__wgOk)return; // só depois de a app arrancar (antes disso nem tudo está definido)
+  const vis=new Set(wgVisiveis().map(w=>w.id)),L=WG_SEL.map(id=>WIDGETS.find(w=>w.id===id)).filter(w=>w&&vis.has(w.id));
+  $("#wgConta").textContent=`${L.length} de ${vis.size} widgets`;
+  g.innerHTML=L.length?L.map(w=>{const M=WG_MOD[w.mod];let c;try{c=w.r()}catch(e){console.warn(w.id,e);c=wgVazio("Não foi possível mostrar este widget.")}
+    return `<div class="wg" data-wg="${w.id}" style="--mc:${M.c}"><div class="wg-h"><span class="wg-m" title="${esc(M.n)}">${M.l}</span><b>${esc(w.nome)}</b><button class="wg-x" data-wgx="${w.id}" title="Esconder este widget" aria-label="Esconder ${esc(w.nome)}">×</button></div><div class="wg-c">${c}</div></div>`}).join("")
+    :`<div class="wg-none">Nenhum widget escolhido. <button class="b s" id="wgEsc2">Escolher widgets</button></div>`;
+  const b2=$("#wgEsc2");if(b2)b2.onclick=wgEscolher}
+function wgEscolher(){const sel=new Set(WG_SEL),mods=Object.keys(WG_MOD);
+  rcAbrir("Widgets do painel",`<p class="hint" style="margin-top:0">Escolha os que quer ver. Só aparecem os dos módulos ligados; a escolha fica guardada neste navegador.</p>
+    <div class="row" style="margin-bottom:10px"><button class="b s" id="wgTodos">Todos</button><button class="b s" id="wgNenhum">Nenhum</button><button class="b s" id="wgRepor">Repor os sugeridos</button></div>
+    ${mods.map(m=>{const M=WG_MOD[m],on=modOn(m);return `<div class="wg-pg"><div class="wg-ph" style="--mc:${M.c}"><span class="wg-m">${M.l}</span>${esc(M.n)}${on?"":` <i class="wg-tag">módulo desligado</i>`}</div>
+      ${WIDGETS.filter(w=>w.mod===m).map(w=>`<label class="wg-op${on?"":" off"}"><input type="checkbox" data-wgc="${w.id}"${sel.has(w.id)?" checked":""}${on?"":" disabled"}><span><b>${esc(w.nome)}</b><small>${esc(w.desc)}</small></span></label>`).join("")}</div>`}).join("")}
+    <div class="row" style="margin-top:12px"><button class="b" id="wgOk">Feito</button></div>`);
+  const ler=()=>{const s=new Set([...document.querySelectorAll("[data-wgc]:checked")].map(x=>x.dataset.wgc));WG_SEL=WG_SEL.filter(id=>s.has(id)).concat(WIDGETS.map(w=>w.id).filter(id=>s.has(id)&&!WG_SEL.includes(id)));wgGuardar();renderWidgets()};
+  document.querySelectorAll("[data-wgc]").forEach(x=>x.onchange=ler);
+  const marcar=f=>{document.querySelectorAll("[data-wgc]:not(:disabled)").forEach(x=>x.checked=f(x.dataset.wgc));ler()};
+  $("#wgTodos").onclick=()=>marcar(()=>true);$("#wgNenhum").onclick=()=>marcar(()=>false);$("#wgRepor").onclick=()=>{WG_SEL=WG_PADRAO.slice();marcar(id=>WG_PADRAO.includes(id))};$("#wgOk").onclick=rcFechar}
+$("#wgEsc").onclick=wgEscolher;
+$("#wgGrid").addEventListener("click",e=>{const x=e.target.closest("[data-wgx]");if(x){WG_SEL=WG_SEL.filter(id=>id!==x.dataset.wgx);wgGuardar();renderWidgets();toast("Widget escondido — volte a pô-lo em Escolher widgets");return}
+  const r=e.target.closest("[data-wgrc]");if(r){rcVer(RC.res[r.dataset.wgrc]);return}
+  const b=e.target.closest("[data-wgir]");if(b){const t=b.dataset.wgir;if(t==="esch")mostrarModulo("eduschedule",true);else show(t)}});
+setInterval(()=>{if(curTab==="esc"&&document.visibilityState==="visible"&&$("#rcDw").hidden)renderWidgets()},60000);
+
 
 /* importa da análise do BoxCheck as turmas no formato "A04 - Mecatrónica Automóvel (25/28)" e cria os cursos */
 function escImportarBox(){let T=[];try{T=turmasSNQ()}catch(x){}
@@ -4945,7 +5176,7 @@ $("#utiGuardar").onclick=async()=>{if(!UTI)return;utiLerCampos();const pad=UTI.l
   catch(e){$("#utiEstado").innerHTML=`<span style="color:var(--bad)">${esc(e.message)}</span>`}};
 
 if(curTab&&curTab.startsWith("rc"))try{rcRender(curTab)}catch(e){console.warn(e)} // 0.9.19: o mapa aparece logo ao entrar
-guideArranque();
+window.__wgOk=true;guideArranque();
 })();
 </script>
 <script>/* NumberFlow 0.6.2 (MIT, Maxwell Barvian) */
