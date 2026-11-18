@@ -98,9 +98,9 @@ details.fd.leaf>summary::before{content:"·"}
 <div class="top"><div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="2" width="28" height="28" rx="8" fill="#1a5fd0"/><path d="M10.5 8.5h7.5l4 4v11a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 9 23.5V10a1.5 1.5 0 0 1 1.5-1.5z" fill="#fff"/><path d="M12.5 18l2.3 2.3 4.7-4.7" stroke="#1a5fd0" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>BoxDoc</div><span class="sub">Controlo de entregas de documentação</span></div>
 <div class="shell">
   <nav id="nav" class="side">
-    <button data-t="config" class="on"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Atribuições</button>
-    <button data-t="box"><svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>Dados da Box</button>
+    <button data-t="box" class="on"><svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>Dados da Box</button>
     <button data-t="pas"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>Pastas</button>
+    <button data-t="config"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Atribuições</button>
     <button data-t="rel"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 15l2 2 4-4"/></svg>Relatório</button>
     <button data-t="env"><svg viewBox="0 0 24 24"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>Enviar</button>
     <button data-t="cop"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>Guardar / carregar</button>
@@ -109,7 +109,7 @@ details.fd.leaf>summary::before{content:"·"}
 <main>
 
 <!-- 1. CONFIG -->
-<section id="config" class="on">
+<section id="config">
   <div class="card">
     <h2>Tipos de documento exigidos</h2>
     <p class="hint">Cada linha é um documento que cada módulo deve ter. A app considera-o <b>entregue</b> se encontrar um ficheiro cujo caminho contenha as pastas do módulo <b>e</b> a secção do DTP indicada (ex.: <code>006</code> = “006 - Planificações”), cujo nome contenha uma das palavras-chave e tenha uma das extensões. Campos vazios aceitam qualquer valor. Maiúsculas e acentos são ignorados.</p>
@@ -131,7 +131,7 @@ details.fd.leaf>summary::before{content:"·"}
 
   <div class="card">
     <h2>Módulos e atribuição</h2>
-    <p class="hint">Cada módulo é identificado pelas pastas que o distinguem, separadas por <code>/</code>, em qualquer ordem — por exemplo <code>997 Mecatrónica Automóvel (23-26) / 1600 - Matemática / Módulo A07</code>. Basta o início do nome da pasta (<code>997 / 1600 / Módulo A07</code>). Depois de carregar a listagem da Box (separador 2), use <b>Detetar módulos</b> para os criar todos de uma vez e atribua-os aos professores com o filtro.</p>
+    <p class="hint">Cada módulo é identificado pelas pastas que o distinguem, separadas por <code>/</code>, em qualquer ordem — por exemplo <code>997 Mecatrónica Automóvel (23-26) / 1600 - Matemática / Módulo A07</code>. Basta o início do nome da pasta (<code>997 / 1600 / Módulo A07</code>). Depois de carregar a listagem da Box (em Dados da Box), use <b>Detetar módulos</b> para os criar todos de uma vez e atribua-os aos professores com o filtro.</p>
     <div class="row" style="margin-bottom:10px">
       <button class="b" id="detect">Detetar módulos na listagem da Box</button>
       <span id="detMsg" class="hint" style="margin:0"></span>
@@ -156,7 +156,7 @@ details.fd.leaf>summary::before{content:"·"}
 </section>
 
 <!-- 2. BOX -->
-<section id="box">
+<section id="box" class="on">
   <div class="card" id="boxLive">
     <h2>Ligação direta à Box <span class="tag ok" style="vertical-align:middle">só leitura</span></h2>
     <p class="hint">A app só lê nomes de pastas e ficheiros. Não abre, altera, move nem apaga nada na Box.</p>
@@ -396,7 +396,7 @@ $("#bulkAssign").onclick=()=>{const pid=$("#bulkProf").value;if(!pid){toast("Esc
   const vis=cfg.mods.filter(modVisible);if(!vis.length)return;vis.forEach(m=>m.profId=pid);save();renderProfs();renderMods();
   toast(`${vis.length} módulo(s) atribuídos`)};
 $("#detect").onclick=()=>{
-  if(!files.length&&!folders.length){$("#detMsg").textContent="Carregue primeiro a listagem da Box no separador 2.";return}
+  if(!files.length&&!folders.length){$("#detMsg").textContent="Carregue primeiro a listagem da Box em Dados da Box.";return}
   const isMod=c=>/^(modulo|mod\.?|ufcd)\s*[a-z0-9]/.test(norm(c));
   const isTurma=c=>/\(\d{2}\s*-\s*\d{2}\)/.test(c);
   const found=new Map();
@@ -543,7 +543,7 @@ function renderReport(){
    <div class="tile"><div class="v">${profsMiss} / ${T.filter(t=>t.p.id!=="_").length}</div><div class="l">professores com falhas</div></div>
    <div class="tile"><div class="v">${files.length}</div><div class="l">ficheiros na listagem da Box</div></div>`;
   const w=[];
-  if(!files.length)w.push(["info","Ainda não carregou a listagem da Box (separador 2). Sem ela, tudo aparece em falta."]);
+  if(!files.length)w.push(["info","Ainda não carregou a listagem da Box (em Dados da Box). Sem ela, tudo aparece em falta."]);
   const empty=ev.filter(e=>e.folder&&e.nFiles===0);
   if(files.length&&empty.length)w.push(["warn",`${empty.length} módulo(s) sem nenhum ficheiro na pasta indicada — confirme o caminho: ${empty.slice(0,6).map(e=>modLabel(e.mod)).join("; ")}${empty.length>6?"…":""}`]);
   const nofolder=ev.filter(e=>!e.folder);if(nofolder.length)w.push(["warn",`${nofolder.length} módulo(s) sem pasta definida.`]);
@@ -564,7 +564,7 @@ function renderReport(){
       ${sf?e.items.filter(i=>i.hits.length).map(i=>`<div class="files"><b>${esc(i.doc.nome)}:</b> ${i.hits.map(h=>esc(h.name)).join(", ")}</div>`).join(""):""}</div>`;}
     if(!mods.length)html+=`<div class="mod hint">Sem módulos para mostrar.</div>`;
     html+=`</div>`;}
-  $("#report").innerHTML=html||`<div class="card"><p class="hint" style="margin:0">${cfg.mods.length?"Nada em falta com estes filtros. 🎉":"Defina primeiro os módulos no separador 1."}</p></div>`;
+  $("#report").innerHTML=html||`<div class="card"><p class="hint" style="margin:0">${cfg.mods.length?"Nada em falta com estes filtros. 🎉":"Defina primeiro os módulos em Atribuições."}</p></div>`;
 }
 
 /* ---------- send ---------- */
@@ -660,7 +660,7 @@ function renderTree(){
   $("#pTiles").innerHTML=`<div class="tile"><div class="v">${all.length}</div><div class="l">pastas</div></div>
    <div class="tile"><div class="v" style="color:var(--bad)">${empty.length}</div><div class="l">pastas vazias</div></div>
    <div class="tile"><div class="v">${files.length}</div><div class="l">ficheiros</div></div>`;
-  if(!all.length){$("#pTree").innerHTML=`<p class="hint" style="margin:0">Faça primeiro a análise da Box (separador 2).</p>`;return}
+  if(!all.length){$("#pTree").innerHTML=`<p class="hint" style="margin:0">Faça primeiro a análise da Box (em Dados da Box).</p>`;return}
   const q=norm($("#pTxt").value),lvl=+$("#pLvl").value;
   if($("#pShow").value==="vazias"){
     // só as pastas vazias de nível mais alto (se uma pasta está vazia, as subpastas também estão)
@@ -803,7 +803,7 @@ $("#scanBtn").onclick=async()=>{
     try{localStorage.setItem("box_last_listing",JSON.stringify(j))}catch(e){}
     $("#scanMsg").textContent=`Concluído em ${Math.round((Date.now()-t0)/1000)} s.`;
     useListing(j,"a Box");showLast();
-    if(!cfg.mods.length)toast("Agora use “Detetar módulos” no separador 1");
+    if(!cfg.mods.length)toast("Agora use “Detetar módulos” em Atribuições");
   }catch(e){$("#scanMsg").textContent="Erro: "+e.message}
   b.disabled=false;
 };
