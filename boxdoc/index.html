@@ -162,7 +162,7 @@ button.big{width:100%;padding:13px 18px;font-size:16px}
 @keyframes rot{to{transform:rotate(360deg)}}
 .who{display:flex;align-items:center;gap:10px;font-size:13.5px;color:#3d434b}
 .who .av{width:30px;height:30px;border-radius:50%;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
-.who a{color:var(--muted);text-decoration:none;font-size:12.5px}.who a:hover{color:var(--bad)}
+.who a{color:var(--muted);text-decoration:none;font-size:12.5px;white-space:nowrap}.who>span{white-space:nowrap}.who a:hover{color:var(--bad)}
 .top .grow{flex:1}
 .ver{font-size:11px;font-weight:600;color:var(--brand);background:var(--brandbg);border-radius:999px;padding:2px 8px;letter-spacing:.02em;margin-left:2px}
 .gver{display:inline-block;margin:0 0 8px}
@@ -560,6 +560,23 @@ button.b.rc-del{background:var(--bad);border-color:var(--bad)}button.b.rc-del:ho
 .rc-pt{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--c);margin-right:7px}
 .rc-filt label{display:flex;flex-direction:column;gap:4px;font-size:13px}
 @media (max-width:700px){.rc-3c{grid-template-columns:1fr 1fr}.rc-3c label:first-child{grid-column:1/-1}.rc-nav{width:100%}.rc-nav b{flex:1}}
+.gcard .msbtn{display:inline-flex;align-items:center;gap:10px;justify-content:center}
+.gcard .msbtn svg{width:18px;height:18px;flex:none}
+.boxlogin{background:#f6f8fb;border:1px solid var(--line);border-radius:10px;padding:14px;margin:10px 0}
+.who .pf{font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;background:#e8effc;color:#163269;white-space:nowrap}
+.who .pf.adm{background:#e3f5ea;color:#1d6b3c}
+.pvbar{position:sticky;top:0;z-index:5;background:#fff4d6;border:1px solid #f0d58a;color:#6b4f00;border-radius:10px;padding:8px 12px;margin:0 0 12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.vmx{border-collapse:collapse;width:100%;font-size:13px}.vmx th,.vmx td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:center}.vmx td:first-child,.vmx th:first-child{text-align:left}
+.vmx tr.grp td{background:#f6f8fb;font-weight:600;text-align:left}
+.mzh{display:grid;gap:2px;font-size:12px;overflow:auto}
+.mzh .c{background:#f6f8fb;border-radius:6px;padding:4px 6px;min-height:42px}
+.mzh .h{font-weight:600;text-align:center;padding:6px 4px;background:transparent}
+.mzh .p{font-weight:600;text-align:right;padding:4px 6px;background:transparent;color:var(--mut,#667)}
+.mzh .a{border-radius:6px;padding:4px 6px;color:#fff;line-height:1.25}
+.mzh .a b{display:block;font-size:12px}.mzh .a span{font-size:11px;opacity:.9}
+#nav [hidden],#mods [hidden],.mgrp[hidden]{display:none!important}
+.ment .mit{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-bottom:1px dashed var(--line)}
+.ment .mit:last-child{border-bottom:0}
 </style>
 </head>
 <body>
@@ -569,27 +586,21 @@ button.b.rc-del{background:var(--bad);border-color:var(--bad)}button.b.rc-del:ho
     <div class="glogo"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="gdgA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f5fb8"/><stop offset=".55" stop-color="#163269"/><stop offset="1" stop-color="#0c1d40"/></linearGradient><linearGradient id="gdkA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5cc985"/><stop offset="1" stop-color="#2f9e57"/></linearGradient></defs><rect x="1.5" y="1.5" width="29" height="29" rx="8.5" fill="url(#gdgA)"/><path d="M1.5 12C9 8 20 7 30.5 9.5V10C20 8 9 9.5 1.5 13.5z" fill="#fff" opacity=".10"/><path transform="translate(7.3 8.7) scale(.175)" fill="#fff" fill-rule="evenodd" d="M90.1 39.4 89.5 38.8 89.2 38.1 88.3 37.2 86.2 36.1 85.3 36.1 81.3 38.1 80.6 38.8 78.0 40.1 77.2 40.7 73.6 42.5 72.9 43.1 70.3 44.4 69.6 45.0 66.9 46.3 66.2 47.0 64.5 47.8 63.8 48.4 61.1 49.7 60.4 50.3 57.8 51.6 57.1 52.2 54.4 53.5 53.7 54.2 50.1 55.9 49.4 56.6 46.7 57.9 44.6 59.4 43.3 59.9 42.6 60.4 40.9 61.2 40.2 61.9 37.6 63.1 36.9 63.8 34.2 65.1 33.5 65.7 30.8 67.0 30.1 67.6 29.4 67.9 25.6 71.7 25.1 72.8 25.0 74.4 25.7 76.4 27.5 78.1 28.6 78.7 30.6 78.8 31.8 79.2 73.9 79.2 75.1 78.8 95.0 78.8 95.6 78.5 96.9 77.2 97.4 76.1 97.6 75.2 98.0 74.4 98.0 72.7 97.6 71.8 97.4 70.9 97.0 70.0 95.3 68.8 74.0 68.8 73.5 68.7 73.2 68.4 73.9 67.8 74.9 67.7 77.2 66.8 78.2 66.7 79.1 66.3 80.4 66.2 82.5 65.4 83.5 65.3 84.4 64.9 85.4 64.8 86.3 64.4 87.7 64.3 88.2 63.9 89.1 63.8 91.1 63.0 92.6 62.9 94.6 62.2 95.4 61.4 96.0 60.3 96.2 59.4 96.6 58.5 96.6 57.8 96.2 56.9 96.0 55.5 95.4 54.4 93.7 52.6 93.1 52.4 90.9 52.4 90.1 52.8 89.2 53.0 88.6 53.3 87.7 53.4 87.2 53.8 86.1 53.8 84.9 54.3 83.4 54.4 82.9 54.7 82.0 54.9 80.0 55.7 78.4 55.8 77.6 56.2 76.2 56.3 75.6 56.7 74.8 56.8 72.8 57.6 71.2 57.7 68.4 58.7 67.5 58.7 67.2 58.8 66.8 58.7 67.1 58.3 69.6 57.0 70.3 56.3 72.9 55.0 73.6 54.4 77.2 52.6 79.4 51.0 82.1 49.8 82.8 49.1 86.4 47.4 87.1 46.7 88.8 45.9 90.1 44.6 90.8 42.5 90.3 41.2 90.3 40.0zM47.0 39.0 47.3 39.4 49.8 40.9 50.8 41.9 52.3 44.5 52.4 46.4 52.6 46.8 52.8 47.0 53.5 47.0 54.1 46.6 55.0 46.5 55.5 46.2 57.9 45.5 60.7 44.1 61.2 43.7 61.9 42.8 63.7 41.8 64.7 41.7 65.6 41.3 66.5 41.2 67.1 40.9 68.4 40.7 69.6 40.1 70.3 39.5 71.0 39.2 72.4 37.8 72.8 37.0 72.8 36.4 72.6 36.1 71.9 36.1 71.0 36.5 68.8 36.5 67.6 37.0 58.3 37.0 56.1 36.1 53.0 36.1 51.8 35.6 50.1 35.6 48.8 36.1 48.3 36.5 47.9 37.3 47.3 38.1zM35.3 2.5 34.2 2.4 33.0 1.9 31.8 1.9 30.9 2.3 29.9 2.4 29.3 2.6 27.6 4.4 27.2 5.1 25.6 7.3 24.9 8.8 24.0 9.9 23.6 9.6 23.5 8.7 23.9 7.9 24.0 7.0 24.8 5.4 25.0 4.6 25.7 3.6 25.7 3.2 25.2 2.9 22.2 2.9 20.0 3.9 18.9 5.4 18.3 6.5 18.2 7.4 17.3 9.6 17.2 10.7 16.7 11.4 16.4 11.2 16.3 10.6 16.3 7.4 16.1 7.0 15.9 6.8 15.1 6.8 11.1 8.8 9.3 10.7 8.3 12.7 8.2 15.2 8.6 16.1 8.7 17.0 9.5 18.5 9.7 19.4 10.2 20.4 10.8 21.2 11.3 22.2 11.7 22.7 11.6 23.0 11.2 22.9 9.8 21.6 9.5 20.8 8.7 19.9 7.7 17.9 7.5 17.1 7.1 16.1 6.7 15.7 6.1 15.8 4.0 17.9 3.7 18.6 3.0 19.6 2.8 20.4 2.5 20.9 2.3 21.8 1.9 22.7 1.9 25.3 2.6 26.8 4.5 28.2 9.4 30.6 10.3 30.8 11.8 31.6 12.7 31.7 13.9 32.4 13.9 32.9 13.2 33.2 12.1 33.2 11.2 32.8 10.3 32.6 5.5 30.2 4.3 29.1 2.7 28.3 2.4 28.8 2.4 30.1 2.8 31.0 3.0 32.4 5.0 36.4 5.8 37.3 8.2 38.4 12.0 38.4 12.7 38.5 12.8 38.8 12.1 39.3 8.7 39.4 8.3 39.7 8.3 40.1 8.7 40.5 9.5 40.9 10.7 42.1 12.3 42.9 13.0 43.4 14.1 43.8 14.7 44.1 19.1 44.2 20.0 43.8 20.8 43.6 22.3 42.6 22.8 42.5 23.1 42.6 22.8 43.3 21.1 45.0 20.0 45.7 19.8 46.2 21.2 49.1 21.2 52.2 20.4 54.2 19.9 54.9 19.6 55.6 18.4 56.8 18.2 57.4 17.7 57.9 16.9 58.3 15.2 59.9 14.5 60.3 13.8 60.9 12.1 61.7 10.7 62.7 10.6 63.7 10.9 64.2 11.3 64.2 12.1 63.9 17.1 63.9 18.0 64.3 19.4 64.4 22.2 65.8 25.2 65.7 26.7 64.9 27.8 64.6 32.5 59.9 32.8 59.2 33.9 58.0 34.7 56.3 35.3 55.7 35.7 54.3 36.3 53.7 36.6 53.0 40.5 49.1 42.9 48.0 43.6 48.0 44.6 48.4 45.3 49.1 45.6 49.8 45.8 50.6 46.1 51.2 46.2 52.2 46.6 52.4 47.5 51.7 50.2 48.9 50.8 47.8 50.8 45.0 50.2 43.8 47.4 41.0 45.4 40.0 44.5 39.8 42.9 39.0 41.9 38.9 41.0 38.5 40.1 38.4 37.6 37.1 37.1 36.7 36.9 36.3 36.9 32.9 35.8 30.8 33.3 28.2 32.9 27.5 32.3 26.8 31.5 25.1 30.9 24.4 30.6 23.3 30.3 22.8 30.2 20.8 29.7 19.6 29.7 17.9 30.2 16.7 30.2 14.5 30.6 13.6 30.8 12.7 33.3 7.8 33.9 7.1 34.2 6.3 35.3 5.1 35.7 4.4 36.3 3.6 36.3 3.2 35.9 2.8zM17.0 37.7 17.0 37.9 16.6 38.2 15.8 38.3 14.9 38.9 14.3 38.9 14.0 38.6 14.3 38.2 14.8 38.0 15.9 38.1 16.5 37.7z"/><path d="M26.24 10.55A11.6 11.6 0 1 1 13.59 4.65" fill="none" stroke="url(#gdkA)" stroke-width="2.3" stroke-linecap="round"/><path d="M16.23 4.09L12.17 2.30L13.25 7.38z" fill="url(#gdkA)"/></svg></div>
     <h1>EPISJ <b>360</b></h1><div class="ver gver" data-ver></div>
     <p class="gsub">A escola toda num só lugar<br><span>Escola Profissional da Ilha de São Jorge</span></p>
-    <p class="gmod">Módulo <b>BoxCheck</b> · controlo de entregas na Box</p>
-    <div id="gateWait" class="gwait" style="display:none"><span class="spin"></span> A ligar à Box…</div>
+    <div id="gateWait" class="gwait" style="display:none"><span class="spin"></span> <span id="gateWaitTxt">A entrar…</span></div>
     <div id="gateLogin">
-    <div id="loginBox">
-      <button class="b big" id="oaGo">Entrar com a Box</button>
-      <p class="hint" style="margin:10px 0 0">Só é preciso entrar uma vez neste navegador: a sessão renova-se sozinha.</p>
-      <div id="wkSet" style="display:none;margin-top:12px">
-        <p class="hint">Primeira vez neste navegador: indique o endereço do serviço de login (Cloudflare) — ver LEIA-ME, passo 3.</p>
-        <div class="row"><label class="grow">Endereço do serviço de login<input type="text" id="wkUrl" placeholder="https://boxdoc-login.o-seu-nome.workers.dev"></label><button class="b s" id="wkSave" style="align-self:flex-end">Guardar</button></div>
-      </div>
-    </div>
-    <details id="devTok" style="margin-top:12px">
-      <summary class="hint" style="cursor:pointer;margin:0">Alternativa: usar um token de programador (60 minutos)</summary>
-      <div class="row" style="margin-top:8px">
-        <label class="grow">Token de programador<input type="text" id="tok" autocomplete="off" spellcheck="false" style="-webkit-text-security:disc" placeholder="cole aqui o Developer Token"></label>
-        <button class="b s" id="tokGo" style="align-self:flex-end">Ligar com token</button>
-      </div>
-    </details>
+      <button class="b big msbtn" id="msGo"><svg viewBox="0 0 21 21" aria-hidden="true"><rect x="1" y="1" width="9" height="9" fill="#f25022"/><rect x="11" y="1" width="9" height="9" fill="#7fba00"/><rect x="1" y="11" width="9" height="9" fill="#00a4ef"/><rect x="11" y="11" width="9" height="9" fill="#ffb900"/></svg>Entrar com o Office 365 da escola</button>
+      <p class="hint" style="margin:10px 0 0">Use a sua conta da escola (a mesma do email e do Teams). Cada conta tem o seu perfil: <b>Direção Executiva</b>, <b>Direção Pedagógica</b>, <b>Professor</b> ou <b>Formando</b>.</p>
+      <details id="msSetup" style="margin-top:12px;display:none">
+        <summary class="hint" style="cursor:pointer;margin:0">Primeira vez neste navegador: ligação ao Office 365</summary>
+        <div class="row" style="margin-top:8px">
+          <label class="grow">ID da aplicação (cliente)<input type="text" id="gMsClient" spellcheck="false" placeholder="ex.: 1a2b3c4d-…"></label>
+          <label class="grow">ID do diretório ou domínio<input type="text" id="gMsTenant" spellcheck="false" placeholder="ex.: episj.pt"></label>
+          <button class="b s" id="gMsSave" style="align-self:flex-end">Guardar</button>
+        </div>
+      </details>
     </div>
     <div id="gateMsg"></div>
-    <p class="gfoot">Só leitura: a EPISJ 360 não altera, move nem apaga nada na Box.</p>
+    <p class="gfoot">A EPISJ 360 só lê a Box (não altera, move nem apaga nada). A Box liga-se dentro do módulo BoxCheck.</p>
   </div>
 </div>
 <div class="top"><div class="brand" title="EPISJ 360 — a escola toda num só lugar"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="gdgB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f5fb8"/><stop offset=".55" stop-color="#163269"/><stop offset="1" stop-color="#0c1d40"/></linearGradient><linearGradient id="gdkB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5cc985"/><stop offset="1" stop-color="#2f9e57"/></linearGradient></defs><rect x="1.5" y="1.5" width="29" height="29" rx="8.5" fill="url(#gdgB)"/><path d="M1.5 12C9 8 20 7 30.5 9.5V10C20 8 9 9.5 1.5 13.5z" fill="#fff" opacity=".10"/><path transform="translate(7.3 8.7) scale(.175)" fill="#fff" fill-rule="evenodd" d="M90.1 39.4 89.5 38.8 89.2 38.1 88.3 37.2 86.2 36.1 85.3 36.1 81.3 38.1 80.6 38.8 78.0 40.1 77.2 40.7 73.6 42.5 72.9 43.1 70.3 44.4 69.6 45.0 66.9 46.3 66.2 47.0 64.5 47.8 63.8 48.4 61.1 49.7 60.4 50.3 57.8 51.6 57.1 52.2 54.4 53.5 53.7 54.2 50.1 55.9 49.4 56.6 46.7 57.9 44.6 59.4 43.3 59.9 42.6 60.4 40.9 61.2 40.2 61.9 37.6 63.1 36.9 63.8 34.2 65.1 33.5 65.7 30.8 67.0 30.1 67.6 29.4 67.9 25.6 71.7 25.1 72.8 25.0 74.4 25.7 76.4 27.5 78.1 28.6 78.7 30.6 78.8 31.8 79.2 73.9 79.2 75.1 78.8 95.0 78.8 95.6 78.5 96.9 77.2 97.4 76.1 97.6 75.2 98.0 74.4 98.0 72.7 97.6 71.8 97.4 70.9 97.0 70.0 95.3 68.8 74.0 68.8 73.5 68.7 73.2 68.4 73.9 67.8 74.9 67.7 77.2 66.8 78.2 66.7 79.1 66.3 80.4 66.2 82.5 65.4 83.5 65.3 84.4 64.9 85.4 64.8 86.3 64.4 87.7 64.3 88.2 63.9 89.1 63.8 91.1 63.0 92.6 62.9 94.6 62.2 95.4 61.4 96.0 60.3 96.2 59.4 96.6 58.5 96.6 57.8 96.2 56.9 96.0 55.5 95.4 54.4 93.7 52.6 93.1 52.4 90.9 52.4 90.1 52.8 89.2 53.0 88.6 53.3 87.7 53.4 87.2 53.8 86.1 53.8 84.9 54.3 83.4 54.4 82.9 54.7 82.0 54.9 80.0 55.7 78.4 55.8 77.6 56.2 76.2 56.3 75.6 56.7 74.8 56.8 72.8 57.6 71.2 57.7 68.4 58.7 67.5 58.7 67.2 58.8 66.8 58.7 67.1 58.3 69.6 57.0 70.3 56.3 72.9 55.0 73.6 54.4 77.2 52.6 79.4 51.0 82.1 49.8 82.8 49.1 86.4 47.4 87.1 46.7 88.8 45.9 90.1 44.6 90.8 42.5 90.3 41.2 90.3 40.0zM47.0 39.0 47.3 39.4 49.8 40.9 50.8 41.9 52.3 44.5 52.4 46.4 52.6 46.8 52.8 47.0 53.5 47.0 54.1 46.6 55.0 46.5 55.5 46.2 57.9 45.5 60.7 44.1 61.2 43.7 61.9 42.8 63.7 41.8 64.7 41.7 65.6 41.3 66.5 41.2 67.1 40.9 68.4 40.7 69.6 40.1 70.3 39.5 71.0 39.2 72.4 37.8 72.8 37.0 72.8 36.4 72.6 36.1 71.9 36.1 71.0 36.5 68.8 36.5 67.6 37.0 58.3 37.0 56.1 36.1 53.0 36.1 51.8 35.6 50.1 35.6 48.8 36.1 48.3 36.5 47.9 37.3 47.3 38.1zM35.3 2.5 34.2 2.4 33.0 1.9 31.8 1.9 30.9 2.3 29.9 2.4 29.3 2.6 27.6 4.4 27.2 5.1 25.6 7.3 24.9 8.8 24.0 9.9 23.6 9.6 23.5 8.7 23.9 7.9 24.0 7.0 24.8 5.4 25.0 4.6 25.7 3.6 25.7 3.2 25.2 2.9 22.2 2.9 20.0 3.9 18.9 5.4 18.3 6.5 18.2 7.4 17.3 9.6 17.2 10.7 16.7 11.4 16.4 11.2 16.3 10.6 16.3 7.4 16.1 7.0 15.9 6.8 15.1 6.8 11.1 8.8 9.3 10.7 8.3 12.7 8.2 15.2 8.6 16.1 8.7 17.0 9.5 18.5 9.7 19.4 10.2 20.4 10.8 21.2 11.3 22.2 11.7 22.7 11.6 23.0 11.2 22.9 9.8 21.6 9.5 20.8 8.7 19.9 7.7 17.9 7.5 17.1 7.1 16.1 6.7 15.7 6.1 15.8 4.0 17.9 3.7 18.6 3.0 19.6 2.8 20.4 2.5 20.9 2.3 21.8 1.9 22.7 1.9 25.3 2.6 26.8 4.5 28.2 9.4 30.6 10.3 30.8 11.8 31.6 12.7 31.7 13.9 32.4 13.9 32.9 13.2 33.2 12.1 33.2 11.2 32.8 10.3 32.6 5.5 30.2 4.3 29.1 2.7 28.3 2.4 28.8 2.4 30.1 2.8 31.0 3.0 32.4 5.0 36.4 5.8 37.3 8.2 38.4 12.0 38.4 12.7 38.5 12.8 38.8 12.1 39.3 8.7 39.4 8.3 39.7 8.3 40.1 8.7 40.5 9.5 40.9 10.7 42.1 12.3 42.9 13.0 43.4 14.1 43.8 14.7 44.1 19.1 44.2 20.0 43.8 20.8 43.6 22.3 42.6 22.8 42.5 23.1 42.6 22.8 43.3 21.1 45.0 20.0 45.7 19.8 46.2 21.2 49.1 21.2 52.2 20.4 54.2 19.9 54.9 19.6 55.6 18.4 56.8 18.2 57.4 17.7 57.9 16.9 58.3 15.2 59.9 14.5 60.3 13.8 60.9 12.1 61.7 10.7 62.7 10.6 63.7 10.9 64.2 11.3 64.2 12.1 63.9 17.1 63.9 18.0 64.3 19.4 64.4 22.2 65.8 25.2 65.7 26.7 64.9 27.8 64.6 32.5 59.9 32.8 59.2 33.9 58.0 34.7 56.3 35.3 55.7 35.7 54.3 36.3 53.7 36.6 53.0 40.5 49.1 42.9 48.0 43.6 48.0 44.6 48.4 45.3 49.1 45.6 49.8 45.8 50.6 46.1 51.2 46.2 52.2 46.6 52.4 47.5 51.7 50.2 48.9 50.8 47.8 50.8 45.0 50.2 43.8 47.4 41.0 45.4 40.0 44.5 39.8 42.9 39.0 41.9 38.9 41.0 38.5 40.1 38.4 37.6 37.1 37.1 36.7 36.9 36.3 36.9 32.9 35.8 30.8 33.3 28.2 32.9 27.5 32.3 26.8 31.5 25.1 30.9 24.4 30.6 23.3 30.3 22.8 30.2 20.8 29.7 19.6 29.7 17.9 30.2 16.7 30.2 14.5 30.6 13.6 30.8 12.7 33.3 7.8 33.9 7.1 34.2 6.3 35.3 5.1 35.7 4.4 36.3 3.6 36.3 3.2 35.9 2.8zM17.0 37.7 17.0 37.9 16.6 38.2 15.8 38.3 14.9 38.9 14.3 38.9 14.0 38.6 14.3 38.2 14.8 38.0 15.9 38.1 16.5 37.7z"/><path d="M26.24 10.55A11.6 11.6 0 1 1 13.59 4.65" fill="none" stroke="url(#gdkB)" stroke-width="2.3" stroke-linecap="round"/><path d="M16.23 4.09L12.17 2.30L13.25 7.38z" fill="url(#gdkB)"/></svg><span>EPISJ <b>360</b></span><span class="ver" data-ver></span></div><nav class="mods" id="mods" aria-label="Módulos da EPISJ 360"><button data-m="escola" title="Escola — anos letivos, cursos, turmas e professores (comuns a todos os módulos)"><svg class="mseal" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="esgM" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f5fb8"/><stop offset=".55" stop-color="#163269"/><stop offset="1" stop-color="#0c1d40"/></linearGradient></defs><rect x="1.5" y="1.5" width="29" height="29" rx="8.5" fill="url(#esgM)"/><text x="16" y="22.2" text-anchor="middle" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="17" font-weight="800" fill="#fff">E</text><circle cx="25" cy="25" r="4.2" fill="#3db166" stroke="#0c1d40" stroke-width="1.4"/></svg><span><b>Escola</b></span></button><button data-m="boxcheck" class="on" title="BoxCheck — controlo de entregas na Box"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="bcgM" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f5fb8"/><stop offset=".55" stop-color="#163269"/><stop offset="1" stop-color="#0c1d40"/></linearGradient><linearGradient id="bckM" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5cc985"/><stop offset="1" stop-color="#2f9e57"/></linearGradient></defs><rect x="1.5" y="1.5" width="29" height="29" rx="8.5" fill="url(#bcgM)"/><path d="M1.5 12C9 8 20 7 30.5 9.5V10C20 8 9 9.5 1.5 13.5z" fill="#fff" opacity=".10"/><path d="M14.5 6.6 22 10.6 14.5 14.6 7 10.6z" fill="#fff"/><path d="M7 10.6 14.5 14.6V23.4L7 19.4z" fill="#e3ebfa"/><path d="M22 10.6 14.5 14.6V23.4L22 19.4z" fill="#b7c8ea"/><path d="M10.7 8.6 18.2 12.6" stroke="#163269" stroke-opacity=".35" stroke-width="1.1"/><circle cx="23" cy="22.6" r="6.2" fill="url(#bckM)" stroke="#0c1d40" stroke-width="1.6"/><path d="M20.2 22.7l1.9 1.9 3.8-3.9" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Box<b>Check</b></span></button><button data-m="eduschedule" title="EduSchedule — horários da escola (o mesmo da EduSpruce)"><svg class="mseal" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="essM" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f5fb8"/><stop offset=".55" stop-color="#163269"/><stop offset="1" stop-color="#0c1d40"/></linearGradient></defs><rect x="1.5" y="1.5" width="29" height="29" rx="8.5" fill="url(#essM)"/><text x="16" y="22.2" text-anchor="middle" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="17" font-weight="800" fill="#fff">S</text><circle cx="25" cy="25" r="4.2" fill="#3db166" stroke="#0c1d40" stroke-width="1.4"/></svg><span>Edu<b>Schedule</b></span></button><button data-m="roomcheck" title="RoomCheck — reservas do Auditório e dos Laboratórios de Informática"><svg class="mseal" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="rcsM" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f5fb8"/><stop offset=".55" stop-color="#163269"/><stop offset="1" stop-color="#0c1d40"/></linearGradient></defs><rect x="1.5" y="1.5" width="29" height="29" rx="8.5" fill="url(#rcsM)"/><text x="16" y="22.2" text-anchor="middle" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="17" font-weight="800" fill="#fff">R</text><circle cx="25" cy="25" r="4.2" fill="#3db166" stroke="#0c1d40" stroke-width="1.4"/></svg><span>Room<b>Check</b></span></button></nav><span class="grow"></span><label class="anotop" title="Ano letivo ativo — comum a todos os módulos"><span>Ano letivo</span><select id="anoSel"></select></label><span id="bgp" class="bgp" style="display:none"></span><span class="fsz" title="Tamanho da letra"><button id="fszMenos" aria-label="Diminuir a letra">A−</button><button id="fszVal" title="Repor o tamanho normal">100%</button><button id="fszMais" aria-label="Aumentar a letra">A+</button></span><span class="undo"><button id="undoBtn" title="Anular (Ctrl+Z)" disabled>↶ Anular</button><button id="redoBtn" title="Refazer (Ctrl+Shift+Z)" disabled>↷ Refazer</button></span><span id="who" class="who" style="display:none"></span></div>
@@ -605,6 +616,7 @@ button.b.rc-del{background:var(--bad);border-color:var(--bad)}button.b.rc-del:ho
     </div>
     <div class="mgrp" data-m="eduschedule">
     <div class="mh">EduSchedule</div>
+    <button data-t="mh"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><circle cx="12" cy="16" r="2.5"/></svg><span data-mhlbl>O meu horário</span></button>
     <button data-t="esch"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h2M14 14h2M8 18h2M14 18h2"/></svg>Horários</button>
     </div>
     <div class="mgrp" data-m="roomcheck">
@@ -616,6 +628,7 @@ button.b.rc-del{background:var(--bad);border-color:var(--bad)}button.b.rc-del:ho
     <div class="mgrp" data-m="boxcheck">
     <div class="mh">BoxCheck <span class="mv" data-bcver></span></div>
     <label class="anasel" id="anaTop" style="display:none"><span>Análise</span><select id="anaSel" title="Escolha a análise guardada a usar"></select></label>
+    <button data-t="meu"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a7 7 0 0 1 11-5.7"/><path d="M15 19l2 2 4-4"/></svg>As minhas entregas</button>
     <button data-t="box" class="on"><svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>Gestão Documental</button>
     <button data-t="alt"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Alterações</button>
     <button data-t="pas"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>Pastas</button>
@@ -628,6 +641,7 @@ button.b.rc-del{background:var(--bad);border-color:var(--bad)}button.b.rc-del:ho
     </div>
     <div class="mgrp gl">
     <div class="mh">EPISJ 360</div>
+    <button data-t="uti"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8l1.5 1.5L23 7"/></svg>Utilizadores e perfis</button>
     <button data-t="def"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Definições</button>
     </div>
     <div class="foot"><a class="sfoot" href="https://www.episj.com" target="_blank" rel="noopener" title="Escola Profissional da Ilha de São Jorge"><img src="https://www.episj.com/wp-content/uploads/2024/05/logo_2024_2-mobile.png" alt="Escola Profissional da Ilha de São Jorge" onerror="this.parentNode.style.display='none'"></a>EPISJ 360 <span data-ver></span> · BoxCheck <span data-bcver></span> · RoomCheck <span data-rcver></span> — ferramenta interna da Escola Profissional da Ilha de São Jorge. Só leitura: não altera nada na Box.<br>Não é um produto da Box, Inc.</div>
@@ -645,6 +659,7 @@ button.b.rc-del{background:var(--bad);border-color:var(--bad)}button.b.rc-del:ho
     </div>
     <div class="tiles" id="escTiles"></div>
     <div id="escAvisos"></div>
+    <div id="pubBox" class="row" style="display:none;margin-top:12px;align-items:center"><button class="b s" id="pubGo" title="Envia as turmas, os professores e os horários para os perfis Professor e Formando verem (só leitura)">Publicar para professores e formandos</button><span id="pubMsg" class="hint" style="margin:0"></span></div>
   </div>
 </section>
 
@@ -822,7 +837,24 @@ button.b.rc-del{background:var(--bad);border-color:var(--bad)}button.b.rc-del:ho
   <div class="card" id="boxLive">
     <h2>Pastas da Box <span class="tag ok" style="vertical-align:middle">só leitura</span></h2>
     <p class="hint">A app só lê nomes de pastas e ficheiros. Não abre, altera, move nem apaga nada na Box.</p>
-    <div class="row" style="margin-top:10px"><button class="b s" id="tokOut" style="display:none">Terminar sessão</button></div>
+    <div id="loginBox" class="boxlogin">
+      <p style="margin:0 0 10px"><b>Ligar a Box</b> — a Box só é precisa no módulo BoxCheck, para ler as pastas da Gestão Documental. Sem ela, o resto do BoxCheck abre com a última análise guardada.</p>
+      <button class="b" id="oaGo">Entrar com a Box</button>
+      <p class="hint" style="margin:8px 0 0">Só é preciso entrar uma vez neste navegador: a sessão renova-se sozinha.</p>
+      <div id="wkSet" style="display:none;margin-top:12px">
+        <p class="hint">Indique o endereço do serviço de login (Cloudflare) — ver LEIA-ME, passo 3.</p>
+        <div class="row"><label class="grow">Endereço do serviço de login<input type="text" id="wkUrl" placeholder="https://boxdoc-login.o-seu-nome.workers.dev"></label><button class="b s" id="wkSave" style="align-self:flex-end">Guardar</button></div>
+      </div>
+      <details id="devTok" style="margin-top:10px">
+        <summary class="hint" style="cursor:pointer;margin:0">Alternativa: usar um token de programador (60 minutos)</summary>
+        <div class="row" style="margin-top:8px">
+          <label class="grow">Token de programador<input type="text" id="tok" autocomplete="off" spellcheck="false" style="-webkit-text-security:disc" placeholder="cole aqui o Developer Token"></label>
+          <button class="b s" id="tokGo" style="align-self:flex-end">Ligar com token</button>
+        </div>
+      </details>
+      <div id="boxWait" class="hint" style="display:none;margin:10px 0 0"><span class="spin"></span> A ligar à Box…</div>
+    </div>
+    <div class="row" style="margin-top:10px"><button class="b s" id="tokOut" style="display:none">Terminar sessão da Box</button></div>
     <div id="boxAuth"></div><div id="nuvemMsg"></div>
     <div id="boxBrowse" style="display:none">
       <h3>Escolha a pasta a analisar</h3>
@@ -1161,6 +1193,78 @@ button.b.rc-del{background:var(--bad);border-color:var(--bad)}button.b.rc-del:ho
   </div>
 </section>
 
+
+<!-- ===================== PERFIS (EPISJ 360 0.9) ===================== -->
+<section id="meu">
+  <div class="card">
+    <h2>As minhas entregas</h2>
+    <p class="hint">O que <b id="meuQuem">lhe</b> falta entregar na Box, prazo a prazo — o mesmo cálculo dos avisos automáticos. A Box é verificada de hora a hora pelo serviço da EPISJ 360; não precisa de entrar na Box para ver isto.</p>
+    <div class="row" id="meuSelRow" style="display:none;margin-bottom:10px"><label class="grow">Ver as entregas de<select id="meuSel"></select></label><button class="b s" id="meuAtual" style="align-self:flex-end">Atualizar</button></div>
+    <div id="meuOut"><p class="hint">A carregar…</p></div>
+  </div>
+</section>
+
+<section id="mh">
+  <div class="card">
+    <h2 id="mhTit">O meu horário</h2>
+    <p class="hint" id="mhHint">O horário publicado pela Direção para o ano letivo ativo. Só leitura.</p>
+    <div class="row" style="margin-bottom:12px">
+      <label style="width:160px">Ver por<select id="mhTipo"><option value="t">Professor</option><option value="c">Turma</option></select></label>
+      <label class="grow">Quem<select id="mhQuem"></select></label>
+    </div>
+    <div id="mhOut"></div>
+  </div>
+</section>
+
+<section id="uti">
+  <div class="card">
+    <h2>Utilizadores e perfis</h2>
+    <p class="hint">Toda a gente entra na EPISJ 360 com a conta do <b>Office 365 da escola</b>. Cada conta tem um perfil, que decide o que vê. A regra é, por esta ordem: <b>1)</b> a lista abaixo; <b>2)</b> os administradores ficam com <b>Direção Executiva</b>; <b>3)</b> quem está em <b>Escola › Professores</b> com o email da escola fica <b>Professor</b>; <b>4)</b> quem cumprir a regra dos formandos fica <b>Formando</b>. Quem não cumprir nenhuma não entra.</p>
+    <div id="utiMsg"></div>
+  </div>
+  <div class="card">
+    <h2>Administradores</h2>
+    <p class="hint">Veem e mudam tudo, incluindo esta página. Um email por linha.</p>
+    <textarea id="utiAdmins" style="min-height:70px" placeholder="diretor@episj.pt"></textarea>
+    <p class="hint" id="utiAdmInfo" style="margin:6px 0 0"></p>
+  </div>
+  <div class="card">
+    <h2>Contas com perfil atribuído</h2>
+    <form id="utiForm" class="row" style="background:#f6f8fb;border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:12px" autocomplete="off">
+      <label class="grow">Email do Office 365<input type="email" id="utiEmail" placeholder="nome@episj.pt" required></label>
+      <label style="width:200px">Perfil<select id="utiPerfil"></select></label>
+      <label style="width:130px" title="Só para formandos: a turma do horário que vê">Turma<select id="utiTurma"></select></label>
+      <button class="b" type="submit" style="align-self:flex-end">Atribuir</button>
+    </form>
+    <div class="row" style="margin-bottom:10px"><label class="grow">Procurar<input type="text" id="utiFiltro" placeholder="email ou perfil"></label></div>
+    <table class="rt"><thead><tr><th>Email</th><th style="width:200px">Perfil</th><th style="width:120px">Turma</th><th></th></tr></thead><tbody id="tbUti"></tbody></table>
+    <details style="margin-top:12px"><summary class="hint" style="cursor:pointer;margin:0"><b>Colar uma lista</b> (email; perfil; turma)</summary>
+      <p class="hint">Um por linha. Perfil: <code>executiva</code>, <code>pedagógica</code>, <code>professor</code> ou <code>formando</code>. A turma é opcional (só para formandos).</p>
+      <textarea id="utiBulk" placeholder="ana.silva@episj.pt; pedagógica&#10;a1234@episj.pt; formando; A04"></textarea>
+      <div class="row" style="margin-top:8px"><button class="b s" id="utiBulkGo">Juntar à lista</button></div>
+    </details>
+    <p class="hint" id="utiProfs" style="margin:12px 0 0"></p>
+  </div>
+  <div class="card">
+    <h2>Regra dos formandos</h2>
+    <p class="hint">Os formandos entram sem ser preciso pô-los um a um. Indique o domínio das contas dos alunos (se for diferente do dos professores) e/ou um padrão. Ex.: se as contas dos alunos são <code>a1234@episj.pt</code>, o padrão é <code>^a\d+@</code>.</p>
+    <div class="row">
+      <label class="grow">Domínios só de formandos<input type="text" id="utiDom" placeholder="ex.: alunos.episj.pt"></label>
+      <label class="grow">Padrão do email (expressão regular)<input type="text" id="utiPad" placeholder="ex.: ^a\d+@" spellcheck="false"></label>
+    </div>
+  </div>
+  <div class="card">
+    <h2>O que cada perfil vê</h2>
+    <p class="hint">Marque os separadores que cada perfil pode abrir. Os módulos sem nenhum separador marcado desaparecem da barra de cima. Os administradores veem sempre tudo.</p>
+    <div style="overflow:auto"><table class="vmx" id="utiVis"></table></div>
+    <div class="row" style="margin-top:10px"><button class="b s" id="utiVisRepor">Repor o que vem por omissão</button>
+      <label style="margin-left:auto">Pré-visualizar como<select id="utiPrev"><option value="">— escolha —</option></select></label></div>
+  </div>
+  <div class="card">
+    <div class="row"><button class="b" id="utiGuardar">Guardar perfis</button><span id="utiEstado" class="hint" style="margin:0"></span></div>
+  </div>
+</section>
+
 <!-- GUARDAR -->
 <section id="cop">
   <div class="card">
@@ -1234,7 +1338,7 @@ button.b.rc-del{background:var(--bad);border-color:var(--bad)}button.b.rc-del:ho
 <script>
 (function(){
 "use strict";
-const VERSAO="0.8"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo BoxCheck
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -1246,6 +1350,8 @@ const normPath=s=>norm(s).split("/").map(x=>x.trim()).filter(Boolean).join("/");
 const splitList=s=>String(s||"").split(/[,;]/).map(x=>norm(x).replace(/^\./,"")).filter(Boolean);
 
 const KEY="entregas_box_v1";
+// EPISJ 360 0.9 — perfis: EU = conta do Office 365 e o seu perfil; RO = só leitura (Professor, Formando: os dados vêm do que a Direção publicou)
+let EU=null,RO=false,PREV="",UTI=null;
 /* ---------- modelos por omissão (EPISJ) ---------- */
 // [nome, secção/subpasta, "o texto deve conter" (pelo menos uma destas palavras)]
 const DTP_TYPES=[["Planificação","006","planifica, objetivos, objectivos, conteudos, competencias, estrategias, calendariza, carga horaria, aulas previstas, sumario"],
@@ -1270,7 +1376,7 @@ let rawRows=null, rawHead=null;
 let filesRev=0,IDX=null,cfgRev=0,txRev=0,refRev=0,tplRev=0;
 
 function load(){try{const t=localStorage.getItem(KEY);return t?JSON.parse(t):null}catch(e){return null}}
-function persist(s){try{localStorage.setItem(KEY,s||JSON.stringify(cfg))}catch(e){}}
+function persist(s){if(RO)return;try{localStorage.setItem(KEY,s||JSON.stringify(cfg))}catch(e){}}
 
 /* ---------- histórico: anular / refazer ---------- */
 let undoS=[],redoS=[],lastJSON=JSON.stringify(cfg),lastPush=0;
@@ -1452,16 +1558,23 @@ let curMod=(()=>{try{const m=localStorage.getItem("guide_mod");return MODULOS.so
 function mostrarModulo(id,abrir){curMod=id;try{localStorage.setItem("guide_mod",id)}catch(e){}
   document.querySelectorAll("#mods button").forEach(b=>b.classList.toggle("on",b.dataset.m===id));
   document.querySelectorAll("#nav .mgrp[data-m]").forEach(g=>g.hidden=g.dataset.m!==id);
-  if(abrir){const M=MODULOS.find(x=>x.id===id);if(M)show(M.inicio)}}
+  if(abrir){const t=primeiroPermitido(id);if(t)show(t)}}
+// separador → módulo (pelo grupo do menu lateral); o primeiro separador que o perfil pode abrir em cada módulo
+function modDeTab(t){const b=document.querySelector(`#nav button[data-t="${t}"]`);const g=b&&b.closest(".mgrp[data-m]");return g?g.dataset.m:null}
+function primeiroPermitido(m){const M=MODULOS.find(x=>x.id===m);if(M&&podeVer(M.inicio))return M.inicio;
+  const b=[...document.querySelectorAll(`#nav .mgrp[data-m="${m}"] button[data-t]`)].find(x=>podeVer(x.dataset.t));return b?b.dataset.t:null}
+function visAtual(){if(PREV&&UTI)return new Set(UTI.loja.vis[PREV]||UTI.visOmissao[PREV]||[]);if(!EU||!EU.vis)return null;return new Set(EU.vis)}
+function podeVer(t){const v=visAtual();return !v||v.has(t)}
 $("#mods").addEventListener("click",e=>{const b=e.target.closest("button[data-m]");if(b)mostrarModulo(b.dataset.m,true)});
 mostrarModulo(curMod,false);
 
 /* ---------- tabs ---------- */
 let curTab="box";
 $("#nav").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;show(b.dataset.t)});
-function show(t){curTab=t;document.body.classList.toggle("esch",t==="esch");{const M=MODULOS.find(x=>x.inicio===t)||(t==="prof"?MODULOS[0]:null);if(M&&M.id!==curMod)mostrarModulo(M.id,false)}document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
+function show(t){if(!podeVer(t)){const f=primeiroPermitido(modDeTab(t)||curMod);if(!f||f===t)return;t=f}
+  curTab=t;document.body.classList.toggle("esch",t==="esch");{const m=modDeTab(t);if(m&&m!==curMod)mostrarModulo(m,false)}document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
   document.querySelectorAll("main>section").forEach(s=>s.classList.toggle("on",s.id===t));
-  if(t==="rel")renderReport(); if(t==="est")renderEst(); if(t==="pas")renderTree(); if(t==="alt"){renderAlt();if(SES&&lastListing&&!scanBusy&&Date.now()-(lastListing.t||0)>120000)altAtualizar(true)} if(t==="rel"||t==="alt")verificarFundo(); if(t==="env")renderSend(); if(t==="def")renderDef(); if(t==="cop"){$("#cfgTxt").value=JSON.stringify(cfg,null,2);renderRP()} if(t==="pra")renderPrazos(); if(t==="esc")renderEscPainel(); if(t==="anos")renderAnos(); if(t==="cur")renderCursos(); if(t==="tur")renderTurmas(); if(t==="esch")esMostrar(); if(t.startsWith("rc"))try{rcRender(t)}catch(e){console.warn(e)}}
+  if(t==="rel")renderReport(); if(t==="est")renderEst(); if(t==="pas")renderTree(); if(t==="alt"){renderAlt();if(SES&&lastListing&&!scanBusy&&Date.now()-(lastListing.t||0)>120000)altAtualizar(true)} if(t==="rel"||t==="alt")verificarFundo(); if(t==="env")renderSend(); if(t==="def")renderDef(); if(t==="cop"){$("#cfgTxt").value=JSON.stringify(cfg,null,2);renderRP()} if(t==="pra")renderPrazos(); if(t==="esc")renderEscPainel(); if(t==="anos")renderAnos(); if(t==="cur")renderCursos(); if(t==="tur")renderTurmas(); if(t==="esch")esMostrar(); if(t==="meu")renderMeu(); if(t==="mh")renderMh(); if(t==="uti")renderUti(); if(t.startsWith("rc"))try{rcRender(t)}catch(e){console.warn(e)}}
 function refreshAll(){renderAll();try{escRender();esRecarregar()}catch(_){}if(curTab==="pra")renderPrazos();if(curTab==="rel")renderReport();if(curTab==="est")renderEst();if(curTab==="env")renderSend();if(curTab==="pas")renderTree();if(curTab==="alt")renderAlt();if(curTab==="cop"){$("#cfgTxt").value=JSON.stringify(cfg,null,2);renderRP()}}
 const debounce=(fn,ms)=>{let h;return()=>{clearTimeout(h);h=setTimeout(fn,ms)}};
 
@@ -2508,34 +2621,37 @@ $("#wkSave").onclick=()=>{let v=$("#wkUrl").value.trim();if(!/^https:\/\//.test(
   try{localStorage.setItem("boxdoc_worker",v.replace(/\/+$/,""))}catch(e){}loginUI();toast("Guardado")};
 async function tokGo(){
   const v=$("#tok").value.trim();if(!v){toast("Cole o token");return}
-  SES={mode:"dev",a:v,exp:Date.now()+3600e3};gateState("wait");
+  SES={mode:"dev",a:v,exp:Date.now()+3600e3};boxEstado("wait");
   try{const me=await boxGet("users/me",{fields:"name,login"});saveSes();connected(me)}
-  catch(e){SES=null;gateState("login",e.message)}
+  catch(e){SES=null;boxEstado("login",e.message)}
 }
-function gateState(st,msg){
+function boxEstado(st,msg){$("#boxWait").style.display=st==="wait"?"block":"none";$("#loginBox").style.display=st==="off"?"none":"";
+  ["#oaGo","#tokGo"].forEach(x=>$(x).disabled=st==="wait");if(msg)$("#boxAuth").innerHTML=`<div class="msg bad">${esc(msg)}</div>`}
+function boxArrancar(){loginUI();
+  if(SES){boxEstado("wait");boxGet("users/me",{fields:"name,login"}).then(connected).catch(e=>boxEstado("login",e.message))}
+  else boxEstado("login",window.__authErr||"")}
+function gateState(st,msg,txt){if(txt)$("#gateWaitTxt").textContent=txt;
   $("#gate").classList.toggle("off",st==="off");
   $("#gateWait").style.display=st==="wait"?"flex":"none";
   $("#gateLogin").style.display=st==="login"?"":"none";
   $("#gateMsg").innerHTML=msg?`<div class="msg bad" style="text-align:left">${esc(msg)}</div>`:"";
 }
 function connected(me){
-  gateState("off");
-  window.__guideLogin=String(me.login||"").toLowerCase();
-  const ini=(me.name||"?").split(/\s+/).filter(Boolean).map(w=>w[0]).slice(0,2).join("").toUpperCase();
-  $("#who").innerHTML=`<span class="av">${esc(ini)}</span><span>${esc(me.name)}</span><a href="#" id="whoOut">Terminar sessão</a>`;$("#who").style.display="flex";
-  $("#whoOut").onclick=e=>{e.preventDefault();logout(true)};
+  boxEstado("off");if(RO&&!soLeitura())sairSoLeitura();
+  if(!window.__guideLogin)window.__guideLogin=String(me.login||"").toLowerCase();
+  $("#tokOut").style.display="";
   $("#boxAuth").innerHTML=`<div class="msg ok">Ligado à Box como <b>${esc(me.name)}</b> (${esc(me.login)})${SES.mode==="oauth"?" — a sessão renova-se automaticamente.":" com token de programador (válido 60 minutos)."}</div>`;
   $("#tok").value="";$("#loginBox").style.display="none";$("#devTok").style.display="none";
   $("#boxBrowse").style.display="block";
   // ao entrar: procura sozinha o que mudou desde a última análise (poucos pedidos) e continua a leitura dos documentos
   nuvemUI();
-  pronto.then(()=>nuvemTrazer()).then(()=>avTrazerNuvem()).then(()=>rcTrazer(false)).then(()=>esTrazerNuvem()).then(()=>browse(curFolder.id,curFolder.path)).then(()=>{if(lastListing&&lastListing.rootId===curFolder.id)runScan(false,true);else verificarFundo()});
+  pronto.then(()=>nuvemTrazer()).then(()=>avTrazerNuvem()).then(()=>rcTrazer(false)).then(()=>esTrazerNuvem()).then(()=>{guidePubAgendar();return browse(curFolder.id,curFolder.path)}).then(()=>{if(lastListing&&lastListing.rootId===curFolder.id)runScan(false,true);else verificarFundo()});
 }
 function logout(revoke,msg){
   const old=SES;SES=null;saveSes();bgRun++;
   if(revoke&&old&&old.mode==="oauth"&&workerUrl())fetch(workerUrl()+"/logout",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({token:old.r||old.a})}).catch(()=>{});
   $("#boxBrowse").style.display="none";$("#tokOut").style.display="none";$("#loginBox").style.display="";$("#devTok").style.display="";$("#boxAuth").innerHTML="";loginUI();
-  $("#who").style.display="none";gateState("login",msg||"");
+  boxEstado("login",msg||"");
 }
 $("#tokGo").onclick=tokGo;$("#tok").addEventListener("keydown",e=>{if(e.key==="Enter")tokGo()});
 $("#tokOut").onclick=()=>logout(true);
@@ -2767,7 +2883,7 @@ $("#dlList").onclick=()=>{if(!lastListing)return;const q=v=>`"${String(v??"").re
 const NUV={ativo:null,ultimo:0,erro:"",ocupado:false};
 const nuvT=()=>lsJ("boxcheck_nuvem",{});
 function nuvSetT(k,t){const o=nuvT();o[k]=t;try{localStorage.setItem("boxcheck_nuvem",JSON.stringify(o))}catch(e){}}
-function marcarCfg(){try{localStorage.setItem("boxcheck_cfg_t",String(Date.now()))}catch(e){}nuvemAgendar();try{agendarPlano()}catch(e){}}
+function marcarCfg(){if(RO)return;try{guidePubAgendar()}catch(e){}try{localStorage.setItem("boxcheck_cfg_t",String(Date.now()))}catch(e){}nuvemAgendar();try{agendarPlano()}catch(e){}}
 const cfgT=()=>+(localStorage.getItem("boxcheck_cfg_t")||0);
 async function gz(obj){const s=new Blob([JSON.stringify(obj)]).stream().pipeThrough(new CompressionStream("gzip"));return new Response(s).arrayBuffer()}
 async function ungz(buf){const s=new Blob([buf]).stream().pipeThrough(new DecompressionStream("gzip"));return JSON.parse(await new Response(s).text())}
@@ -2952,7 +3068,11 @@ const msCfg=()=>cfg.ms||(cfg.ms={clientId:"",tenant:"",cc:"",lista:false});
 const MS_REDIR=location.origin+location.pathname.replace(/[^/]*$/,"")+"ms.html";
 const MS_SCOPES=["Mail.Send","User.Read"];
 let MSAL=null,MSACC=null;
-async function msInit(){const c=msCfg(),id=(c.clientId||"").trim(),ten=(c.tenant||"").trim();
+// entrada na EPISJ 360: só o nome e o email da conta (User.Read). O Mail.Send só é pedido ao enviar emails no BoxCheck.
+const LOGIN_SCOPES=["User.Read"];
+let GMS=lsJ("guide_ms",null); // ID da aplicação e do diretório, vindos do serviço da EPISJ 360 (não são segredos)
+function msIds(){const c=cfg.ms||{};return{id:(c.clientId||"").trim()||(GMS&&GMS.clientId)||"",ten:(c.tenant||"").trim()||(GMS&&GMS.tenant)||""}}
+async function msInit(){const {id,ten}=msIds();
   if(!id||!ten)throw new Error("Falta ligar o Office 365: em Definições, indique o ID da aplicação e o ID do diretório.");
   const k=id+"|"+ten;if(MSAL&&MSAL._k===k)return MSAL;
   if(!window.msal)await loadScript("lib/msal-browser.min.js");
@@ -3803,7 +3923,7 @@ const ES_URL="https://eduspruce.github.io/eduschedule.html";
 let ESD={t:0,porAno:{},copias:{},mapaT:{},mapaC:{},ligT:{},ligC:{}};
 const esdPronto=DB.get("kv","esched").then(v=>{if(v&&typeof v==="object")ESD=Object.assign(ESD,v)}).catch(()=>{});
 let esdH=null;
-function esdGuardar(){ESD.t=Date.now();DB.put("kv","esched",ESD);clearTimeout(esdH);esdH=setTimeout(()=>{if(SES&&NUV.ativo!==false)nuvemPut("ES",ESD,ESD.t)},8000)}
+function esdGuardar(){if(RO)return;guidePubAgendar();ESD.t=Date.now();DB.put("kv","esched",ESD);clearTimeout(esdH);esdH=setTimeout(()=>{if(SES&&NUV.ativo!==false)nuvemPut("ES",ESD,ESD.t)},8000)}
 async function esTrazerNuvem(){try{await esdPronto;if(!SES||!workerUrl()||NUV.ativo===false)return;
   const idx=(await (await nuvem("GET","")).json()).itens||{};
   if(idx.ES&&(idx.ES.t||0)>(ESD.t||0)){const j=await nuvemGet("ES");if(j&&typeof j==="object"){ESD=Object.assign({t:0,porAno:{},copias:{},mapaT:{},mapaC:{},ligT:{},ligC:{}},j);DB.put("kv","esched",ESD);esRecarregar(true)}}
@@ -4087,9 +4207,206 @@ const pronto=(async()=>{try{await migrarListagem;let root="";try{root=localStora
   if(root){const j=await lerListagem(root);if(j){useListing(j,true);showLast();boxMsg(`Aberta a análise guardada de “${j.pasta}” (${j.quando}): ${files.length} ficheiros e ${folders.length} pastas.`,"ok")}}
   await carregarRef()}catch(e){console.warn(e)}})();
 textosProntos.then(()=>{if(curTab==="rel")renderReport();if(curTab==="alt")renderAlt()});
-if(window.__goBox)show("box");
-if(SES){gateState("wait");boxGet("users/me",{fields:"name,login"}).then(connected).catch(e=>gateState("login",e.message))}
-else gateState("login",window.__authErr||"");
+
+/* ===================== EPISJ 360 0.9 — entrada com o Office 365 e perfis de utilizador ===================== */
+// Todos entram com a conta do Office 365 da escola. O serviço da EPISJ 360 (o mesmo dos avisos, na Cloudflare) confirma a conta
+// junto da Microsoft e devolve o perfil — Direção Executiva, Direção Pedagógica, Professor ou Formando — e os separadores que pode abrir.
+// A Box deixa de ser a porta de entrada: liga-se só dentro do módulo BoxCheck.
+const PERFIL_CURTO={dexec:"Direção Executiva",dped:"Direção Pedagógica",prof:"Professor",form:"Formando"};
+const perfilAtual=()=>PREV||(EU&&EU.perfil)||"";
+const soLeitura=()=>!!EU&&!EU.admin&&(EU.perfil==="prof"||EU.perfil==="form");
+const podePublicar=()=>!!EU&&!EU.provisorio&&(EU.admin||EU.perfil==="dexec"||EU.perfil==="dped");
+async function guideTok(force){const p=await msInit();if(!MSACC)throw new Error("Sem sessão Microsoft — volte a entrar.");
+  try{return (await p.acquireTokenSilent({scopes:LOGIN_SCOPES,account:MSACC,forceRefresh:!!force})).accessToken}
+  catch(e){return (await p.acquireTokenPopup({scopes:LOGIN_SCOPES,account:MSACC,redirectUri:MS_REDIR})).accessToken}}
+async function guideApi(path,opts,again){opts=opts||{};const tok=await guideTok(again);let r;
+  try{r=await fetch(srvUrl()+path,{method:opts.method||"GET",body:opts.body,cache:"no-store",headers:Object.assign({Authorization:"Bearer "+tok},opts.body?{"Content-Type":"application/json"}:{})})}
+  catch(e){throw new Error("Não foi possível contactar o serviço da EPISJ 360.")}
+  if(r.status===401&&!again)return guideApi(path,opts,true);
+  const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.erro||("o serviço respondeu "+r.status));return j}
+
+async function guideArranque(){
+  gateState("wait","","A entrar…");
+  try{const r=await fetch(srvUrl()+"/guide/config",{cache:"no-store"});if(r.ok){const j=await r.json();if(j.clientId&&j.tenant){GMS={clientId:j.clientId,tenant:j.tenant};try{localStorage.setItem("guide_ms",JSON.stringify(GMS))}catch(e){}}}}catch(e){}
+  const {id,ten}=msIds();
+  if(!id||!ten){$("#msSetup").style.display="";$("#msSetup").open=true;$("#msGo").disabled=true;gateState("login","");return}
+  $("#msSetup").style.display="none";$("#msGo").disabled=false;
+  try{const p=await msInit();
+    if(MSACC){try{const t=(await p.acquireTokenSilent({scopes:LOGIN_SCOPES,account:MSACC})).accessToken;return guideEntrar(t)}catch(e){}}}
+  catch(e){gateState("login",msErro(e));return}
+  gateState("login","")}
+$("#msGo").onclick=async()=>{try{const p=await msInit();gateState("wait","","A entrar…");
+    const r=await p.loginPopup({scopes:LOGIN_SCOPES,prompt:"select_account",redirectUri:MS_REDIR});MSACC=r.account;p.setActiveAccount(r.account);await guideEntrar(r.accessToken)}
+  catch(e){gateState("login",msErro(e))}};
+$("#gMsSave").onclick=()=>{const id=$("#gMsClient").value.trim(),ten=$("#gMsTenant").value.trim();if(!id||!ten){toast("Preencha os dois campos");return}
+  GMS={clientId:id,tenant:ten};try{localStorage.setItem("guide_ms",JSON.stringify(GMS))}catch(e){}MSAL=null;guideArranque()};
+
+async function guideEntrar(tok){
+  gateState("wait","","A confirmar o perfil…");
+  let r=null,j={};
+  try{r=await fetch(srvUrl()+"/guide/eu",{headers:{Authorization:"Bearer "+tok},cache:"no-store"});j=await r.json().catch(()=>({}))}catch(e){}
+  const servicoNovo=r&&(r.ok||j.semPerfil||/Microsoft|Office 365|MS_TENANT|perfil/i.test(j.erro||""));
+  if(r&&r.ok&&j.perfil)EU=j;
+  else if(servicoNovo){gateState("login",j.erro||"Sem acesso à EPISJ 360.");return}
+  else{ // o serviço ainda não tem as rotas da EPISJ 360: entra só quem já usa a EPISJ 360 neste navegador (a Direção), como administrador provisório
+    if(!(cfg.profs.length||cfg.mods.length)){gateState("login","O serviço da EPISJ 360 ainda não conhece os perfis (falta atualizar o serviço de avisos na Cloudflare). Fale com a Direção.");return}
+    EU={email:String(MSACC&&MSACC.username||"").toLowerCase(),nome:MSACC&&(MSACC.name||MSACC.username)||"",perfil:"dexec",perfilNome:"Direção Executiva",admin:true,vis:null,provisorio:true}}
+  window.__guideLogin=EU.email;
+  whoUI();gateState("off");aplicarPerfil();
+  if(soLeitura())await carregarPublico();
+  else{if(podePublicar()&&!cfg.profs.length&&!escData().turmas.length&&!SES)await carregarPublico(); // computador novo da Direção: mostra o publicado até ligar a Box
+    if(podeVer("box"))boxArrancar();else loginUI()}
+  if(window.__goBox&&podeVer("box"))show("box");
+  if(EU.provisorio)setTimeout(()=>toast("Perfis provisórios: falta atualizar o serviço de avisos na Cloudflare"),800);
+  pubUI()}
+function whoUI(){const n=EU.nome||EU.email,ini=n.split(/\s+/).filter(Boolean).map(w=>w[0]).slice(0,2).join("").toUpperCase();
+  $("#who").innerHTML=`<span class="av">${esc(ini)}</span><span title="${esc(EU.email)}">${esc(n)}</span><span class="pf${EU.admin?" adm":""}" title="${esc(EU.admin?"Administrador da EPISJ 360":"Perfil da conta")}">${esc(EU.perfilNome||PERFIL_CURTO[EU.perfil]||"")}</span><a href="#" id="whoOut">Terminar sessão</a>`;
+  $("#who").style.display="flex";$("#whoOut").onclick=e=>{e.preventDefault();guideSair()}}
+async function guideSair(){if(SES)logout(true);try{const p=await msInit();await p.clearCache({account:MSACC})}catch(e){}MSACC=null;EU=null;location.reload()}
+
+// esconde os módulos e separadores que o perfil não pode abrir
+function aplicarPerfil(){
+  document.querySelectorAll("#nav button[data-t]").forEach(b=>b.hidden=!podeVer(b.dataset.t));
+  document.querySelectorAll("#mods button[data-m]").forEach(b=>b.hidden=!primeiroPermitido(b.dataset.m));
+  document.querySelectorAll("#nav .mgrp.gl").forEach(g=>g.hidden=![...g.querySelectorAll("button[data-t]")].some(b=>!b.hidden));
+  const ro=soLeitura()&&!PREV;document.body.classList.toggle("ro",ro);const u=document.querySelector(".undo");if(u)u.style.display=ro||RO?"none":"";
+  const pf=perfilAtual(),l=$("[data-mhlbl]");if(l)l.textContent=pf==="form"?"Horário da turma":pf==="prof"?"O meu horário":"Horários publicados";
+  let bar=$("#pvbar");if(PREV){if(!bar){bar=document.createElement("div");bar.id="pvbar";bar.className="pvbar";document.querySelector("main").prepend(bar)}
+    bar.innerHTML=`👁 A pré-visualizar como <b>${esc(PERFIL_CURTO[PREV])}</b> — é só o que aparece; os dados continuam os seus.<button class="b s" id="pvOut">Sair da pré-visualização</button>`;$("#pvOut").onclick=()=>{PREV="";aplicarPerfil();show("uti")}}
+  else if(bar)bar.remove();
+  if(!primeiroPermitido(curMod)){const m=MODULOS.find(x=>primeiroPermitido(x.id));if(m)mostrarModulo(m.id,true);else if(podeVer("def"))show("def")}
+  else if(!podeVer(curTab))mostrarModulo(curMod,true)}
+
+/* dados publicados pela Direção (só leitura para Professor e Formando) */
+let PUB=null;
+async function carregarPublico(){
+  let j={};try{j=await guideApi("/guide/publico")}catch(e){toast("Não foi possível trazer os dados da escola: "+e.message)}
+  RO=true;PUB=j||{};
+  cfg=Object.assign(defaultCfg(),j&&j.escola?{escola:j.escola,profs:Array.isArray(j.profs)?j.profs:[]}:{});lastJSON=JSON.stringify(cfg);undoS=[];redoS=[];undoUI();
+  try{await esdPronto}catch(e){}
+  ESD=Object.assign({t:0,porAno:{},copias:{},mapaT:{},mapaC:{},ligT:{},ligC:{}},j&&j.es||{});
+  try{renderAnoTopo();refreshAll()}catch(e){console.warn(e)}aplicarPerfil();if(curTab==="mh")renderMh()}
+function sairSoLeitura(){RO=false;PUB=null;cfg=load()||defaultCfg();lastJSON=JSON.stringify(cfg);
+  DB.get("kv","esched").then(v=>{ESD=Object.assign({t:0,porAno:{},copias:{},mapaT:{},mapaC:{},ligT:{},ligC:{}},v&&typeof v==="object"?v:{})}).catch(()=>{});
+  try{renderAnoTopo();refreshAll()}catch(e){}aplicarPerfil()}
+
+/* a Direção publica para os outros perfis: turmas, cursos, anos letivos, professores e horários */
+let pubH=null,PUBT=+(localStorage.getItem("guide_pub_t")||0),PUBERR="";
+function guidePubAgendar(){if(!podePublicar()||RO)return;clearTimeout(pubH);pubH=setTimeout(()=>guidePublicar(false),15000)}
+async function guidePublicar(manual){if(!podePublicar()||RO)return;
+  if(!cfg.profs.length&&!escData().turmas.length){if(manual)toast("Ainda não há turmas nem professores para publicar");return}
+  const porAno={};for(const [k,v] of Object.entries(ESD.porAno||{}))if(v&&v.estado)porAno[k]={estado:v.estado,quando:v.quando||0};
+  const body={v:1,t:Date.now(),por:EU.email,escola:cfg.escola,profs:cfg.profs.map(p=>({id:p.id,nome:p.nome,abrev:p.abrev||"",email:String(p.email||"").trim().toLowerCase()})),es:{porAno,mapaT:ESD.mapaT||{},mapaC:ESD.mapaC||{}}};
+  try{await guideApi("/guide/publico",{method:"POST",body:JSON.stringify(body)});PUBT=Date.now();PUBERR="";try{localStorage.setItem("guide_pub_t",String(PUBT))}catch(e){}if(manual)toast("Publicado")}
+  catch(e){PUBERR=e.message;if(manual)toast("Não foi possível publicar: "+e.message)}
+  pubUI()}
+function pubUI(){const b=$("#pubBox");if(!b)return;b.style.display=podePublicar()&&!RO?"flex":"none";
+  $("#pubMsg").innerHTML=PUBERR?`<span style="color:var(--bad)">Não publicado: ${esc(PUBERR)}</span>`:PUBT?`Publicado às ${new Date(PUBT).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"})} — volta a publicar sozinho a cada alteração.`:"Ainda não publicado: Professores e Formandos não veem turmas nem horários."}
+$("#pubGo").onclick=()=>guidePublicar(true);
+
+/* As minhas entregas */
+let MEU_SEL="";
+const EST_TAG={prazo:["ok","entregue"],atraso:["warn","entregue com atraso"],falta:["bad","em falta"],pendente:["","por entregar"]};
+async function renderMeu(){const out=$("#meuOut");if(!EU)return;
+  if(EU.provisorio){out.innerHTML=`<div class="msg info">Para ver as entregas por professor, falta atualizar o serviço de avisos na Cloudflare (EPISJ 360 0.9).</div>`;return}
+  out.innerHTML=`<p class="hint"><span class="spin"></span> A carregar…</p>`;
+  let j;try{j=await guideApi("/guide/entregas"+(MEU_SEL?"?email="+encodeURIComponent(MEU_SEL):""))}catch(e){out.innerHTML=`<div class="msg bad">${esc(e.message)}</div>`;return}
+  const row=$("#meuSelRow");
+  if(j.professores&&j.professores.length){row.style.display="";$("#meuSel").innerHTML=`<option value="">${esc(EU.nome)} (a minha conta)</option>`+j.professores.slice().sort((a,b)=>a.nome.localeCompare(b.nome,"pt")).map(p=>`<option value="${esc(p.email)}"${p.email===MEU_SEL?" selected":""}>${esc(p.nome)}</option>`).join("")}else row.style.display="none";
+  $("#meuQuem").textContent=MEU_SEL&&j.prof?j.prof.nome:"lhe";
+  if(j.semPlano){out.innerHTML=`<div class="msg info">Ainda não há prazos no serviço da EPISJ 360: a Direção tem de ligar o envio pelo servidor em <b>BoxCheck › Prazos</b>.</div>`;return}
+  if(j.semProf){out.innerHTML=`<div class="msg info">${MEU_SEL?"Este professor":"A sua conta (<b>"+esc(EU.email)+"</b>)"} não aparece entre os professores com prazos. O email em <b>Escola › Professores</b> tem de ser o do Office 365.</div>`;return}
+  if(!j.prazos.length){out.innerHTML=`<div class="msg ok">Não há documentos com prazo atribuídos${MEU_SEL?" a "+esc(j.prof.nome):""}.</div>`;return}
+  const ord={falta:0,pendente:1,atraso:2,prazo:3};
+  out.innerHTML=j.prazos.map(p=>{const c=p.c,tot=c.prazo+c.atraso+c.falta+c.pendente,ok=c.prazo+c.atraso;
+    return `<div class="card ment" style="margin:0 0 12px;box-shadow:none"><h3 style="margin:0 0 4px">${esc(p.nome||"Prazo")} <span class="hint" style="font-weight:400">· até ${esc(p.prazoPT)}</span></h3>
+      <p class="hint" style="margin:0 0 8px"><b>${ok}</b> de <b>${tot}</b> entregues${c.falta?` · <span style="color:var(--bad)"><b>${c.falta}</b> em falta</span>`:""}${c.pendente?` · <b>${c.pendente}</b> por entregar`:""}${c.atraso?` · ${c.atraso} com atraso`:""}</p>
+      ${p.itens.slice().sort((a,b)=>ord[a.est]-ord[b.est]).map(x=>{const [cl,tx]=EST_TAG[x.est]||["",x.est];
+        const det=x.est==="prazo"||x.est==="atraso"?`entregue a ${dataPT(x.ent)}${x.atraso?` (${x.atraso} dia(s) depois do prazo)`:""}`:x.est==="falta"?`${x.atraso} dia(s) depois do prazo${x.naoConta?" — o ficheiro que lá está não conta (vazio ou repetido)":""}`:(x.naoConta?"o ficheiro que lá está não conta (vazio ou repetido)":"");
+        return `<div class="mit"><span class="tag ${cl}" style="flex:none">${tx}</span><div><div>${esc(x.linha)}</div>${x.loc?`<div class="hint" style="margin:0">${esc(x.loc)}</div>`:""}${det?`<div class="hint" style="margin:0">${esc(det)}</div>`:""}</div></div>`}).join("")}</div>`}).join("")
+    +`<p class="hint">Ano letivo ${esc(j.ano||"")} · a Box foi verificada pela última vez ${j.verificado?"a "+new Date(j.verificado).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"}):"— ainda não"}.</p>`}
+$("#meuSel").onchange=e=>{MEU_SEL=e.target.value;renderMeu()};$("#meuAtual").onclick=()=>renderMeu();
+
+/* O meu horário / Horário da turma — o horário publicado, só leitura */
+function mhEstado(){const a=anoAtivo(),x=a&&ESD.porAno&&ESD.porAno[a.id];if(!x||!x.estado)return null;try{const st=JSON.parse(x.estado);return st&&!st.example?st:null}catch(e){return null}}
+const corTexto=hex=>{const m=String(hex||"").match(/^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/i);if(!m)return"#fff";const [r,g,b]=m.slice(1).map(x=>parseInt(x,16)/255);return 0.2126*r+0.7152*g+0.0722*b>0.6?"#1d2433":"#fff"};
+async function renderMh(){try{await esdPronto}catch(e){}const st=mhEstado(),out=$("#mhOut"),pf=perfilAtual(),tipoEl=$("#mhTipo"),quemEl=$("#mhQuem");
+  $("#mhTit").textContent=pf==="form"?"Horário da turma":pf==="prof"?"O meu horário":"Horários publicados";
+  if(!st){out.innerHTML=`<div class="msg info">${RO?"A Direção ainda não publicou o horário de "+esc(anoAtivo().nome)+".":"Ainda não há horário para "+esc(anoAtivo().nome)+" — faça-o no EduSchedule."}</div>`;quemEl.innerHTML="";return}
+  tipoEl.parentNode.style.display=pf==="form"?"none":"";
+  if(pf==="form")tipoEl.value="c";
+  const T=st.teachers||[],C=(st.classes||[]).slice().sort((a,b)=>String(a.name).localeCompare(String(b.name),"pt",{numeric:true}));
+  if(!quemEl.dataset.init){quemEl.dataset.init="1";
+    if(pf==="prof"){const me=cfg.profs.find(p=>String(p.email||"").toLowerCase()===String(EU&&EU.email||""));const t=me&&T.find(t=>t.id===me.id||(ESD.mapaT||{})[t.id]===me.id);if(t){tipoEl.value="t";quemEl.dataset.v=t.id}}
+    if(pf==="form"){const tc=(EU&&EU.turma)||lsJ("guide_mh_turma","");const c=C.find(c=>norm(c.name)===norm(tc));if(c)quemEl.dataset.v=c.id}}
+  const tipo=tipoEl.value,L=tipo==="t"?T.slice().sort((a,b)=>String(a.name).localeCompare(String(b.name),"pt")).map(t=>[t.id,t.name+(t.short?" ("+t.short+")":"")]):C.map(c=>[c.id,c.name+(c.full&&c.full!==c.name?" — "+c.full:"")]);
+  const v=L.some(x=>x[0]===quemEl.dataset.v)?quemEl.dataset.v:(L[0]||[""])[0];
+  quemEl.innerHTML=L.map(([id,n])=>`<option value="${esc(id)}"${id===v?" selected":""}>${esc(n)}</option>`).join("");quemEl.dataset.v=v;
+  if(!v){out.innerHTML=`<p class="hint">Sem ${tipo==="t"?"professores":"turmas"} no horário.</p>`;return}
+  const les=new Map((st.lessons||[]).map(l=>[l.id,l])),TT=new Map(T.map(t=>[t.id,t])),CC=new Map(C.map(c=>[c.id,c])),SS=new Map((st.subjects||[]).map(x=>[x.id,x])),RR=new Map((st.rooms||[]).map(x=>[x.id,x]));
+  const cel=new Map();let n=0;
+  for(const cd of st.cards||[]){const l=les.get(cd.lessonId);if(!l)continue;const lin=(l.linhas||[]).map((x,i)=>Object.assign({i},x));
+    const sel=tipo==="t"?lin.filter(x=>x.t===v):((l.classIds||[]).includes(v)?lin.filter(x=>!x.cls||x.cls.includes(v)):[]);if(!sel.length)continue;
+    for(let k=0;k<(cd.len||1);k++){const key=cd.day+"|"+(cd.period+k),rr=(cd.rx&&cd.rx[k])||cd.r||[];
+      for(const x of sel){const s=SS.get(x.s)||{},sala=RR.get(rr[x.i])||RR.get(x.r);n++;
+        const sub=tipo==="t"?(l.classIds||[]).map(id=>(CC.get(id)||{}).name).filter(Boolean).join(", "):(TT.get(x.t)||{}).short||(TT.get(x.t)||{}).name||"";
+        (cel.get(key)||cel.set(key,[]).get(key)).push(`<div class="a" style="background:${esc(s.color||"#2f5fb8")};color:${corTexto(s.color||"#2f5fb8")}" title="${esc(s.name||"")}"><b>${esc(s.short||s.name||"—")}</b><span>${esc([sub,sala&&sala.name].filter(Boolean).join(" · "))}</span></div>`)}}}
+  const D=st.days||["Seg","Ter","Qua","Qui","Sex"],P=st.periods||[];
+  let h=`<div class="mzh" style="grid-template-columns:76px repeat(${D.length},minmax(104px,1fr))"><div class="h"></div>${D.map(d=>`<div class="h">${esc(d)}</div>`).join("")}`;
+  P.forEach((p,pi)=>{h+=`<div class="p">${esc(p.label||pi+1)}<div class="hint" style="margin:0;font-weight:400">${esc(p.start||"")}${p.end?"–"+esc(p.end):""}</div></div>`;
+    D.forEach((d,di)=>{const c=cel.get(di+"|"+pi);h+=`<div class="c">${c?c.join(""):""}</div>`})});
+  out.innerHTML=h+`</div>`+(n?"":`<p class="hint">Sem aulas marcadas.</p>`)+`<p class="hint">${esc(st.name||"")} · ${esc(st.ano||anoAtivo().nome)}${PUB&&PUB.t?" · publicado a "+new Date(PUB.t).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"}):""}</p>`}
+$("#mhTipo").onchange=()=>{$("#mhQuem").dataset.v="";renderMh()};
+$("#mhQuem").onchange=e=>{$("#mhQuem").dataset.v=e.target.value;if(perfilAtual()==="form")try{localStorage.setItem("guide_mh_turma",JSON.stringify(e.target.selectedOptions[0].textContent.split(" — ")[0]))}catch(x){}renderMh()};
+
+/* Utilizadores e perfis (administradores) */
+let UTI_SUJO=false;
+function utiPerfilDe(t){t=norm(t);return /exec/.test(t)?"dexec":/pedag/.test(t)?"dped":/prof|formador|docente/.test(t)?"prof":/forman|alun|estud/.test(t)?"form":""}
+function utiSujo(){UTI_SUJO=true;$("#utiEstado").innerHTML=`<span style="color:var(--warn)">Alterações por guardar.</span>`}
+async function renderUti(force){const m=$("#utiMsg");
+  if(!EU||!EU.admin){m.innerHTML=`<div class="msg bad">Só os administradores da EPISJ 360 gerem os perfis.</div>`;return}
+  if(EU.provisorio){m.innerHTML=`<div class="msg info">Para gerir os perfis, atualize primeiro o serviço de avisos na Cloudflare com o ficheiro <code>servidor/boxcheck-avisos.js</code> da EPISJ 360 0.9 (ver LEIA-ME).</div>`;return}
+  if(!UTI||force){m.innerHTML=`<p class="hint"><span class="spin"></span> A carregar…</p>`;try{UTI=await guideApi("/guide/perfis");UTI_SUJO=false}catch(e){m.innerHTML=`<div class="msg bad">${esc(e.message)}</div>`;return}}
+  m.innerHTML="";const L=UTI.loja;
+  $("#utiAdmins").value=L.admins.join("\n");
+  $("#utiAdmInfo").innerHTML=UTI.adminsServico.length?`Também administradores (definidos no serviço, em GUIDE_ADMINS): <b>${UTI.adminsServico.map(esc).join(", ")}</b>.`:L.admins.length?"":`Sem administradores na lista, é administrador quem ligou a Box ao serviço de avisos${UTI.adminAuto?` (<b>${esc(UTI.adminAuto)}</b>)`:""}. Ao guardar, a sua conta fica na lista.`;
+  $("#utiPerfil").innerHTML=Object.entries(UTI.perfis).map(([k,n])=>`<option value="${k}">${esc(n)}</option>`).join("");
+  const turmas=turmasDoAno().map(t=>t.cod);$("#utiTurma").innerHTML=`<option value="">—</option>`+turmas.map(c=>`<option>${esc(c)}</option>`).join("");
+  $("#utiDom").value=L.formandos.dominios.join(", ");$("#utiPad").value=L.formandos.padrao||"";
+  utiTabela();utiVis();
+  const sem=cfg.profs.filter(p=>!p.email).length;
+  $("#utiProfs").innerHTML=`Ficam <b>Professor</b> automaticamente os ${cfg.profs.filter(p=>p.email).length} professores com email em <b>Escola › Professores</b>${sem?` — <span style="color:var(--warn)">${sem} sem email não conseguem entrar</span>`:""}.`;
+  $("#utiPrev").innerHTML=`<option value="">— escolha —</option>`+Object.entries(UTI.perfis).map(([k,n])=>`<option value="${k}">${esc(n)}</option>`).join("");
+  $("#utiEstado").innerHTML=UTI_SUJO?`<span style="color:var(--warn)">Alterações por guardar.</span>`:L.t?`Guardado a ${new Date(L.t).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"})}${L.por?" por "+esc(L.por):""}.`:""}
+function utiTabela(){const L=UTI.loja,f=norm($("#utiFiltro").value),turmas=turmasDoAno().map(t=>t.cod);
+  const rows=Object.entries(L.utilizadores).filter(([e,u])=>!f||norm(e+" "+UTI.perfis[u.perfil]).includes(f)).sort((a,b)=>a[0].localeCompare(b[0]));
+  $("#tbUti").innerHTML=rows.map(([e,u])=>`<tr><td>${esc(e)}</td><td><select data-ue="${esc(e)}" data-k="perfil">${Object.entries(UTI.perfis).map(([k,n])=>`<option value="${k}"${k===u.perfil?" selected":""}>${esc(n)}</option>`).join("")}</select></td>
+    <td>${u.perfil==="form"?`<select data-ue="${esc(e)}" data-k="turma"><option value="">—</option>${[...new Set(turmas.concat(u.turma?[u.turma]:[]))].map(c=>`<option${c===u.turma?" selected":""}>${esc(c)}</option>`).join("")}</select>`:""}</td>
+    <td><button class="b s" data-udel="${esc(e)}" title="Tirar da lista">✕</button></td></tr>`).join("")||`<tr><td colspan="4" class="hint">Ninguém na lista — valem as regras automáticas.</td></tr>`}
+function utiVis(){const L=UTI.loja,P=Object.keys(UTI.perfis);let h=`<thead><tr><th>Separador</th>${P.map(k=>`<th>${esc(UTI.perfis[k])}</th>`).join("")}</tr></thead><tbody>`;
+  document.querySelectorAll("#nav .mgrp").forEach(g=>{const bs=[...g.querySelectorAll("button[data-t]")].filter(b=>b.dataset.t!=="uti");if(!bs.length)return;
+    h+=`<tr class="grp"><td colspan="${P.length+1}">${esc(g.querySelector(".mh").childNodes[0].textContent.trim())}</td></tr>`;
+    for(const b of bs){const t=b.dataset.t;h+=`<tr><td>${esc(b.textContent.trim())}</td>${P.map(k=>`<td><input type="checkbox" data-vp="${k}" data-vt="${t}"${(L.vis[k]||UTI.visOmissao[k]).includes(t)?" checked":""}></td>`).join("")}</tr>`}});
+  $("#utiVis").innerHTML=h+"</tbody>"}
+$("#utiFiltro").oninput=()=>utiTabela();
+$("#utiForm").onsubmit=e=>{e.preventDefault();const em=$("#utiEmail").value.trim().toLowerCase();if(!/@/.test(em)){toast("Email inválido");return}
+  const pf=$("#utiPerfil").value;UTI.loja.utilizadores[em]={perfil:pf,turma:pf==="form"?$("#utiTurma").value:"",nome:""};$("#utiEmail").value="";utiTabela();utiSujo()};
+$("#tbUti").addEventListener("change",e=>{const x=e.target.closest("[data-ue]");if(!x)return;const u=UTI.loja.utilizadores[x.dataset.ue];if(!u)return;u[x.dataset.k]=x.value;if(x.dataset.k==="perfil"&&x.value!=="form")u.turma="";utiTabela();utiSujo()});
+$("#tbUti").addEventListener("click",e=>{const b=e.target.closest("[data-udel]");if(!b)return;delete UTI.loja.utilizadores[b.dataset.udel];utiTabela();utiSujo()});
+$("#utiBulkGo").onclick=()=>{let n=0,mal=0;for(const l of $("#utiBulk").value.split(/\n/)){const c=l.split(/[;\t,]/).map(x=>x.trim());if(!c[0])continue;const em=c[0].toLowerCase(),pf=utiPerfilDe(c[1]||"");
+    if(!/@/.test(em)||!pf){mal++;continue}UTI.loja.utilizadores[em]={perfil:pf,turma:pf==="form"?(c[2]||"").toUpperCase():"",nome:""};n++}
+  utiTabela();if(n){utiSujo();$("#utiBulk").value=""}toast(`${n} conta(s) juntada(s)${mal?` · ${mal} linha(s) não percebida(s)`:""}`)};
+$("#utiVis").addEventListener("change",e=>{const x=e.target.closest("[data-vp]");if(!x)return;const L=UTI.loja,k=x.dataset.vp;const v=new Set(L.vis[k]||UTI.visOmissao[k]);if(x.checked)v.add(x.dataset.vt);else v.delete(x.dataset.vt);L.vis[k]=[...v];utiSujo()});
+$("#utiVisRepor").onclick=()=>{UTI.loja.vis={};utiVis();utiSujo()};
+["#utiAdmins","#utiDom","#utiPad"].forEach(x=>$(x).addEventListener("input",utiSujo));
+$("#utiPrev").onchange=e=>{const v=e.target.value;if(!v)return;utiLerCampos();PREV=v;aplicarPerfil();toast("A pré-visualizar como "+PERFIL_CURTO[v]);e.target.value=""};
+function utiLerCampos(){const L=UTI.loja;L.admins=$("#utiAdmins").value.split(/[\s,;]+/).map(x=>x.trim().toLowerCase()).filter(x=>x.includes("@"));
+  L.formandos={dominios:$("#utiDom").value.split(/[\s,;]+/).map(x=>x.trim().toLowerCase().replace(/^@/,"")).filter(Boolean),padrao:$("#utiPad").value.trim()}}
+$("#utiGuardar").onclick=async()=>{if(!UTI)return;utiLerCampos();const pad=UTI.loja.formandos.padrao;if(pad){try{new RegExp(pad)}catch(e){toast("O padrão dos formandos não é uma expressão regular válida");return}}
+  $("#utiEstado").textContent="A guardar…";try{const j=await guideApi("/guide/perfis",{method:"POST",body:JSON.stringify(UTI.loja)});UTI.loja=j.loja;UTI_SUJO=false;renderUti();toast("Perfis guardados")}
+  catch(e){$("#utiEstado").innerHTML=`<span style="color:var(--bad)">${esc(e.message)}</span>`}};
+
+guideArranque();
 })();
 </script>
 <script>/* NumberFlow 0.6.2 (MIT, Maxwell Barvian) */

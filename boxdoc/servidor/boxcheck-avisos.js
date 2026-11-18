@@ -14,7 +14,13 @@
  *   BOX_CLIENT_ID, BOX_CLIENT_SECRET   — da aplicação da Box (a mesma do serviço de login)
  *   MS_TENANT, MS_CLIENT_ID, MS_CLIENT_SECRET — da aplicação "BoxCheck" no Entra (Office 365)
  *   APP_ORIGINS (opcional) — endereços da app separados por vírgulas
+ *   GUIDE_ADMINS (opcional) — emails dos administradores da EPISJ 360, separados por vírgulas
+ *                             (se faltar, é administrador quem ligou a Box a este serviço)
  * Ligação KV (Bindings): nome da variável  KV  → espaço "boxcheck"
+ *
+ * EPISJ 360 (a partir da EPISJ 360 0.9): toda a gente entra na EPISJ 360 com a conta do Office 365 da escola.
+ * Este serviço confirma a conta junto da Microsoft e diz qual é o perfil (Direção Executiva,
+ * Direção Pedagógica, Professor ou Formando) e o que esse perfil pode ver. Rotas em /guide/…
  * Cron Trigger: 0 * * * *   (de hora a hora)
  */
 
@@ -27,7 +33,7 @@ export default {
   async fetch(req, env) {
     const url = new URL(req.url), o = req.headers.get("Origin") || "";
     const okOrigens = (env.APP_ORIGINS || ORIGENS_OMISSAO).split(",").map(s => s.trim()).filter(Boolean);
-    const cors = { "Access-Control-Allow-Origin": okOrigens.includes(o) ? o : okOrigens[0], "Access-Control-Allow-Headers": "Authorization, Content-Type", "Access-Control-Allow-Methods": "GET, POST, OPTIONS", "Vary": "Origin" };
+    const cors = { "Access-Control-Allow-Origin": okOrigens.includes(o) ? o : okOrigens[0], "Access-Control-Allow-Headers": "Authorization, Content-Type", "Access-Control-Allow-Methods": "GET, POST, PUT, OPTIONS", "Vary": "Origin" };
     const json = (obj, st = 200) => new Response(JSON.stringify(obj), { status: st, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" } });
     try {
       if (req.method === "OPTIONS") return new Response(null, { headers: cors });
@@ -53,6 +59,8 @@ export default {
         await env.KV.delete(P + "oauth_state");
         return pagina("Ligado", `<p>✅ O serviço de avisos está ligado à Box como <b>${esc(me.name)}</b> (${esc(me.login)}).</p><p>Pode fechar esta janela e voltar à BoxCheck.</p>`);
       }
+      // EPISJ 360: entrada com a conta do Office 365 e perfis de utilizador
+      if (url.pathname.startsWith("/guide/")) return await guide(req, env, url, json);
       // a partir daqui: pedidos da app, com o acesso à Box de quem está na app
       const quem = await quemE(req, env);
       if (!quem.ok) return json({ erro: quem.erro }, quem.st);
@@ -82,6 +90,156 @@ export default {
   },
   async scheduled(ev, env, ctx) { ctx.waitUntil(correr(env, Date.now()).catch(async e => { await anotar(env, { erro: String(e && e.message || e) }) })) }
 };
+
+/* ---------- EPISJ 360: perfis de utilizador (conta do Office 365) ---------- */
+const G = "guide:";
+const PERFIS = { dexec: "Direção Executiva", dped: "Direção Pedagógica", prof: "Professor", form: "Formando" };
+// separadores da EPISJ 360 (os mesmos ids da app). "uti" (Utilizadores e perfis) é só para administradores.
+const SEPARADORES = ["esc", "anos", "cur", "tur", "prof", "box", "alt", "pas", "config", "rel", "est", "env", "pra", "cop", "meu", "esch", "mh", "rcMapa", "rcLista", "rcEsp", "def"];
+const VIS_OMISSAO = {
+  dexec: SEPARADORES.slice(),
+  dped: ["esc", "anos", "cur", "tur", "prof", "box", "alt", "pas", "config", "rel", "est", "env", "pra", "meu", "esch", "mh", "rcMapa", "rcLista", "rcEsp"],
+  prof: ["meu", "mh"],
+  form: ["mh"]
+};
+const PODE_PUBLICAR = new Set(["dexec", "dped"]);
+const lst = v => Array.isArray(v) ? v : [];
+const em = s => String(s || "").trim().toLowerCase();
+
+async function guide(req, env, url, json) {
+  const p = url.pathname.replace(/\/+$/, "");
+  // pública: o que a app precisa para abrir o login da Microsoft (o ID da aplicação e do diretório não são segredos)
+  if (p === "/guide/config") return json({ ok: !!(env.MS_CLIENT_ID && env.MS_TENANT), clientId: env.MS_CLIENT_ID || "", tenant: env.MS_TENANT || "" });
+  const quem = await msQuem(req, env);
+  if (!quem.ok) return json({ erro: quem.erro }, quem.st);
+  const loja = await lerPerfis(env), plano = (await env.KV.get(P + "plano", "json")) || null;
+  const profsPub = (await env.KV.get(G + "profs", "json")) || [];
+  const eu = await perfilDe(quem, loja, plano, env, profsPub);
+  if (p === "/guide/eu") {
+    if (!eu.perfil) return json({ erro: `A conta ${quem.email} ainda não tem perfil na EPISJ 360. Peça à Direção que lho atribua.`, semPerfil: true, email: quem.email, nome: quem.nome }, 403);
+    return json({ ok: true, ...eu, perfis: PERFIS, separadores: SEPARADORES });
+  }
+  if (!eu.perfil) return json({ erro: "Sem perfil na EPISJ 360." }, 403);
+  if (p === "/guide/perfis") {
+    if (!eu.admin) return json({ erro: "Só os administradores da EPISJ 360 gerem os perfis." }, 403);
+    if (req.method === "GET") return json({ ok: true, loja, perfis: PERFIS, separadores: SEPARADORES, visOmissao: VIS_OMISSAO, adminsServico: adminsDoServico(env), adminAuto: (await env.KV.get(P + "box", "json") || {}).login || "",
+      professores: lst(profsPub).concat(lst(plano && plano.profs)).filter(x => x.email).map(x => ({ nome: x.nome, email: em(x.email) })) });
+    if (req.method === "POST" || req.method === "PUT") {
+      const b = await req.json().catch(() => null);
+      if (!b || typeof b !== "object") return json({ erro: "Pedido inválido." }, 400);
+      const nova = limparPerfis(b);
+      // não deixa um administrador tirar-se a si próprio (ficava sem forma de voltar)
+      const adm = new Set([...nova.admins, ...adminsDoServico(env)]);
+      if (!adm.has(quem.email) && !adm.has(quem.upn) && !(await adminAutomatico(env, nova, quem))) nova.admins.push(quem.email);
+      nova.t = Date.now(); nova.por = quem.email;
+      await env.KV.put(G + "perfis", JSON.stringify(nova));
+      return json({ ok: true, loja: nova });
+    }
+  }
+  // As minhas entregas: o que falta a cada professor, prazo a prazo (o mesmo cálculo dos avisos)
+  if (p === "/guide/entregas") {
+    let alvo = quem;
+    const pedido = em(url.searchParams.get("email"));
+    if (pedido && pedido !== quem.email && pedido !== quem.upn) {
+      if (!(eu.admin || eu.perfil === "dexec" || eu.perfil === "dped")) return json({ erro: "Só a Direção vê as entregas de outros professores." }, 403);
+      alvo = { email: pedido, upn: pedido };
+    }
+    if (!plano) return json({ ok: true, semPlano: true, prazos: [], professores: [] });
+    const prof = lst(plano.profs).find(x => x.email && [alvo.email, alvo.upn].includes(em(x.email)));
+    const lista = (eu.admin || eu.perfil === "dexec" || eu.perfil === "dped") ? lst(plano.profs).filter(x => x.email).map(x => ({ nome: x.nome, email: em(x.email) })) : [];
+    if (!prof) return json({ ok: true, semProf: true, professores: lista, planoT: plano.recebido || 0 });
+    const fich = (await env.KV.get(P + "ficheiros", "json")) || {}, est = (await env.KV.get(P + "estado", "json")) || {}, agora = Date.now();
+    const prazos = lst(plano.prazos).map(pz => {
+      const its = estadoItens(plano, pz, fich, agora).filter(x => x.it.prof === prof.id);
+      if (!its.length) return null;
+      const c = { prazo: 0, atraso: 0, falta: 0, pendente: 0 }; for (const x of its) c[x.est]++;
+      return { id: pz.id, nome: pz.nome || "", prazoPT: pz.prazoPT || "", fim: pz.fim, c,
+        itens: its.map(x => ({ linha: x.it.linha || x.k, loc: x.it.loc || "", est: x.est, ent: x.ent, atraso: x.atraso, naoConta: !!x.naoConta })) };
+    }).filter(Boolean);
+    return json({ ok: true, prof: { nome: prof.nome, email: em(prof.email) }, prazos, professores: lista, planoT: plano.recebido || 0, verificado: est.ultimo || 0, ano: plano.ano || "" });
+  }
+  // dados da escola publicados pela Direção (turmas, professores, horários) — só leitura para os outros perfis
+  if (p === "/guide/publico") {
+    if (req.method === "GET") {
+      const d = (await env.KV.get(G + "publico", "json")) || {};
+      if (eu.perfil === "form" && !eu.admin && Array.isArray(d.profs)) d.profs = d.profs.map(x => ({ ...x, email: "" }));  // os formandos não precisam dos emails
+      return json(d);
+    }
+    if (!(eu.admin || PODE_PUBLICAR.has(eu.perfil))) return json({ erro: "Só a Direção publica os dados da escola." }, 403);
+    const txt = await req.text();
+    if (txt.length > 20e6) return json({ erro: "Dados demasiado grandes." }, 413);
+    let o; try { o = JSON.parse(txt); if (!o || typeof o !== "object") throw 0 } catch (e) { return json({ erro: "Pedido inválido." }, 400) }
+    await env.KV.put(G + "publico", txt);
+    // os professores publicados (com email) entram como Professor, mesmo sem prazos no serviço
+    await env.KV.put(G + "profs", JSON.stringify(lst(o.profs).filter(x => x && x.email).map(x => ({ id: x.id, nome: x.nome, email: em(x.email) }))));
+    return json({ ok: true, t: Date.now() });
+  }
+  return json({ erro: "Não encontrado" }, 404);
+}
+
+// confirma a conta junto da Microsoft (Graph /me) e que pertence ao Office 365 da escola
+async function msQuem(req, env) {
+  const a = req.headers.get("Authorization") || "";
+  if (!a.startsWith("Bearer ")) return { ok: false, st: 401, erro: "Sem sessão Microsoft." };
+  if (!env.MS_TENANT) return { ok: false, st: 500, erro: "Falta o segredo MS_TENANT no serviço." };
+  let tid = "";
+  try { let b = a.slice(7).split(".")[1].replace(/-/g, "+").replace(/_/g, "/"); while (b.length % 4) b += "="; tid = JSON.parse(atob(b)).tid || "" } catch (e) {}
+  const escola = await tenantId(env);
+  if (!tid || !escola || tid.toLowerCase() !== escola) return { ok: false, st: 403, erro: "Esta conta não pertence ao Office 365 da escola." };
+  const r = await fetch("https://graph.microsoft.com/v1.0/me?$select=id,displayName,mail,userPrincipalName", { headers: { Authorization: a } });
+  if (!r.ok) return { ok: false, st: 401, erro: "A sessão Microsoft não foi aceite. Entre outra vez." };
+  const me = await r.json();
+  const upn = em(me.userPrincipalName), email = em(me.mail) || upn;
+  return { ok: true, email, upn, nome: me.displayName || email, id: me.id };
+}
+async function tenantId(env) {
+  const t = em(env.MS_TENANT);
+  if (/^[0-9a-f-]{36}$/.test(t)) return t;
+  const c = await env.KV.get(G + "tid:" + t); if (c) return c;
+  try {
+    const j = await (await fetch(`https://login.microsoftonline.com/${encodeURIComponent(t)}/v2.0/.well-known/openid-configuration`)).json();
+    const m = String(j.issuer || "").match(/[0-9a-f-]{36}/i);
+    if (m) { await env.KV.put(G + "tid:" + t, m[0].toLowerCase(), { expirationTtl: 86400 * 30 }); return m[0].toLowerCase() }
+  } catch (e) {}
+  return "";
+}
+const adminsDoServico = env => String(env.GUIDE_ADMINS || "").split(/[,;\s]+/).map(em).filter(Boolean);
+async function adminAutomatico(env, loja, quem) {
+  // sem administradores definidos, é administrador quem ligou a Box ao serviço de avisos (o diretor)
+  if (adminsDoServico(env).length || lst(loja.admins).length) return false;
+  const box = (await env.KV.get(P + "box", "json")) || {};
+  return !!box.login && [quem.email, quem.upn].includes(em(box.login));
+}
+async function lerPerfis(env) { return limparPerfis((await env.KV.get(G + "perfis", "json")) || {}) }
+function limparPerfis(b) {
+  const out = { v: 1, admins: [], utilizadores: {}, formandos: { dominios: [], padrao: "" }, vis: {}, t: b.t || 0, por: b.por || "" };
+  out.admins = [...new Set(lst(b.admins).map(em).filter(x => x.includes("@")))];
+  for (const [k, v] of Object.entries(b.utilizadores || {})) {
+    const e = em(k); if (!e.includes("@") || !v || !PERFIS[v.perfil]) continue;
+    out.utilizadores[e] = { perfil: v.perfil, turma: String(v.turma || "").slice(0, 40), nome: String(v.nome || "").slice(0, 120) };
+  }
+  const f = b.formandos || {};
+  out.formandos.dominios = [...new Set(lst(f.dominios).map(x => em(x).replace(/^@/, "")).filter(Boolean))];
+  out.formandos.padrao = String(f.padrao || "").slice(0, 200);
+  for (const k of Object.keys(PERFIS)) if (Array.isArray((b.vis || {})[k])) out.vis[k] = b.vis[k].filter(x => SEPARADORES.includes(x));
+  return out;
+}
+async function perfilDe(quem, loja, plano, env, profsPub) {
+  const ids = [quem.email, quem.upn].filter(Boolean);
+  const adm = new Set([...adminsDoServico(env), ...loja.admins]);
+  const admin = ids.some(x => adm.has(x)) || await adminAutomatico(env, loja, quem);
+  const u = ids.map(x => loja.utilizadores[x]).find(Boolean);
+  let perfil = u ? u.perfil : null, origem = u ? "atribuído" : "";
+  if (!perfil && admin) { perfil = "dexec"; origem = "administrador" }
+  if (!perfil && (lst(plano && plano.profs).concat(lst(profsPub))).some(x => x.email && ids.includes(em(x.email)))) { perfil = "prof"; origem = "professor da EPISJ 360" }
+  if (!perfil) {
+    const dom = quem.email.split("@")[1] || "", f = loja.formandos;
+    let re = null; try { re = f.padrao ? new RegExp(f.padrao, "i") : null } catch (e) {}
+    if (f.dominios.includes(dom) || (re && ids.some(x => re.test(x)))) { perfil = "form"; origem = "regra dos formandos" }
+  }
+  const vis = !perfil ? [] : admin ? SEPARADORES.concat("uti") : (loja.vis[perfil] || VIS_OMISSAO[perfil]);
+  return { email: quem.email, nome: quem.nome, perfil, perfilNome: PERFIS[perfil] || "", origem, admin, vis, turma: u && u.turma || "" };
+}
 
 /* ---------- autenticação ---------- */
 async function quemE(req, env) {
