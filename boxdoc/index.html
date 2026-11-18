@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BoxCheck — Escola Profissional da Ilha de São Jorge</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox=%220 0 32 32%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cdefs%3E%3ClinearGradient id=%22bcgF%22 x1=%220%22 y1=%220%22 x2=%221%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%232b7bff%22/%3E%3Cstop offset=%22.55%22 stop-color=%22%231650c8%22/%3E%3Cstop offset=%221%22 stop-color=%22%230b2a6b%22/%3E%3C/linearGradient%3E%3ClinearGradient id=%22bckF%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%233ee08f%22/%3E%3Cstop offset=%221%22 stop-color=%22%2312a866%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x=%221.5%22 y=%221.5%22 width=%2229%22 height=%2229%22 rx=%228.5%22 fill=%22url%28%23bcgF%29%22/%3E%3Cpath d=%22M1.5 12C9 8 20 7 30.5 9.5V10C20 8 9 9.5 1.5 13.5z%22 fill=%22%23fff%22 opacity=%22.10%22/%3E%3Cpath d=%22M14.5 6.6 22 10.6 14.5 14.6 7 10.6z%22 fill=%22%23fff%22/%3E%3Cpath d=%22M7 10.6 14.5 14.6V23.4L7 19.4z%22 fill=%22%23dce8ff%22/%3E%3Cpath d=%22M22 10.6 14.5 14.6V23.4L22 19.4z%22 fill=%22%23a9c4f5%22/%3E%3Cpath d=%22M10.7 8.6 18.2 12.6%22 stroke=%22%231650c8%22 stroke-opacity=%22.35%22 stroke-width=%221.1%22/%3E%3Ccircle cx=%2223%22 cy=%2222.6%22 r=%226.2%22 fill=%22url%28%23bckF%29%22 stroke=%22%230b2a6b%22 stroke-width=%221.6%22/%3E%3Cpath d=%22M20.2 22.7l1.9 1.9 3.8-3.9%22 stroke=%22%23fff%22 stroke-width=%222%22 fill=%22none%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -16,7 +17,7 @@
 body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:14.5px}
 .top{height:56px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;padding:0 20px;position:sticky;top:0;z-index:5}
 .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:19px;letter-spacing:-.01em;color:var(--ink)}
-.brand svg{width:30px;height:30px}
+.brand svg{width:32px;height:32px;filter:drop-shadow(0 2px 4px rgba(11,42,107,.25))}
 .top .sub{color:var(--muted);font-size:13.5px;border-left:1px solid var(--line);padding-left:14px}
 .shell{display:flex;min-height:calc(100vh - 56px)}
 nav.side{width:220px;flex:none;background:#fff;border-right:1px solid var(--line);padding:14px 10px;display:flex;flex-direction:column;gap:2px;position:sticky;top:56px;height:calc(100vh - 56px)}
@@ -142,7 +143,7 @@ details.fd[open]>details{animation:fadeUp .2s ease}
   background:radial-gradient(1200px 600px at 10% -10%,#dfeafc 0,transparent 60%),radial-gradient(900px 500px at 110% 110%,#e3ecfb 0,transparent 55%),#f5f7fb;transition:opacity .35s,visibility .35s}
 .gate.off{opacity:0;visibility:hidden}
 .gcard{width:100%;max-width:440px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:36px 34px 26px;text-align:center;box-shadow:0 20px 50px rgba(16,24,40,.10);animation:pop .45s cubic-bezier(.2,.8,.2,1.15)}
-.glogo svg{width:64px;height:64px;animation:pop .5s .1s both cubic-bezier(.2,.8,.2,1.5)}
+.glogo svg{width:84px;height:84px;filter:drop-shadow(0 6px 14px rgba(11,42,107,.3));animation:pop .5s .1s both cubic-bezier(.2,.8,.2,1.5)}
 .gcard h1{margin:12px 0 4px;font-size:30px;letter-spacing:-.02em;font-weight:600}
 .gcard h1 b,.brand b{color:var(--brand);font-weight:800}
 .gsub{color:var(--muted);margin:0 0 24px;font-size:14.5px;line-height:1.5}.gsub span{font-size:13px}
@@ -231,7 +232,7 @@ details.altp>summary{grid-template-columns:minmax(220px,1.6fr) repeat(5,minmax(6
 <body>
 <div id="gate" class="gate">
   <div class="gcard">
-    <div class="glogo"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="2" width="28" height="28" rx="8" fill="#1a5fd0"/><path d="M10.5 8.5h7.5l4 4v11a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 9 23.5V10a1.5 1.5 0 0 1 1.5-1.5z" fill="#fff"/><path d="M12.5 18l2.3 2.3 4.7-4.7" stroke="#1a5fd0" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="glogo"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="bcgA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2b7bff"/><stop offset=".55" stop-color="#1650c8"/><stop offset="1" stop-color="#0b2a6b"/></linearGradient><linearGradient id="bckA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3ee08f"/><stop offset="1" stop-color="#12a866"/></linearGradient></defs><rect x="1.5" y="1.5" width="29" height="29" rx="8.5" fill="url(#bcgA)"/><path d="M1.5 12C9 8 20 7 30.5 9.5V10C20 8 9 9.5 1.5 13.5z" fill="#fff" opacity=".10"/><path d="M14.5 6.6 22 10.6 14.5 14.6 7 10.6z" fill="#fff"/><path d="M7 10.6 14.5 14.6V23.4L7 19.4z" fill="#dce8ff"/><path d="M22 10.6 14.5 14.6V23.4L22 19.4z" fill="#a9c4f5"/><path d="M10.7 8.6 18.2 12.6" stroke="#1650c8" stroke-opacity=".35" stroke-width="1.1"/><circle cx="23" cy="22.6" r="6.2" fill="url(#bckA)" stroke="#0b2a6b" stroke-width="1.6"/><path d="M20.2 22.7l1.9 1.9 3.8-3.9" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
     <h1>Box<b>Check</b></h1><div class="ver gver" data-ver></div>
     <p class="gsub">Escola Profissional da Ilha de São Jorge<br><span>Controlo de entregas de documentação</span></p>
     <div id="gateWait" class="gwait" style="display:none"><span class="spin"></span> A ligar à Box…</div>
@@ -256,7 +257,7 @@ details.altp>summary{grid-template-columns:minmax(220px,1.6fr) repeat(5,minmax(6
     <p class="gfoot">Só leitura: a app não altera, move nem apaga nada na Box.</p>
   </div>
 </div>
-<div class="top"><div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="2" width="28" height="28" rx="8" fill="#1a5fd0"/><path d="M10.5 8.5h7.5l4 4v11a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 9 23.5V10a1.5 1.5 0 0 1 1.5-1.5z" fill="#fff"/><path d="M12.5 18l2.3 2.3 4.7-4.7" stroke="#1a5fd0" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Box<b>Check</b></span><span class="ver" data-ver></span></div><span class="sub">Escola Profissional da Ilha de São Jorge</span><span class="grow"></span><span id="bg" class="bgp" style="display:none"></span><span class="undo"><button id="undoBtn" title="Anular (Ctrl+Z)" disabled>↶ Anular</button><button id="redoBtn" title="Refazer (Ctrl+Shift+Z)" disabled>↷ Refazer</button></span><span id="who" class="who" style="display:none"></span></div>
+<div class="top"><div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="bcgB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2b7bff"/><stop offset=".55" stop-color="#1650c8"/><stop offset="1" stop-color="#0b2a6b"/></linearGradient><linearGradient id="bckB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3ee08f"/><stop offset="1" stop-color="#12a866"/></linearGradient></defs><rect x="1.5" y="1.5" width="29" height="29" rx="8.5" fill="url(#bcgB)"/><path d="M1.5 12C9 8 20 7 30.5 9.5V10C20 8 9 9.5 1.5 13.5z" fill="#fff" opacity=".10"/><path d="M14.5 6.6 22 10.6 14.5 14.6 7 10.6z" fill="#fff"/><path d="M7 10.6 14.5 14.6V23.4L7 19.4z" fill="#dce8ff"/><path d="M22 10.6 14.5 14.6V23.4L22 19.4z" fill="#a9c4f5"/><path d="M10.7 8.6 18.2 12.6" stroke="#1650c8" stroke-opacity=".35" stroke-width="1.1"/><circle cx="23" cy="22.6" r="6.2" fill="url(#bckB)" stroke="#0b2a6b" stroke-width="1.6"/><path d="M20.2 22.7l1.9 1.9 3.8-3.9" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Box<b>Check</b></span><span class="ver" data-ver></span></div><span class="sub">Escola Profissional da Ilha de São Jorge</span><span class="grow"></span><span id="bg" class="bgp" style="display:none"></span><span class="undo"><button id="undoBtn" title="Anular (Ctrl+Z)" disabled>↶ Anular</button><button id="redoBtn" title="Refazer (Ctrl+Shift+Z)" disabled>↷ Refazer</button></span><span id="who" class="who" style="display:none"></span></div>
 <div class="shell">
   <nav id="nav" class="side">
     <button data-t="box" class="on"><svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>Dados da Box</button>
@@ -356,7 +357,7 @@ details.altp>summary{grid-template-columns:minmax(220px,1.6fr) repeat(5,minmax(6
     <h2>Pastas da Box <span class="tag ok" style="vertical-align:middle">só leitura</span></h2>
     <p class="hint">A app só lê nomes de pastas e ficheiros. Não abre, altera, move nem apaga nada na Box.</p>
     <div class="row" style="margin-top:10px"><button class="b s" id="tokOut" style="display:none">Terminar sessão</button></div>
-    <div id="boxAuth"></div>
+    <div id="boxAuth"></div><div id="nuvemMsg"></div>
     <div id="boxBrowse" style="display:none">
       <h3>Escolha a pasta a analisar</h3>
       <div class="row" id="crumbs" style="gap:4px;font-size:14px"></div>
@@ -547,7 +548,7 @@ details.altp>summary{grid-template-columns:minmax(220px,1.6fr) repeat(5,minmax(6
 <script>
 (function(){
 "use strict";
-const VERSAO="1.2"; // versão do BoxCheck — sobe a cada alteração publicada
+const VERSAO="1.4"; // versão do BoxCheck — sobe a cada alteração publicada
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 const $=s=>document.querySelector(s);
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -586,12 +587,12 @@ function save(){
   const cur=JSON.stringify(cfg);
   if(cur!==lastJSON){
     if(Date.now()-lastPush>1500||!undoS.length){undoS.push(lastJSON);if(undoS.length>80)undoS.shift()}
-    redoS=[];lastPush=Date.now();lastJSON=cur;cfgRev++;
+    redoS=[];lastPush=Date.now();lastJSON=cur;cfgRev++;marcarCfg();
   }
   persist(cur);undoUI();
 }
 function undoUI(){$("#undoBtn").disabled=!undoS.length;$("#redoBtn").disabled=!redoS.length}
-function goHist(from,to,msg){if(!from.length)return;to.push(lastJSON);lastJSON=from.pop();cfg=JSON.parse(lastJSON);lastPush=0;cfgRev++;persist(lastJSON);undoUI();refreshAll();toast(msg)}
+function goHist(from,to,msg){if(!from.length)return;to.push(lastJSON);lastJSON=from.pop();cfg=JSON.parse(lastJSON);lastPush=0;cfgRev++;persist(lastJSON);marcarCfg();undoUI();refreshAll();toast(msg)}
 const undo=()=>goHist(undoS,redoS,"Alteração anulada");
 const redo=()=>goHist(redoS,undoS,"Alteração refeita");
 $("#undoBtn").onclick=undo;$("#redoBtn").onclick=redo;
@@ -603,7 +604,7 @@ document.addEventListener("keydown",e=>{
 /* ---------- pontos de restauro ---------- */
 const RPKEY="boxcheck_pontos";
 function rpList(){try{return JSON.parse(localStorage.getItem(RPKEY)||"[]")}catch(e){return[]}}
-function ponto(label){try{const l=rpList();l.unshift({t:Date.now(),label,cfg:JSON.stringify(cfg)});localStorage.setItem(RPKEY,JSON.stringify(l.slice(0,25)))}catch(e){}renderRP()}
+function ponto(label){try{const l=rpList();l.unshift({t:Date.now(),label,cfg:JSON.stringify(cfg)});localStorage.setItem(RPKEY,JSON.stringify(l.slice(0,25)))}catch(e){}renderRP();nuvemAgendar()}
 function renderRP(){const el=$("#rpList");if(!el)return;const l=rpList();
   el.innerHTML=l.map((p,i)=>{let n="";try{const c=JSON.parse(p.cfg);n=`${c.profs.length} formadores · ${c.mods.length} módulos`}catch(e){}
     return `<div class="rp"><span class="d">${new Date(p.t).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"})}</span><span class="l">${esc(p.label)} <span class="hint" style="margin:0">· ${n}</span></span><button class="b s" data-rp="${i}">Restaurar</button></div>`}).join("")||`<p class="hint">Ainda não há pontos de restauro.</p>`}
@@ -728,6 +729,7 @@ async function criarBase(j,label){
   const idx=basesIdx(),l=(idx[j.rootId]=idx[j.rootId]||[]);l.unshift({t:b.t,quando:b.quando,label,n:b.itens.length});
   while(l.length>12){const old=l.pop();DB.del("listagens","B|"+j.rootId+"|"+old.t)}
   try{localStorage.setItem("box_bases",JSON.stringify(idx))}catch(e){}
+  setTimeout(()=>nuvemBases(j.rootId),0);
   return b}
 const lerBase=(rootId,t)=>DB.get("listagens","B|"+rootId+"|"+t);
 // análise guardada pelas versões anteriores (no armazenamento pequeno do navegador): passa para a base de dados local
@@ -1330,7 +1332,7 @@ async function verificarFundo(){
       if(Date.now()-last>15000){last=Date.now();if(curTab==="rel")renderReport();if(curTab==="alt")renderAlt()}},()=>my!==bgRun,4);
     el.textContent=`${r.done-r.err} documentos lidos`;setTimeout(()=>{if(!bgOn)el.style.display="none"},6000)}
   catch(e){el.textContent="leitura interrompida"}
-  bgOn=false;if(curTab==="rel")renderReport();if(curTab==="alt")renderAlt();
+  bgOn=false;nuvemTextos();if(curTab==="rel")renderReport();if(curTab==="alt")renderAlt();
 }
 $("#qGo").onclick=async()=>{
   if(!SES){toast("Entre primeiro na Box");return}
@@ -1356,7 +1358,7 @@ $("#tplGo").onclick=async()=>{
     if(fl.length>300){$("#scanMsg").textContent=`Esta pasta tem ${fl.length} documentos — escolha a pasta que só tem os modelos.`}
     else{await checkFiles(fl.map(x=>({fid:x.id,sha1:x.sha1,name:x.name,size:x.size})),(d,n)=>{$("#scanMsg").textContent=`A ler os modelos… ${d}/${n}`});
       TPL={id:curFolder.id,pasta:nome,quando:new Date().toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"}),itens:fl.map(x=>({nome:x.name,sha1:x.sha1}))};
-      try{localStorage.setItem("boxcheck_modelos",JSON.stringify(TPL))}catch(e){}
+      try{localStorage.setItem("boxcheck_modelos",JSON.stringify(TPL))}catch(e){}marcarCfg();
       tplRev++;qualInit();$("#scanMsg").textContent=`${TPL.itens.length} modelo(s) lidos de “${nome}”. Os documentos iguais ou quase iguais a um modelo passam a aparecer como “modelo por preencher”.`}
   }catch(e){scanRun++;$("#scanMsg").textContent="Erro: "+e.message}
   scanBusy=false;b.disabled=false;
@@ -1711,7 +1713,8 @@ function connected(me){
   $("#tok").value="";$("#loginBox").style.display="none";$("#devTok").style.display="none";
   $("#boxBrowse").style.display="block";
   // ao entrar: procura sozinha o que mudou desde a última análise (poucos pedidos) e continua a leitura dos documentos
-  browse(curFolder.id,curFolder.path).then(()=>pronto).then(()=>{if(lastListing&&lastListing.rootId===curFolder.id)runScan(false,true);else verificarFundo()});
+  nuvemUI();
+  pronto.then(()=>nuvemTrazer()).then(()=>browse(curFolder.id,curFolder.path)).then(()=>{if(lastListing&&lastListing.rootId===curFolder.id)runScan(false,true);else verificarFundo()});
 }
 function logout(revoke,msg){
   const old=SES;SES=null;saveSes();bgRun++;
@@ -1860,9 +1863,9 @@ async function runScan(full,auto){
     const dk=Object.keys(delBy);if(dk.length>3000)for(const k of dk.slice(0,dk.length-3000))delete delBy[k];
     const j={v:2,pasta:root,rootId,t:agora,tFull:res.full?agora:(prev.tFull||prev.t),quando:new Date(agora).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"}),itens:res.itens,pos:res.pos,failed:st.failed,nF,nP,delBy};
     const d=prev&&prev.v===2?diffFicheiros(prev,j):null;
-    await guardarListagem(j);
+    await guardarListagem(j);nuvemListagem(j);
     // contagem inicial para o painel Alterações: o estado antes desta análise (ou este, se for a primeira)
-    if(!(basesIdx()[rootId]||[]).length)await criarBase(prev&&prev.v===2?prev:j,prev&&prev.v===2?"Análise de "+prev.quando:"Primeira análise");
+    if(!(basesIdx()[rootId]||[]).length){await criarBase(prev&&prev.v===2?prev:j,prev&&prev.v===2?"Análise de "+prev.quando:"Primeira análise")}
     scanRun++; // impede atualizações tardias da mensagem
     useListing(j);showLast();scanHint();
     const secs=Math.round((agora-st.t0)/1000);
@@ -1894,6 +1897,93 @@ function showLast(){const j=lastListing;$("#lastInfo").textContent=j?`Análise c
 $("#lastScan").onclick=async()=>{const j=await lerListagem(curFolder.id);if(!j){toast("Sem análise guardada desta pasta");return}useListing(j);showLast();scanHint();carregarRef()};
 $("#dlList").onclick=()=>{if(!lastListing)return;const q=v=>`"${String(v??"").replace(/"/g,'""')}"`;
   download(`listagem_box_${hoje()}.csv`,"﻿"+["path,name,type,modified_at,id,size,sha1,cmod"].concat(lastListing.itens.map(x=>[x.path,x.name,x.type,x.modified_at||"",x.id||"",x.size??"",x.sha1||"",x.cm||""].map(q).join(","))).join("\n"),"text/csv;charset=utf-8")};
+
+/* ---------- guardar tudo no serviço de login (Cloudflare) para continuar noutro computador ---------- */
+// Nada disto escreve na Box. Fica guardado: configuração (formadores, atribuições, exceções, envios, falsos positivos),
+// pontos de restauro, modelos oficiais, análises de cada pasta, contagens e o resultado da leitura dos documentos.
+const NUV={ativo:null,ultimo:0,erro:"",ocupado:false};
+const nuvT=()=>lsJ("boxcheck_nuvem",{});
+function nuvSetT(k,t){const o=nuvT();o[k]=t;try{localStorage.setItem("boxcheck_nuvem",JSON.stringify(o))}catch(e){}}
+function marcarCfg(){try{localStorage.setItem("boxcheck_cfg_t",String(Date.now()))}catch(e){}nuvemAgendar()}
+const cfgT=()=>+(localStorage.getItem("boxcheck_cfg_t")||0);
+async function gz(obj){const s=new Blob([JSON.stringify(obj)]).stream().pipeThrough(new CompressionStream("gzip"));return new Response(s).arrayBuffer()}
+async function ungz(buf){const s=new Blob([buf]).stream().pipeThrough(new DecompressionStream("gzip"));return JSON.parse(await new Response(s).text())}
+async function nuvem(method,name,body,t){
+  const w=workerUrl();if(!w||!SES)throw new Error("sem sessão");
+  const H={Authorization:"Bearer "+await accessToken()};if(t)H["X-T"]=String(t);
+  const r=await fetch(w+"/sync"+(name?"/"+encodeURIComponent(name):""),{method,headers:H,body});
+  if(r.status===501){NUV.ativo=false;nuvemUI();const e=new Error("sem armazenamento");e.kind="nokv";throw e}
+  if(r.status===404&&method==="GET"&&!name){NUV.ativo=false;nuvemUI();const e=new Error("serviço antigo");e.kind="nokv";throw e}
+  if(!r.ok)throw new Error("o serviço respondeu "+r.status);
+  NUV.ativo=true;return r}
+async function nuvemPut(name,obj,t){if(NUV.ativo===false)return;t=t||Date.now();
+  try{await nuvem("PUT",name,await gz(obj),t);nuvSetT(name,t);NUV.ultimo=Date.now();NUV.erro=""}
+  catch(e){if(e.kind!=="nokv")NUV.erro=e.message}
+  nuvemUI()}
+async function nuvemGet(name){return ungz(await (await nuvem("GET",name)).arrayBuffer())}
+function nuvemUI(){const el=$("#nuvemMsg");if(!el)return;
+  if(!SES){el.innerHTML="";return}
+  if(NUV.ativo===false){el.innerHTML=`<div class="msg info">Para guardar tudo na nuvem e continuar noutro computador sem repetir a análise, falta ligar o armazenamento ao serviço de login (3 passos no LEIA-ME). Até lá, fica tudo guardado só neste navegador.</div>`;return}
+  if(NUV.erro){el.innerHTML=`<div class="msg bad">Não foi possível guardar na nuvem (${esc(NUV.erro)}). Fica guardado neste navegador; volta a tentar sozinho.</div>`;return}
+  el.innerHTML=NUV.ultimo?`<div class="msg ok">☁ Tudo guardado na nuvem às ${new Date(NUV.ultimo).toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"})} — noutro computador basta entrar com a Box.</div>`:NUV.ativo?`<div class="msg ok">☁ Guardado na nuvem — noutro computador basta entrar com a Box.</div>`:""}
+// configuração e o resto do estado (pequeno): enviado alguns segundos depois de cada alteração
+function estadoAtual(){let root="";try{root=localStorage.getItem("box_last_root")||""}catch(e){}
+  return{cfg:JSON.stringify(cfg),pontos:rpList(),tpl:TPL,folder:curFolder,root,bases:basesIdx(),resumos:resumos()}}
+let nuvH=null;
+function nuvemAgendar(){if(NUV.ativo===false||!SES||NUV.ocupado)return;clearTimeout(nuvH);nuvH=setTimeout(()=>nuvemPut("estado",estadoAtual(),cfgT()||Date.now()),8000)}
+function nuvemListagem(j){if(!SES)return;nuvemPut("L_"+j.rootId,j,j.t).then(()=>nuvemAgendar())}
+async function nuvemBases(rootId){if(!SES||NUV.ativo===false)return;const l=basesIdx()[rootId]||[];const out=[];
+  for(const b of l){const x=await lerBase(rootId,b.t);if(x)out.push(x)}
+  await nuvemPut("B_"+rootId,out);nuvemAgendar()}
+const b64=u=>{let s="";const a=new Uint8Array(u.buffer,u.byteOffset,u.byteLength);for(let i=0;i<a.length;i++)s+=String.fromCharCode(a[i]);return btoa(s)};
+const unb64=s=>{const b=atob(s),a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return new Uint32Array(a.buffer)};
+let nuvTxN=-1;
+async function nuvemTextos(force){if(!SES||NUV.ativo===false)return;if(!force&&TX.size===nuvTxN)return;nuvTxN=TX.size;
+  const arr=[];for(const r of TX.values())arr.push(r.sig?{...r,sig:b64(r.sig)}:r);
+  await nuvemPut("tx",arr);nuvSetT("txN",arr.length)}
+// ao entrar: traz o que for mais recente na nuvem e envia o que for mais recente aqui
+async function nuvemTrazer(){
+  if(!SES||!workerUrl())return;NUV.ocupado=true;let mudou=false;
+  try{
+    const idx=(await (await nuvem("GET","")).json()).itens||{},L=nuvT();
+    // 1) configuração, pontos de restauro, modelos, pasta
+    const E=idx.estado;
+    if(E&&(E.t||0)>cfgT()){const e=await nuvemGet("estado");
+      const vazio=!cfg.mods.length&&!cfg.profs.length;
+      if(!vazio&&e.cfg!==JSON.stringify(cfg))ponto("Antes de trazer da nuvem a configuração de outro computador");
+      cfg=JSON.parse(e.cfg);migrate();lastJSON=JSON.stringify(cfg);cfgRev++;persist(lastJSON);
+      try{localStorage.setItem("boxcheck_cfg_t",String(E.t));
+        const rp=rpList(),ts=new Set(rp.map(p=>p.t));const juntos=rp.concat((e.pontos||[]).filter(p=>!ts.has(p.t))).sort((a,b)=>b.t-a.t).slice(0,25);localStorage.setItem(RPKEY,JSON.stringify(juntos));
+        if(e.tpl&&e.tpl.itens){TPL=e.tpl;tplRev++;localStorage.setItem("boxcheck_modelos",JSON.stringify(TPL))}
+        if(e.bases){const bi=basesIdx();for(const k in e.bases)if(!bi[k]||!bi[k].length)bi[k]=e.bases[k];localStorage.setItem("box_bases",JSON.stringify(bi))}
+        if(e.folder&&e.folder.id&&curFolder.id==="0"){curFolder=e.folder;localStorage.setItem("box_last_folder",JSON.stringify(curFolder))}
+        if(e.root&&!localStorage.getItem("box_last_root"))localStorage.setItem("box_last_root",e.root)}catch(x){}
+      mudou=true}
+    else if(!E?(cfg.mods.length||cfg.profs.length):cfgT()>(E.t||0)){if(!cfgT())localStorage.setItem("boxcheck_cfg_t",String(Date.now()));await nuvemPut("estado",estadoAtual(),cfgT())}
+    // 2) análises de cada pasta
+    const R=resumos();
+    for(const k in idx){if(!k.startsWith("L_"))continue;const root=k.slice(2),loc=R[root];
+      if(!loc||(idx[k].t||0)>(loc.t||0)){const j=await nuvemGet(k);const last=localStorage.getItem("box_last_root");await guardarListagem(j);
+        if(last)try{localStorage.setItem("box_last_root",last)}catch(x){}
+        nuvSetT(k,j.t);if(!lastListing||lastListing.rootId===root||(!last&&curFolder.id===root))useListing(j,true);mudou=true}}
+    for(const root in R){const k="L_"+root;if(!idx[k]||(R[root].t||0)>(idx[k].t||0)){const j=await lerListagem(root);if(j)await nuvemPut(k,j,j.t)}}
+    // 3) contagens do painel Alterações
+    for(const k in idx){if(!k.startsWith("B_"))continue;const root=k.slice(2);
+      if((idx[k].t||0)>(L[k]||0)){const arr=await nuvemGet(k);const bi=basesIdx();const have=new Set((bi[root]||[]).map(b=>b.t));
+        for(const b of arr){await DB.put("listagens","B|"+root+"|"+b.t,b);if(!have.has(b.t))(bi[root]=bi[root]||[]).push({t:b.t,quando:b.quando,label:b.label,n:b.itens.length})}
+        if(bi[root])bi[root].sort((a,b)=>b.t-a.t);try{localStorage.setItem("box_bases",JSON.stringify(bi))}catch(x){}nuvSetT(k,idx[k].t)}}
+    for(const root in basesIdx())if(!idx["B_"+root])await nuvemBases(root);
+    // 4) documentos já lidos (não voltam a ser pedidos à Box)
+    await textosProntos;
+    if(idx.tx&&(idx.tx.t||0)>(L.tx||0)){const arr=await nuvemGet("tx");let n=0;
+      for(const r of arr){if(!r||!r.sha1||TX.has(r.sha1))continue;if(r.sig)r.sig=unb64(r.sig);TX.set(r.sha1,r);await DB.put("textos",r.sha1,r);n++}
+      if(n){txRev++;mudou=true}nuvSetT("tx",idx.tx.t)}
+    if(TX.size&&(!idx.tx||TX.size>(nuvT().txN||0)))await nuvemTextos(true);
+    NUV.ultimo=NUV.ultimo||Date.now();
+  }catch(e){if(e.kind!=="nokv"){NUV.erro=e.message;console.warn(e)}}
+  finally{NUV.ocupado=false;nuvemUI()}
+  if(mudou){refreshAll();renderRP();showLast();scanHint();await carregarRef();toast("Trazida da nuvem a informação guardada noutro computador")}
+  return mudou}
 
 /* ---------- exportar relatório ---------- */
 $("#dlCsv").onclick=()=>download(`relatorio_entregas_${hoje()}.csv`,"﻿"+geralCSV(),"text/csv;charset=utf-8");
