@@ -96,6 +96,8 @@ const G = "guide:";
 const PERFIS = { dexec: "Direção Executiva", dped: "Direção Pedagógica", prof: "Professor", form: "Formando" };
 // separadores da EPISJ 360 (os mesmos ids da app). "uti" (Utilizadores e perfis) é só para administradores.
 const SEPARADORES = ["esc", "anos", "cur", "tur", "prof", "box", "alt", "pas", "config", "rel", "est", "env", "pra", "cop", "meu", "esch", "mh", "rcMapa", "rcLista", "rcEsp", "def"];
+// EPISJ 360 0.9.19: separadores de cada módulo — um módulo desligado pelo administrador some para todos os outros
+const MOD_TABS = { escola: ["esc", "anos", "cur", "tur", "prof"], boxcheck: ["box", "alt", "pas", "config", "rel", "est", "env", "pra", "cop", "meu"], eduschedule: ["esch", "mh"], roomcheck: ["rcMapa", "rcLista", "rcEsp"] };
 const VIS_OMISSAO = {
   dexec: SEPARADORES.slice(),
   dped: ["esc", "anos", "cur", "tur", "prof", "box", "alt", "pas", "config", "rel", "est", "env", "pra", "meu", "esch", "mh", "rcMapa", "rcLista", "rcEsp"],
@@ -212,7 +214,7 @@ async function adminAutomatico(env, loja, quem) {
 }
 async function lerPerfis(env) { return limparPerfis((await env.KV.get(G + "perfis", "json")) || {}) }
 function limparPerfis(b) {
-  const out = { v: 1, admins: [], utilizadores: {}, formandos: { dominios: [], padrao: "" }, vis: {}, t: b.t || 0, por: b.por || "" };
+  const out = { v: 1, admins: [], utilizadores: {}, formandos: { dominios: [], padrao: "" }, vis: {}, modsOff: [], t: b.t || 0, por: b.por || "" };
   out.admins = [...new Set(lst(b.admins).map(em).filter(x => x.includes("@")))];
   for (const [k, v] of Object.entries(b.utilizadores || {})) {
     const e = em(k); if (!e.includes("@") || !v || !PERFIS[v.perfil]) continue;
@@ -222,6 +224,7 @@ function limparPerfis(b) {
   out.formandos.dominios = [...new Set(lst(f.dominios).map(x => em(x).replace(/^@/, "")).filter(Boolean))];
   out.formandos.padrao = String(f.padrao || "").slice(0, 200);
   for (const k of Object.keys(PERFIS)) if (Array.isArray((b.vis || {})[k])) out.vis[k] = b.vis[k].filter(x => SEPARADORES.includes(x));
+  out.modsOff = [...new Set(lst(b.modsOff).filter(m => MOD_TABS[m]))];
   return out;
 }
 async function perfilDe(quem, loja, plano, env, profsPub) {
@@ -237,8 +240,9 @@ async function perfilDe(quem, loja, plano, env, profsPub) {
     let re = null; try { re = f.padrao ? new RegExp(f.padrao, "i") : null } catch (e) {}
     if (f.dominios.includes(dom) || (re && ids.some(x => re.test(x)))) { perfil = "form"; origem = "regra dos formandos" }
   }
-  const vis = !perfil ? [] : admin ? SEPARADORES.concat("uti") : (loja.vis[perfil] || VIS_OMISSAO[perfil]);
-  return { email: quem.email, nome: quem.nome, perfil, perfilNome: PERFIS[perfil] || "", origem, admin, vis, turma: u && u.turma || "" };
+  const off = new Set(lst(loja.modsOff).flatMap(m => MOD_TABS[m] || []));
+  const vis = !perfil ? [] : admin ? SEPARADORES.concat("uti") : (loja.vis[perfil] || VIS_OMISSAO[perfil]).filter(t => !off.has(t));
+  return { email: quem.email, nome: quem.nome, perfil, perfilNome: PERFIS[perfil] || "", origem, admin, vis, modsOff: lst(loja.modsOff), turma: u && u.turma || "" };
 }
 
 /* ---------- autenticação ---------- */

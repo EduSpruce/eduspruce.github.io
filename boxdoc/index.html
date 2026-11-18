@@ -754,6 +754,10 @@ body.temfundos main{padding-bottom:84px}
 body.temfundos nav.side{padding-bottom:16px}
 @media (max-width:820px){.fundos{left:0;height:50px}.fundos img{max-height:36px}nav.side .sfoot.stopo{width:100%;border-bottom:0;margin:0 0 6px;padding:0}nav.side .sfoot.stopo img{max-width:120px;margin:0}}
 @media print{.fundos{display:none!important}}
+body.esch.temfundos #esFr{height:calc(100vh - 116px);height:calc(100dvh - 116px)}
+@media (max-width:820px){body.esch.temfundos #esFr{height:calc(100vh - 108px);height:calc(100dvh - 108px)}}
+.mods button.moff{opacity:.6}.mods button.moff::after{content:"desligado";font-size:10.5px;font-weight:600;color:#8a5a00;background:#fff4d6;border:1px solid #f0d58a;border-radius:999px;padding:0 6px;margin-left:2px}
+.utimods{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.utimods label{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fff;cursor:pointer}.utimods label.off{background:#fafafa;color:var(--muted)}.utimods input{width:18px;height:18px;margin:0}
 </style>
 </head>
 <body>
@@ -777,15 +781,15 @@ body.temfundos nav.side{padding-bottom:16px}
       </details>
     </div>
     <div id="gateMsg"></div>
-    <p class="gfoot">A EPISJ 360 só lê a Box (não altera, move nem apaga nada). A Box liga-se dentro do módulo BoxCheck.</p>
+    <p class="gfoot">A EPISJ 360 só lê a Box (não altera, move nem apaga nada). A Box liga-se dentro do módulo Box360.</p>
   </div>
 </div>
-<div class="top"><div class="brand" title="EPISJ 360 — a escola toda num só lugar"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><radialGradient id="gdgB" cx=".5" cy=".42" r=".72"><stop offset="0" stop-color="#1d3f86"/><stop offset=".6" stop-color="#163269"/><stop offset="1" stop-color="#0a1736"/></radialGradient><linearGradient id="gdkB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7bdc9f"/><stop offset=".5" stop-color="#3db166"/><stop offset="1" stop-color="#2f9e57"/></linearGradient></defs><path d="M31.00 16.00L30.98 21.65L30.91 23.45L30.79 24.74L30.63 25.77L30.42 26.63L30.16 27.37L29.85 28.01L29.48 28.57L29.06 29.06L28.57 29.48L28.01 29.85L27.37 30.16L26.63 30.42L25.77 30.63L24.74 30.79L23.45 30.91L21.65 30.98L16.00 31.00L10.35 30.98L8.55 30.91L7.26 30.79L6.23 30.63L5.37 30.42L4.63 30.16L3.99 29.85L3.43 29.48L2.94 29.06L2.52 28.57L2.15 28.01L1.84 27.37L1.58 26.63L1.37 25.77L1.21 24.74L1.09 23.45L1.02 21.65L1.00 16.00L1.02 10.35L1.09 8.55L1.21 7.26L1.37 6.23L1.58 5.37L1.84 4.63L2.15 3.99L2.52 3.43L2.94 2.94L3.43 2.52L3.99 2.15L4.63 1.84L5.37 1.58L6.23 1.37L7.26 1.21L8.55 1.09L10.35 1.02L16.00 1.00L21.65 1.02L23.45 1.09L24.74 1.21L25.77 1.37L26.63 1.58L27.37 1.84L28.01 2.15L28.57 2.52L29.06 2.94L29.48 3.43L29.85 3.99L30.16 4.63L30.42 5.37L30.63 6.23L30.79 7.26L30.91 8.55L30.98 10.35z" fill="url(#gdgB)"/><circle cx="16" cy="16" r="10.8" fill="none" stroke="#3db166" stroke-opacity=".2" stroke-width="4"/><path d="M23.23 7.97A10.8 10.8 0 1 1 8.77 7.97" fill="none" stroke="url(#gdkB)" stroke-width="1.7" stroke-linecap="round"/><path d="M10.74 6.20L6.61 6.69L9.82 10.26z" fill="url(#gdkB)"/><image href="data:image/png;base64,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" x="9.80" y="11.03" width="12.4" height="9.94" preserveAspectRatio="xMidYMid meet"/><text x="16.6" y="7.3" text-anchor="middle" font-family="-apple-system,system-ui,Segoe UI,Arial,sans-serif" font-size="3.4" font-weight="800" fill="#5cc985" letter-spacing="-.15">360</text></svg><span>EPISJ <b>360</b></span><span class="ver" data-ver></span></div><nav class="mods" id="mods" aria-label="Módulos da EPISJ 360"><button data-m="escola" title="Escola — anos letivos, cursos, turmas e professores (comuns a todos os módulos)"><svg class="mseal" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="esgM" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f5fb8"/><stop offset=".55" stop-color="#163269"/><stop offset="1" stop-color="#0c1d40"/></linearGradient></defs><rect x="1.5" y="1.5" width="29" height="29" rx="8.5" fill="url(#esgM)"/><text x="16" y="22.2" text-anchor="middle" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="17" font-weight="800" fill="#fff">E</text><circle cx="25" cy="25" r="4.2" fill="#3db166" stroke="#0c1d40" stroke-width="1.4"/></svg><span><b>Escola</b></span></button><button data-m="boxcheck" class="on" title="BoxCheck — controlo de entregas na Box"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="bcgM" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f5fb8"/><stop offset=".55" stop-color="#163269"/><stop offset="1" stop-color="#0c1d40"/></linearGradient><linearGradient id="bckM" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5cc985"/><stop offset="1" stop-color="#2f9e57"/></linearGradient></defs><rect x="1.5" y="1.5" width="29" height="29" rx="8.5" fill="url(#bcgM)"/><path d="M1.5 12C9 8 20 7 30.5 9.5V10C20 8 9 9.5 1.5 13.5z" fill="#fff" opacity=".10"/><path d="M14.5 6.6 22 10.6 14.5 14.6 7 10.6z" fill="#fff"/><path d="M7 10.6 14.5 14.6V23.4L7 19.4z" fill="#e3ebfa"/><path d="M22 10.6 14.5 14.6V23.4L22 19.4z" fill="#b7c8ea"/><path d="M10.7 8.6 18.2 12.6" stroke="#163269" stroke-opacity=".35" stroke-width="1.1"/><circle cx="23" cy="22.6" r="6.2" fill="url(#bckM)" stroke="#0c1d40" stroke-width="1.6"/><path d="M20.2 22.7l1.9 1.9 3.8-3.9" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Box<b>Check</b></span></button><button data-m="eduschedule" title="EduSchedule — horários da escola (o mesmo da EduSpruce)"><svg class="mseal" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="essM" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f5fb8"/><stop offset=".55" stop-color="#163269"/><stop offset="1" stop-color="#0c1d40"/></linearGradient></defs><rect x="1.5" y="1.5" width="29" height="29" rx="8.5" fill="url(#essM)"/><text x="16" y="22.2" text-anchor="middle" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="17" font-weight="800" fill="#fff">S</text><circle cx="25" cy="25" r="4.2" fill="#3db166" stroke="#0c1d40" stroke-width="1.4"/></svg><span>Edu<b>Schedule</b></span></button><button data-m="roomcheck" title="RoomCheck — reservas do Auditório e dos Laboratórios de Informática"><svg class="mseal" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="rcsM" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f5fb8"/><stop offset=".55" stop-color="#163269"/><stop offset="1" stop-color="#0c1d40"/></linearGradient></defs><rect x="1.5" y="1.5" width="29" height="29" rx="8.5" fill="url(#rcsM)"/><text x="16" y="22.2" text-anchor="middle" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="17" font-weight="800" fill="#fff">R</text><circle cx="25" cy="25" r="4.2" fill="#3db166" stroke="#0c1d40" stroke-width="1.4"/></svg><span>Room<b>Check</b></span></button></nav><span class="grow"></span><label class="anotop" title="Ano letivo ativo — comum a todos os módulos"><span>Ano letivo</span><select id="anoSel"></select></label><span id="bgp" class="bgp" style="display:none"></span><span class="fsz" title="Tamanho da letra"><button id="fszMenos" aria-label="Diminuir a letra">A−</button><button id="fszVal" title="Repor o tamanho normal">100%</button><button id="fszMais" aria-label="Aumentar a letra">A+</button></span><span class="undo"><button id="undoBtn" title="Anular (Ctrl+Z)" disabled>↶ Anular</button><button id="redoBtn" title="Refazer (Ctrl+Shift+Z)" disabled>↷ Refazer</button></span><span id="who" class="who" style="display:none"></span></div>
+<div class="top"><div class="brand" title="EPISJ 360 — a escola toda num só lugar"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><radialGradient id="gdgB" cx=".5" cy=".42" r=".72"><stop offset="0" stop-color="#1d3f86"/><stop offset=".6" stop-color="#163269"/><stop offset="1" stop-color="#0a1736"/></radialGradient><linearGradient id="gdkB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7bdc9f"/><stop offset=".5" stop-color="#3db166"/><stop offset="1" stop-color="#2f9e57"/></linearGradient></defs><path d="M31.00 16.00L30.98 21.65L30.91 23.45L30.79 24.74L30.63 25.77L30.42 26.63L30.16 27.37L29.85 28.01L29.48 28.57L29.06 29.06L28.57 29.48L28.01 29.85L27.37 30.16L26.63 30.42L25.77 30.63L24.74 30.79L23.45 30.91L21.65 30.98L16.00 31.00L10.35 30.98L8.55 30.91L7.26 30.79L6.23 30.63L5.37 30.42L4.63 30.16L3.99 29.85L3.43 29.48L2.94 29.06L2.52 28.57L2.15 28.01L1.84 27.37L1.58 26.63L1.37 25.77L1.21 24.74L1.09 23.45L1.02 21.65L1.00 16.00L1.02 10.35L1.09 8.55L1.21 7.26L1.37 6.23L1.58 5.37L1.84 4.63L2.15 3.99L2.52 3.43L2.94 2.94L3.43 2.52L3.99 2.15L4.63 1.84L5.37 1.58L6.23 1.37L7.26 1.21L8.55 1.09L10.35 1.02L16.00 1.00L21.65 1.02L23.45 1.09L24.74 1.21L25.77 1.37L26.63 1.58L27.37 1.84L28.01 2.15L28.57 2.52L29.06 2.94L29.48 3.43L29.85 3.99L30.16 4.63L30.42 5.37L30.63 6.23L30.79 7.26L30.91 8.55L30.98 10.35z" fill="url(#gdgB)"/><circle cx="16" cy="16" r="10.8" fill="none" stroke="#3db166" stroke-opacity=".2" stroke-width="4"/><path d="M23.23 7.97A10.8 10.8 0 1 1 8.77 7.97" fill="none" stroke="url(#gdkB)" stroke-width="1.7" stroke-linecap="round"/><path d="M10.74 6.20L6.61 6.69L9.82 10.26z" fill="url(#gdkB)"/><image href="data:image/png;base64,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" x="9.80" y="11.03" width="12.4" height="9.94" preserveAspectRatio="xMidYMid meet"/><text x="16.6" y="7.3" text-anchor="middle" font-family="-apple-system,system-ui,Segoe UI,Arial,sans-serif" font-size="3.4" font-weight="800" fill="#5cc985" letter-spacing="-.15">360</text></svg><span>EPISJ <b>360</b></span><span class="ver" data-ver></span></div><nav class="mods" id="mods" aria-label="Módulos da EPISJ 360"><button data-m="escola" title="Escola360 — anos letivos, cursos, turmas e professores (comuns a todos os módulos)"><svg class="mseal" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="esgM" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f5fb8"/><stop offset=".55" stop-color="#163269"/><stop offset="1" stop-color="#0c1d40"/></linearGradient></defs><rect x="1.5" y="1.5" width="29" height="29" rx="8.5" fill="url(#esgM)"/><text x="16" y="22.2" text-anchor="middle" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="17" font-weight="800" fill="#fff">E</text><circle cx="25" cy="25" r="4.2" fill="#3db166" stroke="#0c1d40" stroke-width="1.4"/></svg><span>Escola<b>360</b></span></button><button data-m="boxcheck" class="on" title="Box360 — controlo de entregas na Box"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="bcgM" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f5fb8"/><stop offset=".55" stop-color="#163269"/><stop offset="1" stop-color="#0c1d40"/></linearGradient><linearGradient id="bckM" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5cc985"/><stop offset="1" stop-color="#2f9e57"/></linearGradient></defs><rect x="1.5" y="1.5" width="29" height="29" rx="8.5" fill="url(#bcgM)"/><path d="M1.5 12C9 8 20 7 30.5 9.5V10C20 8 9 9.5 1.5 13.5z" fill="#fff" opacity=".10"/><path d="M14.5 6.6 22 10.6 14.5 14.6 7 10.6z" fill="#fff"/><path d="M7 10.6 14.5 14.6V23.4L7 19.4z" fill="#e3ebfa"/><path d="M22 10.6 14.5 14.6V23.4L22 19.4z" fill="#b7c8ea"/><path d="M10.7 8.6 18.2 12.6" stroke="#163269" stroke-opacity=".35" stroke-width="1.1"/><circle cx="23" cy="22.6" r="6.2" fill="url(#bckM)" stroke="#0c1d40" stroke-width="1.6"/><path d="M20.2 22.7l1.9 1.9 3.8-3.9" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Box<b>360</b></span></button><button data-m="eduschedule" title="Horário360 — horários da escola (o EduSchedule da EduSpruce)"><svg class="mseal" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="essM" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f5fb8"/><stop offset=".55" stop-color="#163269"/><stop offset="1" stop-color="#0c1d40"/></linearGradient></defs><rect x="1.5" y="1.5" width="29" height="29" rx="8.5" fill="url(#essM)"/><text x="16" y="22.2" text-anchor="middle" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="17" font-weight="800" fill="#fff">H</text><circle cx="25" cy="25" r="4.2" fill="#3db166" stroke="#0c1d40" stroke-width="1.4"/></svg><span>Horário<b>360</b></span></button><button data-m="roomcheck" title="Sala360 — reservas do Auditório e dos Laboratórios de Informática"><svg class="mseal" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="rcsM" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f5fb8"/><stop offset=".55" stop-color="#163269"/><stop offset="1" stop-color="#0c1d40"/></linearGradient></defs><rect x="1.5" y="1.5" width="29" height="29" rx="8.5" fill="url(#rcsM)"/><text x="16" y="22.2" text-anchor="middle" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="17" font-weight="800" fill="#fff">S</text><circle cx="25" cy="25" r="4.2" fill="#3db166" stroke="#0c1d40" stroke-width="1.4"/></svg><span>Sala<b>360</b></span></button></nav><span class="grow"></span><label class="anotop" title="Ano letivo ativo — comum a todos os módulos"><span>Ano letivo</span><select id="anoSel"></select></label><span id="bgp" class="bgp" style="display:none"></span><span class="fsz" title="Tamanho da letra"><button id="fszMenos" aria-label="Diminuir a letra">A−</button><button id="fszVal" title="Repor o tamanho normal">100%</button><button id="fszMais" aria-label="Aumentar a letra">A+</button></span><span class="undo"><button id="undoBtn" title="Anular (Ctrl+Z)" disabled>↶ Anular</button><button id="redoBtn" title="Refazer (Ctrl+Shift+Z)" disabled>↷ Refazer</button></span><span id="who" class="who" style="display:none"></span></div>
 <div class="shell">
   <nav id="nav" class="side">
     <a class="sfoot stopo" href="https://www.episj.com" target="_blank" rel="noopener" title="Escola Profissional da Ilha de São Jorge"><img src="img/logo-episj.png" alt="Escola Profissional da Ilha de São Jorge" onerror="this.parentNode.style.display='none'"></a>
     <div class="mgrp" data-m="escola">
-    <div class="mh">Escola</div>
+    <div class="mh">Escola360</div>
     <button data-t="esc"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V9l7-5 7 5v12"/><path d="M9 21v-6h6v6"/></svg>Painel da escola</button>
     <button data-t="anos"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Anos letivos</button>
     <button data-t="cur"><svg viewBox="0 0 24 24"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg>Cursos</button>
@@ -794,18 +798,18 @@ body.temfundos nav.side{padding-bottom:16px}
     <button data-t="for"><svg viewBox="0 0 24 24"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/><path d="M22 10v6"/></svg>Formandos</button>
     </div>
     <div class="mgrp" data-m="eduschedule">
-    <div class="mh">EduSchedule</div>
+    <div class="mh">Horário360</div>
     <button data-t="mh"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><circle cx="12" cy="16" r="2.5"/></svg><span data-mhlbl>O meu horário</span></button>
     <button data-t="esch"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h2M14 14h2M8 18h2M14 18h2"/></svg>Horários</button>
     </div>
     <div class="mgrp" data-m="roomcheck">
-    <div class="mh">RoomCheck <span class="mv" data-rcver></span></div>
+    <div class="mh">Sala360 <span class="mv" data-rcver></span></div>
     <button data-t="rcMapa"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M9.5 21v-6.5h5V21"/></svg>Mapa</button>
     <button data-t="rcLista"><svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>Todas as reservas</button>
     <button data-t="rcEsp"><svg viewBox="0 0 24 24"><path d="M3 21h18M6 21V4h12v17"/><circle cx="14.5" cy="12.5" r=".9" fill="currentColor"/></svg>Espaços</button>
     </div>
     <div class="mgrp" data-m="boxcheck">
-    <div class="mh">BoxCheck <span class="mv" data-bcver></span></div>
+    <div class="mh">Box360 <span class="mv" data-bcver></span></div>
     <label class="anasel" id="anaTop" style="display:none"><span>Análise</span><select id="anaSel" title="Escolha a análise guardada a usar"></select></label>
     <button data-t="meu"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a7 7 0 0 1 11-5.7"/><path d="M15 19l2 2 4-4"/></svg>As minhas entregas</button>
     <button data-t="box" class="on"><svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>Gestão Documental</button>
@@ -823,7 +827,7 @@ body.temfundos nav.side{padding-bottom:16px}
     <button data-t="uti"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8l1.5 1.5L23 7"/></svg>Utilizadores e perfis</button>
     <button data-t="def"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Definições</button>
     </div>
-    <div class="foot">EPISJ 360 <span data-ver></span> · BoxCheck <span data-bcver></span> · RoomCheck <span data-rcver></span> — ferramenta interna da Escola Profissional da Ilha de São Jorge. Só leitura: não altera nada na Box.<br>Não é um produto da Box, Inc.</div>
+    <div class="foot">EPISJ 360 <span data-ver></span> · Box360 <span data-bcver></span> · Sala360 <span data-rcver></span> — ferramenta interna da Escola Profissional da Ilha de São Jorge. Só leitura: não altera nada na Box.<br>Não é um produto da Box, Inc.</div>
   </nav>
 <main>
 
@@ -831,10 +835,10 @@ body.temfundos nav.side{padding-bottom:16px}
 <section id="esc">
   <div class="card">
     <h2>Escola</h2>
-    <p class="hint">O que é comum a todos os módulos da EPISJ 360: o <b>ano letivo ativo</b> (também no topo), os <b>cursos</b>, as <b>turmas</b> e os <b>professores</b>. O BoxCheck e o EduSchedule usam estes dados; o que se acrescentar no EduSchedule aparece aqui.</p>
+    <p class="hint">O que é comum a todos os módulos da EPISJ 360: o <b>ano letivo ativo</b> (também no topo), os <b>cursos</b>, as <b>turmas</b> e os <b>professores</b>. O Box360 e o Horário360 usam estes dados; o que se acrescentar no Horário360 aparece aqui.</p>
     <div class="row" style="margin-bottom:14px">
       <label class="grow">Nome da escola<input type="text" id="escNome"></label>
-      <button class="b s" id="escImport" style="align-self:flex-end" title="Traz as turmas das pastas A01 - Curso (25/28) da análise do BoxCheck">Importar turmas e cursos da Box</button>
+      <button class="b s" id="escImport" style="align-self:flex-end" title="Traz as turmas das pastas A01 - Curso (25/28) da análise do Box360">Importar turmas e cursos da Box</button>
     </div>
     <div class="tiles" id="escTiles"></div>
     <div id="escAvisos"></div>
@@ -845,7 +849,7 @@ body.temfundos nav.side{padding-bottom:16px}
 <section id="anos">
   <div class="card">
     <h2>Anos letivos</h2>
-    <p class="hint">Só um ano letivo está <b>ativo</b> de cada vez — é o que todos os módulos usam (relatórios e emails do BoxCheck, horário do EduSchedule). As turmas passam de um ano para o outro sozinhas, pelo ano de início e de fim de cada uma.</p>
+    <p class="hint">Só um ano letivo está <b>ativo</b> de cada vez — é o que todos os módulos usam (relatórios e emails do Box360, horário do Horário360). As turmas passam de um ano para o outro sozinhas, pelo ano de início e de fim de cada uma.</p>
     <table class="rt">
       <thead><tr><th>Ano letivo</th><th>Início das aulas</th><th>Fim das aulas</th><th>Estado</th><th class="hm">Turmas</th><th></th></tr></thead>
       <tbody id="tbAnos"></tbody>
@@ -865,7 +869,7 @@ body.temfundos nav.side{padding-bottom:16px}
   </div>
   <div class="card">
     <h2>Interrupções letivas e feriados</h2>
-    <p class="hint">Vão para o calendário do EduSchedule (e para as aulas que se contam em cada período).</p>
+    <p class="hint">Vão para o calendário do Horário360 (e para as aulas que se contam em cada período).</p>
     <div class="row" style="margin-bottom:10px"><label style="width:180px">Ano letivo<select id="ferAno"></select></label><button class="b s" id="ferAdd" style="align-self:flex-end">Acrescentar</button></div>
     <table class="rt">
       <thead><tr><th>Designação</th><th>De</th><th>Até</th><th></th></tr></thead>
@@ -896,7 +900,7 @@ body.temfundos nav.side{padding-bottom:16px}
 <section id="tur">
   <div class="card">
     <h2>Turmas</h2>
-    <p class="hint">Uma turma vive vários anos letivos (do ano de <b>início</b> até ao ano de <b>fim</b>: <code>A04 (25/28)</code> está em 2025/2026, 2026/2027 e 2027/2028). Aparecem por omissão as do ano letivo ativo, <b id="turAnoLbl"></b>. O <b>nome na Box</b> liga a turma às pastas do BoxCheck. O <b>projeto FSE</b> é o código da operação do Fundo Social Europeu que financia a turma (ex.: <code>ACORES-10-5571-FSE-000123</code>).</p>
+    <p class="hint">Uma turma vive vários anos letivos (do ano de <b>início</b> até ao ano de <b>fim</b>: <code>A04 (25/28)</code> está em 2025/2026, 2026/2027 e 2027/2028). Aparecem por omissão as do ano letivo ativo, <b id="turAnoLbl"></b>. O <b>nome na Box</b> liga a turma às pastas do Box360. O <b>projeto FSE</b> é o código da operação do Fundo Social Europeu que financia a turma (ex.: <code>ACORES-10-5571-FSE-000123</code>).</p>
     <form id="turForm" class="row" style="background:#f6f8fb;border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:14px" autocomplete="off">
       <label style="width:100px">Turma<input type="text" id="tCod" placeholder="ex.: A07" required></label>
       <label class="grow">Curso<select id="tCurso"></select></label>
@@ -921,7 +925,7 @@ body.temfundos nav.side{padding-bottom:16px}
 <section id="for">
   <div class="card">
     <h2>Formandos</h2>
-    <p class="hint">Os formandos (alunos) da escola, com a turma — dados gerais partilhados por todos os módulos. No <b>EduSchedule</b> aparecem em <b>Alunos e cursos</b> (lá só se escolhem as aulas e as opções de cada um).</p>
+    <p class="hint">Os formandos (alunos) da escola, com a turma — dados gerais partilhados por todos os módulos. No <b>Horário360</b> aparecem em <b>Alunos e cursos</b> (lá só se escolhem as aulas e as opções de cada um).</p>
     <form id="forForm" class="row" style="background:#f6f8fb;border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:14px" autocomplete="off">
       <label style="width:90px">N.º<input type="text" id="fNum"></label>
       <label class="grow">Nome<input type="text" id="fNome" placeholder="Nome do formando" required></label>
@@ -948,7 +952,7 @@ body.temfundos nav.side{padding-bottom:16px}
 
 <section id="esch" data-fixo="1">
   <div id="esMsg"></div>
-  <iframe id="esFr" title="EduSchedule — horários da escola"></iframe>
+  <iframe id="esFr" title="Horário360 — horários da escola"></iframe>
 </section>
 
 
@@ -956,7 +960,7 @@ body.temfundos nav.side{padding-bottom:16px}
 <section id="prof">
   <div class="card">
     <h2>Professores</h2>
-    <p class="hint">Os professores e formadores da escola, comuns a todos os módulos da EPISJ 360: no <b>BoxCheck</b> atribuem-se as disciplinas de cada turma em <b>Atribuições</b> e o email é usado em <b>Enviar</b>; no <b>EduSchedule</b> aparecem com a <b>sigla</b> nos horários. Quem for acrescentado no EduSchedule aparece também aqui.</p>
+    <p class="hint">Os professores e formadores da escola, comuns a todos os módulos da EPISJ 360: no <b>Box360</b> atribuem-se as disciplinas de cada turma em <b>Atribuições</b> e o email é usado em <b>Enviar</b>; no <b>Horário360</b> aparecem com a <b>sigla</b> nos horários. Quem for acrescentado no Horário360 aparece também aqui.</p>
     <form id="profForm" class="row" style="background:#f6f8fb;border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:14px" autocomplete="off">
       <label style="width:130px">Código interno<input type="text" id="pCod" placeholder="ex.: 0123"></label>
       <label class="grow">Nome<input type="text" id="pNome" placeholder="Nome do professor" required></label>
@@ -1046,7 +1050,7 @@ body.temfundos nav.side{padding-bottom:16px}
     <h2>Pastas da Box <span class="tag ok" style="vertical-align:middle">só leitura</span></h2>
     <p class="hint">A app só lê nomes de pastas e ficheiros. Não abre, altera, move nem apaga nada na Box.</p>
     <div id="loginBox" class="boxlogin">
-      <p style="margin:0 0 10px"><b>Ligar a Box</b> — a Box só é precisa no módulo BoxCheck, para ler as pastas da Gestão Documental. Sem ela, o resto do BoxCheck abre com a última análise guardada.</p>
+      <p style="margin:0 0 10px"><b>Ligar a Box</b> — a Box só é precisa no módulo Box360, para ler as pastas da Gestão Documental. Sem ela, o resto do Box360 abre com a última análise guardada.</p>
       <button class="b" id="oaGo">Entrar com a Box</button>
       <p class="hint" style="margin:8px 0 0">Só é preciso entrar uma vez neste navegador: a sessão renova-se sozinha.</p>
       <div id="wkSet" style="display:none;margin-top:12px">
@@ -1287,7 +1291,7 @@ body.temfundos nav.side{padding-bottom:16px}
   </div>
   <div class="card" id="praAuto">
     <h2>Envio automático dos avisos</h2>
-    <p class="hint">Com o envio automático ligado, sempre que a BoxCheck estiver aberta (neste ou noutro computador) atualiza a análise e envia, pelo Office 365, os avisos que estiverem na hora — só a quem ainda tem documentos em falta e nunca duas vezes o mesmo aviso. Se a app estiver fechada no dia marcado, o aviso sai na próxima vez que a abrir.</p>
+    <p class="hint">Com o envio automático ligado, sempre que a Box360 estiver aberta (neste ou noutro computador) atualiza a análise e envia, pelo Office 365, os avisos que estiverem na hora — só a quem ainda tem documentos em falta e nunca duas vezes o mesmo aviso. Se a app estiver fechada no dia marcado, o aviso sai na próxima vez que a abrir.</p>
     <div class="row">
       <label class="chip" style="align-self:center"><input type="checkbox" id="avAuto"> <b>Envio automático ligado</b></label>
       <label style="width:130px">Hora dos envios<input type="time" id="avHora" value="09:00"></label>
@@ -1375,7 +1379,7 @@ body.temfundos nav.side{padding-bottom:16px}
   </div>
   <div class="card">
     <h2>Envio pelo Office 365</h2>
-    <p class="hint">Com esta ligação, o BoxCheck envia os emails <b>a partir da sua conta da escola</b>, com o relatório em <b>PDF em anexo</b> — sem abrir o programa de email. Os emails ficam nos seus Itens Enviados. A app só pede permissão para <b>enviar email em seu nome</b> (e ler o seu nome); não lê a sua caixa de correio.</p>
+    <p class="hint">Com esta ligação, o Box360 envia os emails <b>a partir da sua conta da escola</b>, com o relatório em <b>PDF em anexo</b> — sem abrir o programa de email. Os emails ficam nos seus Itens Enviados. A app só pede permissão para <b>enviar email em seu nome</b> (e ler o seu nome); não lê a sua caixa de correio.</p>
     <div class="row">
       <label class="grow">ID da aplicação (cliente)<input type="text" id="msClient" placeholder="ex.: 1a2b3c4d-…" spellcheck="false"></label>
       <label class="grow">ID do diretório (inquilino) ou domínio<input type="text" id="msTenant" placeholder="ex.: episj.com ou 5e6f7a8b-…" spellcheck="false"></label>
@@ -1462,6 +1466,12 @@ body.temfundos nav.side{padding-bottom:16px}
     </div>
   </div>
   <div class="card">
+    <h2>Módulos ligados</h2>
+    <p class="hint">Desligue um módulo para o esconder de toda a gente. Só os <b>administradores</b> o continuam a ver (com a marca <b>desligado</b> na barra de cima), para o prepararem antes de o abrir à escola. Os dados não se perdem.</p>
+    <div class="utimods" id="utiMods"></div>
+    <p class="hint" id="utiModsAviso" style="margin:8px 0 0"></p>
+  </div>
+  <div class="card">
     <h2>O que cada perfil vê</h2>
     <p class="hint">Marque os separadores que cada perfil pode abrir. Os módulos sem nenhum separador marcado desaparecem da barra de cima. Os administradores veem sempre tudo.</p>
     <div style="overflow:auto"><table class="vmx" id="utiVis"></table></div>
@@ -1537,7 +1547,7 @@ body.temfundos nav.side{padding-bottom:16px}
     <h3>Horário do mapa</h3>
     <div class="row"><label style="width:140px">Abre às<input type="time" id="rcAbre" step="900"></label><label style="width:140px">Fecha às<input type="time" id="rcFecha" step="900"></label><label class="chk" style="align-self:flex-end;display:flex;gap:6px;align-items:center"><input type="checkbox" id="rcSab"> Mostrar sábado</label></div>
     <label style="display:block;margin-top:14px">Tempos letivos <span class="hint">(um por linha, ex.: 08:30-09:20 — o mapa da semana segue estes tempos; os intervalos e o almoço são o que fica entre eles)</span><textarea id="rcTempos" rows="7" spellcheck="false" style="font-variant-numeric:tabular-nums;max-width:260px;display:block"></textarea></label>
-    <div class="row" style="margin-top:6px"><button class="b s" id="rcTemposES">Copiar do horário do EduSchedule</button><button class="b s" id="rcTemposRepor">Repor os da escola</button></div>
+    <div class="row" style="margin-top:6px"><button class="b s" id="rcTemposES">Copiar do horário do Horário360</button><button class="b s" id="rcTemposRepor">Repor os da escola</button></div>
     <div id="rcNuv" style="margin-top:14px"></div>
   </div>
 </section>
@@ -1550,8 +1560,8 @@ body.temfundos nav.side{padding-bottom:16px}
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.18"; // versão da EPISJ 360 — sobe a cada alteração publicada
-const BC_VER="1.17"; // versão do módulo BoxCheck
+const VERSAO="0.9.19"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
 const $=s=>document.querySelector(s);
@@ -1563,7 +1573,7 @@ const splitList=s=>String(s||"").split(/[,;]/).map(x=>norm(x).replace(/^\./,""))
 
 const KEY="entregas_box_v1";
 // EPISJ 360 0.9 — perfis: EU = conta do Office 365 e o seu perfil; RO = só leitura (Professor, Formando: os dados vêm do que a Direção publicou)
-let EU=null,RO=false,PREV="",UTI=null;
+let EU=null,RO=false,PREV="",UTI=null,MODS_OFF=[];
 /* ---------- modelos por omissão (EPISJ) ---------- */
 // [nome, secção/subpasta, "o texto deve conter" (pelo menos uma destas palavras)]
 const DTP_TYPES=[["Planificação","006","planifica, objetivos, objectivos, conteudos, competencias, estrategias, calendariza, carga horaria, aulas previstas, sumario"],
@@ -1765,7 +1775,7 @@ function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clea
 async function copy(txt){try{await navigator.clipboard.writeText(txt);toast("Copiado")}catch(e){toast("Não foi possível copiar — selecione o texto e use Ctrl+C")}}
 
 /* ---------- módulos da EPISJ 360 ---------- */
-const MODULOS=[{id:"escola",nome:"Escola",inicio:"esc"},{id:"boxcheck",nome:"BoxCheck",inicio:"box"},{id:"eduschedule",nome:"EduSchedule",inicio:"esch"},{id:"roomcheck",nome:"RoomCheck",inicio:"rcMapa"}]; // novos módulos entram aqui, com um grupo .mgrp[data-m] no menu lateral
+const MODULOS=[{id:"escola",nome:"Escola360",inicio:"esc"},{id:"boxcheck",nome:"Box360",inicio:"box"},{id:"eduschedule",nome:"Horário360",inicio:"esch"},{id:"roomcheck",nome:"Sala360",inicio:"rcMapa"}]; // novos módulos entram aqui, com um grupo .mgrp[data-m] no menu lateral
 let curMod=(()=>{try{const m=localStorage.getItem("guide_mod");return MODULOS.some(x=>x.id===m)?m:MODULOS[0].id}catch(e){return MODULOS[0].id}})();
 function mostrarModulo(id,abrir){curMod=id;try{localStorage.setItem("guide_mod",id)}catch(e){}
   document.querySelectorAll("#mods button").forEach(b=>b.classList.toggle("on",b.dataset.m===id));
@@ -1776,7 +1786,9 @@ function modDeTab(t){const b=document.querySelector(`#nav button[data-t="${t}"]`
 function primeiroPermitido(m){const M=MODULOS.find(x=>x.id===m);if(M&&podeVer(M.inicio))return M.inicio;
   const b=[...document.querySelectorAll(`#nav .mgrp[data-m="${m}"] button[data-t]`)].find(x=>podeVer(x.dataset.t));return b?b.dataset.t:null}
 function visAtual(){if(PREV&&UTI)return new Set(UTI.loja.vis[PREV]||UTI.visOmissao[PREV]||[]);if(!EU||!EU.vis)return null;return new Set(EU.vis)}
-function podeVer(t){const v=visAtual();return !v||v.has(t)}
+// 0.9.19: módulos desligados pelo administrador — ninguém os vê, só os administradores (e não na pré-visualização de um perfil)
+function modEscondido(m){return !!m&&MODS_OFF.includes(m)&&!!EU&&(!EU.admin||!!PREV)}
+function podeVer(t){const v=visAtual();if(MODS_OFF.length&&modEscondido(modDeTab(t)))return false;return !v||v.has(t)}
 $("#mods").addEventListener("click",e=>{const b=e.target.closest("button[data-m]");if(b)mostrarModulo(b.dataset.m,true)});
 mostrarModulo(curMod,false);
 
@@ -1784,10 +1796,10 @@ mostrarModulo(curMod,false);
 let curTab="box";
 $("#nav").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;show(b.dataset.t)});
 function show(t){if(!podeVer(t)){const f=primeiroPermitido(modDeTab(t)||curMod);if(!f||f===t)return;t=f}
-  curTab=t;document.body.classList.toggle("esch",t==="esch");{const m=modDeTab(t);if(m&&m!==curMod)mostrarModulo(m,false)}document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
+  curTab=t;document.body.classList.toggle("esch",t==="esch");try{if(!(LOGOS.anos&&LOGOS.anos.__ok))lgMigrar();aplicarLogos()}catch(e){}{const m=modDeTab(t);if(m&&m!==curMod)mostrarModulo(m,false)}document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
   document.querySelectorAll("main>section").forEach(s=>s.classList.toggle("on",s.id===t));
   if(t==="rel")renderReport(); if(t==="est")renderEst(); if(t==="pas")renderTree(); if(t==="alt"){renderAlt();if(SES&&lastListing&&!scanBusy&&Date.now()-(lastListing.t||0)>120000)altAtualizar(true)} if(t==="rel"||t==="alt")verificarFundo(); if(t==="env")renderSend(); if(t==="def")renderDef(); if(t==="cop"){$("#cfgTxt").value=JSON.stringify(cfg,null,2);renderRP()} if(t==="pra")renderPrazos(); if(t==="esc")renderEscPainel(); if(t==="anos")renderAnos(); if(t==="cur")renderCursos(); if(t==="tur")renderTurmas(); if(t==="for")renderFormandos(); if(t==="esch")esMostrar(); if(t==="meu")renderMeu(); if(t==="mh")renderMh(); if(t==="uti")renderUti(); if(t.startsWith("rc"))try{rcRender(t)}catch(e){console.warn(e)}}
-function refreshAll(){renderAll();try{escRender();esRecarregar()}catch(_){}if(curTab==="pra")renderPrazos();if(curTab==="rel")renderReport();if(curTab==="est")renderEst();if(curTab==="env")renderSend();if(curTab==="pas")renderTree();if(curTab==="alt")renderAlt();if(curTab==="cop"){$("#cfgTxt").value=JSON.stringify(cfg,null,2);renderRP()}}
+function refreshAll(){renderAll();if(curTab&&curTab.startsWith("rc"))try{rcRender(curTab)}catch(_){}try{escRender();esRecarregar()}catch(_){}if(curTab==="pra")renderPrazos();if(curTab==="rel")renderReport();if(curTab==="est")renderEst();if(curTab==="env")renderSend();if(curTab==="pas")renderTree();if(curTab==="alt")renderAlt();if(curTab==="cop"){$("#cfgTxt").value=JSON.stringify(cfg,null,2);renderRP()}}
 const debounce=(fn,ms)=>{let h;return()=>{clearTimeout(h);h=setTimeout(fn,ms)}};
 
 /* ---------- documentos exigidos ---------- */
@@ -2871,7 +2883,7 @@ function boxArrancar(){loginUI();
   else boxEstado("login",window.__authErr||"")}
 /* EPISJ 360 0.9.13 — barra de progresso 0–100% enquanto os módulos carregam */
 const GP={alvo:0,v:0,raf:0,mods:{}};
-const GP_MODS=[["escola","Escola"],["boxcheck","BoxCheck"],["eduschedule","EduSchedule"],["roomcheck","RoomCheck"]];
+const GP_MODS=[["escola","Escola360"],["boxcheck","Box360"],["eduschedule","Horário360"],["roomcheck","Sala360"]];
 const GP_EST={wait:"",ok:"",erro:"com erro",off:"por ligar",bg:"em fundo"};
 function gpDesenhar(){const d=GP.alvo-GP.v;GP.v=Math.abs(d)<.3?GP.alvo:GP.v+d*.14;const p=Math.round(GP.v);
   $("#gpFill").style.width=GP.v+"%";$("#gpPct").textContent=p+"%";$("#gpBar").setAttribute("aria-valuenow",p);
@@ -2898,10 +2910,10 @@ function connected(me){
   $("#boxBrowse").style.display="block";
   // ao entrar: procura sozinha o que mudou desde a última análise (poucos pedidos) e continua a leitura dos documentos
   nuvemUI();
-  const sinc=pronto.then(()=>{gpPasso(80,"BoxCheck: a trazer análises e atribuições…");return nuvemTrazer()})
-    .then(()=>{gpPasso(85,"BoxCheck: a trazer prazos e avisos…");return avTrazerNuvem()})
-    .then(()=>{gpPasso(89,"RoomCheck: a trazer as reservas…");return rcTrazer(false)})
-    .then(()=>{gpPasso(94,"A sincronizar a Escola e o EduSchedule…");return esTrazerNuvem()});
+  const sinc=pronto.then(()=>{gpPasso(80,"Box360: a trazer análises e atribuições…");return nuvemTrazer()})
+    .then(()=>{gpPasso(85,"Box360: a trazer prazos e avisos…");return avTrazerNuvem()})
+    .then(()=>{gpPasso(89,"Sala360: a trazer as reservas…");return rcTrazer(false)})
+    .then(()=>{gpPasso(94,"A sincronizar a Escola e o Horário360…");return esTrazerNuvem()});
   sinc.then(()=>{guidePubAgendar();return browse(curFolder.id,curFolder.path)}).then(()=>{if(lastListing&&lastListing.rootId===curFolder.id)runScan(false,true);else verificarFundo()});
   return sinc; // 0.9.13: o arranque espera por isto para chegar aos 100%
 }
@@ -3232,9 +3244,13 @@ const LG_SLOTS=[{k:"main",t:"Logotipo Principal",d:"Canto superior esquerdo de t
 /* EPISJ 360 0.9.7: o logótipo do rodapé é de cada ano letivo (LOGOS.anos[id].foot) */
 const LG_FUNDOS_PADRAO={ini:2026,src:"img/fundos-2026-2027.png"}; // Açores 2030 · Governo dos Açores · Portugal 2030 · UE (para 2026/2027, até ser mudado nas Definições)
 function lgAnoId(){try{return anoAtivo().id}catch(e){return""}}
+// 0.9.19: a barra de baixo mostra os logótipos do ano ativo; se esse ano ainda não tiver, usa os do ano mais recente que tiver (só um "Remover" explícito a esconde)
+function lgFootBarra(){const f=lgGet("foot");if(f||f===null)return f;const A=(LOGOS.anos||{}),ini=(anoAtivo()||{}).ini||9999;
+  const anos=escData().anos.filter(a=>A[a.id]&&A[a.id].foot).sort((a,b)=>(b.ini<=ini)-(a.ini<=ini)||b.ini-a.ini);return anos.length?A[anos[0].id].foot:undefined}
 function lgGet(k){if(k!=="foot")return LOGOS[k];const a=LOGOS.anos&&LOGOS.anos[lgAnoId()];return a?a.foot:undefined}
 function lgSet(k,v){if(k!=="foot"){if(v)LOGOS[k]=v;else delete LOGOS[k];return}const id=lgAnoId();if(!id)return;LOGOS.anos=LOGOS.anos||{};const a=LOGOS.anos[id]=LOGOS.anos[id]||{};if(v)a.foot=v;else{a.foot=null}}
-async function lgMigrar(){try{if(LOGOS.anos&&LOGOS.anos.__ok)return;LOGOS.anos=LOGOS.anos||{};const id=lgAnoId();if(!id)return;
+let LG_MIG=null;function lgMigrar(){if(!LG_MIG)LG_MIG=lgMigrar0().finally(()=>{LG_MIG=null});return LG_MIG}
+async function lgMigrar0(){try{if(LOGOS.anos&&LOGOS.anos.__ok)return;LOGOS.anos=LOGOS.anos||{};const id=lgAnoId();if(!id)return;
   if(LOGOS.foot){if(LOGOS.anos[id]===undefined)LOGOS.anos[id]={foot:LOGOS.foot};delete LOGOS.foot}
   // os logótipos de 2026/2027 entram já no ano letivo de 2026/2027
   const a=escData().anos.find(x=>x.ini===LG_FUNDOS_PADRAO.ini);
@@ -3249,7 +3265,7 @@ const IC_IMG=`<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" 
 let lgAlvo="main";
 function guardarLogos(){try{localStorage.setItem(LGKEY,JSON.stringify(LOGOS))}catch(e){toast("Não foi possível guardar a imagem neste navegador (é grande demais?)")}marcarCfg();aplicarLogos();renderDef()}
 function aplicarLogos(){const m=LOGOS.main;
-  {const fb=document.querySelector("#fundos"),f=lgGet("foot");if(fb){const im=fb.querySelector("img");if(f){im.src=f.src;fb.hidden=false}else{fb.hidden=true;im.removeAttribute("src")}document.body.classList.toggle("temfundos",!!f);lgNavW()}}
+  {const fb=document.querySelector("#fundos");let f;try{f=lgFootBarra()}catch(e){f=lgGet("foot")}if(fb){const im=fb.querySelector("img");if(f){if(im.getAttribute("src")!==f.src)im.src=f.src;fb.hidden=false}else{fb.hidden=true;im.removeAttribute("src")}document.body.classList.toggle("temfundos",!!f);lgNavW()}}
   const top=document.querySelector(".sfoot"),ti=top&&top.querySelector("img"),gi=document.querySelector(".gschl");
   if(ti){if(!ti.dataset.orig)ti.dataset.orig=ti.src;ti.src=m?m.src:ti.dataset.orig;top.classList.toggle("wbg",!!(m&&m.bg));if(m)top.style.display=""}
   if(gi){if(!gi.dataset.orig)gi.dataset.orig=gi.src;gi.src=m?m.src:gi.dataset.orig;if(m)gi.style.display=""}}
@@ -3321,7 +3337,7 @@ function pdfFormadorSec(doc,t,y,geral){
     {0:{cellWidth:19},1:{cellWidth:28},2:{cellWidth:34},3:{cellWidth:31,fontStyle:"bold"},4:{cellWidth:40}})+10}
 async function pdfFormador(t){const J=await loadPDF(),doc=new J({unit:"mm",format:"a4"});
   const y=pdfTitulo(doc,"Documentação em falta na Box",pdfSub());pdfFormadorSec(doc,t,y,false);
-  pdfMoldura(doc,"Escola Profissional da Ilha de São Jorge · EPISJ 360 · BoxCheck");return doc}
+  pdfMoldura(doc,"Escola Profissional da Ilha de São Jorge · EPISJ 360 · Box360");return doc}
 async function pdfGeral(){const J=await loadPDF(),doc=new J({unit:"mm",format:"a4"}),T=byTeacher(evaluate());
   const tot=T.reduce((a,t)=>a+t.tot,0),ok=T.reduce((a,t)=>a+t.ok,0);
   let y=pdfTitulo(doc,"Relatório de documentação não entregue",pdfSub()+` · Entregue: ${ok}/${tot} (${tot?Math.round(ok/tot*100):0}%) · Em falta: ${tot-ok}`);
@@ -3329,7 +3345,7 @@ async function pdfGeral(){const J=await loadPDF(),doc=new J({unit:"mm",format:"a
   doc.setFont("helvetica","bold");doc.setFontSize(11.5);doc.setTextColor(25);doc.text("Resumo por formador",14,y);
   y=pdfTabela(doc,y+3,["Formador","Email","Em falta","Entregue"],res,{2:{halign:"right",cellWidth:20},3:{halign:"right",cellWidth:20}})+12;
   for(const t of T)if(t.miss)y=pdfFormadorSec(doc,t,y,true);
-  pdfMoldura(doc,"Escola Profissional da Ilha de São Jorge · EPISJ 360 · BoxCheck · Relatório geral");return doc}
+  pdfMoldura(doc,"Escola Profissional da Ilha de São Jorge · EPISJ 360 · Box360 · Relatório geral");return doc}
 const ficheiroNome=s=>String(s).replace(/[\\/:*?"<>|]+/g,"-").replace(/\s+/g," ").trim();
 const pdfNomeF=t=>ficheiroNome(`Documentos em falta - ${t.p.nome} - ${anoLetivo().replace("/","-")}.pdf`);
 const pdfNomeG=()=>ficheiroNome(`Relatório de documentação não entregue - ${hoje()}.pdf`);
@@ -3751,7 +3767,7 @@ function resumoTexto(p,agora){const L=prazoItens(p,agora),c=contar(L),G=prazoPor
     for(const x of g.it.filter(x=>x.est==="falta"||x.est==="atraso"))s+=linhaItem(x).replace(/^• /,"   • ")+"\n"}
   return s}
 async function enviarItem(x,manual){const agora=Date.now();
-  if(x.resumo){await msEnviar({to:x.para,cc:"",subject:`Prazo “${x.p.nome}” (${prazoPT(x.p)}) — quem não cumpriu`,body:resumoTexto(x.p,agora)+"\n\n— Enviado pela EPISJ 360 (módulo BoxCheck)"});return}
+  if(x.resumo){await msEnviar({to:x.para,cc:"",subject:`Prazo “${x.p.nome}” (${prazoPT(x.p)}) — quem não cumpriu`,body:resumoTexto(x.p,agora)+"\n\n— Enviado pela EPISJ 360 (módulo Box360)"});return}
   await msEnviar({to:x.g.p.email,cc:msCfg().cc,subject:preencherAviso(x.a.subj,x.p,x.a,x.g,agora),body:preencherAviso(x.a.body,x.p,x.a,x.g,agora)})}
 async function enviarLista(lista,manual,onProg){let n=0;const falhas=[];
   for(const x of lista){onProg&&onProg(n+falhas.length+1,lista.length,x);
@@ -3884,7 +3900,7 @@ $("#praItens").addEventListener("click",e=>{const v=e.target.closest("[data-pver
   if(v){PSEL=v.dataset.pver;renderPrazos();$("#praRes").scrollIntoView({behavior:"smooth"})}
   if(d){PED=d.dataset.ped;PSEL=PSEL||PED;renderPrazos();$("#praEd").scrollIntoView({behavior:"smooth"})}});
 $("#avAuto").onchange=e=>{const A=avCfg();
-  if(e.target.checked&&!confirm("Ligar o envio automático?\n\nSempre que a BoxCheck estiver aberta, os avisos que estiverem na hora saem sozinhos pelo Office 365, para quem tiver documentos em falta.")){e.target.checked=false;return}
+  if(e.target.checked&&!confirm("Ligar o envio automático?\n\nSempre que a Box360 estiver aberta, os avisos que estiverem na hora saem sozinhos pelo Office 365, para quem tiver documentos em falta.")){e.target.checked=false;return}
   A.auto=e.target.checked;save();avEstadoUI();if(A.auto)correrAvisos()};
 $("#avHora").onchange=e=>{avCfg().hora=e.target.value||"09:00";save();renderPrazos()};
 $("#avPara").onchange=e=>{avCfg().para=e.target.value.trim();save()};
@@ -4055,11 +4071,11 @@ function renderEscPainel(){const e=escData(),a=anoAtivo(),T=turmasDoAno(a);
   $("#escTiles").innerHTML=[[a.nome,"Ano letivo ativo","anos"],[T.length,"Turmas neste ano","tur"],[e.cursos.length,"Cursos","cur"],[cfg.profs.length,"Professores","prof"],[(e.formandos||[]).length,"Formandos","for"],[aulas?aulas:"—",aulas?"Tempos colocados no horário":"Horário por fazer","esch"]]
     .map(([v,l,t])=>`<button class="tile" data-ir="${t}" style="text-align:left;cursor:pointer;font:inherit"><div class="v">${esc(v)}</div><div class="l">${esc(l)}</div></button>`).join("");
   const av=[];
-  if(!e.cursos.length&&!e.turmas.length)av.push(`Ainda não há cursos nem turmas. Use <b>Importar da Box</b> (traz as turmas das pastas <code>A01 - Curso (25/28)</code> da análise do BoxCheck) ou crie-os em <b>Cursos</b> e <b>Turmas</b>.`);
+  if(!e.cursos.length&&!e.turmas.length)av.push(`Ainda não há cursos nem turmas. Use <b>Importar da Box</b> (traz as turmas das pastas <code>A01 - Curso (25/28)</code> da análise do Box360) ou crie-os em <b>Cursos</b> e <b>Turmas</b>.`);
   if(semCurso)av.push(`${semCurso} turma(s) deste ano sem curso.`);
   if(semDT)av.push(`${semDT} turma(s) deste ano sem diretor de turma.`);
   if(semCnq)av.push(`${semCnq} curso(s) ainda não ligados ao Catálogo Nacional de Qualificações.`);
-  if(semMail)av.push(`${semMail} professor(es) sem email — não recebem os avisos do BoxCheck.`);
+  if(semMail)av.push(`${semMail} professor(es) sem email — não recebem os avisos do Box360.`);
   $("#escAvisos").innerHTML=av.length?av.map(t=>`<div class="msg info" style="margin:0 0 8px">${t}</div>`).join(""):`<div class="msg ok" style="margin:0">Tudo em ordem para ${esc(a.nome)}.</div>`}
 $("#escNome").addEventListener("change",e=>{escData().nome=e.target.value.trim()||"Escola Profissional da Ilha de São Jorge";save();esRecarregar()});
 $("#escTiles").addEventListener("click",e=>{const b=e.target.closest("[data-ir]");if(!b)return;if(b.dataset.ir==="esch")mostrarModulo("eduschedule",true);else show(b.dataset.ir)});
@@ -4068,7 +4084,7 @@ $("#escImport2").onclick=()=>escImportarBox();
 
 /* importa da análise do BoxCheck as turmas no formato "A04 - Mecatrónica Automóvel (25/28)" e cria os cursos */
 function escImportarBox(){let T=[];try{T=turmasSNQ()}catch(x){}
-  if(!T.length){toast("Ainda não há turmas na análise da Box — faça primeiro a análise em BoxCheck › Gestão Documental");return}
+  if(!T.length){toast("Ainda não há turmas na análise da Box — faça primeiro a análise em Box360 › Gestão Documental");return}
   ponto("Antes de importar as turmas da Box");const e=escData();let nc=0,nt=0,nu=0;
   for(const s of T){const cod=((s.match(/^\s*([a-z]?\d{1,4}[a-z]?)\b/i)||[])[1]||s).toUpperCase(),cn=cursoDe(s)||"(sem curso)";
     const m=s.match(/\(\s*(\d{2,4})\s*[-\/]\s*(\d{2,4})\s*\)/);let ai=null,af=null;if(m){ai=+m[1];af=+m[2];if(ai<100)ai+=2000;if(af<100)af+=2000}
@@ -4266,7 +4282,7 @@ function esdGuardar(){if(RO)return;guidePubAgendar();ESD.t=Date.now();DB.put("kv
 async function esTrazerNuvem(){try{await esdPronto;if(!SES||!workerUrl()||NUV.ativo===false)return;
   const idx=(await (await nuvem("GET","")).json()).itens||{};
   if(idx.ES&&(idx.ES.t||0)>(ESD.t||0)){const j=await nuvemGet("ES");if(j&&typeof j==="object"){ESD=Object.assign({t:0,porAno:{},copias:{},mapaT:{},mapaC:{},ligT:{},ligC:{},mapaA:{},ligA:{}},j);DB.put("kv","esched",ESD);esRecarregar(true)}}
-  else if((ESD.t||0)>((idx.ES||{}).t||0))await nuvemPut("ES",ESD,ESD.t)}catch(e){if(e.kind!=="nokv")console.warn("EduSchedule/nuvem",e)}}
+  else if((ESD.t||0)>((idx.ES||{}).t||0))await nuvemPut("ES",ESD,ESD.t)}catch(e){if(e.kind!=="nokv")console.warn("Horário360/nuvem",e)}}
 
 let ES_ANO=null,ES_SIG="";
 function esAno(){return escData().anos.find(a=>a.id===ES_ANO)||anoAtivo()}
@@ -4350,7 +4366,7 @@ async function esAbrir(){await esdPronto;const fr=$("#esFr");fr.classList.remove
   fr.onload=()=>esAjustar(fr);
   if(esMesmaOrigem()){fr.removeAttribute("srcdoc");fr.src=ES_URL.replace(location.origin,"")+"?guide="+encodeURIComponent(VERSAO)+"&t="+Date.now();return}
   try{let h=await (await fetch(ES_URL+"?t="+Date.now(),{cache:"no-store"})).text();h=h.replace(/<head([^>]*)>/i,`<head$1><base href="${ES_URL.replace(/[^/]*$/,"")}">`);fr.removeAttribute("src");fr.srcdoc=h}
-  catch(e){$("#esMsg").innerHTML=`<div class="msg bad">Não foi possível abrir o EduSchedule (${esc(e.message)}). Verifique a ligação à Internet.</div>`}}
+  catch(e){$("#esMsg").innerHTML=`<div class="msg bad">Não foi possível abrir o Horário360 (${esc(e.message)}). Verifique a ligação à Internet.</div>`}}
 /* ---------- EPISJ 360 0.6: o EduSchedule com o aspeto e as animações da EPISJ 360 ---------- */
 // O tema é posto pela EPISJ 360 no documento do EduSchedule quando ele abre: o ficheiro do EduSchedule (e a EduSpruce) não muda.
 const ES_TEMA="/* EPISJ 360 0.6 \u2014 o EduSchedule com o aspeto da EPISJ 360 (posto pela EPISJ 360 ao abrir; o EduSchedule da EduSpruce n\u00e3o muda) */\n[data-theme=guide]{color-scheme:light;\n  --color-base-100:#fff;--color-base-200:#f8f9fb;--color-base-300:#e3e7ee;--color-base-content:#1b2333;\n  --color-primary:#163269;--color-primary-content:#fff;--color-secondary:#2f5fb8;--color-secondary-content:#fff;\n  --color-accent:#3db166;--color-accent-content:#fff;--color-neutral:#1b2333;--color-neutral-content:#f8f9fb;\n  --color-info:#2f5fb8;--color-info-content:#fff;--color-success:#2f9e57;--color-success-content:#fff;\n  --color-warning:#b45309;--color-warning-content:#fff;--color-error:#dc2626;--color-error-content:#fff;\n  --radius-selector:7px;--radius-field:7px;--radius-box:10px;--size-selector:.25rem;--size-field:.25rem;--border:1px;--depth:0;--noise:0;\n  --fbody:Poppins,system-ui,sans-serif;--fdisplay:Poppins,system-ui,sans-serif;\n  --g-brand:#163269;--g-brand2:#0f2552;--g-brandbg:#eef3fc;--g-sky:#d4e1fa;--g-accent:#3db166;--g-accent2:#2f9e57;--g-ink:#1b2333;--g-muted:#6b7385;--g-line:#e3e7ee;--g-line2:#d3d9e3;--g-ring:rgba(22,50,105,.25);\n  --g-sh-sm:0 1px 2px rgba(15,23,42,.05);--g-sh:0 1px 3px rgba(15,23,42,.06),0 1px 2px rgba(15,23,42,.04)}\n[data-theme=guide] body{font-family:Poppins,system-ui,sans-serif;font-size:13.5px;letter-spacing:0;-webkit-font-smoothing:antialiased;background:#f8f9fb;color:var(--g-ink)}\n[data-theme=guide] h1,[data-theme=guide] h2,[data-theme=guide] h3,[data-theme=guide] .fd{font-family:Poppins,system-ui,sans-serif;letter-spacing:-.01em}\n/* o que j\u00e1 est\u00e1 no topo da EPISJ 360 (escola, ano letivo, tema) n\u00e3o se repete */\n[data-theme=guide] #school,[data-theme=guide] #ano,[data-theme=guide] #tema,[data-theme=guide] #es-casa{display:none!important}\n/* barra de cima: como o topo da EPISJ 360 */\n[data-theme=guide] header.navbar{min-height:52px;background:rgba(255,255,255,.85);backdrop-filter:saturate(1.6) blur(10px);border-bottom:1px solid var(--g-line)!important;padding:0 18px}\n[data-theme=guide] #status{font-size:12.5px;color:var(--g-muted);opacity:1}\n[data-theme=guide] header .join{border:1px solid var(--g-line);border-radius:999px;overflow:hidden;background:#fff}\n[data-theme=guide] header .join .btn{border:0;border-radius:0;background:#fff;color:#3d434b;font-weight:600;font-size:12.5px;box-shadow:none;height:30px;min-height:30px}\n[data-theme=guide] header .join .btn+.btn{border-left:1px solid var(--g-line)}\n[data-theme=guide] header .join .btn:hover:not(:disabled){background:#f2f5fa}\n[data-theme=guide] header .join .btn:disabled{color:#b8bec7;background:#fff}\n/* menu lateral: como o menu da EPISJ 360 */\n[data-theme=guide] .drawer-side aside{background:#fbfcfd;border-right:1px solid var(--g-line)!important;width:236px}\n[data-theme=guide] aside>div:first-child{border-bottom:0!important;padding:18px 18px 6px}\n[data-theme=guide] aside>div:first-child>span:last-child{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--g-muted)}\n[data-theme=guide] aside>div:first-child>span:last-child span{display:block;text-transform:none;letter-spacing:0;font-weight:500;font-size:11.5px;color:#9aa1ad;opacity:1}\n[data-theme=guide] #logo{display:none!important}\n[data-theme=guide] #logo-x{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2f5fb8,#163269 55%,#0c1d40);box-shadow:0 1px 2px rgba(22,50,105,.3)}\n[data-theme=guide] #logo svg{width:15px;height:15px}\n[data-theme=guide] #nav{padding:6px 12px 16px;gap:3px}\n[data-theme=guide] #nav .menu-title{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--g-muted);padding:14px 11px 6px;opacity:1}\n[data-theme=guide] #nav li>a{position:relative;display:flex;align-items:center;gap:11px;border-radius:7px;padding:8px 11px;font-size:13px;font-weight:500;color:#3b4456;transition:background .15s,color .15s,box-shadow .2s}\n[data-theme=guide] #nav li>a svg{width:18px;height:18px;transition:transform .2s}\n[data-theme=guide] #nav li>a:hover{background:#f1f4f8;color:var(--g-ink)}\n[data-theme=guide] #nav li>a:hover svg{transform:translateX(2px)}\n[data-theme=guide] #nav li>a.menu-active{background:#fff!important;color:var(--g-brand)!important;font-weight:600;box-shadow:var(--g-sh),inset 3px 0 0 var(--g-accent),inset 0 0 0 1px var(--g-line)}\n[data-theme=guide] #foot{border-top:1px solid var(--g-line)!important;color:var(--g-muted);opacity:1;font-size:11.5px;line-height:1.5;padding:12px 18px}\n/* p\u00e1gina */\n[data-theme=guide] #main{max-width:none;padding:24px 28px 60px;gap:18px}\n[data-theme=guide] #main>div:first-child h2,[data-theme=guide] #main h2.text-xl{font-size:20px;font-weight:600;color:var(--g-brand)}\n[data-theme=guide] .text-sm.opacity-70{color:var(--g-muted);opacity:1}\n/* cart\u00f5es e n\u00fameros: como os cart\u00f5es e os mosaicos da EPISJ 360 */\n[data-theme=guide] .card,[data-theme=guide] .stat,[data-theme=guide] .rounded-box.border{border-color:var(--g-line)!important;border-radius:10px;box-shadow:var(--g-sh-sm);transition:box-shadow .2s,transform .2s,border-color .2s}\n[data-theme=guide] .card:hover{box-shadow:0 6px 18px rgba(16,24,40,.07);border-color:#d9dee5!important}\n[data-theme=guide] .card-title{font-size:16px;font-weight:600;color:var(--g-brand)}\n[data-theme=guide] .stat{background:#fff}\n[data-theme=guide] .stat:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(16,24,40,.08)}\n[data-theme=guide] .stat-title{font-size:13px;color:var(--g-muted);opacity:1}\n[data-theme=guide] .stat-value{font-weight:600;color:var(--g-ink);font-variant-numeric:tabular-nums}\n[data-theme=guide] .stat-desc{color:var(--g-muted);opacity:1}\n/* bot\u00f5es */\n[data-theme=guide] .btn{font-family:inherit;font-weight:500;font-size:13px;border-radius:7px;border:1px solid var(--g-line2);background:#fff;color:var(--g-ink);box-shadow:var(--g-sh-sm);transition:background .15s,border-color .15s,transform .08s,box-shadow .15s}\n[data-theme=guide] .btn:hover{background:#f4f6f9;border-color:var(--g-line2)}\n[data-theme=guide] .btn:active:not(:disabled){transform:scale(.96)}\n[data-theme=guide] .btn-primary{background:var(--g-brand);border-color:var(--g-brand);color:#fff;box-shadow:0 1px 2px rgba(22,50,105,.25),inset 0 1px 0 rgba(255,255,255,.12)}\n[data-theme=guide] .btn-primary:hover{background:var(--g-brand2);border-color:var(--g-brand2)}\n[data-theme=guide] .btn-ghost{background:transparent;border-color:transparent;box-shadow:none}\n[data-theme=guide] .btn-ghost:hover{background:#f1f4f8}\n[data-theme=guide] .btn-error{background:#fff;color:#dc2626;border-color:#e3b4b4}\n[data-theme=guide] .btn-error:hover{background:#fef2f2;border-color:#dc2626}\n[data-theme=guide] .btn:focus-visible{outline:none;box-shadow:0 0 0 2px #fff,0 0 0 4px var(--g-ring)}\n/* campos */\n[data-theme=guide] .input,[data-theme=guide] .select,[data-theme=guide] .textarea{border:1px solid var(--g-line2);border-radius:7px;background:#fff;box-shadow:var(--g-sh-sm);font-size:13.5px;color:var(--g-ink);transition:border-color .15s,box-shadow .15s}\n[data-theme=guide] .input:focus,[data-theme=guide] .input:focus-within,[data-theme=guide] .select:focus,[data-theme=guide] .textarea:focus{outline:none;border-color:var(--g-brand);box-shadow:0 0 0 3px var(--g-ring)}\n[data-theme=guide] .checkbox,[data-theme=guide] .radio,[data-theme=guide] .toggle{--input-color:var(--g-brand)}\n[data-theme=guide] .checkbox:checked,[data-theme=guide] .radio:checked,[data-theme=guide] .toggle:checked{border-color:var(--g-brand)}\n/* tabelas */\n[data-theme=guide] .table{font-size:13.5px}\n[data-theme=guide] .table th{font-size:12.5px;font-weight:500;color:var(--g-muted);text-transform:none;letter-spacing:0;border-bottom:1px solid var(--g-line)}\n[data-theme=guide] .table td{border-color:var(--g-line)}\n[data-theme=guide] .table tbody tr{transition:background .12s}\n[data-theme=guide] .table tbody tr:hover{background:#f8fafc}\n/* separadores, avisos, etiquetas */\n[data-theme=guide] .tabs .tab{font-size:13px;font-weight:500;color:#3b4456;transition:color .15s,background .15s}\n[data-theme=guide] .tabs .tab.tab-active,[data-theme=guide] .tabs .tab[aria-selected=true]{color:var(--g-brand);font-weight:600}\n[data-theme=guide] .tabs-box{background:#f1f4f8;border-radius:10px}\n[data-theme=guide] .alert{border-radius:8px;font-size:13.5px}\n[data-theme=guide] .alert-info{background:var(--g-brandbg);border-color:var(--g-sky);color:var(--g-brand)}\n[data-theme=guide] .alert-success{background:#eefaf2;border-color:#c5ecd3;color:#2f9e57}\n[data-theme=guide] .alert-warning{background:#fffbeb;border-color:#fde68a;color:#92400e}\n[data-theme=guide] .alert-error{background:#fef2f2;border-color:#fecaca;color:#b91c1c}\n[data-theme=guide] .badge{font-weight:600;border-radius:12px}\n[data-theme=guide] .progress{background:#eef1f5}\n[data-theme=guide] .progress::-webkit-progress-value{background:linear-gradient(90deg,var(--g-brand),var(--g-accent))}\n[data-theme=guide] .progress::-moz-progress-bar{background:linear-gradient(90deg,var(--g-brand),var(--g-accent))}\n/* janelas e avisos: como na EPISJ 360 */\n[data-theme=guide] .modal-box{border-radius:12px;border:1px solid var(--g-line);box-shadow:0 20px 50px rgba(15,23,42,.18)}\n[data-theme=guide] .modal[open] .modal-box{animation:gPop .28s cubic-bezier(.2,.8,.2,1.15)}\n[data-theme=guide] .modal-backdrop{background:rgba(15,23,42,.28);backdrop-filter:blur(2px)}\n[data-theme=guide] #toast .alert{background:var(--g-ink);color:#fff;border:0;border-radius:10px;box-shadow:0 10px 30px rgba(15,23,42,.25);animation:gToast .3s cubic-bezier(.2,.8,.2,1.1)}\n[data-theme=guide] #toast .alert-error{background:#dc2626}\n[data-theme=guide] #toast .alert-success{background:#2f9e57}\n/* ---------- anima\u00e7\u00f5es (como na EPISJ 360) ---------- */\n@keyframes gUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}\n@keyframes gPop{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}\n@keyframes gToast{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}\n@keyframes gIn{from{opacity:0}to{opacity:1}}\n[data-theme=guide] body{animation:gIn .35s ease both}\n/* ao mudar de p\u00e1gina no menu: o conte\u00fado entra como as sec\u00e7\u00f5es da EPISJ 360, quadro a quadro */\n[data-theme=guide] #main.g-anim>*{animation:gUp .34s cubic-bezier(.2,.7,.2,1) both}\n[data-theme=guide] #main.g-anim>*:nth-child(2){animation-delay:.04s}\n[data-theme=guide] #main.g-anim>*:nth-child(3){animation-delay:.08s}\n[data-theme=guide] #main.g-anim>*:nth-child(4){animation-delay:.12s}\n[data-theme=guide] #main.g-anim>*:nth-child(n+5){animation-delay:.16s}\n[data-theme=guide] #main.g-anim .stat{animation:gPop .4s cubic-bezier(.2,.8,.2,1.2) both}\n[data-theme=guide] #main.g-anim .stat:nth-child(2){animation-delay:.05s}\n[data-theme=guide] #main.g-anim .stat:nth-child(3){animation-delay:.1s}\n[data-theme=guide] #main.g-anim .stat:nth-child(4){animation-delay:.15s}\n[data-theme=guide] #main.g-anim .stat:nth-child(n+5){animation-delay:.2s}\n[data-theme=guide] .g-num{display:inline-block;animation:gPop .35s cubic-bezier(.2,.8,.2,1.2)}\n@media (prefers-reduced-motion:reduce){[data-theme=guide] *{animation:none!important;transition:none!important}}\n\n[data-theme=guide] .g-lock{background:#f6f8fb!important;color:#4a5260!important;cursor:not-allowed;box-shadow:none!important}\n[data-theme=guide] .g-nota{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:#eef3fc;border:1px solid #d4e1fa;color:#163269;border-radius:8px;padding:10px 14px;font-size:13px;animation:gUp .3s cubic-bezier(.2,.7,.2,1) both}\n[data-theme=guide] .g-nota span{flex:1;min-width:240px}\n";
@@ -4375,7 +4391,7 @@ function esAjustar(fr){try{const w=fr.contentWindow,d=fr.contentDocument;if(!d||
       new w.MutationObserver(()=>{if(!pend){pend=true;w.requestAnimationFrame(ver)}}).observe(main,{childList:true,subtree:true,characterData:true});ver()}}
   {let pb=false;const bl=()=>{pb=false;try{esBloquear(d)}catch(e){}};new w.MutationObserver(()=>{if(!pb){pb=true;w.requestAnimationFrame(bl)}}).observe(d.body,{childList:true,subtree:true});bl()}
   const f=d.querySelector("#foot");if(f)f.textContent="Os dados ficam guardados na EPISJ 360 (neste navegador e na nuvem da EPISJ 360).";
-  fr.classList.add("pronto")}catch(e){console.warn("EduSchedule/tema",e);fr.classList.add("pronto")}}
+  fr.classList.add("pronto")}catch(e){console.warn("Horário360/tema",e);fr.classList.add("pronto")}}
 /* ---------- no EduSchedule, professores, turmas e formandos só se veem: são dados gerais da EPISJ 360 (mudam-se no módulo Escola) ---------- */
 function esBloquear(d){if(!d||!d.body)return;const TIT="Dado geral da EPISJ 360 — muda-se no módulo Escola";
   d.querySelectorAll('[id^="d-classes-"][id$="-name"],[id^="d-classes-"][id$="-full"],[id^="d-classes-"][id$="-dt"],[id^="d-teachers-"][id$="-name"],[id^="d-teachers-"][id$="-short"],#al-nome,#al-num,#al-cls').forEach(el=>{
@@ -4669,7 +4685,7 @@ $("#rcCsv").onclick=()=>{const L=rcFiltradas(),q=v=>'"'+String(v??"").replace(/"
   download("reservas-"+rcHoje()+".csv","﻿"+[["Dia","Início","Fim","Espaço","Reservado por","Turma","Motivo"].map(q).join(";")].concat(L.map(r=>[r.d,rcHm(r.h0),rcHm(r.h1),rcE(r.e).n,r.p,r.t,r.m].map(q).join(";"))).join("\r\n"),"text/csv;charset=utf-8")};
 $("#rcPdf").onclick=async()=>{try{const J=await loadPDF(),doc=new J({orientation:"landscape"}),L=rcFiltradas();
     doc.setFontSize(15);doc.text("Reservas de espaços — Escola Profissional da Ilha de São Jorge",14,16);doc.setFontSize(10);
-    doc.text(`EPISJ 360 · RoomCheck · ${$("#rcFE").value?rcE($("#rcFE").value).n:"todos os espaços"}${$("#rcFDe").value?" · de "+dataPT($("#rcFDe").value):""}${$("#rcFAte").value?" até "+dataPT($("#rcFAte").value):""} · emitido em ${new Date().toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"})}`,14,23);
+    doc.text(`EPISJ 360 · Sala360 · ${$("#rcFE").value?rcE($("#rcFE").value).n:"todos os espaços"}${$("#rcFDe").value?" · de "+dataPT($("#rcFDe").value):""}${$("#rcFAte").value?" até "+dataPT($("#rcFAte").value):""} · emitido em ${new Date().toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"})}`,14,23);
     doc.autoTable({startY:28,head:[["Dia","Horas","Espaço","Reservado por","Turma","Motivo"]],body:L.map(r=>[rcDia(r.d,{weekday:"short",day:"2-digit",month:"2-digit",year:"numeric"}),rcHm(r.h0)+"–"+rcHm(r.h1),rcE(r.e).n,r.p,r.t||"",r.m||""]),theme:"grid",styles:{fontSize:9},headStyles:{fillColor:[22,50,105]}});
     doc.save("reservas-"+rcHoje()+".pdf")}catch(e){toast("Não foi possível criar o PDF: "+(e.message||e))}};
 
@@ -4690,7 +4706,7 @@ $("#rcTempos").addEventListener("change",ev=>{const T=[],mal=[];ev.target.value.
   RC.cfg.tempos=T.sort((a,b)=>a[0]-b[0]);rcEspMudou();toast(T.length+" tempos guardados"+(mal.length?` · ${mal.length} linha(s) não percebida(s)`:""))});
 $("#rcTemposRepor").onclick=()=>{delete RC.cfg.tempos;rcEspMudou();toast("Repostos os tempos da escola")};
 $("#rcTemposES").onclick=()=>{const st=mhEstado(),T=(st&&st.periods||[]).map(p=>[rcMin(p.start),rcMin(p.end)]).filter(t=>Number.isFinite(t[0])&&Number.isFinite(t[1])&&t[1]>t[0]);
-  if(!T.length){toast("O horário do EduSchedule deste ano letivo ainda não tem tempos com horas");return}RC.cfg.tempos=T;rcEspMudou();toast(T.length+" tempos copiados do EduSchedule")};
+  if(!T.length){toast("O horário do Horário360 deste ano letivo ainda não tem tempos com horas");return}RC.cfg.tempos=T;rcEspMudou();toast(T.length+" tempos copiados do Horário360")};
 // abre logo com a última análise guardada, sem voltar a ler a Box
 const pronto=(async()=>{try{await migrarListagem;let root="";try{root=localStorage.getItem("box_last_root")||""}catch(e){}
   if(root){const j=await lerListagem(root);if(j){useListing(j,true);showLast();boxMsg(`Aberta a análise guardada de “${j.pasta}” (${j.quando}): ${files.length} ficheiros e ${folders.length} pastas.`,"ok")}}
@@ -4735,7 +4751,7 @@ async function guideEntrar(tok){
   let r=null,j={};
   try{r=await fetch(srvUrl()+"/guide/eu",{headers:{Authorization:"Bearer "+tok},cache:"no-store"});j=await r.json().catch(()=>({}))}catch(e){}
   const servicoNovo=r&&(r.ok||j.semPerfil||/Microsoft|Office 365|MS_TENANT|perfil/i.test(j.erro||""));
-  if(r&&r.ok&&j.perfil)EU=j;
+  if(r&&r.ok&&j.perfil){EU=j;MODS_OFF=Array.isArray(j.modsOff)?j.modsOff:[]}
   else if(servicoNovo){gateState("login",j.erro||"Sem acesso à EPISJ 360.");return}
   else{ // o serviço ainda não tem as rotas da EPISJ 360: entra só quem já usa a EPISJ 360 neste navegador (a Direção), como administrador provisório
     if(!(cfg.profs.length||cfg.mods.length)){gateState("login","O serviço da EPISJ 360 ainda não conhece os perfis (falta atualizar o serviço de avisos na Cloudflare). Fale com a Direção.");return}
@@ -4744,6 +4760,8 @@ async function guideEntrar(tok){
   prog(40,"Perfil: "+(EU.admin?"Administrador":(EU.perfilNome||PERFIL_CURTO[EU.perfil]||"")));
   whoUI();aplicarPerfil();
   await guideCarregarModulos();
+  try{await lgMigrar();aplicarLogos()}catch(e){}
+  if(curTab&&curTab.startsWith("rc"))try{rcRender(curTab)}catch(e){}
   prog(100,"Pronto!");await gpEspera(GP.v<99?650:350);
   gateState("off");
   if(window.__goBox&&podeVer("box"))show("box");
@@ -4759,16 +4777,16 @@ async function guideCarregarModulos(){
   try{if(soLeitura())await gpAte(carregarPublico(),20000);
     else if(podePublicar()&&!cfg.profs.length&&!escData().turmas.length&&!SES)await gpAte(carregarPublico(),20000); // computador novo da Direção: mostra o publicado até ligar a Box
     fim("escola","ok")}catch(e){fim("escola",e.tempo?"bg":"erro")}
-  prog(56,"A carregar o EduSchedule…");
+  prog(56,"A carregar o Horário360…");
   try{await gpAte(esdPronto,10000);fim("eduschedule","ok")}catch(e){fim("eduschedule",e.tempo?"bg":"erro")}
-  prog(64,"A carregar o BoxCheck…");
+  prog(64,"A carregar o Box360…");
   try{await gpAte(pronto,15000)}catch(e){}
   if(soLeitura()){fim("boxcheck","ok");fim("roomcheck","ok");return}
   if(!podeVer("box")){loginUI();fim("boxcheck","ok");fim("roomcheck","ok");return}
   if(!SES){boxArrancar();fim("boxcheck","off");fim("roomcheck","ok");return} // sem sessão da Box: fica tudo o que está guardado neste computador
-  loginUI();boxEstado("wait");prog(70,"BoxCheck: a ligar à Box…");
+  loginUI();boxEstado("wait");prog(70,"Box360: a ligar à Box…");
   const pMe=boxGet("users/me",{fields:"name,login"});pMe.catch(e=>boxEstado("login",e.message)); // como antes: se a Box falhar, pede para voltar a ligar
-  const pBox=pMe.then(me=>{gpPasso(76,"BoxCheck: ligado à Box");return connected(me)});pBox.catch(()=>{});
+  const pBox=pMe.then(me=>{gpPasso(76,"Box360: ligado à Box");return connected(me)});pBox.catch(()=>{});
   try{await gpAte(pBox,45000);fim("boxcheck","ok");fim("roomcheck","ok");fim("escola","ok");fim("eduschedule","ok")}
   catch(e){fim("boxcheck",e.tempo?"bg":"erro");fim("roomcheck",e.tempo?"bg":"ok")}}
 function whoUI(){const n=EU.nome||EU.email,ini=n.split(/\s+/).filter(Boolean).map(w=>w[0]).slice(0,2).join("").toUpperCase();
@@ -4779,7 +4797,8 @@ async function guideSair(){if(SES)logout(true);try{const p=await msInit();await 
 // esconde os módulos e separadores que o perfil não pode abrir
 function aplicarPerfil(){
   document.querySelectorAll("#nav button[data-t]").forEach(b=>b.hidden=!podeVer(b.dataset.t));
-  document.querySelectorAll("#mods button[data-m]").forEach(b=>b.hidden=!primeiroPermitido(b.dataset.m));
+  document.querySelectorAll("#mods button[data-m]").forEach(b=>{b.hidden=!primeiroPermitido(b.dataset.m);const off=MODS_OFF.includes(b.dataset.m)&&!b.hidden;b.classList.toggle("moff",off);
+    if(!b.dataset.t0)b.dataset.t0=b.title;b.title=off?b.dataset.t0+" — DESLIGADO: só os administradores o veem":b.dataset.t0});
   document.querySelectorAll("#nav .mgrp.gl").forEach(g=>g.hidden=![...g.querySelectorAll("button[data-t]")].some(b=>!b.hidden));
   const ro=soLeitura()&&!PREV;document.body.classList.toggle("ro",ro);const u=document.querySelector(".undo");if(u)u.style.display=ro||RO?"none":"";
   const pf=perfilAtual(),l=$("[data-mhlbl]");if(l)l.textContent=pf==="form"?"Horário da turma":pf==="prof"?"O meu horário":"Horários publicados";
@@ -4826,7 +4845,7 @@ async function renderMeu(){const out=$("#meuOut");if(!EU)return;
   const row=$("#meuSelRow");
   if(j.professores&&j.professores.length){row.style.display="";$("#meuSel").innerHTML=`<option value="">${esc(EU.nome)} (a minha conta)</option>`+j.professores.slice().sort((a,b)=>a.nome.localeCompare(b.nome,"pt")).map(p=>`<option value="${esc(p.email)}"${p.email===MEU_SEL?" selected":""}>${esc(p.nome)}</option>`).join("")}else row.style.display="none";
   $("#meuQuem").textContent=MEU_SEL&&j.prof?j.prof.nome:"lhe";
-  if(j.semPlano){out.innerHTML=`<div class="msg info">Ainda não há prazos no serviço da EPISJ 360: a Direção tem de ligar o envio pelo servidor em <b>BoxCheck › Prazos</b>.</div>`;return}
+  if(j.semPlano){out.innerHTML=`<div class="msg info">Ainda não há prazos no serviço da EPISJ 360: a Direção tem de ligar o envio pelo servidor em <b>Box360 › Prazos</b>.</div>`;return}
   if(j.semProf){out.innerHTML=`<div class="msg info">${MEU_SEL?"Este professor":"A sua conta (<b>"+esc(EU.email)+"</b>)"} não aparece entre os professores com prazos. O email em <b>Escola › Professores</b> tem de ser o do Office 365.</div>`;return}
   if(!j.prazos.length){out.innerHTML=`<div class="msg ok">Não há documentos com prazo atribuídos${MEU_SEL?" a "+esc(j.prof.nome):""}.</div>`;return}
   const ord={falta:0,pendente:1,atraso:2,prazo:3};
@@ -4844,7 +4863,7 @@ function mhEstado(){const a=anoAtivo(),x=a&&ESD.porAno&&ESD.porAno[a.id];if(!x||
 const corTexto=hex=>{const m=String(hex||"").match(/^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/i);if(!m)return"#fff";const [r,g,b]=m.slice(1).map(x=>parseInt(x,16)/255);return 0.2126*r+0.7152*g+0.0722*b>0.6?"#1d2433":"#fff"};
 async function renderMh(){try{await esdPronto}catch(e){}const st=mhEstado(),out=$("#mhOut"),pf=perfilAtual(),tipoEl=$("#mhTipo"),quemEl=$("#mhQuem");
   $("#mhTit").textContent=pf==="form"?"Horário da turma":pf==="prof"?"O meu horário":"Horários publicados";
-  if(!st){out.innerHTML=`<div class="msg info">${RO?"A Direção ainda não publicou o horário de "+esc(anoAtivo().nome)+".":"Ainda não há horário para "+esc(anoAtivo().nome)+" — faça-o no EduSchedule."}</div>`;quemEl.innerHTML="";return}
+  if(!st){out.innerHTML=`<div class="msg info">${RO?"A Direção ainda não publicou o horário de "+esc(anoAtivo().nome)+".":"Ainda não há horário para "+esc(anoAtivo().nome)+" — faça-o no Horário360."}</div>`;quemEl.innerHTML="";return}
   tipoEl.parentNode.style.display=pf==="form"?"none":"";
   if(pf==="form")tipoEl.value="c";
   const T=st.teachers||[],C=(st.classes||[]).slice().sort((a,b)=>String(a.name).localeCompare(String(b.name),"pt",{numeric:true}));
@@ -4885,7 +4904,7 @@ async function renderUti(force){const m=$("#utiMsg");
   $("#utiPerfil").innerHTML=Object.entries(UTI.perfis).map(([k,n])=>`<option value="${k}">${esc(n)}</option>`).join("");
   const turmas=turmasDoAno().map(t=>t.cod);$("#utiTurma").innerHTML=`<option value="">—</option>`+turmas.map(c=>`<option>${esc(c)}</option>`).join("");
   $("#utiDom").value=L.formandos.dominios.join(", ");$("#utiPad").value=L.formandos.padrao||"";
-  utiTabela();utiVis();
+  utiTabela();utiVis();utiMods();
   const sem=cfg.profs.filter(p=>!p.email).length;
   $("#utiProfs").innerHTML=`Ficam <b>Professor</b> automaticamente os ${cfg.profs.filter(p=>p.email).length} professores com email em <b>Escola › Professores</b>${sem?` — <span style="color:var(--warn)">${sem} sem email não conseguem entrar</span>`:""}.`;
   $("#utiPrev").innerHTML=`<option value="">— escolha —</option>`+Object.entries(UTI.perfis).map(([k,n])=>`<option value="${k}">${esc(n)}</option>`).join("");
@@ -4895,6 +4914,11 @@ function utiTabela(){const L=UTI.loja,f=norm($("#utiFiltro").value),turmas=turma
   $("#tbUti").innerHTML=rows.map(([e,u])=>`<tr><td>${esc(e)}</td><td><select data-ue="${esc(e)}" data-k="perfil">${Object.entries(UTI.perfis).map(([k,n])=>`<option value="${k}"${k===u.perfil?" selected":""}>${esc(n)}</option>`).join("")}</select></td>
     <td>${u.perfil==="form"?`<select data-ue="${esc(e)}" data-k="turma"><option value="">—</option>${[...new Set(turmas.concat(u.turma?[u.turma]:[]))].map(c=>`<option${c===u.turma?" selected":""}>${esc(c)}</option>`).join("")}</select>`:""}</td>
     <td><button class="b s" data-udel="${esc(e)}" title="Tirar da lista">✕</button></td></tr>`).join("")||`<tr><td colspan="4" class="hint">Ninguém na lista — valem as regras automáticas.</td></tr>`}
+function utiMods(){const off=new Set(UTI.loja.modsOff||[]);
+  $("#utiMods").innerHTML=MODULOS.map(M=>`<label class="${off.has(M.id)?"off":""}"><input type="checkbox" data-mod="${M.id}"${off.has(M.id)?"":" checked"}><span><b>${esc(M.nome)}</b><br><span class="hint" style="margin:0">${off.has(M.id)?"Desligado — só os administradores":"Ligado para os perfis com acesso"}</span></span></label>`).join("");
+  $("#utiModsAviso").innerHTML=("modsOff" in UTI.loja)?"":`<span style="color:var(--warn)">Para isto funcionar para toda a gente, atualize o serviço na Cloudflare com o ficheiro <code>servidor/boxcheck-avisos.js</code> da EPISJ 360 0.9.19.</span>`}
+$("#utiMods").addEventListener("change",e=>{const x=e.target.closest("[data-mod]");if(!x)return;const off=new Set(UTI.loja.modsOff||[]);if(x.checked)off.delete(x.dataset.mod);else off.add(x.dataset.mod);
+  UTI.loja.modsOff=MODULOS.map(M=>M.id).filter(m=>off.has(m));utiMods();utiSujo()});
 function utiVis(){const L=UTI.loja,P=Object.keys(UTI.perfis);let h=`<thead><tr><th>Separador</th>${P.map(k=>`<th>${esc(UTI.perfis[k])}</th>`).join("")}</tr></thead><tbody>`;
   document.querySelectorAll("#nav .mgrp").forEach(g=>{const bs=[...g.querySelectorAll("button[data-t]")].filter(b=>b.dataset.t!=="uti");if(!bs.length)return;
     h+=`<tr class="grp"><td colspan="${P.length+1}">${esc(g.querySelector(".mh").childNodes[0].textContent.trim())}</td></tr>`;
@@ -4915,9 +4939,10 @@ $("#utiPrev").onchange=e=>{const v=e.target.value;if(!v)return;utiLerCampos();PR
 function utiLerCampos(){const L=UTI.loja;L.admins=$("#utiAdmins").value.split(/[\s,;]+/).map(x=>x.trim().toLowerCase()).filter(x=>x.includes("@"));
   L.formandos={dominios:$("#utiDom").value.split(/[\s,;]+/).map(x=>x.trim().toLowerCase().replace(/^@/,"")).filter(Boolean),padrao:$("#utiPad").value.trim()}}
 $("#utiGuardar").onclick=async()=>{if(!UTI)return;utiLerCampos();const pad=UTI.loja.formandos.padrao;if(pad){try{new RegExp(pad)}catch(e){toast("O padrão dos formandos não é uma expressão regular válida");return}}
-  $("#utiEstado").textContent="A guardar…";try{const j=await guideApi("/guide/perfis",{method:"POST",body:JSON.stringify(UTI.loja)});UTI.loja=j.loja;UTI_SUJO=false;renderUti();toast("Perfis guardados")}
+  $("#utiEstado").textContent="A guardar…";try{const j=await guideApi("/guide/perfis",{method:"POST",body:JSON.stringify(UTI.loja)});UTI.loja=j.loja;UTI_SUJO=false;MODS_OFF=Array.isArray(j.loja.modsOff)?j.loja.modsOff:[];aplicarPerfil();renderUti();toast("modsOff" in j.loja?"Perfis e módulos guardados":"Perfis guardados — falta atualizar o serviço na Cloudflare para desligar módulos")}
   catch(e){$("#utiEstado").innerHTML=`<span style="color:var(--bad)">${esc(e.message)}</span>`}};
 
+if(curTab&&curTab.startsWith("rc"))try{rcRender(curTab)}catch(e){console.warn(e)} // 0.9.19: o mapa aparece logo ao entrar
 guideArranque();
 })();
 </script>
