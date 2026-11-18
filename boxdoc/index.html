@@ -225,8 +225,8 @@ button.big{width:100%;padding:13px 18px;font-size:16px}
   .col[data-col=b]{position:sticky;top:64px;max-height:calc(100vh - 72px);overflow:auto;padding:12px 12px 8px 4px;margin-top:-12px;scrollbar-width:thin}
   .col[data-col=b]:empty{min-height:60px}}
 .blk{position:relative}
-.dh{position:absolute;top:-11px;right:-11px;z-index:4;width:26px;height:26px;border-radius:7px;border:1px solid var(--line);background:#fff;color:#8a93a3;cursor:grab;opacity:0;display:flex;align-items:center;justify-content:center;transition:opacity .15s;padding:0}
-.dh svg{fill:currentColor}.dh:hover{color:var(--brand);border-color:#a9bde6}.blk:hover>.dh,.dh:focus-visible{opacity:1}
+.dh{position:absolute;top:-11px;right:-11px;z-index:4;width:26px;height:26px;border-radius:7px;border:1px solid var(--line);background:#fff;color:#8a93a3;cursor:grab;opacity:.5;display:flex;align-items:center;justify-content:center;transition:opacity .15s;padding:0}
+.dh svg{fill:currentColor}.dh:hover{color:var(--brand);border-color:#a9bde6}.blk:hover>.dh,.dh:focus-visible{opacity:1}@media (hover:none){.dh{opacity:.8}} /* 0.9.21: a pega fica sempre à vista, mais forte ao passar o rato */
 
 .blk.dragging{opacity:.35}
 body.arrastar .col,body.arrastar [data-cont]{outline:2px dashed #c3d3f1;outline-offset:6px;border-radius:12px;min-height:70px}
@@ -1400,7 +1400,7 @@ body.esch.temfundos #esFr{height:calc(100vh - 116px);height:calc(100dvh - 116px)
   </div>
   <div class="card">
     <h2>Disposição dos quadros</h2>
-    <p class="hint">Todos os quadros podem ser arrastados pela pega <b>⋮⋮</b> que aparece no canto quando passa o rato por cima. Em ecrãs largos (a partir de cerca de 2050 píxeis) há uma segunda coluna à direita (por exemplo, a lista do Relatório); em ecrãs estreitos fica tudo numa coluna. A disposição fica guardada neste navegador.</p>
+    <p class="hint">Todos os quadros podem ser arrastados pela pega <b>⋮⋮</b> no canto de cima, à direita, de cada quadro. Em ecrãs largos (a partir de cerca de 2050 píxeis) há uma segunda coluna à direita (por exemplo, a lista do Relatório); em ecrãs estreitos fica tudo numa coluna. A disposição fica guardada neste navegador.</p>
     <button class="b s" id="layReset">Repor a disposição original</button>
   </div>
 </section>
@@ -1560,7 +1560,7 @@ body.esch.temfundos #esFr{height:calc(100vh - 116px);height:calc(100dvh - 116px)
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.20"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.21"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
