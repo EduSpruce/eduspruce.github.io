@@ -358,6 +358,9 @@ input[type=file]::file-selector-button:hover{background:#f4f6f9}
 .estHead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:16px}
 .egrid>.blk>.card{margin-bottom:18px;min-width:0}.egrid>.blk{min-width:0}
 .egrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:18px}
+.heat{border-collapse:separate;border-spacing:3px;font-size:12.5px;width:100%}.heat th{font-weight:600;color:#4a5260;text-transform:none;letter-spacing:0;font-size:12px;border:0;padding:4px 6px;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.heat thead th{vertical-align:bottom;white-space:normal;text-align:center}.heat td{text-align:center;border:0;border-radius:6px;padding:7px 4px;font-weight:600;color:#1f2937;min-width:56px}.heat td.tot{outline:2px solid #fff;font-weight:700}
+.parl{display:flex;flex-direction:column;gap:4px}.parr{display:grid;grid-template-columns:minmax(0,1fr) auto 86px 78px;gap:10px;align-items:center;padding:5px 2px;border-bottom:1px solid #f0f2f5;font-size:13.5px}.parr .n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tlbar{display:flex;justify-content:flex-end;margin:-4px 0 6px}.tllg{display:flex;flex-wrap:wrap;gap:6px}
 .tlk{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:12.5px;border:1px solid var(--line);background:#fff;border-radius:99px;padding:3px 10px;cursor:pointer;color:#3d434b}
 .tlk.on{background:var(--brandbg);border-color:#a9bde6;color:var(--brand);font-weight:600}.tlk .sw{width:10px;height:10px;border-radius:3px;display:inline-block}.egrid>.card{margin-bottom:18px;min-width:0}
@@ -732,6 +735,17 @@ button.rm{background:#fff;color:var(--bad);border-color:#e3b4b4}button.rm:hover{
   </div>
   <div class="card" id="eTopPC" data-col="b"><h3>Mais cumpridores</h3><p class="hint" style="margin-top:0">Formadores com maior percentagem de documentos entregues (com 100% primeiro os que tinham mais para entregar).</p><div id="eTopP"></div></div>
   <div class="card" id="eTopTC" data-col="b"><h3>Turmas mais completas</h3><p class="hint" style="margin-top:0">Turmas com maior percentagem dos documentos exigidos já entregues.</p><div id="eTopT"></div></div>
+  <div class="egrid">
+    <div class="card"><h3>Entregue por disciplina</h3><p class="hint" style="margin-top:0">Percentagem dos documentos exigidos já entregues em cada disciplina (as piores primeiro).</p><div id="eDisc"></div></div>
+    <div class="card"><h3>Módulos fechados por turma</h3><p class="hint" style="margin-top:0">Módulos/UFCD/UC com todos os documentos entregues, em cada turma.</p><div id="eModT"></div></div>
+  </div>
+  <div class="egrid">
+    <div class="card"><h3>Qualidade por formador</h3><p class="hint" style="margin-top:0">Dos documentos entregues, quantos estão sem problemas e quantos estão vazios, são falsos ou ficaram “a confirmar”.</p><div id="eQual"></div></div>
+    <div class="card"><h3>Entregas fora do prazo</h3><p class="hint" style="margin-top:0" id="ePrazoSub">Documentos entregues depois do prazo definido em Enviar, pela data do ficheiro na Box.</p><div id="ePrazo"></div></div>
+  </div>
+  <div class="card"><h3>Mapa de calor: turma × tipo de documento</h3><p class="hint" style="margin-top:0">Percentagem entregue em cada cruzamento — vermelho = quase nada, verde = completo. Passe o rato por cima para ver os números.</p><div id="eHeat"></div></div>
+  <div class="card" data-col="b"><h3>Efeito dos lembretes</h3><p class="hint" style="margin-top:0">Do que estava em falta quando registou o envio dos emails, quanto cada formador já entregou.</p><div id="eLemb"></div></div>
+  <div class="card" data-col="b"><h3>Formadores parados</h3><p class="hint" style="margin-top:0">Última entrega de cada formador (os parados há mais tempo primeiro). Amarelo: mais de 30 dias · vermelho: mais de 60 dias ou nenhuma.</p><div id="ePar"></div></div>
 </section>
 <div id="vtip" role="tooltip"></div>
 
@@ -851,7 +865,7 @@ button.rm{background:#fff;color:var(--bad);border-color:#e3b4b4}button.rm:hover{
 <script>
 (function(){
 "use strict";
-const VERSAO="1.13"; // versão do BoxCheck — sobe a cada alteração publicada
+const VERSAO="1.14"; // versão do BoxCheck — sobe a cada alteração publicada
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 const $=s=>document.querySelector(s);
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -2629,14 +2643,14 @@ function animar(root){const els=root.querySelectorAll("[data-w],[data-off]");
     if(t!==on){on=t;tip.innerHTML=t.dataset.tip;tip.classList.add("on")}pos(e)});
   document.addEventListener("scroll",()=>{if(on){tip.classList.remove("on");on=null}},true)})();
 // barras horizontais: [{nome, ok, tot}] → % entregue
-function barras(el,rows,vazio,limite=12){
+function barras(el,rows,vazio,limite=12,lOk="entregues",lMiss="em falta"){
   if(!rows.length){el.innerHTML=`<p class="eempty">${vazio}</p>`;return}
   const mostrar=el.dataset.all==="1"?rows:rows.slice(0,limite);
   el.innerHTML=`<div class="hb">${mostrar.map(r=>{const p=pctTxt(r.ok,r.tot);
-    const tip=`<b>${esc(r.nome)}</b><br>${r.ok} de ${r.tot} entregues (${p}%)<br>${r.tot-r.ok} em falta`;
+    const tip=`<b>${esc(r.nome)}</b><br>${r.ok} de ${r.tot} ${lOk} (${p}%)<br>${r.tot-r.ok} ${lMiss}`;
     return`<div class="row-h" data-tip="${esc(tip)}"><span class="n" title="${esc(r.nome)}">${esc(r.nome)}</span><span class="t"><i data-w="${p}%"></i></span><span class="v"><b>${p}%</b> · ${r.tot-r.ok}</span></div>`}).join("")}</div>`
     +(rows.length>limite?`<button class="b s hbmore">${el.dataset.all==="1"?"Mostrar menos":`Mostrar todos (${rows.length})`}</button>`:"");
-  const mb=el.querySelector(".hbmore");if(mb)mb.onclick=()=>{el.dataset.all=el.dataset.all==="1"?"":"1";barras(el,rows,vazio,limite)};
+  const mb=el.querySelector(".hbmore");if(mb)mb.onclick=()=>{el.dataset.all=el.dataset.all==="1"?"":"1";barras(el,rows,vazio,limite,lOk,lMiss)};
   animar(el)}
 function agrupar(ev,chave){const m=new Map();
   for(const e of ev){const k=chave(e);if(k==null)continue;const o=m.get(k)||{nome:k,ok:0,tot:0};for(const i of e.items){o.tot++;if(i.ok)o.ok++}m.set(k,o)}
@@ -2688,8 +2702,52 @@ function renderEst(){
   const rk=rows=>rows.filter(r=>r.tot).sort((a,b)=>b.ok/b.tot-a.ok/a.tot||b.tot-a.tot||a.nome.localeCompare(b.nome,"pt")).map((r,i)=>({...r,nome:`${i+1}.º ${r.nome}`}));
   barras($("#eTopP"),rk(T.filter(t=>t.p.id!=="_").map(t=>({nome:t.p.nome,ok:t.ok,tot:t.tot}))),"Ainda sem formadores com módulos atribuídos.",10);
   barras($("#eTopT"),rk(agrupar(ev,e=>e.mod.turma||"(sem turma)")),"Sem turmas.",10);
+  // ---- indicadores extra ----
+  // 1) por disciplina (pior primeiro)
+  barras($("#eDisc"),agrupar(ev,e=>discShort(e.mod.disc)||"(sem disciplina)").sort((a,b)=>a.ok/a.tot-b.ok/b.tot||a.nome.localeCompare(b.nome,"pt")),"Sem disciplinas.");
+  // 5) módulos fechados por turma
+  (()=>{const m=new Map();for(const e of ev){if(!e.items.length)continue;const k=e.mod.turma||"(sem turma)",o=m.get(k)||{nome:k,ok:0,tot:0};o.tot++;if(e.items.every(i=>i.ok))o.ok++;m.set(k,o)}
+    barras($("#eModT"),[...m.values()].sort((a,b)=>b.ok/b.tot-a.ok/a.tot||a.nome.localeCompare(b.nome,"pt")),"Sem módulos.",12,"módulos fechados","por fechar")})();
+  // 4) qualidade por formador: entregues sem problemas vs vazios/falsos/a confirmar
+  barras($("#eQual"),T.filter(t=>t.p.id!=="_").map(t=>{let ok=0,tot=0;for(const e of t.list)for(const i of e.items){if(i.state==="missing")continue;tot++;if(i.state==="ok")ok++}return{nome:t.p.nome,ok,tot}}).filter(r=>r.tot).sort((a,b)=>(b.tot-b.ok)-(a.tot-a.ok)||a.ok/a.tot-b.ok/b.tot),
+    "Ainda não há documentos entregues.",12,"sem problemas","vazios, falsos ou a confirmar");
+  // 3) entregas fora do prazo (data do ficheiro mais antigo de cada documento entregue vs. prazo definido em Enviar)
+  (()=>{const el=$("#ePrazo"),pz=prazoData();
+    if(!pz){el.innerHTML=`<p class="eempty">Defina o prazo em <b>Enviar</b> (ex.: 27/11/2026) para ver quem entregou depois dele.</p>`;return}
+    $("#ePrazoSub").textContent=`Documentos entregues depois de ${dataPT(pz)} (prazo definido em Enviar), pela data do ficheiro na Box.`;
+    barras(el,T.filter(t=>t.p.id!=="_").map(t=>{let ok=0,tot=0;for(const e of t.list)for(const i of e.items){if(!i.ok)continue;const ds=(i.hits||[]).map(f=>Date.parse(f.date)).filter(x=>x>0);if(!ds.length)continue;tot++;if(Math.min(...ds)<=pz+864e5-1)ok++}return{nome:t.p.nome,ok,tot}}).filter(r=>r.tot).sort((a,b)=>(b.tot-b.ok)-(a.tot-a.ok)),
+      "Ainda não há documentos entregues com data.",12,"dentro do prazo","fora do prazo")})();
+  // 2) efeito dos lembretes: do que faltava no envio escolhido, quanto já foi entregue
+  (()=>{const el=$("#eLemb"),E=(cfg.envios||[]).filter(v=>v.miss&&Object.keys(v.miss).length);
+    if(!E.length){el.innerHTML=`<p class="eempty">Ainda não registou nenhum envio de emails (em Enviar). Depois de registar, aqui vê quem respondeu ao lembrete.</p>`;return}
+    let v=E.find(x=>x.id===eLembSel)||E[0];const ok=new Map();for(const e of ev)for(const i of e.items)ok.set(i.key,i.ok);
+    const rows=Object.entries(v.miss).map(([pid,ks])=>({nome:profName(pid)||"(formador removido)",ok:ks.filter(k=>ok.get(k)).length,tot:ks.length})).sort((a,b)=>b.ok/b.tot-a.ok/a.tot);
+    const totR=rows.reduce((a,r)=>a+r.ok,0),totM=rows.reduce((a,r)=>a+r.tot,0);
+    el.innerHTML=`<div class="row" style="margin-bottom:10px"><select id="eLembPick" style="width:auto">${E.map(x=>`<option value="${x.id}" ${x===v?"selected":""}>${esc(x.label||"Envio")} — ${dataPT(x.t)} (${x.n} em falta)</option>`).join("")}</select>
+      <span class="hint" style="margin:0">Desde esse envio: <b>${totR}</b> de ${totM} entregues (${pctTxt(totR,totM)}%)</span></div><div id="eLembB"></div>`;
+    barras($("#eLembB"),rows,"",12,"entregues desde o envio","ainda em falta");
+    $("#eLembPick").onchange=e=>{eLembSel=e.target.value;renderEst()}})();
+  // 9) formadores parados: última entrega de cada um
+  (()=>{const el=$("#ePar"),hoje0=Date.now();const rows=T.filter(t=>t.p.id!=="_"&&t.tot).map(t=>{let u=0;for(const e of t.list)for(const i of e.items)for(const f of i.hits||[]){const d=Date.parse(f.date);if(d>u)u=d}return{t,u,d:u?Math.floor((hoje0-u)/864e5):null}})
+      .sort((a,b)=>(b.d??1e9)-(a.d??1e9));
+    el.innerHTML=rows.length?`<div class="parl">${rows.map(r=>{const c=r.d==null||r.d>60?"bad":r.d>30?"warn":"ok";
+      return`<div class="parr" data-tip="${esc(`<b>${esc(r.t.p.nome)}</b><br>${r.u?"Última entrega: "+dataPT(r.u):"Ainda sem nenhuma entrega"}<br>${r.t.miss} documento(s) em falta`)}"><span class="n">${esc(r.t.p.nome)}</span><span class="tag ${c==="ok"?"ok":c==="bad"?"bad":""}"${c==="warn"?` style="background:var(--warnbg);color:var(--warn)"`:""}>${r.d==null?"sem entregas":r.d===0?"hoje":`há ${r.d} dia${r.d===1?"":"s"}`}</span><span class="hint" style="margin:0">${r.u?dataPT(r.u):""}</span><span class="hint" style="margin:0">${r.t.miss} em falta</span></div>`}).join("")}</div>`
+      :`<p class="eempty">Ainda sem formadores com módulos atribuídos.</p>`})();
+  // 6) mapa de calor turma × tipo de documento
+  (()=>{const el=$("#eHeat"),docs=cfg.docTypes,m=new Map();
+    for(const e of ev)for(const i of e.items){const k=(e.mod.turma||"(sem turma)")+"\u0001"+(i.doc&&i.doc.id);const o=m.get(k)||{ok:0,tot:0};o.tot++;if(i.ok)o.ok++;m.set(k,o)}
+    const turmas=[...new Set(ev.map(e=>e.mod.turma||"(sem turma)"))].sort((a,b)=>a.localeCompare(b,"pt",{numeric:true}));
+    if(!turmas.length||!docs.length){el.innerHTML=`<p class="eempty">Sem dados.</p>`;return}
+    const cor=p=>p==null?"#f3f4f6":`hsl(${Math.round(p*1.2)},70%,${88-Math.round(p*0.1)}%)`;
+    el.innerHTML=`<div style="overflow-x:auto"><table class="heat"><thead><tr><th></th>${docs.map(d=>`<th title="${esc(d.nome)}">${esc(d.nome)}</th>`).join("")}<th>Total</th></tr></thead><tbody>${turmas.map(t=>{let a=0,b=0;
+      return`<tr><th title="${esc(t)}">${esc(t)}</th>${docs.map(d=>{const o=m.get(t+"\u0001"+d.id);if(!o)return`<td style="background:${cor(null)}">—</td>`;a+=o.ok;b+=o.tot;const p=pctTxt(o.ok,o.tot);
+        return`<td style="background:${cor(p)}" data-tip="${esc(`<b>${esc(t)}</b><br>${esc(d.nome)}: ${o.ok} de ${o.tot} entregues (${p}%)`)}">${p}%</td>`}).join("")}<td class="tot" style="background:${cor(b?pctTxt(a,b):null)}">${b?pctTxt(a,b)+"%":"—"}</td></tr>`}).join("")}</tbody></table></div>`})();
   linhaTempo($("#eTime"));
 }
+let eLembSel="";
+// prazo definido em Enviar (dd/mm/aaaa ou aaaa-mm-dd) → data
+function prazoData(){const v=String(cfg.mail.prazo||"").trim();let m=v.match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{2,4})$/);
+  if(m){const y=+m[3]<100?2000+ +m[3]:+m[3];return new Date(y,+m[2]-1,+m[1]).getTime()}m=v.match(/^(\d{4})-(\d\d)-(\d\d)$/);return m?new Date(+m[1],+m[2]-1,+m[3]).getTime():null}
 // linha do tempo por ano letivo: de setembro a agosto (e meses seguintes, para entregas tardias), uma linha por ano letivo analisado
 const TLC=new Map(),TL_COR=["#1a5fd0","#16a34a","#d97706","#9333ea","#0891b2","#e11d48","#64748b"];
 let TLsel=(()=>{try{return localStorage.getItem("boxcheck_tl")||""}catch(e){return""}})();
