@@ -444,6 +444,21 @@ th{font-weight:500}
 button.rm{background:#fff;color:var(--bad);border-color:#e3b4b4}button.rm:hover{background:var(--badbg);border-color:var(--bad)}
 .schl.wbg img{background:#fff;border-radius:6px;padding:2px 6px}
 @media (max-width:820px){.lgwrap{flex-direction:column}.lgprev{width:200px}.lgslot{flex-direction:column;align-items:flex-start}}
+.peH{margin:16px 0 6px;font-size:15px}
+.prKpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:4px 0 6px}
+.prKpi div{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fff}
+.prKpi b{display:block;font-size:24px;line-height:1.1}
+.prKpi span{font-size:12.5px;color:var(--muted)}
+.prKpi .k-ok b{color:var(--ok)}.prKpi .k-late b{color:#b45309}.prKpi .k-miss b{color:var(--bad)}.prKpi .k-pend b{color:#1c3f72}
+.tag.late{background:#fff4e0;color:#b45309}.tag.pend{background:#e8f0fb;color:#1c3f72}
+.praItem{display:flex;gap:12px;align-items:center;flex-wrap:wrap;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;background:#fff}
+.praItem .nm{flex:1;min-width:180px}.praItem .nm small{display:block;color:var(--muted);font-size:12.5px}
+.avBox{border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px;background:#f8fafc}
+.avBox textarea{font-family:inherit;font-size:14px;min-height:150px}
+.prProf{margin-top:12px;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.prProf>div:first-child{display:flex;gap:10px;align-items:center;background:#f6f8fb;padding:8px 12px;font-weight:600;flex-wrap:wrap}
+.prProf table td,.prProf table th{padding:6px 10px;border-top:1px solid var(--line);font-size:13px;text-align:left;vertical-align:top}
+.prProf table th{font-size:12px;color:var(--muted);font-weight:600}
 </style>
 </head>
 <body>
@@ -486,6 +501,7 @@ button.rm{background:#fff;color:var(--bad);border-color:#e3b4b4}button.rm:hover{
     <button data-t="rel"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 15l2 2 4-4"/></svg>Relatório</button>
     <button data-t="est"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 6-6"/></svg>Estatísticas</button>
     <button data-t="env"><svg viewBox="0 0 24 24"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>Enviar</button>
+    <button data-t="pra"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M9 16l2 2 4-4"/></svg>Prazos</button>
     <button data-t="def"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Definições</button>
     <button data-t="cop"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>Guardar / carregar</button>
     <div class="foot">BoxCheck <span data-ver></span> — ferramenta interna da Escola Profissional da Ilha de São Jorge. Só leitura: não altera nada na Box.<br>Não é um produto da Box, Inc.</div>
@@ -798,6 +814,79 @@ button.rm{background:#fff;color:var(--bad);border-color:#e3b4b4}button.rm:hover{
   </div>
 </section>
 
+<!-- PRAZOS E AVISOS -->
+<section id="pra">
+  <div class="card" id="praLista">
+    <h2>Prazos de entrega</h2>
+    <p class="hint">Defina o que tem de ser entregue e até quando (ex.: <b>Planificações</b> de todos os módulos, UC e UFCD até <b>01/12</b>). A app mostra quem entregou <b>dentro do prazo</b>, <b>fora do prazo</b> ou <b>ainda não entregou</b>, e envia os avisos que escrever, com a periodicidade que escolher. A data de entrega é a data em que o ficheiro foi colocado na Box.</p>
+    <div class="row" style="margin-bottom:12px"><button class="b" id="praNovo">+ Novo prazo</button></div>
+    <div id="praItens"></div>
+  </div>
+  <div class="card" id="praAuto">
+    <h2>Envio automático dos avisos</h2>
+    <p class="hint">Com o envio automático ligado, sempre que a BoxCheck estiver aberta (neste ou noutro computador) atualiza a análise e envia, pelo Office 365, os avisos que estiverem na hora — só a quem ainda tem documentos em falta e nunca duas vezes o mesmo aviso. Se a app estiver fechada no dia marcado, o aviso sai na próxima vez que a abrir.</p>
+    <div class="row">
+      <label class="chip" style="align-self:center"><input type="checkbox" id="avAuto"> <b>Envio automático ligado</b></label>
+      <label style="width:130px">Hora dos envios<input type="time" id="avHora" value="09:00"></label>
+      <label class="grow">Resumo dos incumprimentos para<input type="text" id="avPara" placeholder="direcao@escola.pt"></label>
+    </div>
+    <div id="avEstado"></div>
+    <h3 style="margin:16px 0 6px;font-size:15px">Próximos envios</h3>
+    <div id="avProx"></div>
+    <div class="row" style="margin-top:10px"><button class="b s" id="avAgora">Enviar já os avisos que estão na hora</button></div>
+  </div>
+  <div class="card" id="praEd" style="display:none">
+    <h2 id="praEdT">Prazo</h2>
+    <div class="row">
+      <label class="grow">Nome do prazo<input type="text" id="peNome" placeholder="Planificações 2026/2027"></label>
+      <label style="width:170px">Data limite<input type="date" id="peData"></label>
+      <label class="chip" style="align-self:flex-end"><input type="checkbox" id="peAtivo" checked> ativo</label>
+    </div>
+    <h3 class="peH">O que tem de ser entregue</h3>
+    <div class="chips" id="peDocs"></div>
+    <h3 class="peH">Em que módulos</h3>
+    <div class="chips" id="peTipos"></div>
+    <p class="hint" style="margin:10px 0 4px">Turmas (nenhuma escolhida = todas)</p>
+    <div class="chips" id="peTurmas"></div>
+    <p class="hint" style="margin:10px 0 4px">Formadores (nenhum escolhido = todos)</p>
+    <div class="chips" id="peProfs"></div>
+    <div class="row" style="margin-top:10px">
+      <label class="grow">Só disciplinas que contenham (opcional, separe por vírgulas)<input type="text" id="peDisc" placeholder="ex.: Português, Matemática"></label>
+      <label class="grow">Só módulos que contenham (opcional)<input type="text" id="peMod" placeholder="ex.: UFCD 0349, Módulo 1"></label>
+    </div>
+    <label class="chip" style="margin-top:10px;display:inline-flex"><input type="checkbox" id="peResumo" checked> no dia seguinte ao prazo, enviar-me o resumo de quem não cumpriu</label>
+    <div id="peCont" class="msg info"></div>
+    <h3 class="peH">Avisos por email (até 3)</h3>
+    <p class="hint">Campos: <code>{primeiro_nome}</code> <code>{nome}</code> <code>{prazo}</code> <code>{prazo_nome}</code> <code>{dias}</code> <code>{documentos}</code> <code>{total}</code> <code>{lista}</code> <code>{ano}</code>. <code>{dias}</code> são os dias que faltam (antes do prazo) ou os dias de atraso (depois).</p>
+    <div id="peAvisos"></div>
+    <div class="row" style="margin-top:10px">
+      <button class="b s" id="peAddAv">+ Acrescentar aviso</button>
+      <span style="flex:1"></span>
+      <button class="b s" id="peDel" style="color:var(--bad);border-color:#f3c4c6">Apagar prazo</button>
+      <button class="b" id="peFechar">Concluído</button>
+    </div>
+  </div>
+  <div class="card" id="praRes" style="display:none">
+    <h2 id="prT">Cumprimento</h2>
+    <div id="prKpi" class="prKpi"></div>
+    <div id="prData"></div>
+    <div class="row" style="margin:12px 0">
+      <div class="chips" id="prFil"></div>
+      <input type="text" id="prQ" placeholder="Procurar formador, turma, disciplina, módulo…" style="flex:1;min-width:200px">
+    </div>
+    <div class="row" style="margin-bottom:10px">
+      <button class="b s" id="prCopy">Copiar lista de incumprimentos</button>
+      <button class="b s" id="prCsv">Descarregar Excel (CSV)</button>
+      <label style="align-self:center">Enviar agora o aviso <select id="prAv"></select></label>
+      <button class="b" id="prSend">Enviar agora</button>
+    </div>
+    <div id="prMsg"></div>
+    <div id="prTab"></div>
+    <h3 style="margin:18px 0 6px;font-size:15px">Avisos já enviados neste prazo</h3>
+    <div id="prLog"></div>
+  </div>
+</section>
+
 <!-- DEFINIÇÕES -->
 <section id="def">
   <div class="card">
@@ -865,7 +954,7 @@ button.rm{background:#fff;color:var(--bad);border-color:#e3b4b4}button.rm:hover{
 <script>
 (function(){
 "use strict";
-const VERSAO="1.14"; // versão do BoxCheck — sobe a cada alteração publicada
+const VERSAO="1.15"; // versão do BoxCheck — sobe a cada alteração publicada
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 const $=s=>document.querySelector(s);
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -1080,8 +1169,8 @@ let curTab="box";
 $("#nav").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;show(b.dataset.t)});
 function show(t){curTab=t;document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
   document.querySelectorAll("main>section").forEach(s=>s.classList.toggle("on",s.id===t));
-  if(t==="rel")renderReport(); if(t==="est")renderEst(); if(t==="pas")renderTree(); if(t==="alt")renderAlt(); if(t==="rel"||t==="alt")verificarFundo(); if(t==="env")renderSend(); if(t==="def")renderDef(); if(t==="cop"){$("#cfgTxt").value=JSON.stringify(cfg,null,2);renderRP()}}
-function refreshAll(){renderAll();if(curTab==="rel")renderReport();if(curTab==="est")renderEst();if(curTab==="env")renderSend();if(curTab==="pas")renderTree();if(curTab==="alt")renderAlt();if(curTab==="cop"){$("#cfgTxt").value=JSON.stringify(cfg,null,2);renderRP()}}
+  if(t==="rel")renderReport(); if(t==="est")renderEst(); if(t==="pas")renderTree(); if(t==="alt")renderAlt(); if(t==="rel"||t==="alt")verificarFundo(); if(t==="env")renderSend(); if(t==="def")renderDef(); if(t==="cop"){$("#cfgTxt").value=JSON.stringify(cfg,null,2);renderRP()} if(t==="pra")renderPrazos()}
+function refreshAll(){renderAll();if(curTab==="pra")renderPrazos();if(curTab==="rel")renderReport();if(curTab==="est")renderEst();if(curTab==="env")renderSend();if(curTab==="pas")renderTree();if(curTab==="alt")renderAlt();if(curTab==="cop"){$("#cfgTxt").value=JSON.stringify(cfg,null,2);renderRP()}}
 const debounce=(fn,ms)=>{let h;return()=>{clearTimeout(h);h=setTimeout(fn,ms)}};
 
 /* ---------- documentos exigidos ---------- */
@@ -1895,7 +1984,7 @@ const cbOf=x=>pes(x&&x.created_by);
 function toFF(L){const fs=[],fo=[];
   for(const x of L.itens){const sg=x.path.split("/").map(s=>s.trim()).filter(Boolean);
     if(x.type==="folder"){fo.push(sg.join("/"));continue}
-    fs.push({path:[...sg,x.name].join("/"),rawDir:sg.join("/"),comps:sg.map(norm),name:x.name,nname:norm(x.name),date:x.modified_at||"",fid:x.id||"",size:x.size??null,sha1:x.sha1||"",cmod:x.cm||""})}
+    fs.push({path:[...sg,x.name].join("/"),rawDir:sg.join("/"),comps:sg.map(norm),name:x.name,nname:norm(x.name),date:x.modified_at||"",fid:x.id||"",size:x.size??null,sha1:x.sha1||"",cmod:x.cm||"",ca:x.ca||""})}
   return{fs,fo}}
 let EVB=null;
 function evalBase(b){const rev=txRev+"|"+refRev+"|"+tplRev+"|"+cfgRev+"|"+filesRev;if(EVB&&EVB.b===b&&EVB.rev===rev)return EVB.ev;
@@ -2093,7 +2182,7 @@ async function boxGet(path,params){
 }
 async function listFolder(id){
   let out=[],marker=null;
-  do{const p={fields:"id,type,name,modified_at,content_modified_at,size,sha1,created_by,modified_by",limit:1000,usemarker:"true"};if(marker)p.marker=marker;
+  do{const p={fields:"id,type,name,created_at,modified_at,content_modified_at,size,sha1,created_by,modified_by",limit:1000,usemarker:"true"};if(marker)p.marker=marker;
     const j=await boxGet(`folders/${id}/items`,p);out=out.concat(j.entries||[]);marker=j.next_marker||null}while(marker);
   return out;
 }
@@ -2129,7 +2218,7 @@ function connected(me){
   $("#boxBrowse").style.display="block";
   // ao entrar: procura sozinha o que mudou desde a última análise (poucos pedidos) e continua a leitura dos documentos
   nuvemUI();
-  pronto.then(()=>nuvemTrazer()).then(()=>browse(curFolder.id,curFolder.path)).then(()=>{if(lastListing&&lastListing.rootId===curFolder.id)runScan(false,true);else verificarFundo()});
+  pronto.then(()=>nuvemTrazer()).then(()=>avTrazerNuvem()).then(()=>browse(curFolder.id,curFolder.path)).then(()=>{if(lastListing&&lastListing.rootId===curFolder.id)runScan(false,true);else verificarFundo()});
 }
 function logout(revoke,msg){
   const old=SES;SES=null;saveSes();bgRun++;
@@ -2190,7 +2279,7 @@ function useListing(j,quiet){
 /* ---------- leitura da Box: completa (uma vez) ou só o que mudou ---------- */
 let scanRun=0,scanBusy=false;
 const pool=async(items,fn,n)=>{let i=0;await Promise.all(Array.from({length:Math.min(n,items.length)},async()=>{while(i<items.length){const x=items[i++];await fn(x)}}))};
-const fileItem=(x,path,pid)=>({path,name:x.name,type:"file",modified_at:x.modified_at||"",cm:x.content_modified_at||"",id:x.id,pid,size:x.size,sha1:x.sha1||"",by:byOf(x),cb:cbOf(x)});
+const fileItem=(x,path,pid)=>({path,name:x.name,type:"file",modified_at:x.modified_at||"",cm:x.content_modified_at||"",ca:x.created_at||"",id:x.id,pid,size:x.size,sha1:x.sha1||"",by:byOf(x),cb:cbOf(x)});
 function progress(run,st,pending){if(run!==scanRun||st.stop)return;
   const sec=(Date.now()-st.t0)/1000,o=st.opened,mm=Math.floor(sec/60),ss=String(Math.floor(sec%60)).padStart(2,"0"),rate=(o-(st.o0||0))/Math.max(sec,1);
   const falta=pending>0&&sec>8&&rate>0?Math.ceil(pending/rate/60):0;
@@ -2310,7 +2399,7 @@ async function runScan(full,auto){
     // contagem inicial para o painel Alterações: o estado antes desta análise (ou este, se for a primeira)
     if(!(basesIdx()[rootId]||[]).length){await criarBase(prev&&prev.v===2?prev:j,prev&&prev.v===2?"Análise de "+prev.quando:"Primeira análise")}
     scanRun++; // impede atualizações tardias da mensagem
-    useListing(j);showLast();scanHint();
+    useListing(j);showLast();scanHint();setTimeout(()=>correrAvisos(),800);
     const secs=Math.round((agora-st.t0)/1000);
     let msg=`Concluído em ${secs} s (${st.modo}${res.full?"":`: ${st.mudancas} alteração(ões) registadas pela Box, ${st.opened} pasta(s) relidas`}) · ${nP} pastas, ${nF} ficheiros${RATE.hits?` · a Box pediu ${RATE.hits} pausa(s)`:""}${st.failed.length?` · ⚠ ${st.failed.length} pasta(s) sem acesso: ${st.failed.slice(0,3).join("; ")}${st.failed.length>3?"…":""}`:""}.`;
     if(d){const n=d.novos.length+d.alterados.length+d.apagados.length;msg+=n?` Desde ${prev.quando}: ${d.novos.length} colocado(s), ${d.alterados.length} substituído(s) ou movido(s), ${d.apagados.length} apagado(s) — veja “Alterações”.`:` Nada mudou desde ${prev.quando}.`;
@@ -2394,7 +2483,8 @@ function nuvemUI(){const el=$("#nuvemMsg");if(!el)return;
 function estadoAtual(){let root="";try{root=localStorage.getItem("box_last_root")||""}catch(e){}
   return{cfg:JSON.stringify(cfg),logos:LOGOS,pontos:rpList(),tpl:TPL,folder:curFolder,root,bases:basesIdx(),resumos:resumos()}}
 let nuvH=null;
-function nuvemAgendar(){if(NUV.ativo===false||!SES||NUV.ocupado)return;clearTimeout(nuvH);nuvH=setTimeout(()=>nuvemPut("estado",estadoAtual(),cfgT()||Date.now()),8000)}
+function nuvemAgendar(){try{NUV}catch(e){setTimeout(nuvemAgendar,0);return} // pode ser chamada ao arrancar, antes de NUV existir
+  if(NUV.ativo===false||!SES||NUV.ocupado)return;clearTimeout(nuvH);nuvH=setTimeout(()=>nuvemPut("estado",estadoAtual(),cfgT()||Date.now()),8000)}
 function nuvemListagem(j){if(!SES)return;nuvemPut("L_"+j.rootId,j,j.t).then(()=>nuvemAgendar())}
 async function nuvemBases(rootId){if(!SES||NUV.ativo===false)return;const l=basesIdx()[rootId]||[];const out=[];
   for(const b of l){const x=await lerBase(rootId,b.t);if(x)out.push(x)}
@@ -2838,6 +2928,312 @@ document.querySelector("main").addEventListener("drop",e=>{if(!DRG||!MARK||!MARK
 document.querySelector("main").addEventListener("dragend",()=>{if(!DRG)return;DRG.classList.remove("dragging");DRG.draggable=false;DRG=null;if(MARK)MARK.remove();MARK=null;document.body.classList.remove("arrastar")});
 $("#layReset").onclick=()=>{try{localStorage.removeItem(LAYKEY)}catch(e){}location.reload()};
 prepararDisposicao();
+
+
+/* ---------- prazos de entrega e avisos automáticos (v1.14) ---------- */
+// tipo do módulo: "mod" (Módulo), "uc" (UC) ou "ufcd" (UFCD)
+const TIPOS_MOD=[["mod","Módulos"],["uc","UC"],["ufcd","UFCD"]];
+function tipoMod(m){const n=norm(m.cod||m.nome||"");
+  if(/^uc\s*\d/.test(n))return "uc";if(/^ufcd/.test(n))return "ufcd";if(/^(modulo|mod\.?)\s*/.test(n))return "mod";
+  if(/^\d{4}(?!\d)/.test(n))return "ufcd";return "mod"}
+const avCfg=()=>{cfg.avisosCfg=Object.assign({auto:false,hora:"09:00",para:""},cfg.avisosCfg||{});return cfg.avisosCfg};
+const prazos=()=>cfg.prazos||(cfg.prazos=[]);
+const AV_MAX=3;
+const AVISO_TPL=[
+  {nome:"Lembrete antes do prazo",quando:"antes",dias:7,rep:0,max:1,dest:"falta",
+   subj:"Lembrete: {prazo_nome} — entrega até {prazo}",
+   body:"Olá {primeiro_nome},\n\nLembro que o prazo para a entrega de {documentos} na Box termina no dia {prazo} (faltam {dias} dia(s)).\n\nDe acordo com a última verificação, ainda falta(m) {total} documento(s):\n\n{lista}\n\nObrigado,\nA Direção"},
+  {nome:"No dia do prazo",quando:"dia",dias:0,rep:0,max:1,dest:"falta",
+   subj:"Último dia: {prazo_nome}",
+   body:"Olá {primeiro_nome},\n\nHoje, {prazo}, termina o prazo para a entrega de {documentos} na Box. Ainda falta(m):\n\n{lista}\n\nObrigado,\nA Direção"},
+  {nome:"Incumprimento do prazo",quando:"depois",dias:1,rep:7,max:4,dest:"falta",
+   subj:"Incumprimento do prazo: {prazo_nome}",
+   body:"Caro(a) {nome},\n\nO prazo para a entrega de {documentos} na Box terminou no dia {prazo} (há {dias} dia(s)) e, de acordo com a verificação de hoje, continua(m) em falta {total} documento(s):\n\n{lista}\n\nSolicito a regularização com a maior brevidade possível.\n\nCom os melhores cumprimentos,\nA Direção"}];
+function novoPrazo(){const plan=cfg.docTypes.find(d=>/planifica/.test(norm(d.nome)));
+  const d=new Date();d.setDate(d.getDate()+14);
+  return{id:uid(),nome:plan?"Planificações":"Novo prazo",data:d.toISOString().slice(0,10),ativo:true,docs:plan?[plan.id]:[],tipos:["mod","uc","ufcd"],turmas:[],profs:[],disc:"",modq:"",resumo:true,
+    avisos:AVISO_TPL.map(a=>({id:uid(),ativo:true,...a}))}}
+// datas
+const pd=s=>{const m=String(s||"").match(/^(\d{4})-(\d\d)-(\d\d)/);return m?[+m[1],+m[2]-1,+m[3]]:null};
+const fimPrazo=p=>{const d=pd(p.data);return d?new Date(d[0],d[1],d[2],23,59,59,999).getTime():NaN};
+const prazoPT=p=>{const d=pd(p.data);return d?new Date(d[0],d[1],d[2]).toLocaleDateString("pt-PT"):"(sem data)"};
+const DIA=864e5;
+const diasEntre=(a,b)=>Math.round((new Date(new Date(b).toDateString())-new Date(new Date(a).toDateString()))/DIA);
+const horaEnvio=()=>{const m=String(avCfg().hora||"09:00").match(/^(\d\d?):(\d\d)/);return m?[+m[1],+m[2]]:[9,0]};
+// data de entrega de um ficheiro: quando foi colocado na Box (created_at); nas análises antigas, a última alteração (aproximada)
+const dataEntrega=f=>{if(f.ca){const t=Date.parse(f.ca);if(!isNaN(t))return{t,aprox:false}}const t=Date.parse(f.date||"");return{t:isNaN(t)?null:t,aprox:true}};
+const splitQ=s=>String(s||"").split(/[,;]/).map(norm).filter(Boolean);
+function prazoMods(p){const T=new Set(p.turmas||[]),P=new Set(p.profs||[]),tp=new Set(p.tipos&&p.tipos.length?p.tipos:["mod","uc","ufcd"]),dq=splitQ(p.disc),mq=splitQ(p.modq);
+  return m=>{if(!tp.has(tipoMod(m)))return false;if(T.size&&!T.has(m.turma))return false;if(P.size&&!P.has(profOf(m)))return false;
+    if(dq.length&&!dq.some(q=>norm(m.disc).includes(q)))return false;
+    if(mq.length){const t=norm(modTitle(m)+" "+(m.cod||""));if(!mq.some(q=>t.includes(q)||modKey(q)===modKey(m.cod)))return false}
+    return true}}
+// estado de cada documento abrangido pelo prazo: prazo (entregue no prazo), atraso (fora do prazo), falta (prazo passou e não entregou), pendente (ainda dentro do prazo)
+const EST_P={prazo:["No prazo","ok"],atraso:["Fora do prazo","late"],falta:["Não entregue","bad"],pendente:["Por entregar","pend"]};
+function prazoItens(p,agora){agora=agora||Date.now();const fim=fimPrazo(p),ok=prazoMods(p),D=new Set(p.docs||[]),out=[];
+  for(const e of evaluate()){const m=e.mod;if(!ok(m))continue;
+    for(const i of e.items){if(D.size&&!D.has(i.doc.id))continue;
+      let est,ent=null,aprox=false;
+      if(i.ok){const good=(i.q||[]).filter(x=>!x.q||x.q.lvl!=="bad").map(x=>dataEntrega(x.f)).filter(x=>x.t).sort((a,b)=>a.t-b.t);
+        const need=Math.max(1,i.doc.min||1),g=good[Math.min(need,good.length)-1];
+        if(g){ent=g.t;aprox=g.aprox}
+        est=ent&&ent>fim?"atraso":"prazo"}
+      else est=agora>fim?"falta":"pendente";
+      out.push({e,m,i,pid:profOf(m)||"_",est,ent,aprox,atraso:ent&&ent>fim?diasEntre(fim,ent):(est==="falta"?diasEntre(fim,agora):0)})}}
+  return out}
+function prazoPorProf(L){const M=new Map();for(const x of L){if(!M.has(x.pid))M.set(x.pid,[]);M.get(x.pid).push(x)}
+  return [...M.entries()].map(([pid,it])=>{const p=cfg.profs.find(q=>q.id===pid)||{id:"_",nome:"(sem formador atribuído)",email:""};
+    const c={prazo:0,atraso:0,falta:0,pendente:0};for(const x of it)c[x.est]++;return{p,it,c,inc:c.falta+c.atraso}})
+    .sort((a,b)=>(b.c.falta+b.c.pendente)-(a.c.falta+a.c.pendente)||b.c.atraso-a.c.atraso||a.p.nome.localeCompare(b.p.nome,"pt"))}
+const contar=L=>{const c={prazo:0,atraso:0,falta:0,pendente:0};for(const x of L)c[x.est]++;return c};
+
+/* registo dos avisos enviados (fora da configuração, para "anular" nunca fazer reenviar) */
+const AVLOG="boxcheck_avisos_log";
+let AVL=lsJ(AVLOG,[])||[];
+const avKeys=()=>new Set(AVL.map(x=>x.k));
+function avGuardar(){AVL=AVL.slice(-3000);try{localStorage.setItem(AVLOG,JSON.stringify(AVL))}catch(e){}
+  if(SES&&NUV.ativo!==false)nuvemPut("avisos",AVL)}
+function avJuntar(arr){if(!Array.isArray(arr))return 0;const K=new Set(AVL.map(x=>x.k+"|"+x.t));let n=0;
+  for(const x of arr)if(x&&x.k&&!K.has(x.k+"|"+x.t)){AVL.push(x);n++}
+  if(n){AVL.sort((a,b)=>a.t-b.t);try{localStorage.setItem(AVLOG,JSON.stringify(AVL))}catch(e){}}return n}
+async function avTrazerNuvem(){if(!SES||!workerUrl()||NUV.ativo===false)return;
+  try{const idx=(await (await nuvem("GET","")).json()).itens||{};if(!idx.avisos)return;const arr=await nuvemGet("avisos");avJuntar(arr)}catch(e){}}
+// já enviado para este formador (ok) nesta ocorrência?
+const enviado=k=>AVL.some(x=>x.k===k&&x.ok);
+
+/* calendário de cada aviso */
+function ocorrencias(p,a){const d=pd(p.data);if(!d)return[];const [h,mi]=horaEnvio();
+  const off=a.quando==="antes"?-(+a.dias||0):a.quando==="depois"?(+a.dias||0):0;
+  const rep=Math.max(0,+a.rep||0),max=rep?Math.max(1,Math.min(52,+a.max||1)):1,fim=fimPrazo(p),out=[];
+  for(let k=0;k<max;k++){const t=new Date(d[0],d[1],d[2]+off+k*rep,h,mi).getTime();if(a.quando!=="depois"&&t>fim)break;out.push(t)}
+  return out}
+// ocorrência que está na hora (a mais recente que já passou); os avisos "antes" deixam de valer quando o prazo termina
+function ocorrenciaDevida(p,a,agora){const o=ocorrencias(p,a);let k=-1;for(let i=0;i<o.length;i++)if(o[i]<=agora)k=i;
+  if(k<0)return null;if(a.quando!=="depois"&&agora>fimPrazo(p))return null;return{k,t:o[k]}}
+const proxima=(p,a,agora)=>ocorrencias(p,a).find(t=>t>agora)||null;
+function destinatarios(p,a,L){const G=prazoPorProf(L).filter(g=>g.p.id!=="_");
+  return G.map(g=>{const it=g.it.filter(x=>a.dest==="incumpriu"?(x.est==="falta"||x.est==="atraso"):(x.est==="falta"||x.est==="pendente"));return{...g,alvo:it}}).filter(g=>g.alvo.length)}
+function linhaItem(x){const r=`• ${x.m.turma} | ${discShort(x.m.disc)} | ${modTitle(x.m)} → ${x.i.doc.nome}`;
+  if(x.est==="atraso")return r+` — entregue a ${dataPT(x.ent)}, ${x.atraso} dia(s) depois do prazo`;
+  return r+(x.i.state==="blank"?" — o ficheiro entregue não conta: "+motivoBad(x.i):x.i.loc?` (${x.i.loc})`:"")}
+function preencherAviso(tpl,p,a,g,agora){agora=agora||Date.now();const fim=fimPrazo(p);
+  const dias=a.quando==="depois"?Math.max(0,diasEntre(fim,agora)):Math.max(0,diasEntre(agora,fim));
+  const docs=(p.docs||[]).map(id=>(cfg.docTypes.find(d=>d.id===id)||{}).nome).filter(Boolean);
+  const first=String(g.p.nome||"").trim().split(/\s+/)[0]||"";
+  return String(tpl||"").replace(/\{primeiro_nome\}/g,first).replace(/\{nome\}/g,g.p.nome).replace(/\{prazo_nome\}/g,p.nome||"")
+    .replace(/\{prazo\}/g,prazoPT(p)).replace(/\{dias\}/g,dias).replace(/\{documentos\}/g,docs.length?docs.join(", ").replace(/, ([^,]*)$/," e $1").toLowerCase():"a documentação pedida")
+    .replace(/\{total\}/g,g.alvo.length).replace(/\{ano\}/g,anoLetivo()).replace(/\{lista\}/g,g.alvo.map(linhaItem).join("\n"))}
+
+/* envio */
+let AVBUSY=false,AVMSG="";
+async function msTokenSilencioso(){const p=await msInit();if(!MSACC)throw new Error("Office 365 sem sessão");return (await p.acquireTokenSilent({scopes:MS_SCOPES,account:MSACC})).accessToken}
+function analiseFresca(){return lastListing&&Date.now()-(lastListing.t||0)<3*3600e3}
+// lista do que está na hora de enviar (sem enviar)
+function avisosDevidos(agora){agora=agora||Date.now();const out=[];
+  for(const p of prazos()){if(!p.ativo||!pd(p.data))continue;let L=null;
+    for(const a of p.avisos||[]){if(!a.ativo)continue;const o=ocorrenciaDevida(p,a,agora);if(!o)continue;
+      L=L||prazoItens(p,agora);
+      for(const g of destinatarios(p,a,L)){const k=p.id+"|"+a.id+"|"+g.p.id+"|"+o.k;if(enviado(k)||!g.p.email)continue;out.push({p,a,g,k,o})}}
+    // resumo para a direção no dia seguinte ao prazo
+    const para=(avCfg().para||cfg.mail.relatorio_para||"").trim(),fim=fimPrazo(p),[h,mi]=horaEnvio(),d=pd(p.data);
+    if(p.resumo&&para&&d&&agora>=new Date(d[0],d[1],d[2]+1,h,mi).getTime()&&agora-fim<30*DIA){const k=p.id+"|resumo";if(!enviado(k))out.push({p,resumo:true,para,k})}}
+  return out}
+function resumoTexto(p,agora){const L=prazoItens(p,agora),c=contar(L),G=prazoPorProf(L).filter(g=>g.inc);
+  let s=`${p.nome} — prazo: ${prazoPT(p)}\nSituação a ${new Date(agora||Date.now()).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"})}\n\n`+
+    `Entregues no prazo: ${c.prazo}\nEntregues fora do prazo: ${c.atraso}\nNão entregues: ${c.falta+c.pendente}\nTotal de documentos: ${L.length}\n\n`;
+  if(!G.length)return s+"Todos os formadores cumpriram o prazo.";
+  s+=`Formadores que não cumpriram (${G.length}):\n`;
+  for(const g of G){s+=`\n${g.p.nome}${g.p.email?" <"+g.p.email+">":""} — ${g.c.falta} não entregue(s), ${g.c.atraso} fora do prazo\n`;
+    for(const x of g.it.filter(x=>x.est==="falta"||x.est==="atraso"))s+=linhaItem(x).replace(/^• /,"   • ")+"\n"}
+  return s}
+async function enviarItem(x,manual){const agora=Date.now();
+  if(x.resumo){await msEnviar({to:x.para,cc:"",subject:`Prazo “${x.p.nome}” (${prazoPT(x.p)}) — quem não cumpriu`,body:resumoTexto(x.p,agora)+"\n\n— Enviado pela BoxCheck"});return}
+  await msEnviar({to:x.g.p.email,cc:msCfg().cc,subject:preencherAviso(x.a.subj,x.p,x.a,x.g,agora),body:preencherAviso(x.a.body,x.p,x.a,x.g,agora)})}
+async function enviarLista(lista,manual,onProg){let n=0;const falhas=[];
+  for(const x of lista){onProg&&onProg(n+falhas.length+1,lista.length,x);
+    const base={k:x.k,t:Date.now(),prazo:x.p.id,aviso:x.resumo?"resumo":x.a.id,prof:x.resumo?"":x.g.p.id,nome:x.resumo?"(resumo para "+x.para+")":x.g.p.nome,n:x.resumo?0:x.g.alvo.length,manual:!!manual};
+    if(!x.resumo&&!x.g.p.email){AVL.push({...base,ok:false,err:"sem email"});falhas.push(x.g.p.nome+": sem email");continue}
+    try{await enviarItem(x,manual);AVL.push({...base,ok:true});n++}
+    catch(e){AVL.push({...base,ok:false,err:msErro(e)});falhas.push((x.resumo?"Resumo":x.g.p.nome)+": "+msErro(e))}
+    await sleep(400)}
+  avGuardar();return{n,falhas}}
+// corre sozinho: depois de cada análise e de 20 em 20 minutos com a app aberta
+async function correrAvisos(forcar){
+  if(AVBUSY)return;const A=avCfg();if(!A.auto&&!forcar)return;
+  if(!prazos().some(p=>p.ativo))return;
+  if(!analiseFresca()){if(SES&&!scanBusy&&lastListing&&lastListing.rootId===curFolder.id&&!forcar){runScan(false,true)}
+    if(!forcar){AVMSG="";avEstadoUI();return}}
+  AVBUSY=true;
+  try{await avTrazerNuvem();
+    const lista=avisosDevidos();if(!lista.length){AVMSG="";return}
+    try{await msTokenSilencioso()}catch(e){AVMSG=`Há ${lista.length} aviso(s) na hora, mas falta entrar no Office 365 neste navegador (Definições › Office 365 ou o botão abaixo).`;return}
+    const r=await enviarLista(lista,false);
+    AVMSG=`${r.n} aviso(s) enviado(s) automaticamente às ${new Date().toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"})}.`+(r.falhas.length?` Não enviados: ${r.falhas.join("; ")}`:"");
+    if(r.n)toast(`${r.n} aviso(s) de prazos enviado(s)`)}
+  catch(e){AVMSG="Erro nos avisos: "+e.message}
+  finally{AVBUSY=false;avEstadoUI();if(curTab==="pra")renderPrazos()}}
+setInterval(()=>{if(document.visibilityState!=="hidden"||true)correrAvisos()},20*60e3);
+
+/* ---------- interface ---------- */
+let PSEL=null,PED=null,PFIL="todos";
+const tagE=e=>`<span class="tag ${EST_P[e][1]}">${EST_P[e][0]}</span>`;
+function quandoTxt(a){const d=+a.dias||0;let s=a.quando==="antes"?`${d} dia(s) antes do prazo`:a.quando==="depois"?`${d} dia(s) depois do prazo`:"no dia do prazo";
+  if(+a.rep>0)s+=`, depois a cada ${a.rep} dia(s) (até ${a.max||1} vez(es))`;return s}
+function avEstadoUI(){const el=$("#avEstado");if(!el)return;const A=avCfg();let h="";
+  if(msCfg().clientId&&!MSAL){msInit().then(()=>avEstadoUI()).catch(()=>{})}
+  if(!msCfg().clientId)h=`<div class="msg bad">Para os avisos saírem, ligue primeiro o Office 365 em <b>Definições</b>.</div>`;
+  else if(!MSACC)h=`<div class="msg bad">O Office 365 está configurado mas não há sessão neste navegador. <a href="#" id="avMsIn">Entrar no Office 365</a></div>`;
+  else h=`<div class="msg ${A.auto?"ok":"info"}">${A.auto?"Envio automático ligado":"Envio automático desligado"} — os emails saem de <b>${esc(MSACC.username)}</b>.${lastListing?` Última análise: ${esc(lastListing.quando)}.`:""}</div>`;
+  const semE=[...new Set(prazos().filter(p=>p.ativo).flatMap(p=>prazoPorProf(prazoItens(p)).filter(g=>g.p.id!=="_"&&!g.p.email&&(g.c.falta||g.c.pendente)).map(g=>g.p.nome)))];
+  if(semE.length)h+=`<div class="msg bad">Sem email registado (não recebem avisos): ${esc(semE.join(", "))} — acrescente-o em Formadores.</div>`;
+  if(AVMSG)h+=`<div class="msg info">${esc(AVMSG)}</div>`;
+  el.innerHTML=h;const li=$("#avMsIn");if(li)li.onclick=async e=>{e.preventDefault();try{await msLoginPopup();avEstadoUI();correrAvisos()}catch(x){AVMSG=msErro(x);avEstadoUI()}}}
+function renderProx(){const el=$("#avProx");if(!el)return;const agora=Date.now(),rows=[];
+  for(const p of prazos()){if(!p.ativo)continue;
+    for(const a of p.avisos||[]){if(!a.ativo)continue;const t=proxima(p,a,agora),o=ocorrenciaDevida(p,a,agora);
+      if(o)rows.push({t:o.t,p,a,agora:true});if(t)rows.push({t,p,a})}}
+  const dev=avisosDevidos(agora);rows.sort((a,b)=>a.t-b.t);
+  if(!rows.length){el.innerHTML=`<p class="hint">Sem envios marcados.</p>`;return}
+  el.innerHTML=`<table class="rt"><thead><tr><th>Quando</th><th>Prazo</th><th>Aviso</th><th>Para</th></tr></thead><tbody>${rows.slice(0,12).map(r=>{
+    const n=r.agora?dev.filter(x=>x.a&&x.a.id===r.a.id).length:destinatarios(r.p,r.a,prazoItens(r.p)).length;
+    return `<tr><td>${r.agora?`<span class="tag warn">na hora</span>`:esc(new Date(r.t).toLocaleString("pt-PT",{weekday:"short",day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}))}</td><td>${esc(r.p.nome)}</td><td>${esc(r.a.nome)}</td><td>${r.agora?`${n} por enviar`:`${n} formador(es), se fosse hoje`}</td></tr>`}).join("")}</tbody></table>`}
+function renderPrazos(){
+  const A=avCfg();$("#avAuto").checked=!!A.auto;$("#avHora").value=A.hora||"09:00";$("#avPara").value=A.para||cfg.mail.relatorio_para||"";
+  const P=prazos(),el=$("#praItens");
+  el.innerHTML=P.length?P.map(p=>{const L=prazoItens(p),c=contar(L),inc=prazoPorProf(L).filter(g=>g.p.id!=="_"&&(g.c.falta||g.c.atraso||g.c.pendente)).length,fim=fimPrazo(p),dd=diasEntre(Date.now(),fim);
+    const quando=isNaN(fim)?"sem data":dd>0?`faltam ${dd} dia(s)`:dd===0?"termina hoje":`terminou há ${-dd} dia(s)`;
+    return `<div class="praItem"><div class="nm"><b>${esc(p.nome)}</b>${p.ativo?"":` <span class="tag">inativo</span>`}<small>até ${prazoPT(p)} · ${quando} · ${L.length} documento(s) · ${(p.avisos||[]).filter(a=>a.ativo).length} aviso(s)</small></div>
+      <span class="tag ok">${c.prazo} no prazo</span>${c.atraso?`<span class="tag late">${c.atraso} fora do prazo</span>`:""}${c.falta?`<span class="tag bad">${c.falta} não entregue(s)</span>`:""}${c.pendente?`<span class="tag pend">${c.pendente} por entregar</span>`:""}
+      <span class="hint" style="margin:0">${inc} formador(es) com pendências</span>
+      <button class="b s" data-pver="${p.id}">Ver</button><button class="b s" data-ped="${p.id}">Editar</button></div>`}).join(""):`<p class="hint">Ainda não há prazos. Carregue em <b>+ Novo prazo</b>.</p>`;
+  avEstadoUI();renderProx();
+  if(PED){const p=P.find(x=>x.id===PED);if(p)renderEditor(p);else{PED=null;$("#praEd").style.display="none"}}
+  if(PSEL){const p=P.find(x=>x.id===PSEL);if(p)renderRes(p);else{PSEL=null;$("#praRes").style.display="none"}}
+}
+function chipsHTML(list,sel,attr){const S=new Set(sel||[]);return list.map(([v,t])=>`<label class="chip${S.has(v)?" on":""}"><input type="checkbox" ${attr}="${esc(v)}"${S.has(v)?" checked":""}> ${esc(t)}</label>`).join("")}
+function renderEditor(p){$("#praEd").style.display="";$("#praEdT").textContent="Prazo: "+(p.nome||"");
+  const f=document.activeElement;
+  if(f!==$("#peNome"))$("#peNome").value=p.nome||"";$("#peData").value=p.data||"";$("#peAtivo").checked=!!p.ativo;$("#peResumo").checked=!!p.resumo;
+  if(f!==$("#peDisc"))$("#peDisc").value=p.disc||"";if(f!==$("#peMod"))$("#peMod").value=p.modq||"";
+  $("#peDocs").innerHTML=chipsHTML(cfg.docTypes.map(d=>[d.id,d.nome]),p.docs,"data-pdoc");
+  const tc={};for(const m of ativos())tc[tipoMod(m)]=(tc[tipoMod(m)]||0)+1;
+  $("#peTipos").innerHTML=chipsHTML(TIPOS_MOD.map(([v,t])=>[v,`${t} (${tc[v]||0})`]),p.tipos,"data-ptipo");
+  const turmas=[...new Set(ativos().map(m=>m.turma).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"pt",{numeric:true}));
+  $("#peTurmas").innerHTML=turmas.length?chipsHTML(turmas.map(t=>[t,t]),p.turmas,"data-pturma"):`<span class="hint">Sem turmas — faça a análise e detete os módulos em Atribuições.</span>`;
+  $("#peProfs").innerHTML=cfg.profs.length?chipsHTML(cfg.profs.slice().sort((a,b)=>a.nome.localeCompare(b.nome,"pt")).map(x=>[x.id,x.nome]),p.profs,"data-pprof"):`<span class="hint">Sem formadores registados.</span>`;
+  const L=prazoItens(p),nm=new Set(L.map(x=>x.m.id)).size;
+  $("#peCont").innerHTML=`Este prazo abrange <b>${L.length}</b> documento(s) em <b>${nm}</b> módulo(s)/UC/UFCD de <b>${new Set(L.map(x=>x.pid)).size}</b> formador(es).${L.length?"":" Confirme os filtros e se esses documentos estão pedidos nos módulos (Atribuições)."}`;
+  const sem=L.filter(x=>x.aprox&&x.ent).length;if(sem)$("#peCont").innerHTML+=`<br>${sem} entrega(s) com data aproximada (análise anterior à v1.14). Para datas exatas, use “Ler tudo outra vez” em Gestão Documental.`;
+  renderAvEd(p)}
+function renderAvEd(p){const el=$("#peAvisos");const foc=document.activeElement,fk=foc&&foc.dataset&&foc.dataset.avf?foc.dataset.avf+"|"+foc.closest("[data-av]").dataset.av:null;
+  if(fk)return; // não redesenha enquanto escreve
+  el.innerHTML=(p.avisos||[]).map((a,ix)=>`<div class="avBox" data-av="${a.id}">
+    <div class="row"><label class="chip" style="align-self:flex-end"><input type="checkbox" data-avf="ativo"${a.ativo?" checked":""}> ativo</label>
+      <label class="grow">Nome do aviso ${ix+1}<input type="text" data-avf="nome" value="${esc(a.nome)}"></label>
+      <button class="b s" data-avdel="${a.id}" style="align-self:flex-end">Remover</button></div>
+    <div class="row" style="margin-top:8px">
+      <label style="width:175px">Quando<select data-avf="quando"><option value="antes"${a.quando==="antes"?" selected":""}>antes do prazo</option><option value="dia"${a.quando==="dia"?" selected":""}>no dia do prazo</option><option value="depois"${a.quando==="depois"?" selected":""}>depois do prazo</option></select></label>
+      <label style="width:110px">N.º de dias<input type="number" min="0" max="120" data-avf="dias" value="${+a.dias||0}"${a.quando==="dia"?" disabled":""}></label>
+      <label style="width:150px">Repetir a cada<select data-avf="rep">${[0,1,2,3,5,7,10,14,21,30].map(v=>`<option value="${v}"${+a.rep===v?" selected":""}>${v?v+" dia(s)":"não repetir"}</option>`).join("")}</select></label>
+      <label style="width:110px">Máx. de envios<input type="number" min="1" max="52" data-avf="max" value="${+a.max||1}"${+a.rep?"":" disabled"}></label>
+      <label class="grow">Para quem<select data-avf="dest"><option value="falta"${a.dest!=="incumpriu"?" selected":""}>quem ainda não entregou</option><option value="incumpriu"${a.dest==="incumpriu"?" selected":""}>quem não cumpriu o prazo (inclui entregas atrasadas)</option></select></label>
+    </div>
+    <p class="hint" style="margin:6px 0">${esc(quandoTxt(a))}${ocorrencias(p,a).length?" · "+ocorrencias(p,a).map(t=>new Date(t).toLocaleDateString("pt-PT",{day:"2-digit",month:"2-digit"})).join(", "):""}</p>
+    <label>Assunto<input type="text" data-avf="subj" value="${esc(a.subj)}"></label>
+    <label style="margin-top:6px;display:block">Mensagem<textarea data-avf="body">${esc(a.body)}</textarea></label>
+    <div class="row" style="margin-top:6px"><button class="b s" data-avprev="${a.id}">Pré-visualizar</button></div>
+    <div class="mailbox" data-avout="${a.id}" style="display:none;max-height:300px;overflow:auto"></div>
+  </div>`).join("");
+  $("#peAddAv").disabled=(p.avisos||[]).length>=AV_MAX}
+function renderRes(p){$("#praRes").style.display="";const agora=Date.now(),L=prazoItens(p,agora),c=contar(L),fim=fimPrazo(p);
+  $("#prT").textContent=`${p.nome} — até ${prazoPT(p)}`;
+  const G=prazoPorProf(L);
+  $("#prKpi").innerHTML=`<div class="k-ok"><b>${c.prazo}</b><span>entregues no prazo</span></div><div class="k-late"><b>${c.atraso}</b><span>entregues fora do prazo</span></div>`+
+    (agora>fim?`<div class="k-miss"><b>${c.falta}</b><span>não entregues</span></div>`:`<div class="k-pend"><b>${c.pendente}</b><span>ainda por entregar</span></div>`)+
+    `<div><b>${G.filter(g=>g.p.id!=="_"&&g.inc).length}</b><span>formador(es) não cumpriram</span></div>`;
+  $("#prData").innerHTML=lastListing?`<p class="hint" style="margin:4px 0">Conforme a análise de ${esc(lastListing.quando)}.${analiseFresca()?"":" <b>Atualize a análise</b> em Gestão Documental para ver as entregas mais recentes."}</p>`:"";
+  const F=[["todos","Todos"],["inc","Não cumpriram"],["falta",agora>fim?"Não entregues":"Por entregar"],["atraso","Fora do prazo"],["prazo","No prazo"]];
+  $("#prFil").innerHTML=F.map(([k,t])=>`<label class="chip${PFIL===k?" on":""}"><input type="radio" name="prf" value="${k}"${PFIL===k?" checked":""}> ${t}</label>`).join("");
+  const q=norm($("#prQ").value),passa=x=>(PFIL==="todos"||(PFIL==="inc"?(x.est==="falta"||x.est==="atraso"||x.est==="pendente"):PFIL==="falta"?(x.est==="falta"||x.est==="pendente"):x.est===PFIL))&&
+    (!q||norm([x.m.turma,x.m.disc,modTitle(x.m),x.i.doc.nome,(cfg.profs.find(y=>y.id===x.pid)||{}).nome].join(" ")).includes(q));
+  const blocos=G.map(g=>({...g,v:g.it.filter(passa)})).filter(g=>g.v.length);
+  $("#prTab").innerHTML=blocos.length?blocos.map(g=>`<div class="prProf"><div><span style="flex:1">${esc(g.p.nome)}${g.p.email?` <span class="hint" style="font-weight:400;margin:0">&lt;${esc(g.p.email)}&gt;</span>`:""}</span>
+      ${g.c.prazo?`<span class="tag ok">${g.c.prazo} no prazo</span>`:""}${g.c.atraso?`<span class="tag late">${g.c.atraso} fora do prazo</span>`:""}${g.c.falta?`<span class="tag bad">${g.c.falta} não entregue(s)</span>`:""}${g.c.pendente?`<span class="tag pend">${g.c.pendente} por entregar</span>`:""}</div>
+    <table><thead><tr><th>Turma</th><th>Disciplina</th><th>Módulo / UC / UFCD</th><th>Documento</th><th>Estado</th><th>Entregue em</th></tr></thead><tbody>${g.v.map(x=>`<tr><td>${esc(x.m.turma)}</td><td>${esc(discShort(x.m.disc))}</td><td>${esc(modTitle(x.m))}</td><td>${esc(x.i.doc.nome)}</td><td>${tagE(x.est)}${x.i.state==="blank"?` <span class="hint" style="margin:0">(ficheiro não conta)</span>`:""}</td><td>${x.ent?esc((x.aprox?"≈ ":"")+new Date(x.ent).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"}))+(x.est==="atraso"?` <b style="color:#b45309">+${x.atraso} d</b>`:""):x.est==="falta"?`<b style="color:var(--bad)">${x.atraso} d de atraso</b>`:"—"}</td></tr>`).join("")}</tbody></table></div>`).join(""):`<p class="hint">Nada a mostrar com este filtro.</p>`;
+  $("#prAv").innerHTML=(p.avisos||[]).map(a=>`<option value="${a.id}">${esc(a.nome)}</option>`).join("")+(p.resumo?`<option value="resumo">Resumo para mim (direção)</option>`:"");
+  const LG=AVL.filter(x=>x.prazo===p.id).slice(-60).reverse();
+  $("#prLog").innerHTML=LG.length?`<table class="rt"><thead><tr><th>Data</th><th>Aviso</th><th>Formador</th><th>Itens</th><th>Resultado</th></tr></thead><tbody>${LG.map(x=>{const a=(p.avisos||[]).find(y=>y.id===x.aviso);
+    return `<tr><td>${esc(new Date(x.t).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"}))}</td><td>${esc(x.aviso==="resumo"?"Resumo":a?a.nome:"(aviso removido)")}${x.manual?" · manual":" · automático"}</td><td>${esc(x.nome||"")}</td><td>${x.n||""}</td><td>${x.ok?`<span class="tag ok">enviado</span>`:`<span class="tag bad">falhou</span> ${esc(x.err||"")}`}</td></tr>`}).join("")}</tbody></table>`:`<p class="hint">Ainda não foi enviado nenhum aviso deste prazo.</p>`}
+function prazoCSV(p){const L=prazoItens(p),qq=v=>`"${String(v??"").replace(/"/g,'""')}"`;
+  const h=["Formador","Email","Turma","Disciplina","Módulo/UC/UFCD","Documento","Estado","Entregue em","Dias de atraso"];
+  return [h.map(qq).join(";"),...L.map(x=>{const p2=cfg.profs.find(y=>y.id===x.pid)||{nome:"(sem formador)",email:""};
+    return [p2.nome,p2.email,x.m.turma,discShort(x.m.disc),modTitle(x.m),x.i.doc.nome,EST_P[x.est][0],x.ent?new Date(x.ent).toLocaleString("pt-PT"):"",x.atraso||""].map(qq).join(";")})].join("\n")}
+const prCur=()=>prazos().find(x=>x.id===PSEL);
+const pedCur=()=>prazos().find(x=>x.id===PED);
+function prMsg(h,k){$("#prMsg").innerHTML=h?`<div class="msg ${k||"ok"}">${h}</div>`:""}
+
+$("#praNovo").onclick=()=>{const p=novoPrazo();prazos().push(p);save();PED=p.id;PSEL=p.id;renderPrazos();$("#praEd").scrollIntoView({behavior:"smooth"})};
+$("#praItens").addEventListener("click",e=>{const v=e.target.closest("[data-pver]"),d=e.target.closest("[data-ped]");
+  if(v){PSEL=v.dataset.pver;renderPrazos();$("#praRes").scrollIntoView({behavior:"smooth"})}
+  if(d){PED=d.dataset.ped;PSEL=PSEL||PED;renderPrazos();$("#praEd").scrollIntoView({behavior:"smooth"})}});
+$("#avAuto").onchange=e=>{const A=avCfg();
+  if(e.target.checked&&!confirm("Ligar o envio automático?\n\nSempre que a BoxCheck estiver aberta, os avisos que estiverem na hora saem sozinhos pelo Office 365, para quem tiver documentos em falta.")){e.target.checked=false;return}
+  A.auto=e.target.checked;save();avEstadoUI();if(A.auto)correrAvisos()};
+$("#avHora").onchange=e=>{avCfg().hora=e.target.value||"09:00";save();renderPrazos()};
+$("#avPara").onchange=e=>{avCfg().para=e.target.value.trim();save()};
+$("#avAgora").onclick=async e=>{const btn=e.currentTarget;
+  if(!analiseFresca()&&!confirm("A análise tem mais de 3 horas — pode haver entregas recentes que a app ainda não viu. Enviar mesmo assim?\n\n(Para atualizar primeiro: Gestão Documental › Analisar.)"))return;
+  await avTrazerNuvem();const lista=avisosDevidos();if(!lista.length){AVMSG="Não há avisos na hora para enviar.";avEstadoUI();return}
+  if(!confirm(`Enviar agora ${lista.length} email(s)?\n\n`+lista.slice(0,15).map(x=>x.resumo?`• Resumo para ${x.para}`:`• ${x.a.nome} → ${x.g.p.nome} (${x.g.alvo.length})`).join("\n")+(lista.length>15?"\n…":"")))return;
+  btn.disabled=true;try{await msToken()}catch(x){AVMSG=msErro(x);avEstadoUI();btn.disabled=false;return}
+  AVBUSY=true;try{const r=await enviarLista(lista,true,(i,n)=>{AVMSG=`A enviar ${i} de ${n}…`;avEstadoUI()});AVMSG=`${r.n} email(s) enviado(s).`+(r.falhas.length?` Não enviados: ${r.falhas.join("; ")}`:"")}
+  finally{AVBUSY=false;btn.disabled=false;renderPrazos()}};
+// editor
+const pedSet=(fn,redraw)=>{const p=pedCur();if(!p)return;fn(p);save();if(redraw!==false)renderPrazos()};
+$("#peNome").addEventListener("input",e=>pedSet(p=>p.nome=e.target.value,false));
+$("#peNome").addEventListener("change",()=>renderPrazos());
+$("#peData").onchange=e=>pedSet(p=>p.data=e.target.value);
+$("#peAtivo").onchange=e=>pedSet(p=>p.ativo=e.target.checked);
+$("#peResumo").onchange=e=>pedSet(p=>p.resumo=e.target.checked);
+$("#peDisc").addEventListener("change",e=>pedSet(p=>p.disc=e.target.value));
+$("#peMod").addEventListener("change",e=>pedSet(p=>p.modq=e.target.value));
+const togg=(arr,v,on)=>{const s=new Set(arr||[]);on?s.add(v):s.delete(v);return[...s]};
+$("#praEd").addEventListener("change",e=>{const t=e.target;
+  if(t.dataset.pdoc)pedSet(p=>p.docs=togg(p.docs,t.dataset.pdoc,t.checked));
+  else if(t.dataset.ptipo)pedSet(p=>p.tipos=togg(p.tipos,t.dataset.ptipo,t.checked));
+  else if(t.dataset.pturma)pedSet(p=>p.turmas=togg(p.turmas,t.dataset.pturma,t.checked));
+  else if(t.dataset.pprof)pedSet(p=>p.profs=togg(p.profs,t.dataset.pprof,t.checked));
+  else if(t.dataset.avf){const id=t.closest("[data-av]").dataset.av,f=t.dataset.avf;
+    pedSet(p=>{const a=p.avisos.find(x=>x.id===id);if(!a)return;a[f]=t.type==="checkbox"?t.checked:["dias","rep","max"].includes(f)?Math.max(0,+t.value||0):t.value;if(f==="max")a.max=Math.max(1,a.max)},false);
+    t.blur&&["quando","rep","ativo","dest","dias","max"].includes(f)&&(t.blur(),renderPrazos())}});
+$("#peAvisos").addEventListener("input",e=>{const t=e.target;if(!t.dataset.avf||!["nome","subj","body"].includes(t.dataset.avf))return;
+  const id=t.closest("[data-av]").dataset.av;pedSet(p=>{const a=p.avisos.find(x=>x.id===id);if(a)a[t.dataset.avf]=t.value},false)});
+$("#peAvisos").addEventListener("focusout",()=>setTimeout(()=>{if(!document.activeElement||!document.activeElement.dataset||!document.activeElement.dataset.avf)renderPrazos()},50));
+$("#peAvisos").addEventListener("click",e=>{const d=e.target.closest("[data-avdel]"),pv=e.target.closest("[data-avprev]");
+  if(d){if(!confirm("Remover este aviso?"))return;pedSet(p=>p.avisos=p.avisos.filter(a=>a.id!==d.dataset.avdel))}
+  if(pv){const p=pedCur(),a=p&&p.avisos.find(x=>x.id===pv.dataset.avprev),out=document.querySelector(`[data-avout="${pv.dataset.avprev}"]`);if(!a)return;
+    const D=destinatarios(p,a,prazoItens(p));let g=D[0];
+    if(!g){const any=prazoPorProf(prazoItens(p)).find(x=>x.p.id!=="_");g=any?{...any,alvo:any.it.slice(0,3)}:{p:{nome:"Maria Exemplo",email:""},alvo:[]}}
+    out.style.display=out.style.display==="none"?"":"none";
+    out.textContent=`${D.length} formador(es) receberiam este aviso se saísse agora.${D[0]?"":" (Exemplo com dados fictícios: ninguém está nesta situação agora.)"}\n\nPara: ${g.p.email||"(sem email)"}\nAssunto: ${preencherAviso(a.subj,p,a,g)}\n\n${preencherAviso(a.body,p,a,g)}`}});
+$("#peAddAv").onclick=()=>pedSet(p=>{if((p.avisos||[]).length>=AV_MAX)return;const t=AVISO_TPL[Math.min(p.avisos.length,2)];p.avisos.push({id:uid(),ativo:true,...t,nome:"Novo aviso"})});
+$("#peDel").onclick=()=>{const p=pedCur();if(!p||!confirm(`Apagar o prazo “${p.nome}” e os seus avisos?`))return;cfg.prazos=prazos().filter(x=>x.id!==p.id);save();PED=null;if(PSEL===p.id)PSEL=null;$("#praEd").style.display="none";renderPrazos()};
+$("#peFechar").onclick=()=>{PED=null;$("#praEd").style.display="none";renderPrazos();if(PSEL)$("#praRes").scrollIntoView({behavior:"smooth"})};
+// resultados
+$("#prFil").addEventListener("change",e=>{if(e.target.name==="prf"){PFIL=e.target.value;const p=prCur();if(p)renderRes(p)}});
+$("#prQ").addEventListener("input",debounce(()=>{const p=prCur();if(p)renderRes(p)},150));
+$("#prCsv").onclick=()=>{const p=prCur();if(p)download(`prazo_${norm(p.nome).replace(/[^a-z0-9]+/g,"_")}_${hoje()}.csv`,"﻿"+prazoCSV(p),"text/csv;charset=utf-8")};
+$("#prCopy").onclick=()=>{const p=prCur();if(p)copy(resumoTexto(p))};
+$("#prSend").onclick=async e=>{const p=prCur();if(!p)return;const id=$("#prAv").value,agora=Date.now();let lista;
+  if(id==="resumo"){const para=(avCfg().para||cfg.mail.relatorio_para||"").trim();if(!para){prMsg("Indique em “Resumo dos incumprimentos para” o seu email.","bad");return}
+    lista=[{p,resumo:true,para,k:p.id+"|resumo|m"+agora}]}
+  else{const a=p.avisos.find(x=>x.id===id);if(!a)return;lista=destinatarios(p,a,prazoItens(p,agora)).map(g=>({p,a,g,k:p.id+"|"+a.id+"|"+g.p.id+"|m"+agora}))}
+  if(!lista.length){prMsg("Ninguém está nessa situação neste momento — não há nada a enviar.","ok");return}
+  if(!confirm(`Enviar agora ${lista.length} email(s)?\n\n`+lista.slice(0,20).map(x=>x.resumo?"• Resumo para "+x.para:`• ${x.g.p.nome} (${x.g.alvo.length} documento(s))${x.g.p.email?"":" — SEM EMAIL"}`).join("\n")))return;
+  const btn=e.currentTarget;btn.disabled=true;try{await msToken()}catch(x){prMsg(esc(msErro(x)),"bad");btn.disabled=false;return}
+  try{const r=await enviarLista(lista,true,(i,n,x)=>prMsg(`A enviar ${i} de ${n}${x.g?": "+esc(x.g.p.nome):""}…`,"info"));
+    prMsg(`${r.n} email(s) enviado(s).${r.falhas.length?`<br><b>Não enviados:</b><br>${r.falhas.map(esc).join("<br>")}`:""}`,r.falhas.length?"bad":"ok")}
+  finally{btn.disabled=false;renderRes(p);renderProx()}};
 
 /* ---------- init ---------- */
 try{localStorage.removeItem("box_skip")}catch(e){}
