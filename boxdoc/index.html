@@ -204,6 +204,24 @@ button.big{width:100%;padding:13px 18px;font-size:16px}
 .gturma:first-child{margin-top:0}
 .grow2{display:grid;grid-template-columns:minmax(200px,1.4fr) 90px minmax(220px,1.2fr) minmax(120px,.8fr);gap:10px;align-items:center;padding:6px 10px;border:1px solid var(--line);border-radius:8px;margin-bottom:6px;background:#fff}
 .grow2.vazio{border-left:3px solid #e0a100}
+.cols{display:flex;flex-direction:column}.col{min-width:0;display:flex;flex-direction:column}
+@media (min-width:2050px){main{max-width:none}.cols{display:grid;grid-template-columns:minmax(0,1180px) minmax(560px,1fr);gap:22px;align-items:start}
+  .col[data-col=b]{position:sticky;top:64px;max-height:calc(100vh - 72px);overflow:auto;padding:12px 12px 8px 4px;margin-top:-12px;scrollbar-width:thin}
+  .col[data-col=b]:empty{min-height:60px}}
+.blk{position:relative}
+.dh{position:absolute;top:-11px;right:-11px;z-index:4;width:26px;height:26px;border-radius:7px;border:1px solid var(--line);background:#fff;color:#8a93a3;cursor:grab;opacity:0;display:flex;align-items:center;justify-content:center;transition:opacity .15s;padding:0}
+.dh svg{fill:currentColor}.dh:hover{color:var(--brand);border-color:#a9bde6}.blk:hover>.dh,.dh:focus-visible{opacity:1}
+
+.blk.dragging{opacity:.35}
+body.arrastar .col,body.arrastar [data-cont]{outline:2px dashed #c3d3f1;outline-offset:6px;border-radius:12px;min-height:70px}
+.dropmark{height:5px;background:var(--brand);border-radius:3px;margin:2px 0 14px;grid-column:1/-1}
+.prof .hd .pdfb{padding:3px 12px;font-size:12.5px}
+button.gopen{background:none;border:1px solid transparent;border-radius:6px;font:inherit;font-size:13px;color:var(--muted);cursor:pointer;padding:3px 6px;text-align:left}
+button.gopen:hover{border-color:var(--line);color:var(--brand);background:var(--brandbg)}.grow2.open button.gopen{color:var(--brand)}.grow2.open .car{display:inline-block;transform:rotate(180deg)}
+.gsub{margin:-2px 0 8px 18px;border-left:2px solid #d6e2f7;padding:4px 0 4px 12px;display:flex;flex-direction:column;gap:4px}
+.gsubr{display:grid;grid-template-columns:minmax(200px,1fr) minmax(220px,340px);gap:10px;align-items:center;font-size:13.5px}.gsubr.exc>span{color:#7a4f00;font-weight:600}
+.snq{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;background:#fff}.snqh{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.snqh select{width:auto;max-width:320px}
+.snqi{display:flex;flex-direction:column;gap:2px;font-size:13px;margin:6px 0 2px 4px}
 .grow2 .n{color:var(--muted);font-size:13px}
 .grow2 .exc{font-size:12.5px;color:#7a4f00}
 .tag.exc{background:var(--warnbg);color:#7a4f00}
@@ -338,7 +356,11 @@ input[type=file]::file-selector-button:hover{background:#f4f6f9}
 /* ===================== estatísticas (v1.11) ===================== */
 #boxMsg:empty{display:none}#boxMsg .msg{margin:0}
 .estHead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:16px}
-.egrid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.egrid>.card{margin-bottom:18px;min-width:0}
+.egrid>.blk>.card{margin-bottom:18px;min-width:0}.egrid>.blk{min-width:0}
+.egrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:18px}
+.tlbar{display:flex;justify-content:flex-end;margin:-4px 0 6px}.tllg{display:flex;flex-wrap:wrap;gap:6px}
+.tlk{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:12.5px;border:1px solid var(--line);background:#fff;border-radius:99px;padding:3px 10px;cursor:pointer;color:#3d434b}
+.tlk.on{background:var(--brandbg);border-color:#a9bde6;color:var(--brand);font-weight:600}.tlk .sw{width:10px;height:10px;border-radius:3px;display:inline-block}.egrid>.card{margin-bottom:18px;min-width:0}
 @media (max-width:980px){.egrid{grid-template-columns:1fr}}
 #est h3{margin:0 0 12px;font-size:15px}
 .ring{display:flex;align-items:center;gap:28px;flex-wrap:wrap}
@@ -453,7 +475,7 @@ button.rm{background:#fff;color:var(--bad);border-color:#e3b4b4}button.rm:hover{
 <div class="top"><a class="schl" href="https://www.episj.com" target="_blank" rel="noopener" title="Escola Profissional da Ilha de São Jorge"><img src="https://www.episj.com/wp-content/uploads/2024/05/logo_2024_2-mobile.png" alt="Escola Profissional da Ilha de São Jorge" onerror="this.parentNode.style.display='none'"></a><div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="bcgB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f5fb8"/><stop offset=".55" stop-color="#163269"/><stop offset="1" stop-color="#0c1d40"/></linearGradient><linearGradient id="bckB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5cc985"/><stop offset="1" stop-color="#2f9e57"/></linearGradient></defs><rect x="1.5" y="1.5" width="29" height="29" rx="8.5" fill="url(#bcgB)"/><path d="M1.5 12C9 8 20 7 30.5 9.5V10C20 8 9 9.5 1.5 13.5z" fill="#fff" opacity=".10"/><path d="M14.5 6.6 22 10.6 14.5 14.6 7 10.6z" fill="#fff"/><path d="M7 10.6 14.5 14.6V23.4L7 19.4z" fill="#e3ebfa"/><path d="M22 10.6 14.5 14.6V23.4L22 19.4z" fill="#b7c8ea"/><path d="M10.7 8.6 18.2 12.6" stroke="#163269" stroke-opacity=".35" stroke-width="1.1"/><circle cx="23" cy="22.6" r="6.2" fill="url(#bckB)" stroke="#0c1d40" stroke-width="1.6"/><path d="M20.2 22.7l1.9 1.9 3.8-3.9" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Box<b>Check</b></span><span class="ver" data-ver></span></div><span class="sub">Escola Profissional da Ilha de São Jorge</span><span class="grow"></span><label class="anasel" id="anaTop" style="display:none"><span>Análise</span><select id="anaSel" title="Escolha a análise guardada a usar"></select></label><span id="bg" class="bgp" style="display:none"></span><span class="undo"><button id="undoBtn" title="Anular (Ctrl+Z)" disabled>↶ Anular</button><button id="redoBtn" title="Refazer (Ctrl+Shift+Z)" disabled>↷ Refazer</button></span><span id="who" class="who" style="display:none"></span></div>
 <div class="shell">
   <nav id="nav" class="side">
-    <button data-t="box" class="on"><svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>Dados da Box</button>
+    <button data-t="box" class="on"><svg viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>Gestão Documental</button>
     <button data-t="alt"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Alterações</button>
     <button data-t="pas"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>Pastas</button>
     <button data-t="prof"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>Formadores</button>
@@ -515,7 +537,14 @@ button.rm{background:#fff;color:var(--bad);border-color:#e3b4b4}button.rm:hover{
   </div>
 
   <div class="card">
-    <h2>Módulos e UFCD</h2>
+    <h2>Catálogo Nacional de Qualificações</h2>
+    <p class="hint">Procura o curso de cada turma (<code>A04 - Mecatrónica Automóvel (25/28)</code> → “Técnico/a de Mecatrónica Automóvel”) em <a href="https://catalogo.snq.gov.pt/" target="_blank" rel="noopener">catalogo.snq.gov.pt</a>, escolhe a versão do referencial em vigor quando a turma começou e traz a lista oficial de <b>UFCD</b> ou <b>UC</b> com as designações. Mostra também as que ainda não têm pasta na Box. Se o curso escolhido não for o certo, troque-o na lista de cada turma.</p>
+    <div class="row"><button class="b" id="snqGo">Cruzar as turmas com o catálogo</button><span id="snqMsg" class="hint" style="margin:0"></span></div>
+    <div id="snqList" style="margin-top:12px"></div>
+  </div>
+
+  <div class="card">
+    <h2>Módulos, UFCD e UC</h2>
     <p class="hint">Cada módulo é identificado pelas pastas <code>turma / disciplina / módulo</code>. O formador vem da grelha acima; escolha outro aqui só quando for uma exceção — e “segue a grelha” para desfazer.</p>
     <div class="row" style="margin-bottom:10px;background:#f6f8f6;padding:10px;border-radius:8px">
       <label class="grow">Filtrar módulos<input type="text" id="modFilter" placeholder="ex.: A01 Matemática  ·  !prof = sem formador  ·  !exc = exceções"></label>
@@ -654,6 +683,7 @@ button.rm{background:#fff;color:var(--bad);border-color:#e3b4b4}button.rm:hover{
     </div>
     <div class="row" style="margin-top:10px">
       <label class="chip" id="chkFilesWrap"><input type="checkbox" id="chkFiles"> mostrar ficheiros encontrados</label>
+      <span class="grow"></span><button class="b s" id="fPdf" title="Do formador escolhido, ou de todos se estiver em “Todos”">Exportar PDF</button>
     </div>
     <div id="warns"></div>
   </div>
@@ -680,7 +710,7 @@ button.rm{background:#fff;color:var(--bad);border-color:#e3b4b4}button.rm:hover{
     <p class="hint" id="qTpl" style="margin:8px 0 0"></p>
     <div class="prog" id="qProg"><i></i></div>
   </div>
-  <div id="report"></div>
+  <div id="report" data-col="b"></div>
 </section>
 
 <!-- 4. ENVIAR -->
@@ -691,7 +721,7 @@ button.rm{background:#fff;color:var(--bad);border-color:#e3b4b4}button.rm:hover{
     <div class="card"><h3>Documentação entregue</h3><div id="eRing"></div></div>
     <div class="card"><h3>Estado de todos os documentos exigidos</h3><div id="eState"></div></div>
   </div>
-  <div class="card"><h3>Ficheiros colocados na Box ao longo do tempo</h3><p class="hint" style="margin-top:0">Total acumulado de ficheiros da análise em uso, pela data da última modificação na Box.</p><div id="eTime"></div></div>
+  <div class="card"><h3>Ficheiros colocados na Box por ano letivo</h3><p class="hint" style="margin-top:0">Total acumulado de ficheiros por <b>ano letivo</b> — de setembro a agosto e meses seguintes —, pela data da última modificação na Box. Clique num ano para o ver sozinho.</p><div id="eTime"></div></div>
   <div class="egrid">
     <div class="card"><h3>Entregue por formador</h3><p class="hint" style="margin-top:0">Percentagem dos documentos exigidos que já estão entregues. Os que têm mais em falta aparecem primeiro.</p><div id="eProf"></div></div>
     <div class="card"><h3>Entregue por turma</h3><p class="hint" style="margin-top:0">Percentagem dos documentos exigidos que já estão entregues em cada turma.</p><div id="eTurma"></div></div>
@@ -700,6 +730,8 @@ button.rm{background:#fff;color:var(--bad);border-color:#e3b4b4}button.rm:hover{
     <div class="card"><h3>Entregue por tipo de documento</h3><div id="eDoc"></div></div>
     <div class="card"><h3>Análises guardadas</h3><p class="hint" style="margin-top:0">Número de ficheiros em cada pasta analisada (por exemplo, cada ano letivo).</p><div id="eAna"></div></div>
   </div>
+  <div class="card" id="eTopPC" data-col="b"><h3>Mais cumpridores</h3><p class="hint" style="margin-top:0">Formadores com maior percentagem de documentos entregues (com 100% primeiro os que tinham mais para entregar).</p><div id="eTopP"></div></div>
+  <div class="card" id="eTopTC" data-col="b"><h3>Turmas mais completas</h3><p class="hint" style="margin-top:0">Turmas com maior percentagem dos documentos exigidos já entregues.</p><div id="eTopT"></div></div>
 </section>
 <div id="vtip" role="tooltip"></div>
 
@@ -788,6 +820,11 @@ button.rm{background:#fff;color:var(--bad);border-color:#e3b4b4}button.rm:hover{
         <li>Volte aqui e clique em <b>Entrar com a conta Microsoft</b>.</li>
       </ol></details>
   </div>
+  <div class="card">
+    <h2>Disposição dos quadros</h2>
+    <p class="hint">Todos os quadros podem ser arrastados pela pega <b>⋮⋮</b> que aparece no canto quando passa o rato por cima. Em ecrãs largos (a partir de cerca de 2050 píxeis) há uma segunda coluna à direita (por exemplo, a lista do Relatório); em ecrãs estreitos fica tudo numa coluna. A disposição fica guardada neste navegador.</p>
+    <button class="b s" id="layReset">Repor a disposição original</button>
+  </div>
 </section>
 
 <!-- GUARDAR -->
@@ -814,7 +851,7 @@ button.rm{background:#fff;color:var(--bad);border-color:#e3b4b4}button.rm:hover{
 <script>
 (function(){
 "use strict";
-const VERSAO="1.12"; // versão do BoxCheck — sobe a cada alteração publicada
+const VERSAO="1.13"; // versão do BoxCheck — sobe a cada alteração publicada
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 const $=s=>document.querySelector(s);
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -838,6 +875,7 @@ const OLD_BODY="Caro(a) {nome},\n\nNa verificação das pastas da Box, constatei
 const defaultCfg=()=>({schema:2,docTypes:dtpTypes(),profs:[],mods:[],grid:{},desig:{},envios:[],
   mail:{subj:MAIL_SUBJ,prazo:"",ano:"",body:MAIL_BODY,relatorio_para:""},qual:{min:40,dup:true}});
 let cfg=load()||defaultCfg();
+const GOPEN=new Set(); // disciplinas abertas na grelha
 const LGKEY="boxcheck_logos"; // logótipos dos documentos (guardados à parte: não entram no histórico de anular)
 let LOGOS=(()=>{try{return JSON.parse(localStorage.getItem(LGKEY)||"{}")||{}}catch(e){return{}}})();
 let files=[]; // {path, rawDir, comps, name, nname, date, fid, size, sha1}
@@ -882,11 +920,19 @@ $("#rpNow").onclick=()=>{ponto("Ponto criado manualmente");toast("Ponto de resta
 
 /* ---------- módulos: turma, disciplina, código, formador, designação, ano letivo ---------- */
 const isDisc=c=>/^\d{4}\s*-\s*\S/.test(String(c).trim());
-const isTurma=c=>/\(\d{2}\s*-\s*\d{2}\)/.test(c);
-const isModName=c=>/^(modulo|mod\.?|ufcd)\s*[a-z0-9]/.test(norm(c));
+const isTurma=c=>/\(\s*\d{2,4}\s*[-\/]\s*\d{2,4}\s*\)/.test(c);
+const isModName=c=>{const n=norm(c);return /^(modulo|mod\.?|ufcd)\s*[a-z0-9]/.test(n)||/^uc\s*\d/.test(n)};
 const discCode=d=>(String(d||"").match(/^\s*(\d{3,5})/)||[])[1]||norm(d);
 const discShort=d=>String(d||"").replace(/^\s*\d+\s*-\s*/,"");
-const modKey=c=>norm(c).replace(/^(modulo|mod\.?|ufcd)\s*/,"").replace(/^0+(?=[a-z0-9])/,"");
+// chave do módulo: "Módulo 1" = "Módulo 01" = "Módulo 001" → "1"; "UFCD 0349 (nome)" → "349"; "UC03611 - nome" → "uc3611"
+const modKey=c=>{let n=norm(c),uc=false;
+  if(/^uc\s*\d/.test(n)){uc=true;n=n.replace(/^uc\s*/,"")}else n=n.replace(/^(modulo|mod\.?|ufcd)\s*/,"");
+  const m=n.match(/^0*(\d+)(?=$|[\s\-–(:.,_])/);if(m)return (uc?"uc":"")+m[1];
+  return (uc?"uc":"")+n.replace(/^0+(?=[a-z0-9])/,"")};
+// código curto (sem o nome) e nome tirado da própria pasta: "UFCD 0349 (Ambiente)" → "UFCD 0349" + "Ambiente"
+const COD_RE=/^\s*((?:m[oó]dulo|mod\.?|ufcd|uc)\s*[a-z]{0,2}\s*\d+|[a-z]?\d{3,6})/i;
+const codCurto=c=>{const m=String(c||"").match(COD_RE);return m?m[1].trim():String(c||"")};
+const nomeDaPasta=c=>{const m=String(c||"").match(COD_RE);if(!m)return "";return String(c).slice(m[0].length).replace(/^[\s\-–:.)]+/,"").replace(/^\((.*)\)$/,"$1").trim()};
 // ano letivo tirado do nome de uma pasta (ex.: "DTP 2025.2026" → "2025/2026")
 const anoDe=p=>{const m=String(p||"").match(/(20\d\d)\s*[.\-\/_ ]\s*(20\d\d)/);return m&&+m[2]===+m[1]+1?m[1]+"/"+m[2]:""};
 // a grelha turma × disciplina é guardada por ano letivo; as atribuições antigas (sem ano) servem de valor por omissão
@@ -903,13 +949,14 @@ function fillModFields(m){
 const profOf=m=>m.profId||gridGet(m)||"";
 const isExc=m=>!!m.profId&&m.profId!==gridGet(m);
 const profName=id=>(cfg.profs.find(p=>p.id===id)||{}).nome||"";
-const desigOf=m=>cfg.desig[discCode(m.disc)+"|"+modKey(m.cod)]||cfg.desig["*|"+modKey(m.cod)]||"";
-const modTitle=m=>(m.cod||m.nome||"(módulo)")+(desigOf(m)?" — "+desigOf(m):"");
+const desigOf=m=>cfg.desig[discCode(m.disc)+"|"+modKey(m.cod)]||cfg.desig["*|"+modKey(m.cod)]||snqDesig(m)||nomeDaPasta(m.cod)||"";
+const modTitle=m=>(m.cod?codCurto(m.cod):(m.nome||"(módulo)"))+(desigOf(m)?" — "+desigOf(m):"");
 const modLabel=m=>[discShort(m.disc),modTitle(m),m.turma].filter(Boolean).join(" · ");
 
 /* ---------- atualização da configuração antiga ---------- */
 function migrate(){
-  cfg.grid=cfg.grid||{};cfg.desig=cfg.desig||{};cfg.envios=cfg.envios||[];
+  cfg.grid=cfg.grid||{};cfg.desig=cfg.desig||{};cfg.envios=cfg.envios||[];cfg.snq=cfg.snq||{};
+  if(!cfg.keyV2){const d={};for(const k in cfg.desig){const i=k.indexOf("|");d[k.slice(0,i)+"|"+modKey(k.slice(i+1))]=cfg.desig[k]}cfg.desig=d;cfg.keyV2=1}
   cfg.qual=Object.assign({min:40,dup:true},cfg.qual||{});
   cfg.mail=Object.assign({subj:MAIL_SUBJ,prazo:"",ano:"",body:MAIL_BODY,relatorio_para:""},cfg.mail||{});
   cfg.mods.forEach(fillModFields);
@@ -1120,21 +1167,27 @@ function renderGrid(){
     const tk=r.ano+"|"+r.turma;
     if(tk!==last){html+=`<div class="gturma">${esc(r.turma||"(sem turma)")}${multi&&r.ano?` <span class="tag" style="background:#eef1f5;color:#4a5260">${esc(r.ano)}</span>`:""}</div>`;last=tk}
     const exc=r.mods.filter(isExc),g=gridGet(r.ref);
-    html+=`<div class="grow2${g?"":" vazio"}" data-g="${esc(r.k)}"><span>${esc(r.disc||"(sem disciplina)")}</span><span class="n">${r.mods.length} módulo${r.mods.length===1?"":"s"}</span>
+    const ab=GOPEN.has(r.k);
+    html+=`<div class="grow2${g?"":" vazio"}${ab?" open":""}" data-g="${esc(r.k)}"><span>${esc(r.disc||"(sem disciplina)")}</span><button class="n gopen" data-gopen title="Ver os módulos e atribuir cada um a um formador">${r.mods.length} ${r.mods.length===1?"módulo":"módulos"} <span class="car">▾</span></button>
       <select data-grid>${profOpts(g,`<option value="">— sem formador —</option>`)}</select>
       <span class="exc">${exc.length?`<a href="#" data-excf="${esc(r.turma+" "+discShort(r.disc))}">${exc.length} exceção${exc.length===1?"":"ões"}: ${esc([...new Set(exc.map(m=>profName(m.profId)))].join(", "))}</a>`:""}</span></div>`;
+    if(ab)html+=`<div class="gsub">${r.mods.slice().sort((a,b)=>String(a.cod).localeCompare(String(b.cod),"pt",{numeric:true})).map(m=>`<div class="gsubr${isExc(m)?" exc":""}" data-mid="${m.id}"><span>${esc(modTitle(m))}</span>
+      <select data-mprof>${profOpts(m.profId||"",`<option value="">↳ o da disciplina (${esc(profName(g)||"sem formador")})</option>`)}</select></div>`).join("")}</div>`;
   }
   const sem=all.filter(r=>!gridGet(r.ref)).length,outros=cfg.mods.length-ativos().length,anos=[...getIdx().anos.keys()].sort();
   $("#anoInfo").innerHTML=anos.length?`Ano letivo da análise carregada: <b>${esc(anos.join(", "))}</b>${outros?` · ${outros} módulo(s) de outros anos letivos estão guardados, mas não aparecem aqui nem no relatório`:""}`:(outros?`${outros} módulo(s) de outras análises não aparecem aqui`:"");
   $("#grid").innerHTML=(all.length?`<p class="hint">${all.length} disciplinas em ${new Set(all.map(r=>r.ano+"|"+r.turma)).size} turmas · ${sem} sem formador</p>`:"")+(html||`<p class="hint">${all.length?"Nada corresponde ao filtro.":"Ainda sem módulos nesta análise: carregue a listagem da Box e clique em “Detetar módulos e UFCD”."}</p>`);
 }
 $("#gFilter").addEventListener("input",renderGrid);$("#gEmpty").addEventListener("change",renderGrid);$("#gProf").addEventListener("change",renderGrid);
-$("#grid").addEventListener("change",e=>{if(!e.target.matches("[data-grid]"))return;const k=e.target.closest("[data-g]").dataset.g,v=e.target.value;
+$("#grid").addEventListener("change",e=>{if(e.target.matches("[data-mprof]")){const m=cfg.mods.find(x=>x.id===e.target.closest("[data-mid]").dataset.mid);if(!m)return;
+    m.profId=e.target.value===gridGet(m)?"":e.target.value;save();renderGrid();renderMods();renderProfs();toast(m.profId?"Módulo atribuído a "+profName(m.profId)+" (exceção)":"O módulo volta a seguir a disciplina");return}
+  if(!e.target.matches("[data-grid]"))return;const k=e.target.closest("[data-g]").dataset.g,v=e.target.value;
   const row=gridRows().find(r=>r.k===k);if(!row)return;const leg=legKey(row.ref);
   if(v)cfg.grid[k]=v;else if(k!==leg&&cfg.grid[leg])cfg.grid[k]="";else delete cfg.grid[k];
   row.mods.forEach(m=>{if(m.profId===v)m.profId=""}); // deixa de ser exceção se coincidir
   save();renderGrid();renderMods();renderProfs()});
-$("#grid").addEventListener("click",e=>{const a=e.target.closest("[data-excf]");if(!a)return;e.preventDefault();$("#modFilter").value="!exc "+a.dataset.excf;renderMods();$("#tbMods").scrollIntoView({behavior:"smooth",block:"start"})});
+$("#grid").addEventListener("click",e=>{const o=e.target.closest("[data-gopen]");if(o){const k=o.closest("[data-g]").dataset.g;GOPEN.has(k)?GOPEN.delete(k):GOPEN.add(k);renderGrid();return}
+  const a=e.target.closest("[data-excf]");if(!a)return;e.preventDefault();$("#modFilter").value="!exc "+a.dataset.excf;renderMods();$("#tbMods").scrollIntoView({behavior:"smooth",block:"start"})});
 
 /* ---------- lista de módulos (exceções) ---------- */
 function modVisible(m){const q=norm($("#modFilter").value);if(!q)return true;
@@ -1181,7 +1234,7 @@ function detetar(){
       if(!found.has(key))found.set(key,{turma,disc,mod,anoDir});break;}}
   return found}
 $("#detect").onclick=()=>{
-  if(!files.length&&!folders.length){$("#detMsg").textContent="Carregue primeiro a listagem da Box em Dados da Box.";return}
+  if(!files.length&&!folders.length){$("#detMsg").textContent="Carregue primeiro a listagem da Box em Gestão Documental.";return}
   adotar();
   const found=detetar(),have=new Set(cfg.mods.map(modId));
   const novos=[...found.entries()].filter(([k])=>!have.has(k)).map(([,v])=>v);
@@ -1203,6 +1256,67 @@ $("#addMod").onclick=()=>{const r=gridRows()[0],idx=getIdx(),a=[...idx.anos][0]|
   const m={id:uid(),nome:"",turma:r?r.turma:"Turma",disc:r?r.disc:"0000 - Disciplina",cod:"Novo módulo",ano:r?r.ano:a[0],anoDir:r?(r.ref.anoDir||""):a[1],profId:"",docs:cfg.docTypes.map(d=>d.id)};
   m.pasta=pastaDe(m);cfg.mods.unshift(m);save();$("#modFilter").value="";renderAll()};
 
+/* ---------- Catálogo Nacional de Qualificações (catalogo.snq.gov.pt) — só leitura ---------- */
+const SNQ="https://bocatalogo.snq.gov.pt/webapi/api",SNQ_REP="https://bocatalogo.snq.gov.pt/reports//TecnologicaHtml";
+const cursoDe=t=>String(t||"").replace(/\(\s*\d{2,4}\s*[-\/]\s*\d{2,4}\s*\)/,"").trim().replace(/^[a-z]?\d{1,4}[a-z]?\s*[-–:]?\s+/i,"").trim();
+const inicioDe=t=>{const m=String(t||"").match(/\(\s*(\d{2,4})\s*[-\/]/);if(!m)return null;let y=+m[1];return y<100?y+2000:y};
+const semTecnico=n=>norm(n).replace(/^tecnico\/?a?\s*(especialista\s*)?(de|em|do|da)?\s*/,"").replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();
+let _snqIx=null,_snqRev=-1;
+function snqDesig(m){if(_snqRev!==cfgRev||!_snqIx){_snqIx=new Map();_snqRev=cfgRev;
+    for(const k in cfg.snq||{})for(const it of cfg.snq[k].itens||[])_snqIx.set(k+"|"+modKey(it.cod),it.nome)}
+  return _snqIx.get(norm(m.turma)+"|"+modKey(m.cod))||""}
+async function snqProcura(nome){const out=[],vistos=new Set();
+  for(const ex of[false,true]){const r=await fetch(SNQ+"/qualificacoes/searchSite",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({currentPage:1,itemsPerPage:50,codigo:"",designacao:nome,areasFormacaoId:[],conselhosSetoriaisId:[],nivelQEQ:[],rvcc:false,adaptada:false,baseadoEmRA:false,regulamentada:false,outrosReferencias:false,excluida:ex,excluidasId:ex?1:0})});
+    if(!r.ok)throw new Error("o catálogo respondeu "+r.status);const j=await r.json();
+    for(const it of j.items||[])for(const d of it.details||[])if(!vistos.has(d.qualificacoesVersoesId)){vistos.add(d.qualificacoesVersoesId);out.push({cod:it.codigo,nivel:it.nivel,id:d.qualificacoesVersoesId,nome:d.designacao,conceito:d.conceito})}}
+  return out}
+function snqScore(curso,c){const a=semTecnico(curso),b=semTecnico(c.nome);if(a===b)return 100+(c.nivel==="4"?5:0);
+  const A=new Set(a.split(" ").filter(w=>w.length>2)),B=new Set(b.split(" ").filter(w=>w.length>2));let k=0;for(const w of A)if(B.has(w))k++;
+  return Math.round(k/Math.max(1,new Set([...A,...B]).size)*80)+(c.nivel==="4"?5:0)}
+async function snqReferencial(id,tipo){
+  const t=await fetch(`${SNQ_REP}?preview=true&id=${id}&faq=false&tipo=${encodeURIComponent(tipo||"PP")}&tipoReport=FORMACAO`).then(r=>{if(!r.ok)throw new Error("referencial: "+r.status);return r.text()});
+  const d=new DOMParser().parseFromString(t,"text/html"),out=[],vistos=new Set();
+  for(const tr of d.querySelectorAll("tr")){const c=[...tr.cells].map(x=>x.textContent.replace(/\s+/g," ").trim());if(c.length<3)continue;
+    if(!/^(UC\d{3,6}|\d{4,5})$/i.test(c[0])||vistos.has(c[0]))continue;vistos.add(c[0]);
+    out.push({cod:c[0].toUpperCase(),nome:c[2],h:/^\d+$/.test(c[3]||"")?+c[3]:null})}
+  return out}
+// escolhe a versão do referencial em vigor no início da turma (setembro do ano inicial)
+async function snqVersao(cands,ano){const lim=(ano||new Date().getFullYear())+"-09-01",vs=[];
+  for(const c of cands){const d=await fetch(`${SNQ}/qualificacoes/qualificacoesVersoes/${c.id}/false`).then(r=>r.json());
+    for(const v of d.versoes||[{qualificacoesVersoesId:c.id,dataInicio:d.dataInicio,tipoAlteracao:""}])if(v.tipoAlteracao!=="EXC")vs.push({id:v.qualificacoesVersoesId,data:String(v.dataInicio||"").slice(0,10),conceito:d.conceito||c.conceito,qual:c})}
+  vs.sort((a,b)=>b.data.localeCompare(a.data));return vs.find(v=>v.data&&v.data<=lim)||vs[vs.length-1]||null}
+async function snqTurma(turma,forcar){const k=norm(turma),curso=cursoDe(turma),ano=inicioDe(turma);
+  let cands=await snqProcura(curso);
+  if(!cands.length){const w=curso.split(/\s+/).filter(x=>x.length>2);if(w.length>1)cands=await snqProcura(w.slice(0,2).join(" "))}
+  cands.forEach(c=>c.sc=snqScore(curso,c));cands.sort((a,b)=>b.sc-a.sc);
+  let esc=forcar?cands.filter(c=>c.cod===forcar):[];
+  if(!esc.length&&cands.length){const top=cands[0],nb=semTecnico(top.nome);esc=cands.filter(c=>semTecnico(c.nome)===nb&&c.nivel===top.nivel);if(!esc.length)esc=[top]}
+  const r={curso,ano,cands:cands.slice(0,12).map(({cod,nivel,id,nome,conceito})=>({cod,nivel,id,nome,conceito})),t:Date.now(),forcar:forcar||""};
+  if(esc.length){const v=await snqVersao(esc,ano);if(v){r.qual={cod:v.qual.cod,nome:v.qual.nome,nivel:v.qual.nivel,id:v.id,data:v.data,conceito:v.conceito};r.itens=await snqReferencial(v.id,v.conceito)}}
+  (cfg.snq=cfg.snq||{})[k]=r;return r}
+function turmasSNQ(){return [...new Set(ativos().map(m=>m.turma).filter(isTurma))].sort((a,b)=>a.localeCompare(b,"pt",{numeric:true}))}
+function renderSNQ(){const el=$("#snqList");if(!el)return;const T=turmasSNQ();
+  if(!T.length){el.innerHTML=`<p class="hint">Ainda não há turmas no formato <code>A01 - Nome do curso (25/28)</code> nesta análise.</p>`;return}
+  el.innerHTML=T.map(t=>{const r=(cfg.snq||{})[norm(t)],mods=ativos().filter(m=>m.turma===t);
+    if(!r)return `<div class="snq"><div class="snqh"><b>${esc(t)}</b><span class="hint" style="margin:0">ainda não cruzado</span></div></div>`;
+    const it=r.itens||[],tem=new Set(mods.map(m=>modKey(m.cod))),na=it.filter(i=>tem.has(modKey(i.cod))),sem=it.filter(i=>!tem.has(modKey(i.cod)));
+    const fora=mods.filter(m=>/^(uc)?\d{4,}$/.test(modKey(m.cod))&&!it.some(i=>modKey(i.cod)===modKey(m.cod)));
+    return `<div class="snq" data-snq="${esc(t)}"><div class="snqh"><b>${esc(t)}</b>
+      ${r.qual?`<a href="https://catalogo.snq.gov.pt/qualificacoesDetalhe/${r.qual.id}" target="_blank" rel="noopener">${esc(r.qual.nome)}</a><span class="tag" style="background:#eef1f5;color:#4a5260">${esc(r.qual.cod)} · nível ${esc(r.qual.nivel||"?")} · ${r.qual.conceito==="RA"?"UC":"UFCD"} · referencial de ${esc(r.qual.data)}</span>`:`<span class="tag bad">não encontrado no catálogo</span>`}
+      <span class="grow"></span>${r.cands&&r.cands.length>1?`<select data-snqpick><option value="">outra qualificação…</option>${r.cands.map(c=>`<option value="${esc(c.cod)}">${esc(c.nome)} (${esc(c.cod)}, nível ${esc(c.nivel)})</option>`).join("")}</select>`:""}</div>
+      ${r.qual?`<p class="hint" style="margin:6px 0 0"><b>${it.length}</b> ${r.qual.conceito==="RA"?"UC":"UFCD"} no referencial · <b>${na.length}</b> com pasta na Box · <b>${sem.length}</b> sem pasta${fora.length?` · <b>${fora.length}</b> pasta(s) na Box fora do referencial`:""}</p>
+      ${sem.length?`<details><summary class="hint" style="cursor:pointer;margin:4px 0 0">Ver as ${sem.length} sem pasta na Box</summary><div class="snqi">${sem.map(i=>`<span><b>${esc(i.cod)}</b> ${esc(i.nome)}${i.h?` · ${i.h} h`:""}</span>`).join("")}</div></details>`:""}
+      ${fora.length?`<details><summary class="hint" style="cursor:pointer;margin:4px 0 0">Ver as ${fora.length} fora do referencial</summary><div class="snqi">${fora.map(m=>`<span>${esc(discShort(m.disc))} · <b>${esc(codCurto(m.cod))}</b></span>`).join("")}</div></details>`:""}`:""}</div>`}).join("")}
+async function cruzarSNQ(soTurma,forcar){const T=soTurma?[soTurma]:turmasSNQ();if(!T.length){renderSNQ();return}
+  const b=$("#snqGo");b.disabled=true;let n=0,f=[];ponto("Antes de cruzar com o catálogo");
+  for(const t of T){$("#snqMsg").textContent=`A consultar o catálogo: ${++n} de ${T.length} — ${t}…`;
+    try{await snqTurma(t,soTurma?forcar:((cfg.snq||{})[norm(t)]||{}).forcar)}catch(e){f.push(t+": "+e.message)}}
+  save();renderSNQ();renderAll();b.disabled=false;
+  $("#snqMsg").textContent=f.length?`Concluído com ${f.length} erro(s): ${f.join(" · ")}`:`Concluído: ${T.length} turma(s). As designações das UFCD/UC passam a vir do catálogo (as que escreveu à mão têm prioridade).`}
+$("#snqGo").onclick=()=>cruzarSNQ();
+$("#snqList").addEventListener("change",e=>{if(!e.target.matches("[data-snqpick]")||!e.target.value)return;cruzarSNQ(e.target.closest("[data-snq]").dataset.snq,e.target.value)});
+
 /* ---------- designações ---------- */
 $("#desImport").onclick=()=>{
   const lines=$("#desBulk").value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);if(!lines.length)return;
@@ -1213,7 +1327,7 @@ $("#desImport").onclick=()=>{
     else if(p.length===2){cfg.desig["*|"+modKey(p[0])]=p[1];n++}else bad++}
   save();renderAll();$("#desMsg").textContent=`${n} designação(ões) guardada(s)${bad?`, ${bad} linha(s) ignorada(s)`:""}.`;if(n)$("#desBulk").value="";
 };
-function renderAll(){renderDocs();renderProfs();renderGrid();renderMods();undoUI()}
+function renderAll(){renderDocs();renderProfs();renderGrid();renderMods();renderSNQ();undoUI()}
 
 
 /* ---------- CSV ---------- */
@@ -1337,6 +1451,7 @@ const escRe=s=>s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
 // como um módulo/UFCD costuma aparecer escrito no nome ou no texto de um documento
 function modRegex(cod){
   const k=modKey(cod);let m;
+  if((m=k.match(/^uc(\d+)$/)))return new RegExp("(?:^|[^a-z0-9])uc\\s*0*"+m[1]+"(?!\\d)");
   if(/^\d{4,}$/.test(k))return /^(19|20)\d\d$/.test(k)?new RegExp("ufcd\\s*(?:n\\.?\\s*[oº°]?\\.?\\s*)?0*"+k+"(?!\\d)"):new RegExp("(?:^|[^0-9])0*"+k+"(?!\\d)");
   if((m=k.match(/^([a-z]{0,2})0*(\d{1,3})$/))){
     const alt=["(?:modulos?|mod|ufcd|\\bm)\\.?\\s*(?:n\\.?\\s*[oº°]?\\.?\\s*)?"+m[1]+"\\s*0*"+m[2]+"(?!\\d)"];
@@ -1513,7 +1628,7 @@ function renderReport(){
    ${ref?`<div class="tile"><div class="v" style="color:var(--ok)">${nSince}</div><div class="l">entregues desde o envio de ${dataPT(ref.t)}</div></div>`:""}
    <div class="tile"><div class="v" style="color:#b26a00">${nBlank+nWarn}</div><div class="l">em branco (${nBlank}) ou a confirmar (${nWarn})</div></div>`;countUp($("#tiles"));
   const w=[];
-  if(!files.length)w.push(["info","Ainda não carregou a listagem da Box (em Dados da Box). Sem ela, tudo aparece em falta."]);
+  if(!files.length)w.push(["info","Ainda não carregou a listagem da Box (em Gestão Documental). Sem ela, tudo aparece em falta."]);
   const atv=ativos(),noprof=atv.filter(m=>!profOf(m)).length;if(noprof)w.push(["warn",`${noprof} módulo(s) sem formador atribuído — veja a grelha em Atribuições.`]);
   const outros=cfg.mods.length-atv.length;if(outros&&files.length)w.push(["info",`${outros} módulo(s) de outros anos letivos não entram neste relatório (só contam os do ano da análise carregada).`]);
   const pend=porLer().length;if(pend)w.push(["info",`Falta ler o conteúdo de ${pend} documento(s)${bgOn?" — a leitura está a correr em segundo plano e o relatório atualiza-se sozinho":SES?" — clique em “Ler os documentos agora”":" — entre na Box para os ler"}. Até lá, esses documentos contam como entregues.`]);
@@ -1528,7 +1643,7 @@ function renderReport(){
     const pc=t.tot?Math.round(t.ok/t.tot*100):100;
     html+=`<div class="prof"><div class="hd"><b>${esc(t.p.nome)}</b>${t.p.cod?`<span class="tag" style="background:#eef1f5;color:#4a5260">${esc(t.p.cod)}</span>`:""}<span class="hint" style="margin:0">${esc(t.p.email)}</span><span class="grow"></span>
       <div class="bar"><i style="width:${pc}%"></i></div><span>${t.ok}/${t.tot}</span>
-      ${t.miss?`<span class="tag bad">${t.miss} em falta</span>`:`<span class="tag ok">completo</span>`}</div>
+      ${t.miss?`<span class="tag bad">${t.miss} em falta</span>`:`<span class="tag ok">completo</span>`}${t.miss&&t.p.id!=="_"?`<button class="b s pdfb" data-rpdf="${t.p.id}" title="Exportar em PDF o que este formador tem em falta">PDF</button>`:""}</div>
       <div style="padding:4px 12px 10px;overflow-x:auto"><table class="rtab rt"><thead><tr><th>Turma</th><th>Disciplina</th><th>Módulo/UFCD</th><th>Localização na Box</th><th>O que está em falta</th><th>Observações</th></tr></thead><tbody>
       ${rows.map(r=>`<tr class="s-${r.state}"><td>${esc(r.turma)}</td><td>${esc(r.disc)}</td><td>${esc(r.mod)}</td><td>${esc(r.loc)}</td><td class="f">${{ok:"✓",warn:"⚠",blank:"✗",missing:"✗"}[r.state]} ${esc(r.falta)}</td><td class="o">${esc(r.obs||(r.state==="ok"?"entregue":""))}${sf&&r.item.hits.length?`<br><b>Ficheiros:</b> ${r.item.hits.map(h=>esc(h.name)).join(", ")}`:""}${fpBtns(r.item)}</td></tr>`).join("")}
       </tbody></table></div></div>`;}
@@ -1544,8 +1659,8 @@ function qualInit(){
   $("#qRef").innerHTML=`<option value="">— nenhum —</option>`+Object.keys(r).filter(id=>id!==cur).map(id=>`<option value="${esc(id)}" ${cfg.qual.refRoot===id?"selected":""}>${esc(r[id].pasta)} (analisada a ${esc(r[id].quando)})</option>`).join("");
   const idx=getIdx();$("#qInicio").placeholder=idx.anos.size===1?[...idx.anos.keys()][0].slice(0,4)+"-07-01":"AAAA-MM-DD";
   const n=(TPL.itens||[]).length;
-  $("#qTpl").innerHTML=n?`<b>Modelos oficiais:</b> ${n} ficheiro(s) de “${esc(TPL.pasta||"")}” (lidos a ${esc(TPL.quando||"")}). Para mudar, abra a pasta dos modelos em <b>Dados da Box</b> e clique em “Usar esta pasta como modelos oficiais”.`
-    :`<b>Modelos oficiais:</b> ainda não definidos. Em <b>Dados da Box</b>, abra a pasta onde estão os modelos da escola (ex.: <i>Formadores › Modelos de Documentos</i>) e clique em “Usar esta pasta como modelos oficiais”.`;
+  $("#qTpl").innerHTML=n?`<b>Modelos oficiais:</b> ${n} ficheiro(s) de “${esc(TPL.pasta||"")}” (lidos a ${esc(TPL.quando||"")}). Para mudar, abra a pasta dos modelos em <b>Gestão Documental</b> e clique em “Usar esta pasta como modelos oficiais”.`
+    :`<b>Modelos oficiais:</b> ainda não definidos. Em <b>Gestão Documental</b>, abra a pasta onde estão os modelos da escola (ex.: <i>Formadores › Modelos de Documentos</i>) e clique em “Usar esta pasta como modelos oficiais”.`;
 }
 $("#qMin").addEventListener("change",e=>{cfg.qual.min=Math.max(1,+e.target.value||40);save();renderReport()});
 $("#qInicio").addEventListener("change",e=>{const v=e.target.value.trim();if(v&&!/^\d{4}-\d\d-\d\d$/.test(v)){toast("Escreva a data como AAAA-MM-DD");return}cfg.qual.inicio=v;save();renderReport()});
@@ -1606,7 +1721,7 @@ async function verificarFundo(){
 }
 $("#qGo").onclick=async()=>{
   if(!SES){toast("Entre primeiro na Box");return}
-  if(!files.some(f=>f.fid)){$("#qMsg").textContent="Faça primeiro uma análise em Dados da Box.";return}
+  if(!files.some(f=>f.fid)){$("#qMsg").textContent="Faça primeiro uma análise em Gestão Documental.";return}
   bgRun++;const list=porLer();
   if(!list.length){$("#qMsg").textContent="Todos os documentos já foram lidos.";renderReport();return}
   const b=$("#qGo");b.disabled=true;$("#qProg").style.display="block";$("#qProg i").style.width="2%";const t0=Date.now();
@@ -1616,7 +1731,7 @@ $("#qGo").onclick=async()=>{
   b.disabled=false;setTimeout(()=>{$("#qProg").style.display="none"},800);
   renderReport();
 };
-// modelos oficiais: lê os ficheiros da pasta escolhida em Dados da Box
+// modelos oficiais: lê os ficheiros da pasta escolhida em Gestão Documental
 $("#tplGo").onclick=async()=>{
   if(!SES){toast("Entre primeiro na Box");return}
   if(scanBusy){toast("Espere que a análise termine");return}
@@ -1816,7 +1931,7 @@ async function renderAlt(){
   if(altSel.startsWith("L|"))d=legacy[+altSel.slice(2)];
   else if(altSel&&root){const t=+altSel.slice(2),k=root+"|"+t;if(!BASEC||BASEC.k!==k){const b=await lerBase(root,t);if(my!==altBusy)return;BASEC={k,b}}
     if(BASEC.b)d=diffListings(BASEC.b,lastListing)}
-  if(!d){el.innerHTML=`<div class="card"><p class="hint" style="margin:0">${root?"Ainda não há uma contagem para comparar.":"Ainda não há alterações para mostrar. Faça uma análise em Dados da Box: a primeira serve de ponto de partida (contagem) e, a partir daí, aparece aqui quem colocou, alterou ou apagou documentos e o efeito no relatório de cada formador."}</p></div>`;$("#altTiles").innerHTML="";return}
+  if(!d){el.innerHTML=`<div class="card"><p class="hint" style="margin:0">${root?"Ainda não há uma contagem para comparar.":"Ainda não há alterações para mostrar. Faça uma análise em Gestão Documental: a primeira serve de ponto de partida (contagem) e, a partir daí, aparece aqui quem colocou, alterou ou apagou documentos e o efeito no relatório de cada formador."}</p></div>`;$("#altTiles").innerHTML="";return}
   const nE=Object.values(d.entregues).reduce((a,x)=>a+x.length,0),nP=Object.values(d.perdidos).reduce((a,x)=>a+x.length,0);
   const postos=[...d.novos,...d.alterados.filter(x=>!x.mv)],C=new Map(postos.map(x=>[x,conteudo(x)])),lv=x=>(C.get(x)||{}).lvl;
   const nB=postos.filter(x=>lv(x)==="bad").length,nS=postos.filter(x=>lv(x)==="warn").length,nQ=postos.filter(x=>lv(x)==="?").length;
@@ -1879,7 +1994,7 @@ function renderTree(){
   $("#pTiles").innerHTML=`<div class="tile"><div class="v">${all.length}</div><div class="l">pastas</div></div>
    <div class="tile"><div class="v" style="color:var(--bad)">${empty.length}</div><div class="l">pastas vazias</div></div>
    <div class="tile"><div class="v">${files.length}</div><div class="l">ficheiros</div></div>`;countUp($("#pTiles"));
-  if(!all.length){$("#pTree").innerHTML=`<p class="hint" style="margin:0">Faça primeiro a análise da Box (em Dados da Box).</p>`;return}
+  if(!all.length){$("#pTree").innerHTML=`<p class="hint" style="margin:0">Faça primeiro a análise da Box (em Gestão Documental).</p>`;return}
   const q=norm($("#pTxt").value),lvl=+$("#pLvl").value;
   if($("#pShow").value==="vazias"){
     // só as pastas vazias de nível mais alto (se uma pasta está vazia, as subpastas também estão)
@@ -1902,7 +2017,7 @@ function printText(title,text){
 /* ---------- ligação direta à Box (só leitura, token de programador) ---------- */
 // ÚNICA porta de acesso à Box: só pedidos GET (leitura). Não há neste código nada que escreva na Box.
 // Endereço do serviço de login na Cloudflare. Pode ser escrito aqui (recomendado ao publicar)
-// ou indicado na própria página, no separador "Dados da Box".
+// ou indicado na própria página, no separador "Gestão Documental".
 const BOXDOC_WORKER="https://boxdoc-login.joel-cunha83.workers.dev";
 const workerUrl=()=>{let u=BOXDOC_WORKER;try{u=u||localStorage.getItem("boxdoc_worker")||""}catch(e){}return u.replace(/\/+$/,"")};
 // Sessão: {mode:"oauth"|"dev", a: access token, r: refresh token, exp: ms}
@@ -2487,6 +2602,9 @@ $("#gSend").onclick=async e=>{const to=$("#gTo").value.trim();if(!to){toast("Esc
   catch(x){sendMsg(esc(msErro(x)),"bad")}finally{btn.disabled=false}};
 
 /* ---------- exportar relatório ---------- */
+const profT=id=>byTeacher(evaluate()).find(t=>t.p.id===id);
+$("#report").addEventListener("click",e=>{const b=e.target.closest("[data-rpdf]");if(!b)return;const t=profT(b.dataset.rpdf);if(t)baixarPDF(()=>pdfFormador(t),pdfNomeF(t))});
+$("#fPdf").onclick=()=>{const id=$("#fProf").value,t=id&&profT(id);if(t&&t.miss)baixarPDF(()=>pdfFormador(t),pdfNomeF(t));else if(t)toast("Este formador não tem nada em falta");else baixarPDF(pdfGeral,pdfNomeG())};
 $("#dlCsv").onclick=()=>download(`relatorio_entregas_${hoje()}.csv`,"﻿"+geralCSV(),"text/csv;charset=utf-8");
 $("#prRep").onclick=()=>baixarPDF(pdfGeral,pdfNomeG());
 $("#gTo").addEventListener("input",e=>{cfg.mail.relatorio_para=e.target.value;save()});
@@ -2530,7 +2648,7 @@ function renderEst(){
   const modsOk=ev.filter(e=>e.items.length&&e.items.every(i=>i.ok)).length,modsTot=ev.filter(e=>e.items.length).length;
   const profsMiss=T.filter(t=>t.miss>0&&t.p.id!=="_").length,profsTot=T.filter(t=>t.p.id!=="_").length;
   const j=lastListing;
-  $("#eSub").textContent=j?`Análise em uso: ${nomePasta(j.pasta)} · ${j.quando}`:"Ainda não há nenhuma análise carregada (em Dados da Box).";
+  $("#eSub").textContent=j?`Análise em uso: ${nomePasta(j.pasta)} · ${j.quando}`:"Ainda não há nenhuma análise carregada (em Gestão Documental).";
   $("#eTiles").innerHTML=`
    <div class="tile"><div class="v">${pct}%</div><div class="l">documentação entregue</div></div>
    <div class="tile"><div class="v">${ok}</div><div class="l">documentos entregues (de ${tot})</div></div>
@@ -2566,42 +2684,102 @@ function renderEst(){
     return`<div class="row-h" data-tip="${esc(`<b>${esc(a.pasta)}</b><br>Análise de ${esc(a.quando||"")}<br>${a.n??0} ficheiros · ${a.np??0} pastas`)}"><span class="n">${on?"● ":""}${esc(nomePasta(a.pasta))}</span><span class="t"><i class="${on?"":"lo"}" data-w="${(a.n||0)/mx*100}%"></i></span><span class="v"><b>${a.n??0}</b></span></div>`}).join("")}</div>`
     :`<p class="eempty">Ainda não há análises guardadas.</p>`;
   animar($("#eAna"));
+  // rankings: mais cumpridores e turmas mais completas
+  const rk=rows=>rows.filter(r=>r.tot).sort((a,b)=>b.ok/b.tot-a.ok/a.tot||b.tot-a.tot||a.nome.localeCompare(b.nome,"pt")).map((r,i)=>({...r,nome:`${i+1}.º ${r.nome}`}));
+  barras($("#eTopP"),rk(T.filter(t=>t.p.id!=="_").map(t=>({nome:t.p.nome,ok:t.ok,tot:t.tot}))),"Ainda sem formadores com módulos atribuídos.",10);
+  barras($("#eTopT"),rk(agrupar(ev,e=>e.mod.turma||"(sem turma)")),"Sem turmas.",10);
   linhaTempo($("#eTime"));
 }
-// linha do tempo: ficheiros acumulados por semana (ou por mês, se o período for longo)
-function linhaTempo(el){
-  const ds=files.map(f=>Date.parse(f.date)).filter(t=>t>0).sort((a,b)=>a-b);
-  if(ds.length<2){el.innerHTML=`<p class="eempty">Sem datas suficientes na análise em uso.</p>`;return}
-  const mes=ds[ds.length-1]-ds[0]>200*864e5;
-  const chave=t=>{const d=new Date(t);if(mes)return new Date(d.getFullYear(),d.getMonth(),1).getTime();const x=new Date(d.getFullYear(),d.getMonth(),d.getDate());x.setDate(x.getDate()-((x.getDay()+6)%7));return x.getTime()};
-  const pts=[];let acc=0;
-  for(const t of ds){const k=chave(t);acc++;if(pts.length&&pts[pts.length-1].k===k){pts[pts.length-1].v=acc;pts[pts.length-1].novos++}else pts.push({k,v:acc,novos:1})}
-  // preenche períodos sem ficheiros para a linha ficar contínua
-  const full=[];for(let i=0;i<pts.length;i++){full.push(pts[i]);if(i<pts.length-1){let d=new Date(pts[i].k);for(;;){mes?d.setMonth(d.getMonth()+1):d.setDate(d.getDate()+7);if(d.getTime()>=pts[i+1].k)break;full.push({k:d.getTime(),v:pts[i].v,novos:0})}}}
-  const W=Math.max(320,el.clientWidth||700),H=240,ml=44,mr=12,mt=10,mb=26,iw=W-ml-mr,ih=H-mt-mb,max=full[full.length-1].v;
+// linha do tempo por ano letivo: de setembro a agosto (e meses seguintes, para entregas tardias), uma linha por ano letivo analisado
+const TLC=new Map(),TL_COR=["#1a5fd0","#16a34a","#d97706","#9333ea","#0891b2","#e11d48","#64748b"];
+let TLsel=(()=>{try{return localStorage.getItem("boxcheck_tl")||""}catch(e){return""}})();
+const anoDeDatas=ds=>{const s=ds.slice().sort((a,b)=>a-b),m=new Date(s[Math.floor(s.length/2)]),y=m.getMonth()>=8?m.getFullYear():m.getFullYear()-1;return y+"/"+(y+1)};
+async function seriesTempo(){const out=[],R=resumos(),vistos=new Set();
+  const add=(pasta,ds,cur)=>{if(ds.length<2)return;const ano=anoDe(pasta)||anoDeDatas(ds);if(vistos.has(ano))return;vistos.add(ano);out.push({pasta,ano,ds,cur})};
+  if(lastListing)add(lastListing.pasta,files.map(f=>Date.parse(f.date)).filter(t=>t>0),true);
+  for(const id in R){if(lastListing&&id===lastListing.rootId)continue;const k=id+"|"+(R[id].t||"");let ds=TLC.get(k);
+    if(!ds){try{const j=await lerListagem(id);if(!j)continue;ds=toFF(j).fs.map(f=>Date.parse(f.date)).filter(t=>t>0);TLC.set(k,ds)}catch(e){continue}}
+    add(R[id].pasta,ds,false)}
+  out.sort((a,b)=>a.ano.localeCompare(b.ano));return out}
+const MESES=["set","out","nov","dez","jan","fev","mar","abr","mai","jun","jul","ago"];
+async function linhaTempo(el){
+  const S=await seriesTempo();
+  if(!S.length){el.innerHTML=`<p class="eempty">Sem datas suficientes na análise em uso.</p>`;return}
+  const anos=S.map(x=>x.ano);if(TLsel&&!anos.includes(TLsel))TLsel="";
+  const vis=TLsel?S.filter(x=>x.ano===TLsel):S;
+  // índice do mês contado a partir de setembro do ano inicial (antes disso conta como setembro)
+  const ser=vis.map((x,i)=>{const y0=+x.ano.slice(0,4),c=[];for(const t of x.ds){const d=new Date(t);let k=(d.getFullYear()-y0)*12+d.getMonth()-8;if(k<0)k=0;if(k>35)k=35;c[k]=(c[k]||0)+1}
+    return{...x,c,last:c.length-1,cor:TL_COR[(x.cur?0:S.indexOf(x)+1)%TL_COR.length]}});
+  const N=Math.max(12,...ser.map(x=>x.last+1));
+  for(const x of ser){let a=0;x.v=Array.from({length:N},(_,k)=>{a+=x.c[k]||0;return k<=x.last?a:null});x.novos=Array.from({length:N},(_,k)=>x.c[k]||0)}
+  const max=Math.max(1,...ser.map(x=>x.v[x.last]));
+  const W=Math.max(320,el.clientWidth||700),H=250,ml=44,mr=12,mt=10,mb=26,iw=W-ml-mr,ih=H-mt-mb;
   const nice=(()=>{const st=Math.pow(10,Math.floor(Math.log10(max)));for(const m of[1,2,2.5,5,10])if(max/(st*m)<=5)return st*m;return st*10})(),top=Math.ceil(max/nice)*nice;
-  const X=i=>ml+(full.length===1?iw/2:i/(full.length-1)*iw),Y=v=>mt+ih-v/top*ih;
-  const d=full.map((p,i)=>(i?"L":"M")+X(i).toFixed(1)+","+Y(p.v).toFixed(1)).join("");
-  const fmt=t=>new Date(t).toLocaleDateString("pt-PT",mes?{month:"short",year:"2-digit"}:{day:"2-digit",month:"short"});
-  const nt=Math.min(6,full.length),ticksX=[...new Set(Array.from({length:nt},(_,i)=>Math.round(i*(full.length-1)/Math.max(1,nt-1))))];
+  const X=i=>ml+i/(N-1)*iw,Y=v=>mt+ih-v/top*ih;
+  const lab=k=>MESES[k%12]+(k>=12?(k>=24?"⁺²":"⁺¹"):"");
   let g="";for(let v=0;v<=top;v+=nice)g+=`<line class="gl" x1="${ml}" x2="${W-mr}" y1="${Y(v)}" y2="${Y(v)}"/><text class="ax" x="${ml-8}" y="${Y(v)+4}" text-anchor="end">${v.toLocaleString("pt-PT")}</text>`;
-  g+=ticksX.map(i=>`<text class="ax" x="${X(i)}" y="${H-6}" text-anchor="${i===0?"start":i===full.length-1?"end":"middle"}">${fmt(full[i].k)}</text>`).join("");
-  el.innerHTML=`<div class="tl"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Ficheiros acumulados ao longo do tempo: ${max} no total">${g}
-    <path class="ar" d="${d}L${X(full.length-1)},${Y(0)}L${X(0)},${Y(0)}Z" style="opacity:0;transition:opacity .9s .6s"/>
-    <path class="ln" d="${d}"/><line class="xh" y1="${mt}" y2="${mt+ih}" style="display:none"/><circle class="dot" r="5" style="display:none"/>
+  const passo=N>18?3:N>12?2:1;for(let k=0;k<N;k+=passo)g+=`<text class="ax" x="${X(k)}" y="${H-6}" text-anchor="${k===0?"start":k>=N-1?"end":"middle"}">${lab(k)}</text>`;
+  if(N>12)g+=`<line class="gl" x1="${X(11.5)}" x2="${X(11.5)}" y1="${mt}" y2="${mt+ih}" stroke-dasharray="3 4"/><text class="ax" x="${X(11.5)+4}" y="${mt+12}">depois de agosto</text>`;
+  const path=x=>x.v.map((v,k)=>v==null?"":(k&&x.v[k-1]!=null?"L":"M")+X(k).toFixed(1)+","+Y(v).toFixed(1)).join("");
+  const um=ser.length===1;
+  el.innerHTML=`<div class="tlbar"><div class="tllg">${S.map(x=>{const s=ser.find(y=>y.ano===x.ano);return`<button class="tlk${TLsel===x.ano?" on":""}" data-tl="${esc(x.ano)}" title="${esc(x.pasta)}"><span class="sw" style="background:${s?s.cor:TL_COR[(x.cur?0:S.indexOf(x)+1)%TL_COR.length]}"></span>${esc(x.ano)}${x.cur?" (em uso)":""}</button>`}).join("")}${S.length>1?`<button class="tlk${TLsel?"":" on"}" data-tl="">Comparar todos</button>`:""}</div></div>
+    <div class="tl"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Ficheiros acumulados por ano letivo">${g}
+    ${um?`<path class="ar" d="${path(ser[0])}L${X(ser[0].last)},${Y(0)}L${X(0)},${Y(0)}Z" style="opacity:0;transition:opacity .9s .6s"/>`:""}
+    ${ser.map(x=>`<path class="ln" d="${path(x)}" style="stroke:${x.cor}"/>`).join("")}
+    <line class="xh" y1="${mt}" y2="${mt+ih}" style="display:none"/>${ser.map(x=>`<circle class="dot" r="5" style="display:none;fill:${x.cor}"/>`).join("")}
     <rect x="${ml}" y="${mt}" width="${iw}" height="${ih}" fill="transparent" data-tip=""/></svg></div>`;
-  const svg=el.querySelector("svg"),ln=svg.querySelector(".ln"),ar=svg.querySelector(".ar"),xh=svg.querySelector(".xh"),dot=svg.querySelector(".dot"),hit=svg.querySelector("rect");
-  const L=ln.getTotalLength();
-  if(!reduz()){ln.style.strokeDasharray=L;ln.style.strokeDashoffset=L;requestAnimationFrame(()=>requestAnimationFrame(()=>{ln.style.transition="stroke-dashoffset 1.6s cubic-bezier(.4,0,.2,1)";ln.style.strokeDashoffset=0;ar.style.opacity=""}))}else ar.style.opacity="";
-  hit.addEventListener("mousemove",e=>{const b=svg.getBoundingClientRect(),x=(e.clientX-b.left)*W/b.width;
-    const i=Math.max(0,Math.min(full.length-1,Math.round((x-ml)/iw*(full.length-1)))),p=full[i];
-    xh.setAttribute("x1",X(i));xh.setAttribute("x2",X(i));xh.style.display="";dot.setAttribute("cx",X(i));dot.setAttribute("cy",Y(p.v));dot.style.display="";
-    hit.dataset.tip=`<b>${mes?"Mês de "+new Date(p.k).toLocaleDateString("pt-PT",{month:"long",year:"numeric"}):"Semana de "+dataPT(p.k)}</b><br>${p.novos} ficheiro(s) novo(s) ou alterado(s)<br>Total acumulado: <b>${p.v}</b>`;
-    const tip=$("#vtip");tip.innerHTML=hit.dataset.tip});
-  hit.addEventListener("mouseleave",()=>{xh.style.display="none";dot.style.display="none"});
+  el.querySelectorAll("[data-tl]").forEach(b=>b.onclick=()=>{TLsel=b.dataset.tl;try{localStorage.setItem("boxcheck_tl",TLsel)}catch(e){}linhaTempo(el)});
+  const svg=el.querySelector("svg"),ar=svg.querySelector(".ar"),xh=svg.querySelector(".xh"),dots=[...svg.querySelectorAll(".dot")],hit=svg.querySelector("rect");
+  svg.querySelectorAll(".ln").forEach(ln=>{const L=ln.getTotalLength();if(!reduz()){ln.style.strokeDasharray=L;ln.style.strokeDashoffset=L;requestAnimationFrame(()=>requestAnimationFrame(()=>{ln.style.transition="stroke-dashoffset 1.6s cubic-bezier(.4,0,.2,1)";ln.style.strokeDashoffset=0;if(ar)ar.style.opacity=""}))}else if(ar)ar.style.opacity=""});
+  hit.addEventListener("mousemove",e=>{const b=svg.getBoundingClientRect(),x=(e.clientX-b.left)*W/b.width,k=Math.max(0,Math.min(N-1,Math.round((x-ml)/iw*(N-1))));
+    xh.setAttribute("x1",X(k));xh.setAttribute("x2",X(k));xh.style.display="";
+    ser.forEach((s,i)=>{const v=s.v[k];if(v==null){dots[i].style.display="none";return}dots[i].setAttribute("cx",X(k));dots[i].setAttribute("cy",Y(v));dots[i].style.display=""});
+    hit.dataset.tip=ser.map(s=>{const v=s.v[k];if(v==null)return"";const y0=+s.ano.slice(0,4),d=new Date(y0,8+k,1);
+      return`<b style="color:${s.cor}">${esc(s.ano)}</b> · ${d.toLocaleDateString("pt-PT",{month:"long",year:"numeric"})}<br>${s.novos[k]} novo(s) ou alterado(s) · total <b>${v}</b>`}).filter(Boolean).join("<br>");
+    $("#vtip").innerHTML=hit.dataset.tip});
+  hit.addEventListener("mouseleave",()=>{xh.style.display="none";dots.forEach(d=>d.style.display="none")});
 }
 $("#eReplay").onclick=()=>{NFV.clear();renderEst()};
 let _estRz;addEventListener("resize",()=>{clearTimeout(_estRz);_estRz=setTimeout(()=>{if(curTab==="est")linhaTempo($("#eTime"))},200)});
+
+/* ---------- disposição: quadros arrastáveis, em duas colunas quando há espaço ---------- */
+const LAYKEY="boxcheck_layout";
+let LAYOUT=(()=>{try{return JSON.parse(localStorage.getItem(LAYKEY)||"{}")||{}}catch(e){return{}}})();
+const GRIP=`<svg viewBox="0 0 24 24" width="14" height="14"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg>`;
+function blkKey(el,sec,used){let k=el.id||"";if(!k){const h=el.querySelector("h2,h3");k=sec.id+":"+(h?norm(h.textContent).slice(0,40):el.className.split(" ")[0]||"x")}
+  let kk=k,i=2;while(used.has(kk))kk=k+"#"+i++;used.add(kk);return kk}
+// cada quadro fica dentro de um invólucro com a pega (o conteúdo do quadro pode ser redesenhado à vontade)
+function tornarBloco(el,key){const w=document.createElement("div");w.className="blk";w.dataset.blk=key;el.parentElement.insertBefore(w,el);w.appendChild(el);el=w;const h=document.createElement("button");h.type="button";h.className="dh";h.title="Arraste para mudar este quadro de sítio";h.setAttribute("aria-label","Mover quadro");h.innerHTML=GRIP;el.appendChild(h)}
+function prepararDisposicao(){
+  document.querySelectorAll("main>section").forEach(sec=>{const used=new Set(),kids=[...sec.children];
+    const cols=document.createElement("div");cols.className="cols";const A=document.createElement("div"),B=document.createElement("div");A.className="col";A.dataset.col="a";B.className="col";B.dataset.col="b";cols.append(A,B);
+    for(const el of kids){(el.dataset.col==="b"?B:A).appendChild(el);
+      if(el.classList.contains("egrid")){el.dataset.cont="g:"+blkKey(el,sec,used);[...el.children].forEach(c=>tornarBloco(c,blkKey(c,sec,used)))}
+      else tornarBloco(el,blkKey(el,sec,used))}
+    sec.appendChild(cols);
+    const L=LAYOUT[sec.id];if(!L)return;
+    for(const ck in L){const cont=ck==="a"?A:ck==="b"?B:sec.querySelector(`[data-cont="${CSS.escape(ck)}"]`);if(!cont)continue;
+      for(const bk of L[ck]){const b=sec.querySelector(`[data-blk="${CSS.escape(bk)}"]`);if(b&&!b.contains(cont))cont.appendChild(b)}}})}
+const contKey=c=>c.dataset.col||c.dataset.cont;
+function guardarDisposicao(sec){const o={};sec.querySelectorAll(".col,[data-cont]").forEach(c=>{o[contKey(c)]=[...c.children].filter(x=>x.classList.contains("blk")).map(x=>x.dataset.blk)});
+  LAYOUT[sec.id]=o;try{localStorage.setItem(LAYKEY,JSON.stringify(LAYOUT))}catch(e){}}
+let DRG=null,MARK=null;
+document.querySelector("main").addEventListener("mousedown",e=>{const h=e.target.closest(".dh");if(h)h.parentElement.draggable=true});
+document.querySelector("main").addEventListener("mouseup",e=>{const h=e.target.closest(".dh");if(h&&!DRG)h.parentElement.draggable=false});
+document.querySelector("main").addEventListener("dragstart",e=>{const b=e.target.closest&&e.target.closest(".blk");if(!b||!b.draggable||e.target!==b)return;
+  DRG=b;e.dataTransfer.effectAllowed="move";try{e.dataTransfer.setData("text/plain","quadro")}catch(x){}
+  MARK=document.createElement("div");MARK.className="dropmark";document.body.classList.add("arrastar");setTimeout(()=>b.classList.add("dragging"),0)});
+document.querySelector("main").addEventListener("dragover",e=>{if(!DRG)return;const sec=DRG.closest("section");
+  let c=e.target.closest(".col,[data-cont]");if(!c||c.closest("section")!==sec||DRG.contains(c))return;
+  e.preventDefault();e.dataTransfer.dropEffect="move";
+  const grid=!!c.dataset.cont,bs=[...c.children].filter(x=>x.classList.contains("blk")&&x!==DRG);
+  let antes=null;for(const x of bs){const r=x.getBoundingClientRect();if(grid?(e.clientY<r.bottom&&e.clientX<r.left+r.width/2)||e.clientY<r.top:e.clientY<r.top+r.height/2){antes=x;break}}
+  if(MARK.parentElement!==c||MARK.nextElementSibling!==antes)c.insertBefore(MARK,antes)});
+document.querySelector("main").addEventListener("drop",e=>{if(!DRG||!MARK||!MARK.parentElement)return;e.preventDefault();MARK.parentElement.insertBefore(DRG,MARK);guardarDisposicao(DRG.closest("section"));
+  if(curTab==="est")linhaTempo($("#eTime"))});
+document.querySelector("main").addEventListener("dragend",()=>{if(!DRG)return;DRG.classList.remove("dragging");DRG.draggable=false;DRG=null;if(MARK)MARK.remove();MARK=null;document.body.classList.remove("arrastar")});
+$("#layReset").onclick=()=>{try{localStorage.removeItem(LAYKEY)}catch(e){}location.reload()};
+prepararDisposicao();
 
 /* ---------- init ---------- */
 try{localStorage.removeItem("box_skip")}catch(e){}
