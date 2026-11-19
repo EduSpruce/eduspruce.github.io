@@ -328,7 +328,8 @@ td{padding:9px 8px;border-bottom:1px solid #eef1f5}
 tbody tr{transition:background .12s}tbody tr:hover{background:#f8fafc}
 /* indicadores */
 .tiles{gap:14px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
-.tile{border-radius:var(--r);border:1px solid var(--line);box-shadow:var(--sh-sm);padding:16px 18px;display:flex;flex-direction:column-reverse;gap:6px;justify-content:flex-end}
+.tile{border-radius:var(--r);border:1px solid var(--line);box-shadow:var(--sh-sm);padding:16px 18px;display:flex;flex-direction:column-reverse;gap:6px;justify-content:space-between}
+.tile .v{margin-top:auto} /* 0.9.71: valores alinhados em baixo, mesmo com legendas de 2 linhas */
 .tile:hover{transform:none;box-shadow:var(--sh)}
 .tile .l{font-size:12.5px;font-weight:500;color:var(--muted)}
 .tile .v{font-size:30px;font-weight:650;letter-spacing:-.03em;line-height:1.05;font-variant-numeric:tabular-nums}
@@ -2200,7 +2201,7 @@ html.ios-aberto,html.ios-aberto body{overflow:hidden}
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.70"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.71"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
