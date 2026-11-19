@@ -1057,6 +1057,7 @@ body.ro #pcOut input,body.ro #pcOut select{pointer-events:none}body.ro #pcOut bu
       <button class="b s" id="pcImp" style="align-self:flex-end" title="Lê as folhas Turma 1, Turma 2… do livro Planos Curriculares e DSD (.xlsm ou .xlsx)">Importar do Excel</button>
       <input type="file" id="pcFile" accept=".xlsx,.xlsm,.xls" hidden>
       <button class="b s" id="pcPdf" style="align-self:flex-end">PDF do plano</button>
+      <button class="b s" id="pcPdfAll" style="align-self:flex-end" title="Os planos de todas as turmas do ano letivo ativo num só PDF">PDF de todas as turmas</button>
     </div>
     <div id="pcMsg"></div>
     <div id="pcOut"></div>
@@ -1725,7 +1726,7 @@ body.ro #pcOut input,body.ro #pcOut select{pointer-events:none}body.ro #pcOut bu
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.31"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.32"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -4752,7 +4753,7 @@ function renderPC(){const e=escData(),a=anoAtivo(),T=turmasDoAno(a),out=$("#pcOu
   if(!T.some(t=>t.id===PC_T)){PC_T=(T[0]||{}).id||""}
   $("#pcTurma").innerHTML=T.length?pcTurmaOpts():`<option value="">— sem turmas em ${esc(a.nome)} —</option>`;
   $("#pcDiscDL").innerHTML=[...new Set((e.disciplinas||[]).concat(pcPlanos().flatMap(p=>(p.linhas||[]).map(l=>l.disc))))].filter(Boolean).sort((x,y)=>x.localeCompare(y,"pt",{numeric:true})).map(d=>`<option value="${esc(d)}">`).join("");
-  $("#pcPdf").disabled=!pcDe(PC_T);
+  $("#pcPdf").disabled=!pcDe(PC_T);{const b=$("#pcPdfAll");if(b)b.disabled=!escData().turmas.some(t=>pcDe(t.id))}
   if(!T.length){out.innerHTML=`<p class="hint">Não há turmas em ${esc(a.nome)}. Crie-as em <b>Escola › Turmas</b> ou use <b>Importar do Excel</b>, que cria as turmas, os cursos e os formadores que faltarem.</p>`+pcResumoAno();return}
   const t=T.find(x=>x.id===PC_T),p=pcDe(t.id,a.id);$("#pcModDL").innerHTML=pcModOpcoes(t);
   if(!p){const outros=pcPlanos().filter(x=>x!==p&&x.linhas&&x.linhas.length).map(x=>{const tt=e.turmas.find(y=>y.id===x.turmaId),aa=e.anos.find(y=>y.id===x.anoId);return tt&&aa?{x,tt,aa}:null}).filter(Boolean)
@@ -4955,23 +4956,63 @@ $("#dsdOut").addEventListener("click",e=>{const tr=e.target.closest("tr[data-dsd
 /* ---------- PDF: plano curricular da turma e DSD de cada formador ---------- */
 const PC_RODAPE="Escola Profissional da Ilha de São Jorge · EPISJ 360 · Escola360";
 function pdfAssinatura(doc,y){if(y>297-PDF_BOT-28){doc.addPage();y=PDF_TOP+10}doc.setDrawColor(150);doc.setLineWidth(.2);doc.line(120,y+16,196,y+16);doc.setFont("helvetica","normal");doc.setFontSize(8.5);doc.setTextColor(95);doc.text("(Diretor Pedagógico)",158,y+21,{align:"center"});return y+26}
-async function pdfPlano(){const t=escData().turmas.find(x=>x.id===PC_T),p=pcDe(PC_T);if(!t||!p)return;const a=anoAtivo(),J=await loadPDF(),doc=new J({unit:"mm",format:"a4"});
-  let y=pdfTitulo(doc,"Plano Curricular — "+dsdTurmaTxt(t),`Ano letivo ${a.nome}${anoCurricular(t,a)?" · "+anoCurricular(t,a):""}${t.fse?" · Projeto n.º "+t.fse:""}${p.semanas?" · "+p.semanas+" semanas de aulas":""} · ${pdfData()}`);
-  for(const [k,n] of PC_AREAS){const D=pcDiscs(p,k);if(!D.length)continue;const body=[];
-    for(const d of D){const L=p.linhas.filter(l=>l.area===k&&l.disc===d),hd=pcH(L),hs=pcSemana(hd,p);
-      L.forEach(l=>body.push([d,l.mod,pcNum(l.h),pcProfNome(l.f)||"(sem formador)"].map(pdfTxt)));
-      body.push([{content:pdfTxt(`Total ${d}`),colSpan:2,styles:{fontStyle:"bold",fillColor:[234,241,253]}},{content:pcNum(hd),styles:{fontStyle:"bold",fillColor:[234,241,253]}},{content:p.semanas?pdfTxt(`${pcNum(hs)} h/semana · ${Math.ceil(hs-1e-9)} tempo(s)`):"",styles:{fillColor:[234,241,253]}}])}
-    if(y>297-PDF_BOT-30){doc.addPage();y=PDF_TOP+4}
-    doc.setFont("helvetica","bold");doc.setFontSize(11);doc.setTextColor(25);doc.text(pdfTxt(`${n} — ${pcNum(pcH(p.linhas.filter(l=>l.area===k)))} h`),14,y);
-    y=pdfTabela(doc,y+3,["Disciplina","Módulo / UFCD / UC","Horas","Formador"],body,{0:{cellWidth:44},2:{cellWidth:16,halign:"right"},3:{cellWidth:48}})+8}
-  if(p.cargos.length){if(y>297-PDF_BOT-30){doc.addPage();y=PDF_TOP+4}doc.setFont("helvetica","bold");doc.setFontSize(11);doc.setTextColor(25);doc.text("Cargos",14,y);
-    y=pdfTabela(doc,y+3,["Cargo","Horas","Formador"],p.cargos.map(c=>[c.nome,pcNum(c.h),pcProfNome(c.f)||"(sem formador)"].map(pdfTxt)),{1:{cellWidth:16,halign:"right"},2:{cellWidth:60}})+8}
-  const tot=pcH(p.linhas),fct=+p.fct.horas||0;
-  y=pdfTabela(doc,y,["Resumo","Horas"],[...PC_AREAS.map(([k,n])=>[n,pcNum(pcH(p.linhas.filter(l=>l.area===k)))]),["Total de horas",pcNum(tot)],[`Formação em Contexto de Trabalho${p.fct.semanas?` (${p.fct.semanas} semanas${p.fct.dias?", "+pcNum(p.fct.dias)+" dias":""})`:""}`,pcNum(fct)],["Total global",pcNum(tot+fct)]].map(r=>r.map(pdfTxt)),{1:{cellWidth:30,halign:"right"}});
-  pdfAssinatura(doc,y+4);pdfMoldura(doc,PC_RODAPE);doc.save(pdfTxt(`Plano Curricular ${t.cod} ${a.nome.replace("/","-")}.pdf`))}
+/* 0.9.32: Plano Curricular Detalhado no formato da folha oficial da escola (uma tabela por disciplina com o total e as horas semanais,
+   Área Sociocultural/Científica/Técnica, Cargos, quadro de FCT e totais, assinatura, data da impressão e paginação); um PDF por turma ou de todas */
+function pdfPlanoSec(doc,t,p,a){const ini=doc.getNumberOfPages(),TOP=40,W=210;
+  doc.setTextColor(0);doc.setFontSize(8);
+  if(t.fse){doc.setFont("helvetica","bolditalic");const v=pdfTxt(t.fse);doc.text(v,170,33,{align:"right"});doc.setFont("helvetica","italic");doc.text("Projeto n.º ",170-doc.getTextWidth(v),33,{align:"right"})}
+  const curso=pdfTxt(dsdTurmaTxt(t)),ano=(anoCurricular(t,a)||"").replace(/\s*ano$/,"");
+  doc.setFont("helvetica","normal");doc.text("Curso: ",30,37.5);doc.setFont("helvetica","bold");doc.text(curso,30+doc.getTextWidth("Curso: "),37.5);
+  if(ano){doc.setFont("helvetica","bold");doc.text(pdfTxt(ano),170,37.5,{align:"right"});doc.setFont("helvetica","normal");doc.text("Ano: ",170-doc.getTextWidth(pdfTxt(ano)),37.5,{align:"right"})}
+  doc.setDrawColor(0);doc.setLineWidth(.6);doc.line(14,39.2,W-14,39.2);
+  const P1={top:1,bottom:1,left:1,right:1},PD={top:3.2,bottom:3.2,left:1,right:1},SEM=p.semanas||0;
+  const LW=(b)=>({top:.2,right:.2,bottom:b||.2,left:.2});
+  const area=n=>[{content:n,colSpan:6,styles:{halign:"right",fontStyle:"italic",lineWidth:0,fillColor:false,cellPadding:{top:2.2,bottom:.8,left:1,right:1}}}];
+  const cab=(c5)=>["Disciplina","Módulos/UFCDs","Horas","Formador",c5,"Autorização de Lecionação"].map((x,i)=>({content:x,styles:{fillColor:[217,217,217],fontStyle:"bold",fontSize:7,cellPadding:P1,halign:i===2||i>=4?"center":"left",valign:"middle"}}));
+  const tempos=h=>SEM?String(Math.ceil(h/SEM-1e-9)):"";
+  const tot=(h,sem)=>[{content:"Total",colSpan:2,styles:{halign:"right",fontStyle:"bolditalic",cellPadding:P1,lineWidth:LW(.8)}},{content:pcNum(h),styles:{halign:"right",fontStyle:"bolditalic",cellPadding:P1,lineWidth:LW(.8)}},
+    {content:sem?"Horas Semanais":"",styles:{fontStyle:"bolditalic",cellPadding:P1,lineWidth:LW(.8)}},{content:"",styles:{cellPadding:P1,lineWidth:LW(.8)}},{content:sem?tempos(h):"",styles:{halign:"right",fontStyle:"italic",cellPadding:P1,lineWidth:LW(.8)}}];
+  const blocos=[];let body=null;const novo=()=>{body=[];blocos.push(body)};const NOME={sociocultural:"Área Sociocultural",cientifica:"Área Científica",tecnica:"Área Técnica"};
+  for(const [k] of PC_AREAS){const D=pcDiscs(p,k);if(!D.length)continue;let pri=true;
+    for(const d of D){const L=p.linhas.filter(l=>l.area===k&&l.disc===d);novo();if(pri){body.push(area(NOME[k]||k));pri=false}body.push(cab(k==="tecnica"?"Regime Excecional":"Autorização de Acumulação"));
+      L.forEach(l=>body.push([d,l.mod,{content:pcNum(l.h),styles:{halign:"center"}},pcProfNome(l.f)||"",""," "].map(x=>typeof x==="string"?pdfTxt(x):x)));
+      body.push(tot(pcH(L),true))}}
+  if(p.cargos&&p.cargos.length){novo();body.push(area("Cargos"));const G={fillColor:[217,217,217]};
+    p.cargos.forEach(c=>body.push([{content:"Cargos",styles:{...G,fontStyle:"bold",cellPadding:P1}},{content:pdfTxt(c.nome),styles:{...G,fontStyle:"bold",cellPadding:P1}},{content:pcNum(c.h),styles:{halign:"center",cellPadding:P1}},{content:pdfTxt(pcProfNome(c.f)),styles:{cellPadding:P1}},{content:"",styles:{cellPadding:P1}},{content:tempos(+c.h||0),styles:{halign:"right",fontStyle:"italic",cellPadding:P1}}]));
+    body.push([{content:"Total",colSpan:2,styles:{halign:"right",fontStyle:"bolditalic",cellPadding:P1,lineWidth:0}},{content:pcNum(pcH(p.cargos.map(c=>({h:c.h})))),styles:{halign:"right",fontStyle:"bolditalic",cellPadding:P1}},{content:"",colSpan:3,styles:{lineWidth:0,cellPadding:P1}}])}
+  // cada disciplina é um bloco (cabeçalho + módulos + total): se não couber o cabeçalho e uma linha, passa para a página seguinte
+  let y=TOP+.4;
+  for(const B of blocos){if(y>297-24-(B.length>2?24:16)){doc.addPage();y=TOP+.4}
+    doc.autoTable({startY:y,body:B,margin:{top:TOP,bottom:24,left:14,right:14},theme:"grid",
+      styles:{font:"helvetica",fontSize:7.2,textColor:0,lineColor:[0,0,0],lineWidth:.2,cellPadding:PD,valign:"middle",overflow:"linebreak"},
+      columnStyles:{0:{cellWidth:41},1:{cellWidth:47},2:{cellWidth:13},3:{cellWidth:34},4:{cellWidth:21},5:{cellWidth:26}}});
+    y=doc.lastAutoTable.finalY}
+  y+=4;if(y>297-24-46){doc.addPage();y=TOP+2}
+  const tot0=pcH(p.linhas),fct=+(p.fct&&p.fct.horas)||0,fs=p.fct||{};
+  const box=(x,w,rows,cw)=>{doc.autoTable({startY:y,body:rows,margin:{left:x,right:W-x-w,bottom:24},tableWidth:w,theme:"grid",
+    styles:{font:"helvetica",fontSize:7,textColor:0,lineColor:[0,0,0],lineWidth:.2,cellPadding:{top:.6,bottom:.6,left:1,right:1}},columnStyles:{0:{halign:"right",fontStyle:"bold",cellWidth:cw}}});return doc.lastAutoTable.finalY};
+  const y1=box(14,72,[["Formação em Contexto de Trabalho",pcNum(fct)],["Total de Horas",pcNum(tot0)],["Total de Horas Global",pcNum(tot0+fct)]],52);
+  const y2=box(110,86,[["Número de Semanas de FCT",{content:fs.semanas?pcNum(fs.semanas):"",styles:{halign:"center"}}],["Número de Dias de FCT",{content:fs.dias?pcNum(fs.dias):"",styles:{halign:"center"}}],["Número de Semanas de Aulas",{content:SEM?pcNum(SEM):"",styles:{halign:"center",fillColor:[217,217,217]}}]],60);
+  y=Math.max(y1,y2)+6;
+  doc.setFont("helvetica","bold");doc.setFontSize(7.5);doc.text("Cidadania e Desenvolvimento",14,y+3);
+  doc.setFont("helvetica","normal");doc.setFontSize(7);doc.text(pdfTxt("Componente desenvolvida com o contributo de disciplinas e componentes de formação."),14,y+6.6);
+  doc.setDrawColor(0);doc.setLineWidth(.3);doc.line(124,y+5,196,y+5);doc.setFontSize(7.5);doc.text("(Diretor Pedagógico)",160,y+8.4,{align:"center"});
+  return {ini,fim:doc.getNumberOfPages()}}
+async function pdfPlano(todos){const a=anoAtivo(),E=escData();
+  const TT=todos?E.turmas.filter(t=>pcDe(t.id)).sort((x,y)=>String(x.cod).localeCompare(String(y.cod),"pt",{numeric:true})):[E.turmas.find(x=>x.id===PC_T)].filter(t=>t&&pcDe(t.id));
+  if(!TT.length){toast("Não há planos curriculares neste ano letivo");return}
+  const J=await loadPDF(),doc=new J({unit:"mm",format:"a4"});
+  TT.forEach((t,i)=>{if(i)doc.addPage();pdfPlanoSec(doc,t,pcDe(t.id),a)});
+  const n=doc.getNumberOfPages();for(let pg=1;pg<=n;pg++){doc.setPage(pg);pdfOfLogos(doc,"Plano Curricular Detalhado",a);pdfDsdRodape(doc,pg,n)}
+  doc.save(pdfTxt(todos?`Planos Curriculares ${a.nome.replace("/","-")} - todas as turmas.pdf`:`Plano Curricular ${TT[0].cod} ${a.nome.replace("/","-")}.pdf`))}
 /* 0.9.31: DSD no formato da folha oficial da escola (cabeçalho com os dois logótipos e o título ao centro, tabela com grelha preta,
    totais da componente letiva/não letiva, código DSD_n.ano, projetos FSE, assinatura do Diretor Pedagógico, data da impressão e paginação) */
 function dsdNum(id,M){const ord=cfg.profs.filter(p=>M.has(p.id)).sort((x,y)=>String(x.cod||"").localeCompare(String(y.cod||""),"pt",{numeric:true})||String(x.nome).localeCompare(String(y.nome),"pt")).map(p=>p.id);const i=ord.indexOf(id);return i<0?ord.length+1:i+1}
+function pdfOfLogos(doc,titulo,a){const W=210,{main:m,right:r}=LOGOS;
+  if(m){const[w,h]=lgFitArea(m,260,40,18);doc.addImage(m.src,lgFmt(m),14,19-h/2,w,h,"lgMain")}
+  if(r){const[w,h]=lgFitArea(r,260,40,18);doc.addImage(r.src,lgFmt(r),W-14-w,19-h/2,w,h,"lgRight")}
+  doc.setTextColor(0);doc.setFont("helvetica","bold");doc.setFontSize(12);
+  [escData().nome||"Escola Profissional da Ilha de São Jorge","Ano Letivo "+a.nome,titulo].forEach((t,i)=>doc.text(pdfTxt(t),W/2,13+i*6,{align:"center"}))}
 function pdfDsdCab(doc,a,p,areas,primeira){const W=210,{main:m,right:r}=LOGOS;
   if(m){const[w,h]=lgFitArea(m,260,40,18);doc.addImage(m.src,lgFmt(m),14,19-h/2,w,h,"lgMain")}
   if(r){const[w,h]=lgFitArea(r,260,40,18);doc.addImage(r.src,lgFmt(r),W-14-w,19-h/2,w,h,"lgRight")}
@@ -5016,7 +5057,8 @@ async function pdfDsd(todos){const a=anoAtivo(),M=dsdDados(a.id),J=await loadPDF
   const secs=[];ids.forEach((id,i)=>{if(i)doc.addPage();const S=pdfDsdSec(doc,id,M,a);if(S)secs.push(S)});
   for(const S of secs)for(let pg=S.ini;pg<=S.fim;pg++){doc.setPage(pg);pdfDsdCab(doc,S.a,S.p,S.areas,pg===S.ini);pdfDsdRodape(doc,pg-S.ini+1,S.fim-S.ini+1)}
   const p=pcProf(ids[0]);doc.save(pdfTxt(todos?`DSD ${a.nome.replace("/","-")} - todos os formadores.pdf`:`${p?(p.cod?p.cod+" - ":"")+p.nome:"DSD"}.pdf`))}
-$("#pcPdf").onclick=()=>pdfPlano().catch(e=>toast(e.message));
+$("#pcPdf").onclick=()=>pdfPlano(false).catch(e=>toast(e.message));
+$("#pcPdfAll").onclick=()=>pdfPlano(true).catch(e=>toast(e.message));
 $("#dsdPdf").onclick=()=>pdfDsd(false).catch(e=>toast(e.message));
 $("#dsdPdfAll").onclick=()=>pdfDsd(true).catch(e=>toast(e.message));
 
