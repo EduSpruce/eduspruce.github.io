@@ -892,6 +892,12 @@ body.ro #pcOut input,body.ro #pcOut select{pointer-events:none}body.ro #pcOut bu
 .impov .impinf{display:flex;justify-content:space-between;gap:12px;margin-top:10px;font-size:13px;color:var(--muted)}
 .impov .impinf b{color:var(--brand);font-variant-numeric:tabular-nums}
 .impov .imptxt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* 0.9.39: botão Enviar para o Office 365, ao lado do estado da gravação */
+.subup{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:12.5px;font-weight:600;color:var(--brand);background:#fff;border:1px solid var(--line);border-radius:var(--rs,8px);padding:4px 10px;cursor:pointer;margin-left:8px}
+.subup svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.subup:hover{background:var(--brandbg)}.subup[disabled]{opacity:.6;cursor:wait}.subup[hidden]{display:none}
+@media (max-width:1100px){.subup span{display:none}}
 </style>
 </head>
 <body>
@@ -1758,7 +1764,7 @@ body.ro #pcOut input,body.ro #pcOut select{pointer-events:none}body.ro #pcOut bu
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.38"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.39"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -1876,6 +1882,16 @@ function renderRP(){const el=$("#rpList");if(!el)return;const l=rpList();
 $("#rpList").addEventListener("click",e=>{const b=e.target.closest("[data-rp]");if(!b)return;const p=rpList()[+b.dataset.rp];if(!p)return;
   ponto("Antes de restaurar “"+p.label+"”");cfg=JSON.parse(p.cfg);migrate();save();refreshAll();toast("Configuração restaurada")});
 $("#rpNow").onclick=()=>{ponto("Ponto criado manualmente");toast("Ponto de restauro criado")};
+
+/* 0.9.39: "Enviar para o Office 365" — envia já para a nuvem da EPISJ 360 e faz uma cópia no OneDrive (pede a permissão da pasta da app, se faltar) */
+async function guardarAgora(){const b=$("#subUp");if(b)b.disabled=true;const out=[];
+  try{save();
+    if(NUVOK()){try{NUV.erro="";await nuvemPut("estado",estadoAtual(),cfgT()||Date.now());try{await rcTrazer(true)}catch(e){}try{if(ESD&&ESD.t)await nuvemPut("ES",ESD,ESD.t)}catch(e){}
+      out.push(NUV.ativo===false?"nuvem: falta atualizar o serviço de avisos na Cloudflare":NUV.erro?"nuvem: "+NUV.erro:"nuvem ✓")}catch(e){out.push("nuvem: "+(e.message||e))}}
+    else out.push("nuvem: entre com a conta do Office 365 da Direção");
+    if(odPode()){try{await odCopia(true);try{localStorage.removeItem("g360_od_falta")}catch(e){}out.push("OneDrive ✓")}catch(e){out.push("OneDrive: "+(e.message||e))}}
+  }finally{if(b)b.disabled=false;try{window.__subEst&&window.__subEst()}catch(e){}}
+  toast("Enviar para o Office 365 — "+out.join(" · "))}
 /* ===================== 0.9.37: cópia de segurança no OneDrive de quem é da Direção (pasta Aplicações › EPISJ 360) =====================
    Uma cópia por dia (ao entrar), mais "Fazer cópia agora"; "Repor do OneDrive" JUNTA a cópia ao que está aqui (não apaga nada). */
 const OD_SCOPES=["Files.ReadWrite.AppFolder"];
@@ -5364,7 +5380,18 @@ if(curMod!=="boxcheck"){const M=MODULOS.find(x=>x.id===curMod);if(M)show(M.inici
  const u=document.querySelector(".top .undo"),f=document.querySelector(".top .fsz");if(u)sb.appendChild(u);if(f)sb.appendChild(f);
  const ic=d=>`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;
  const ub=document.getElementById("undoBtn"),rb=document.getElementById("redoBtn");if(ub){ub.innerHTML=ic("M9 14 4 9l5-5M4 9h10.5a5.5 5.5 0 0 1 0 11H11");ub.setAttribute("aria-label","Anular")}if(rb){rb.innerHTML=ic("m15 14 5-5-5-5M20 9H9.5a5.5 5.5 0 0 0 0 11H13");rb.setAttribute("aria-label","Refazer")}
- const est=()=>{const el=document.getElementById("subSt");if(!el)return;let t="Guardado neste navegador";try{if(NUV.erro)t="Guardado neste navegador (a nuvem volta a tentar)";else if(NUV.ultimo)t="Guardado na nuvem às "+new Date(NUV.ultimo).toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"});else if(NUV.ativo)t="Guardado na nuvem"}catch(e){}el.textContent=t};
+ // 0.9.39: o estado diz onde está mesmo guardado (navegador, nuvem da EPISJ 360 com o Office 365, OneDrive) e há um botão para enviar já
+ {const b=document.createElement("button");b.id="subUp";b.className="subup";b.title="Enviar já tudo para a nuvem da EPISJ 360 e fazer uma cópia no seu OneDrive";
+   b.innerHTML=ic("M12 16V4m0 0-4.5 4.5M12 4l4.5 4.5M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3")+"<span>Enviar para o Office 365</span>";document.getElementById("subSt").after(b);b.onclick=()=>guardarAgora()}
+ const est=()=>{const el=document.getElementById("subSt");if(!el)return;const hm=t=>new Date(t).toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"});let t="Guardado só neste navegador",tit="";
+   try{const ms=nuvMS(),od=+(localStorage.getItem("g360_od_t")||0);
+     if(NUV.ativo===false&&ms){t="Guardado só neste navegador";tit="A nuvem com o Office 365 só funciona depois de atualizar o serviço de avisos na Cloudflare (ficheiro servidor/boxcheck-avisos.js)."}
+     else if(NUV.erro)t="Guardado neste navegador (a nuvem volta a tentar)";
+     else if(NUV.ultimo)t="☁ Guardado na nuvem"+(ms?" (Office 365)":"")+" às "+hm(NUV.ultimo);
+     else if(NUV.ativo)t="☁ Guardado na nuvem"+(ms?" (Office 365)":"");
+     if(od)tit=(tit?tit+"\n":"")+"Última cópia no OneDrive: "+new Date(od).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"});
+     const b=document.getElementById("subUp");if(b)b.hidden=!(ms||odPode());const c=document.getElementById("odCard");if(c&&c.hidden===odPode())odUI()}catch(e){}el.textContent=t;el.title=tit};
+ window.__subEst=est;
  est();setInterval(est,4000)}
 loginUI();
 /* ---------- módulo RoomCheck: reservas do Auditório e dos Laboratórios de Informática 1 e 2 ----------
