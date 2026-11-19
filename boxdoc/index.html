@@ -1726,7 +1726,7 @@ body.ro #pcOut input,body.ro #pcOut select{pointer-events:none}body.ro #pcOut bu
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.33"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.34"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -4865,15 +4865,32 @@ function pcFormador(txt,novos){txt=String(txt||"").trim();if(!txt)return "";cons
   let p=cfg.profs.find(x=>cod&&x.cod&&semZ(x.cod)===semZ(cod))||cfg.profs.find(x=>norm(x.nome)===norm(nome));
   if(!p){p={id:uid(),cod,nome,email:"",abrev:""};cfg.profs.push(p);novos.push(nome)}else if(cod&&!p.cod)p.cod=cod;
   return p.id}
+/* 0.9.34: importar do Excel em dois passos — primeiro lê e mostra o que vai entrar (e para que ano letivo), só grava ao carregar em "Importar dados".
+   Já não muda o ano letivo ativo sozinho; no fim confirma que os planos ficaram guardados neste navegador e cria um ponto de restauro. */
+let PC_IMP=null;
 async function pcImportar(file){const msg=t=>escLinhaMsg("#pcMsg",t,"info");msg("A ler "+esc(file.name)+"…");
   let R;try{const X=await loadXLSX();R=pcLerLivro(X,X.read(await file.arrayBuffer(),{type:"array"}))}catch(err){escLinhaMsg("#pcMsg","Não foi possível ler o ficheiro: "+esc(err.message),"bad");return}
   if(!R.turmas.length){escLinhaMsg("#pcMsg","Não encontrei folhas <b>Turma 1</b>, <b>Turma 2</b>… com um plano curricular neste ficheiro.","bad");return}
-  const E=escData();let y=R.ano;if(!y){const m=file.name.match(/(20\d\d)[.\/_-](20\d\d)/);y=m?+m[1]:anoAtivo().ini}
-  let ano=E.anos.find(a=>a.ini===y),anoNovo=false;
-  const ex=[];for(const T of R.turmas){const t=pcTurmaDe(T,true);if(t&&ano&&pcDe(t.id,ano.id))ex.push(t.cod)}
-  let subst=true;if(ex.length)subst=confirm(`Já existem planos em ${ano.nome} para ${ex.join(", ")}.\n\nOK — substituir esses planos pelos do Excel\nCancelar — importar só as turmas que ainda não têm plano`);
-  ponto("Antes de importar os planos curriculares de "+file.name);
-  if(!ano){ano=novoAno(y);E.anos.push(ano);anoNovo=true}
+  const E=escData();let y=R.ano;if(!y){const m=file.name.match(/(20\d\d)[.\/_-](20\d\d)/);y=m?+m[1]:null}
+  PC_IMP={R,file:file.name,yFicheiro:y};
+  const at=anoAtivo(),anos=E.anos.slice().sort((x,z)=>z.ini-x.ini),existe=y&&E.anos.some(x=>x.ini===y);
+  const nmod=R.turmas.reduce((n,T)=>n+T.linhas.length,0);
+  const opts=anos.map(x=>`<option value="${x.id}"${x.id===at.id?" selected":""}>${esc(x.nome)}${x.id===at.id?" (ano ativo)":""}</option>`).join("")+(y&&!existe?`<option value="novo:${y}">${y}/${y+1} (criar este ano letivo)</option>`:"");
+  $("#pcMsg").innerHTML=`<div class="msg info" style="margin:10px 0 0"><b>${esc(file.name)}</b> — encontrei ${R.turmas.length} plano(s) curricular(es), com ${nmod} módulos/UFCD:<br>
+    <span class="hint" style="margin:0">${esc(R.turmas.map(T=>T.turma).join(" · "))}</span>
+    ${y&&y!==at.ini?`<br><b>Atenção:</b> o ficheiro diz <b>${y}/${y+1}</b>, mas o ano letivo ativo é <b>${esc(at.nome)}</b>. Escolha abaixo para que ano letivo entram os planos.`:""}
+    <div class="row" style="margin-top:10px;align-items:flex-end;flex-wrap:wrap;gap:10px">
+      <label>Ano letivo dos planos<select id="pcImpAno">${opts}</select></label>
+      <label class="chk" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="pcImpSub" checked> Substituir os planos que já existam nessas turmas</label>
+      <span class="grow"></span><button class="b" id="pcImpOk">Importar dados</button><button class="b s" id="pcImpX">Cancelar</button></div>
+    <p class="hint" style="margin:6px 0 0">Nada é gravado antes de carregar em <b>Importar dados</b>. Turmas, cursos e formadores que faltem são acrescentados; nada é apagado.</p></div>`;
+  $("#pcImpX").onclick=()=>{PC_IMP=null;escLinhaMsg("#pcMsg","Importação cancelada — nada foi alterado.","info")};
+  $("#pcImpOk").onclick=()=>pcImportarAplicar($("#pcImpAno").value,$("#pcImpSub").checked)}
+function pcImportarAplicar(anoSel,subst){if(!PC_IMP)return;const {R,file}=PC_IMP;const E=escData();
+  let ano=null,anoNovo=false;
+  ponto("Antes de importar os planos curriculares de "+file);
+  if(String(anoSel).startsWith("novo:")){const y=+anoSel.slice(5);ano=E.anos.find(x=>x.ini===y);if(!ano){ano=novoAno(y);E.anos.push(ano);anoNovo=true}}
+  else ano=E.anos.find(x=>x.id===anoSel)||anoAtivo();
   const novosF=[],novasT=[],novosC=[];let feitos=0,salt=0;
   for(const T of R.turmas){const t=pcTurmaDe(T,false,novasT,novosC);if(!t)continue;
     let p=pcDe(t.id,ano.id);if(p&&!subst){salt++;continue}
@@ -4885,11 +4902,18 @@ async function pcImportar(file){const msg=t=>escLinhaMsg("#pcMsg",t,"info");msg(
     feitos++}
   R.disciplinas.forEach(pcDiscNova);
   cfg.profs.sort((a,b)=>String(a.nome).localeCompare(String(b.nome),"pt"));
-  save();if(ano.id!==E.ativo){E.ativo=ano.id;save()}
+  save();
+  // confirma que ficou mesmo gravado neste navegador
+  let gravados=0;try{const st=JSON.parse(localStorage.getItem(KEY)||"{}");gravados=((st.escola||{}).planos||[]).filter(x=>x.anoId===ano.id).length}catch(e){}
+  ponto("Depois de importar os planos curriculares de "+file);try{nuvemAgendar()}catch(e){}
+  PC_IMP=null;
   try{renderAll()}catch(x){}escRender();try{esRecarregar()}catch(x){}renderPC();
-  escLinhaMsg("#pcMsg",`Importado(s) ${feitos} plano(s) curricular(es) para ${esc(ano.nome)}${anoNovo?" (ano letivo criado)":""}${salt?` · ${salt} turma(s) que já tinham plano ficaram como estavam`:""}.`+
+  const outro=ano.id!==escData().ativo;
+  escLinhaMsg("#pcMsg",`${gravados?"✓ Guardado. ":"<b>Não consegui confirmar a gravação</b> — veja se o navegador tem espaço e tente de novo. "}Importado(s) ${feitos} plano(s) curricular(es) para <b>${esc(ano.nome)}</b>${anoNovo?" (ano letivo criado)":""}${salt?` · ${salt} turma(s) que já tinham plano ficaram como estavam`:""} · ${gravados} plano(s) de ${esc(ano.nome)} guardados neste navegador.`+
+    (outro?`<br>Os planos ficaram em ${esc(ano.nome)}, que não é o ano letivo ativo. <button class="b s" id="pcIrAno" style="margin-left:6px">Mudar para ${esc(ano.nome)}</button>`:"")+
     (novasT.length?`<br>Turmas criadas: ${esc(novasT.join(", "))}.`:"")+(novosC.length?`<br>Cursos criados: ${esc(novosC.join(", "))} — ligue-os ao catálogo em <b>Escola › Cursos</b>.`:"")+
-    (novosF.length?`<br>Formadores acrescentados (falta o email): ${esc([...new Set(novosF)].join(", "))}.`:""),"ok")}
+    (novosF.length?`<br>Formadores acrescentados (falta o email): ${esc([...new Set(novosF)].join(", "))}.`:""),gravados?"ok":"bad");
+  const b=$("#pcIrAno");if(b)b.onclick=()=>{mudarAnoAtivo(ano.id);try{renderPC()}catch(e){}}}
 // "A07 - Mecatrónica Automóvel (26-29)" → turma da EPISJ 360 (cria a turma e o curso se faltarem, a não ser que só se esteja a procurar)
 function pcTurmaDe(T,soProcurar,novasT,novosC){const E=escData(),s=String(T.turma).replace(/ /g," ");
   const m=s.match(/^\s*([A-Z]\d+)\s*[-–]\s*(.+?)\s*\((\d{2,4})\s*[-\/]\s*(\d{2,4})\)\s*$/i)||s.match(/^\s*([A-Z]\d+)\s*[-–]\s*(.+?)\s*$/i);if(!m)return null;
