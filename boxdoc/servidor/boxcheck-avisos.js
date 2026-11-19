@@ -21,6 +21,7 @@
  * EPISJ 360 (a partir da EPISJ 360 0.9): toda a gente entra na EPISJ 360 com a conta do Office 365 da escola.
  * Este serviço confirma a conta junto da Microsoft e diz qual é o perfil (Direção Executiva,
  * Direção Pedagógica, Formador ou Formando) e o que esse perfil pode ver. Rotas em /guide/…
+ * Nuvem da EPISJ 360 (0.9.37): /guide/sync — o estado da app fica guardado aqui com a conta do Office 365 da Direção.
  * Cron Trigger: 0 * * * *   (de hora a hora)
  */
 
@@ -33,7 +34,7 @@ export default {
   async fetch(req, env) {
     const url = new URL(req.url), o = req.headers.get("Origin") || "";
     const okOrigens = (env.APP_ORIGINS || ORIGENS_OMISSAO).split(",").map(s => s.trim()).filter(Boolean);
-    const cors = { "Access-Control-Allow-Origin": okOrigens.includes(o) ? o : okOrigens[0], "Access-Control-Allow-Headers": "Authorization, Content-Type", "Access-Control-Allow-Methods": "GET, POST, PUT, OPTIONS", "Vary": "Origin" };
+    const cors = { "Access-Control-Allow-Origin": okOrigens.includes(o) ? o : okOrigens[0], "Access-Control-Allow-Headers": "Authorization, Content-Type, X-T", "Access-Control-Allow-Methods": "GET, POST, PUT, OPTIONS", "Vary": "Origin" };
     const json = (obj, st = 200) => new Response(JSON.stringify(obj), { status: st, headers: { ...cors, "Content-Type": "application/json; charset=utf-8" } });
     try {
       if (req.method === "OPTIONS") return new Response(null, { headers: cors });
@@ -60,7 +61,7 @@ export default {
         return pagina("Ligado", `<p>✅ O serviço de avisos está ligado à Box como <b>${esc(me.name)}</b> (${esc(me.login)}).</p><p>Pode fechar esta janela e voltar à BoxCheck.</p>`);
       }
       // EPISJ 360: entrada com a conta do Office 365 e perfis de utilizador
-      if (url.pathname.startsWith("/guide/")) return await guide(req, env, url, json);
+      if (url.pathname.startsWith("/guide/")) return await guide(req, env, url, json, cors);
       // a partir daqui: pedidos da app, com o acesso à Box de quem está na app
       const quem = await quemE(req, env);
       if (!quem.ok) return json({ erro: quem.erro }, quem.st);
@@ -108,7 +109,7 @@ const PODE_PUBLICAR = new Set(["dexec", "dped"]);
 const lst = v => Array.isArray(v) ? v : [];
 const em = s => String(s || "").trim().toLowerCase();
 
-async function guide(req, env, url, json) {
+async function guide(req, env, url, json, cors) {
   const p = url.pathname.replace(/\/+$/, "");
   // pública: o que a app precisa para abrir o login da Microsoft (o ID da aplicação e do diretório não são segredos)
   if (p === "/guide/config") return json({ ok: !!(env.MS_CLIENT_ID && env.MS_TENANT), clientId: env.MS_CLIENT_ID || "", tenant: env.MS_TENANT || "" });
@@ -159,6 +160,33 @@ async function guide(req, env, url, json) {
         itens: its.map(x => ({ linha: x.it.linha || x.k, loc: x.it.loc || "", est: x.est, ent: x.ent, atraso: x.atraso, naoConta: !!x.naoConta })) };
     }).filter(Boolean);
     return json({ ok: true, prof: { nome: prof.nome, email: em(prof.email) }, prazos, professores: lista, planoT: plano.recebido || 0, verificado: est.ultimo || 0, ano: plano.ano || "" });
+  }
+  // EPISJ 360 0.9.37: nuvem da EPISJ 360 com a conta do Office 365 (já não depende de a Box estar ligada).
+  // Guarda o estado da app (configuração, escola, planos, reservas, horários, análises…) no KV, com o momento (t) de cada peça.
+  // Só a Direção (e os administradores) leem e gravam aqui; os outros perfis veem o que a Direção publica (/guide/publico).
+  if (p === "/guide/sync" || p.startsWith("/guide/sync/")) {
+    if (!(eu.admin || PODE_PUBLICAR.has(eu.perfil))) return json({ erro: "Só a Direção guarda dados na nuvem da EPISJ 360." }, 403);
+    const S = "g360sync:";
+    if (p === "/guide/sync") {
+      const itens = {}; let cur;
+      do { const l = await env.KV.list({ prefix: S, cursor: cur }); for (const k of l.keys) itens[k.name.slice(S.length)] = { t: (k.metadata && k.metadata.t) || 0 }; cur = l.list_complete ? null : l.cursor } while (cur);
+      return json({ ok: true, itens });
+    }
+    const nome = decodeURIComponent(p.slice("/guide/sync/".length));
+    if (!/^[\w.-]{1,200}$/.test(nome)) return json({ erro: "Nome inválido." }, 400);
+    if (req.method === "GET") {
+      const v = await env.KV.get(S + nome, "arrayBuffer");
+      if (v == null) return json({ erro: "Não existe." }, 404);
+      return new Response(v, { headers: { ...(cors || {}), "Content-Type": "application/octet-stream" } });
+    }
+    if (req.method === "PUT" || req.method === "POST") {
+      const b = await req.arrayBuffer();
+      if (b.byteLength > 24e6) return json({ erro: "Dados demasiado grandes." }, 413);
+      const t = +req.headers.get("X-T") || Date.now();
+      await env.KV.put(S + nome, b, { metadata: { t, por: quem.email } });
+      return json({ ok: true, t });
+    }
+    return json({ erro: "Método não suportado." }, 405);
   }
   // dados da escola publicados pela Direção (turmas, professores, horários) — só leitura para os outros perfis
   if (p === "/guide/publico") {

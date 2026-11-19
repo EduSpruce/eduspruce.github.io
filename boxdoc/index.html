@@ -1576,6 +1576,18 @@ body.ro #pcOut input,body.ro #pcOut select{pointer-events:none}body.ro #pcOut bu
     <p class="hint">Apaga <b>toda</b> a informação da EPISJ 360 — neste computador, na nuvem e nos outros computadores: anos letivos, cursos, turmas, formandos, formadores, perfis, módulos e atribuições, prazos e avisos, análises da Box, horários e reservas das salas. <b>Ficam só as ligações à Box e ao Office 365.</b> Os documentos na Box não são tocados. Antes de apagar, é descarregada automaticamente uma cópia de segurança.</p>
     <div class="row"><label style="width:260px">Para confirmar, escreva <b>APAGAR</b><input type="text" id="recTxt" autocomplete="off"></label><button class="b" id="recBtn" style="background:var(--bad);border-color:var(--bad)" disabled>Apagar tudo e começar de novo</button></div>
   </div>
+  <div class="card" id="odCard" hidden>
+    <h2>Cópia de segurança no OneDrive</h2>
+    <p class="hint">Uma vez por dia, ao entrar, a EPISJ 360 guarda uma cópia de tudo (escola, planos curriculares, formadores, reservas, horários, logótipos) no seu OneDrive, na pasta <b>Aplicações › EPISJ 360</b> — uma por dia e a última. A app só tem acesso a essa pasta, não ao resto do OneDrive. <b>Repor do OneDrive</b> junta a última cópia ao que está neste computador, sem apagar nada.</p>
+    <div class="row"><button class="b" id="odAgora">Fazer cópia agora</button><button class="b s" id="odRepor">Repor do OneDrive</button></div>
+    <div id="odEstado"></div>
+    <details style="margin-top:10px"><summary class="hint" style="cursor:pointer;margin:0">Primeira vez: dar à app acesso à pasta no OneDrive (administrador, uma vez)</summary>
+      <ol class="hint" style="margin:6px 0 0 18px;padding:0">
+        <li>Em <b>entra.microsoft.com</b> › Aplicações › Registos de aplicações › a aplicação da EPISJ 360.</li>
+        <li><b>Permissões de API</b> › Adicionar uma permissão › Microsoft Graph › Permissões delegadas › <b>Files.ReadWrite.AppFolder</b>.</li>
+        <li>Carregue em <b>Conceder consentimento de administrador</b> para a escola.</li>
+        <li>Volte aqui e carregue em <b>Fazer cópia agora</b>.</li></ol></details>
+  </div>
 </section>
 
 
@@ -1733,7 +1745,7 @@ body.ro #pcOut input,body.ro #pcOut select{pointer-events:none}body.ro #pcOut bu
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.36"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.37"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -1851,6 +1863,40 @@ function renderRP(){const el=$("#rpList");if(!el)return;const l=rpList();
 $("#rpList").addEventListener("click",e=>{const b=e.target.closest("[data-rp]");if(!b)return;const p=rpList()[+b.dataset.rp];if(!p)return;
   ponto("Antes de restaurar “"+p.label+"”");cfg=JSON.parse(p.cfg);migrate();save();refreshAll();toast("Configuração restaurada")});
 $("#rpNow").onclick=()=>{ponto("Ponto criado manualmente");toast("Ponto de restauro criado")};
+/* ===================== 0.9.37: cópia de segurança no OneDrive de quem é da Direção (pasta Aplicações › EPISJ 360) =====================
+   Uma cópia por dia (ao entrar), mais "Fazer cópia agora"; "Repor do OneDrive" JUNTA a cópia ao que está aqui (não apaga nada). */
+const OD_SCOPES=["Files.ReadWrite.AppFolder"];
+const odPode=()=>{try{return !!(MSACC&&EU&&!RO&&(EU.admin||EU.perfil==="dexec"||EU.perfil==="dped"))}catch(e){return false}};
+async function odTok(interativo){const p=await msInit();if(!MSACC)throw new Error("Entre com a conta do Office 365.");
+  try{return (await p.acquireTokenSilent({scopes:OD_SCOPES,account:MSACC})).accessToken}
+  catch(e){if(!interativo)throw e;return (await p.acquireTokenPopup({scopes:OD_SCOPES,account:MSACC,redirectUri:MS_REDIR})).accessToken}}
+function odDados(){return{app:"EPISJ 360",v:VERSAO,t:Date.now(),por:(EU&&EU.email)||"",cfg:JSON.stringify(cfg),logos:LOGOS,roomcheck:RC,horarios:ESD,modelos:TPL}}
+async function odPut(tok,nome,txt){const r=await fetch("https://graph.microsoft.com/v1.0/me/drive/special/approot:/"+encodeURIComponent(nome)+":/content",{method:"PUT",headers:{Authorization:"Bearer "+tok,"Content-Type":"application/json"},body:txt});
+  if(!r.ok)throw new Error("o OneDrive respondeu "+r.status);return r.json()}
+async function odCopia(interativo){if(!odPode())throw new Error("Só a Direção faz cópias no OneDrive.");const tok=await odTok(interativo),txt=JSON.stringify(odDados()),dia=new Date().toISOString().slice(0,10);
+  await odPut(tok,"EPISJ360-copia-"+dia+".json",txt);await odPut(tok,"EPISJ360-ultima-copia.json",txt);
+  try{localStorage.setItem("g360_od_dia",dia);localStorage.setItem("g360_od_t",String(Date.now()))}catch(e){}odUI();return dia}
+async function odCopiaDiaria(){odUI();if(!odPode())return;const dia=new Date().toISOString().slice(0,10);if(localStorage.getItem("g360_od_dia")===dia)return;
+  try{await odCopia(false)}catch(e){try{localStorage.setItem("g360_od_falta","1")}catch(x){}odUI()}}
+async function odRepor(){const tok=await odTok(true);const r=await fetch("https://graph.microsoft.com/v1.0/me/drive/special/approot:/EPISJ360-ultima-copia.json:/content",{headers:{Authorization:"Bearer "+tok}});
+  if(r.status===404)throw new Error("Ainda não há cópias no seu OneDrive.");if(!r.ok)throw new Error("o OneDrive respondeu "+r.status);
+  const o=await r.json();if(!o||!o.cfg)throw new Error("A cópia não é da EPISJ 360.");
+  if(!confirm(`Juntar a cópia do OneDrive de ${new Date(o.t).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"})} ao que está neste computador?\n\nNada é apagado: o que só existir num dos lados fica.`))return false;
+  ponto("Antes de juntar a cópia do OneDrive");
+  cfg=juntarCfg(cfg,JSON.parse(o.cfg));migrate();save();
+  try{if(o.roomcheck){RC=rcJuntar(RC,o.roomcheck);rcGravar()}}catch(e){}
+  try{if(o.horarios&&(o.horarios.t||0)>(ESD.t||0)){ESD=Object.assign(ESD,o.horarios);esdGuardar()}}catch(e){}
+  try{if(o.logos&&typeof o.logos==="object"&&!Object.keys(LOGOS).length){LOGOS=o.logos;guardarLogos()}}catch(e){}
+  try{refreshAll()}catch(e){}return true}
+function odUI(){const el=$("#odEstado");if(!el)return;const card=$("#odCard");if(card)card.hidden=!odPode();
+  const t=+(localStorage.getItem("g360_od_t")||0),falta=localStorage.getItem("g360_od_falta")==="1"&&!t;
+  el.innerHTML=t?`<div class="msg ok" style="margin:10px 0 0">☁ Última cópia no OneDrive: ${new Date(t).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"})} (Aplicações › EPISJ 360). Faz-se sozinha uma vez por dia, ao entrar.</div>`
+    :falta?`<div class="msg info" style="margin:10px 0 0">Para a cópia diária funcionar, carregue em <b>Fazer cópia agora</b> e aceite o acesso à pasta da app no seu OneDrive (só uma vez). Se aparecer que precisa de aprovação do administrador, siga os passos abaixo.</div>`
+    :`<p class="hint" style="margin:8px 0 0">Ainda não foi feita nenhuma cópia neste computador.</p>`}
+$("#odAgora").onclick=async()=>{const b=$("#odAgora");b.disabled=true;try{const d=await odCopia(true);try{localStorage.removeItem("g360_od_falta")}catch(e){}toast("Cópia guardada no OneDrive ("+d+")")}catch(e){toast("Não foi possível guardar no OneDrive: "+(e.message||e))}b.disabled=false};
+$("#odRepor").onclick=async()=>{try{if(await odRepor())toast("Cópia do OneDrive junta com o que estava aqui")}catch(e){toast(e.message||String(e))}};
+odUI();
+
 
 /* ---------- módulos: turma, disciplina, código, formador, designação, ano letivo ---------- */
 const isDisc=c=>/^\d{4}\s*-\s*\S/.test(String(c).trim());
@@ -3388,9 +3434,16 @@ function marcarCfg(){if(RO)return;try{guidePubAgendar()}catch(e){}try{localStora
 const cfgT=()=>+(localStorage.getItem("boxcheck_cfg_t")||0);
 async function gz(obj){const s=new Blob([JSON.stringify(obj)]).stream().pipeThrough(new CompressionStream("gzip"));return new Response(s).arrayBuffer()}
 async function ungz(buf){const s=new Blob([buf]).stream().pipeThrough(new DecompressionStream("gzip"));return JSON.parse(await new Response(s).text())}
+/* 0.9.37: a nuvem da EPISJ 360 passa a funcionar com a conta do Office 365 da Direção (serviço de avisos, /guide/sync),
+   sem precisar de a Box estar ligada; sem Office 365, continua a usar o serviço de login da Box como antes */
+function nuvMS(){try{return !!(MSACC&&EU&&!EU.provisorio&&!RO&&(EU.admin||EU.perfil==="dexec"||EU.perfil==="dped"))}catch(e){return false}}
+function NUVOK(){try{return nuvMS()||!!(SES&&workerUrl())}catch(e){return false}}
+async function nuvemSincMS(){if(!nuvMS())return;
+  try{await nuvemTrazer()}catch(e){}try{await avTrazerNuvem()}catch(e){}try{await rcTrazer(false)}catch(e){}try{await esTrazerNuvem()}catch(e){}
+  try{guidePubAgendar()}catch(e){}nuvemUI()}
 async function nuvem(method,name,body,t){
-  const w=workerUrl();if(!w||!SES)throw new Error("sem sessão");
-  const H={Authorization:"Bearer "+await accessToken()};if(t)H["X-T"]=String(t);
+  const M=nuvMS(),w=M?AVISOS_WORKER+"/guide":workerUrl();if(!w||(!M&&!SES))throw new Error("sem sessão");
+  const H={Authorization:"Bearer "+(M?await guideTok():await accessToken())};if(t)H["X-T"]=String(t);
   let r;try{r=await fetch(w+"/sync"+(name?"/"+encodeURIComponent(name):""),{method,headers:H,body})}
   catch(e){if(NUV.ativo!==true){NUV.ativo=false;nuvemUI();const x=new Error("serviço sem armazenamento");x.kind="nokv";throw x}throw e} // serviço antigo: recusa o pedido
   if(r.status===501){NUV.ativo=false;nuvemUI();const e=new Error("sem armazenamento");e.kind="nokv";throw e}
@@ -3411,7 +3464,7 @@ async function limparLocal(ger){LIMPAR=true;
 async function apagarTudoRecomecar(){
   try{download(`episj360_copia_antes_de_apagar_${hoje()}.json`,JSON.stringify({cfg,logos:LOGOS,roomcheck:RC,horarios:ESD,pontos:rpList(),modelos:TPL},null,1),"application/json")}catch(e){} // cópia de segurança, por precaução
   const ger=Date.now();
-  if(SES&&workerUrl()&&NUV.ativo!==false){try{
+  if(NUVOK()&&NUV.ativo!==false){try{
     await nuvem("PUT","reset",await gz({ger}),ger);
     await nuvem("PUT","estado",await gz({cfg:JSON.stringify({...defaultCfg(),ger}),logos:{},pontos:[],tpl:null,folder:null,root:"",bases:{},resumos:{}}),ger);
     await nuvem("PUT","rc",await gz({esp:RC_ESP0.map(x=>({...x})),cfg:{abre:480,fecha:1140,sab:false},res:{},et:ger,ger}),ger);
@@ -3424,29 +3477,29 @@ async function nuvemPut(name,obj,t){if(NUV.ativo===false||LIMPAR)return;t=t||Dat
   nuvemUI()}
 async function nuvemGet(name){return ungz(await (await nuvem("GET",name)).arrayBuffer())}
 function nuvemUI(){const el=$("#nuvemMsg");if(!el)return;
-  if(!SES){el.innerHTML="";return}
-  if(NUV.ativo===false){el.innerHTML=`<div class="msg info">Para guardar tudo na nuvem e continuar noutro computador sem repetir a análise, falta ligar o armazenamento ao serviço de login (3 passos no LEIA-ME). Até lá, fica tudo guardado só neste navegador.</div>`;return}
+  if(!NUVOK()){el.innerHTML="";return}
+  if(NUV.ativo===false){el.innerHTML=nuvMS()?`<div class="msg info">Para guardar tudo na nuvem com a conta do Office 365, atualize o serviço de avisos na Cloudflare com o ficheiro <code>servidor/boxcheck-avisos.js</code> da EPISJ 360 (versão 0.9.37 ou mais recente). Até lá, fica tudo guardado só neste navegador.</div>`:`<div class="msg info">Para guardar tudo na nuvem e continuar noutro computador sem repetir a análise, falta ligar o armazenamento ao serviço de login (3 passos no LEIA-ME). Até lá, fica tudo guardado só neste navegador.</div>`;return}
   if(NUV.erro){el.innerHTML=`<div class="msg bad">Não foi possível guardar na nuvem (${esc(NUV.erro)}). Fica guardado neste navegador; volta a tentar sozinho.</div>`;return}
-  el.innerHTML=NUV.ultimo?`<div class="msg ok">☁ Tudo guardado na nuvem às ${new Date(NUV.ultimo).toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"})} — noutro computador basta entrar com a Box.</div>`:NUV.ativo?`<div class="msg ok">☁ Guardado na nuvem — noutro computador basta entrar com a Box.</div>`:""}
+  el.innerHTML=NUV.ultimo?`<div class="msg ok">☁ Tudo guardado na nuvem às ${new Date(NUV.ultimo).toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"})} — noutro computador basta entrar com ${nuvMS()?"a conta do Office 365":"a Box"}.</div>`:NUV.ativo?`<div class="msg ok">☁ Guardado na nuvem — noutro computador basta entrar com ${nuvMS()?"a conta do Office 365":"a Box"}.</div>`:""}
 // configuração e o resto do estado (pequeno): enviado alguns segundos depois de cada alteração
 function estadoAtual(){let root="";try{root=localStorage.getItem("box_last_root")||""}catch(e){}
   return{cfg:JSON.stringify(cfg),logos:LOGOS,pontos:rpList(),tpl:TPL,folder:curFolder,root,bases:basesIdx(),resumos:resumos()}}
 let nuvH=null;
 function nuvemAgendar(){try{NUV}catch(e){setTimeout(nuvemAgendar,0);return} // pode ser chamada ao arrancar, antes de NUV existir
-  if(NUV.ativo===false||!SES||NUV.ocupado)return;clearTimeout(nuvH);nuvH=setTimeout(()=>nuvemPut("estado",estadoAtual(),cfgT()||Date.now()),8000)}
-function nuvemListagem(j){if(!SES)return;nuvemPut("L_"+j.rootId,j,j.t).then(()=>nuvemAgendar())}
-async function nuvemBases(rootId){if(!SES||NUV.ativo===false)return;const l=basesIdx()[rootId]||[];const out=[];
+  if(NUV.ativo===false||!NUVOK()||NUV.ocupado)return;clearTimeout(nuvH);nuvH=setTimeout(()=>nuvemPut("estado",estadoAtual(),cfgT()||Date.now()),8000)}
+function nuvemListagem(j){if(!NUVOK())return;nuvemPut("L_"+j.rootId,j,j.t).then(()=>nuvemAgendar())}
+async function nuvemBases(rootId){if(!NUVOK()||NUV.ativo===false)return;const l=basesIdx()[rootId]||[];const out=[];
   for(const b of l){const x=await lerBase(rootId,b.t);if(x)out.push(x)}
   await nuvemPut("B_"+rootId,out);nuvemAgendar()}
 const b64=u=>{let s="";const a=new Uint8Array(u.buffer,u.byteOffset,u.byteLength);for(let i=0;i<a.length;i++)s+=String.fromCharCode(a[i]);return btoa(s)};
 const unb64=s=>{const b=atob(s),a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return new Uint32Array(a.buffer)};
 let nuvTxN=-1;
-async function nuvemTextos(force){if(!SES||NUV.ativo===false)return;if(!force&&TX.size===nuvTxN)return;nuvTxN=TX.size;
+async function nuvemTextos(force){if(!NUVOK()||NUV.ativo===false)return;if(!force&&TX.size===nuvTxN)return;nuvTxN=TX.size;
   const arr=[];for(const r of TX.values())arr.push(r.sig?{...r,sig:b64(r.sig)}:r);
   await nuvemPut("tx",arr);nuvSetT("txN",arr.length)}
 // ao entrar: traz o que for mais recente na nuvem e envia o que for mais recente aqui
 async function nuvemTrazer(){
-  if(!SES||!workerUrl())return;NUV.ocupado=true;let mudou=false;
+  if(!NUVOK())return;NUV.ocupado=true;let mudou=false;
   try{
     const idx=(await (await nuvem("GET","")).json()).itens||{},L=nuvT();
     // 1) configuração, pontos de restauro, modelos, pasta
@@ -3968,11 +4021,11 @@ const AVLOG="boxcheck_avisos_log";
 let AVL=lsJ(AVLOG,[])||[];
 const avKeys=()=>new Set(AVL.map(x=>x.k));
 function avGuardar(){AVL=AVL.slice(-3000);try{localStorage.setItem(AVLOG,JSON.stringify(AVL))}catch(e){}
-  if(SES&&NUV.ativo!==false)nuvemPut("avisos",AVL)}
+  if(NUVOK()&&NUV.ativo!==false)nuvemPut("avisos",AVL)}
 function avJuntar(arr){if(!Array.isArray(arr))return 0;const K=new Set(AVL.map(x=>x.k+"|"+x.t));let n=0;
   for(const x of arr)if(x&&x.k&&!K.has(x.k+"|"+x.t)){AVL.push(x);n++}
   if(n){AVL.sort((a,b)=>a.t-b.t);try{localStorage.setItem(AVLOG,JSON.stringify(AVL))}catch(e){}}return n}
-async function avTrazerNuvem(){if(!SES||!workerUrl()||NUV.ativo===false)return;
+async function avTrazerNuvem(){if(!NUVOK()||NUV.ativo===false)return;
   try{const idx=(await (await nuvem("GET","")).json()).itens||{};if(!idx.avisos)return;const arr=await nuvemGet("avisos");avJuntar(arr)}catch(e){}}
 // já enviado para este formador (ok) nesta ocorrência?
 const enviado=k=>AVL.some(x=>x.k===k&&x.ok);
@@ -5124,8 +5177,8 @@ const ES_URL="https://eduspruce.github.io/eduschedule.html";
 let ESD={t:0,porAno:{},copias:{},mapaT:{},mapaC:{},ligT:{},ligC:{},mapaA:{},ligA:{}};
 const esdPronto=DB.get("kv","esched").then(v=>{if(v&&typeof v==="object")ESD=Object.assign(ESD,v)}).catch(()=>{});
 let esdH=null;
-function esdGuardar(){if(RO||LIMPAR)return;guidePubAgendar();ESD.t=Date.now();DB.put("kv","esched",ESD);clearTimeout(esdH);esdH=setTimeout(()=>{if(SES&&NUV.ativo!==false)nuvemPut("ES",ESD,ESD.t)},8000)}
-async function esTrazerNuvem(){try{await esdPronto;if(!SES||!workerUrl()||NUV.ativo===false)return;
+function esdGuardar(){if(RO||LIMPAR)return;guidePubAgendar();ESD.t=Date.now();DB.put("kv","esched",ESD);clearTimeout(esdH);esdH=setTimeout(()=>{if(NUVOK()&&NUV.ativo!==false)nuvemPut("ES",ESD,ESD.t)},8000)}
+async function esTrazerNuvem(){try{await esdPronto;if(!NUVOK()||NUV.ativo===false)return;
   const idx=(await (await nuvem("GET","")).json()).itens||{};
   if(idx.ES&&(idx.ES.t||0)>(ESD.t||0)){const j=await nuvemGet("ES");if(j&&typeof j==="object"){ESD=Object.assign({t:0,porAno:{},copias:{},mapaT:{},mapaC:{},ligT:{},ligC:{},mapaA:{},ligA:{}},j);DB.put("kv","esched",ESD);esRecarregar(true)}}
   else if((ESD.t||0)>((idx.ES||{}).t||0))await nuvemPut("ES",ESD,ESD.t)}catch(e){if(e.kind!=="nokv")console.warn("Horário360/nuvem",e)}}
@@ -5323,7 +5376,7 @@ function rcJuntar(a,b){if((a.ger||0)!==(b.ger||0))return (a.ger||0)>(b.ger||0)?a
   if((b.et||0)>(o.et||0)){o.esp=b.esp;o.cfg=Object.assign({abre:480,fecha:1140,sab:false},b.cfg||{});o.et=b.et}
   for(const k in (b.res||{})){const r=b.res[k];if(!r)continue;const l=o.res[k];if(!l||(r.u||0)>(l.u||0))o.res[k]=r}return o}
 function rcNuvemAgendar(){clearTimeout(rcNuvH);rcNuvH=setTimeout(()=>rcTrazer(true),1500)}
-async function rcTrazer(enviar){try{if(!SES||!workerUrl()||NUV.ativo===false){rcNuvUI();return}
+async function rcTrazer(enviar){try{if(!NUVOK()||NUV.ativo===false){rcNuvUI();return}
     let rem=null;const idx=(await (await nuvem("GET","")).json()).itens||{};if(idx.rc)rem=await nuvemGet("rc");
     const antes=JSON.stringify(RC);if(rem)RC=rcJuntar(RC,rem);
     const mudouAqui=JSON.stringify(RC)!==antes;if(mudouAqui)rcGravar(false);
@@ -5331,7 +5384,7 @@ async function rcTrazer(enviar){try{if(!SES||!workerUrl()||NUV.ativo===false){rc
     rcNuvOk=Date.now();rcNuvErr="";if(mudouAqui&&curTab.startsWith("rc"))rcRender(curTab)}
   catch(e){if(e.kind!=="nokv")rcNuvErr=e.message||String(e)}rcNuvUI()}
 function rcNuvUI(){const el=$("#rcNuv");if(!el)return;
-  el.innerHTML=!SES?"":NUV.ativo===false?`<div class="msg info">Sem armazenamento na nuvem: as reservas ficam só neste navegador.</div>`:rcNuvErr?`<div class="msg bad">Não foi possível guardar na nuvem (${esc(rcNuvErr)}). Volta a tentar sozinho.</div>`:rcNuvOk?`<div class="msg ok">☁ Reservas guardadas na nuvem às ${new Date(rcNuvOk).toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"})}.</div>`:""}
+  el.innerHTML=!NUVOK()?"":NUV.ativo===false?`<div class="msg info">Sem armazenamento na nuvem: as reservas ficam só neste navegador.</div>`:rcNuvErr?`<div class="msg bad">Não foi possível guardar na nuvem (${esc(rcNuvErr)}). Volta a tentar sozinho.</div>`:rcNuvOk?`<div class="msg ok">☁ Reservas guardadas na nuvem às ${new Date(rcNuvOk).toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"})}.</div>`:""}
 /* atualiza com a vista aberta e à vista (para ver as reservas feitas noutro computador) */
 setInterval(()=>{if(curTab&&curTab.startsWith("rc")&&document.visibilityState==="visible"&&$("#rcDw").hidden)rcTrazer(false)},60000);
 
@@ -5670,11 +5723,13 @@ async function guideCarregarModulos(){
   try{await gpAte(pronto,15000)}catch(e){}
   if(soLeitura()){fim("boxcheck","ok");fim("roomcheck","ok");return}
   if(!podeVer("box")){loginUI();fim("boxcheck","ok");fim("roomcheck","ok");return}
-  if(!SES){boxArrancar();fim("boxcheck","off");fim("roomcheck","ok");return} // sem sessão da Box: fica tudo o que está guardado neste computador
+  if(!SES){boxArrancar();fim("boxcheck","off");
+    if(nuvMS()){prog(72,"A trazer os dados da nuvem da EPISJ 360 (Office 365)…");try{await gpAte(nuvemSincMS(),40000)}catch(e){}}
+    fim("roomcheck","ok");odCopiaDiaria();return} // sem sessão da Box: o que está neste computador, junto com a nuvem da EPISJ 360 (Office 365)
   loginUI();boxEstado("wait");prog(70,"Box360: a ligar à Box…");
   const pMe=boxGet("users/me",{fields:"name,login"});pMe.catch(e=>boxEstado("login",e.message)); // como antes: se a Box falhar, pede para voltar a ligar
   const pBox=pMe.then(me=>{gpPasso(76,"Box360: ligado à Box");return connected(me)});pBox.catch(()=>{});
-  try{await gpAte(pBox,45000);fim("boxcheck","ok");fim("roomcheck","ok");fim("escola","ok");fim("eduschedule","ok")}
+  try{await gpAte(pBox,45000);fim("boxcheck","ok");fim("roomcheck","ok");fim("escola","ok");fim("eduschedule","ok");odCopiaDiaria()}
   catch(e){fim("boxcheck",e.tempo?"bg":"erro");fim("roomcheck",e.tempo?"bg":"ok")}}
 function whoUI(){const n=EU.nome||EU.email,ini=n.split(/\s+/).filter(Boolean).map(w=>w[0]).slice(0,2).join("").toUpperCase();
   $("#who").innerHTML=`<span class="av">${esc(ini)}</span><span title="${esc(EU.email)}">${esc(n)}</span><span class="pf${EU.admin?" adm":""}" title="${esc(EU.admin?"Administrador da EPISJ 360 — perfil: "+(EU.perfilNome||PERFIL_CURTO[EU.perfil]||""):"Perfil da conta")}">${esc(EU.admin?"Administrador":(EU.perfilNome||PERFIL_CURTO[EU.perfil]||""))}</span><a href="#" id="whoOut">Terminar sessão</a>`;
