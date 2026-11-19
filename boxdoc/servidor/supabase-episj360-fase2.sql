@@ -192,5 +192,90 @@ language sql stable set search_path = public as $$
 revoke all on function public.g360_email() from public, anon;
 grant execute on function public.g360_email() to authenticated;
 
--- formandos: sem emails, sem lista de formandos, sem planos e sem formandos dentro dos horários (ver migração g360_publico_filtro_formandos)
--- tempo real: alter publication supabase_realtime add table public.g360_estado;
+
+-- ============================================================
+-- 0.9.47–0.9.50 (já aplicado no projeto episj360)
+-- ============================================================
+
+-- Formandos: recebem só o necessário — sem emails dos formadores, sem lista de formandos,
+-- sem planos curriculares e sem a lista de alunos dentro dos horários
+create or replace function public.g360_publico_ler()
+ returns jsonb language plpgsql stable security definer set search_path to 'public' as $function$
+declare p jsonb := g360_perfil_de(g360_email()); d jsonb; k text; v jsonb; st jsonb;
+begin
+  if (p ->> 'perfil') is null then raise exception 'Sem perfil na EPISJ 360.' using errcode = '42501'; end if;
+  d := coalesce((select valor from g360_config where chave = 'publico'), '{}'::jsonb);
+  if (p ->> 'perfil') = 'form' and not coalesce((p ->> 'admin')::boolean, false) then
+    if jsonb_typeof(d -> 'profs') = 'array' then
+      d := jsonb_set(d, '{profs}', (select coalesce(jsonb_agg(x - 'email'), '[]'::jsonb) from jsonb_array_elements(d -> 'profs') x));
+    end if;
+    if jsonb_typeof(d -> 'escola') = 'object' then
+      d := jsonb_set(d, '{escola}', (d -> 'escola') - 'formandos' - 'planos');
+    end if;
+    if jsonb_typeof(d #> '{es,porAno}') = 'object' then
+      for k, v in select * from jsonb_each(d #> '{es,porAno}') loop
+        begin
+          st := (v ->> 'estado')::jsonb;
+          if st is not null then
+            d := jsonb_set(d, array['es','porAno',k,'estado'], to_jsonb((st - 'alunos')::text));
+          end if;
+        exception when others then null;
+        end;
+      end loop;
+    end if;
+  end if;
+  return d;
+end $function$;
+
+-- Tempo real: os computadores e iPads da Direção recebem logo as alterações uns dos outros
+do $$ begin
+  if not exists (select 1 from pg_publication_tables where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = 'g360_estado') then
+    alter publication supabase_realtime add table public.g360_estado;
+  end if;
+end $$;
+
+-- O histórico não incha (nada é apagado — só se deixam de guardar cópias repetidas)
+create or replace function public.g360_guardar_historico()
+ returns trigger language plpgsql security definer set search_path to 'public' as $function$
+begin
+  if tg_op = 'UPDATE' and old.dados is distinct from new.dados then
+    if length(coalesce(new.dados, '')) < length(coalesce(old.dados, '')) * 0.8
+       or split_part(coalesce(old.por, ''), '#', 1) is distinct from split_part(coalesce(new.por, ''), '#', 1)
+       or not exists (select 1 from public.g360_historico h where h.nome = old.nome and h.guardado > now() - interval '15 minutes')
+    then
+      insert into public.g360_historico (nome, dados, t, por) values (old.nome, old.dados, old.t, old.por);
+    end if;
+  end if;
+  new.atualizado := now();
+  return new;
+end $function$;
+
+create or replace function public.g360_config_hist()
+ returns trigger language plpgsql security definer set search_path to 'public' as $function$
+begin
+  if tg_op = 'UPDATE' and old.valor is distinct from new.valor and old.chave not in ('publico', 'profs') then
+    insert into public.g360_config_historico (chave, valor, t, por) values (old.chave, old.valor, old.t, old.por);
+  end if;
+  new.atualizado := now(); return new;
+end $function$;
+
+create or replace function public.g360_publico_gravar(p jsonb)
+ returns jsonb language plpgsql security definer set search_path to 'public' as $function$
+declare e text := g360_email(); t bigint := (extract(epoch from now()) * 1000)::bigint; atual jsonb;
+begin
+  if not g360_direcao() then raise exception 'Só a Direção publica os dados da escola.' using errcode = '42501'; end if;
+  select valor into atual from g360_config where chave = 'publico';
+  if atual is not null and (atual - 't' - 'por') = (coalesce(p, '{}'::jsonb) - 't' - 'por') then
+    return jsonb_build_object('ok', true, 't', (select c.t from g360_config c where c.chave = 'publico'), 'igual', true);
+  end if;
+  insert into g360_config (chave, valor, t, por) values ('publico', coalesce(p, '{}'::jsonb), t, e)
+    on conflict (chave) do update set valor = excluded.valor, t = excluded.t, por = excluded.por;
+  insert into g360_config (chave, valor, t, por)
+    values ('profs', coalesce((select jsonb_agg(jsonb_build_object('id', x ->> 'id', 'nome', x ->> 'nome', 'email', lower(x ->> 'email')))
+                               from jsonb_array_elements(case when jsonb_typeof(p -> 'profs') = 'array' then p -> 'profs' else '[]'::jsonb end) x
+                               where coalesce(x ->> 'email','') <> ''), '[]'::jsonb), t, e)
+    on conflict (chave) do update set valor = excluded.valor, t = excluded.t, por = excluded.por;
+  return jsonb_build_object('ok', true, 't', t);
+end $function$;
+revoke all on function public.g360_publico_gravar(jsonb) from public, anon;
+grant execute on function public.g360_publico_gravar(jsonb) to authenticated;
