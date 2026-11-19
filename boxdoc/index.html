@@ -1056,8 +1056,7 @@ nav.side button.sub.on{border-left-color:var(--mc,var(--accent))}
 /* ícones de linha no resto da app: a mesma pastilha clara do menu lateral */
 .appspop .at .ai.ln{background:linear-gradient(180deg,#f6f8fc,#edf1f8)!important;color:#41506b!important;box-shadow:inset 0 0 0 1px rgba(22,50,105,.07)}
 .appspop .at .ai.ln svg{stroke-width:1.65!important}
-.wg-m{position:relative;background:#163269!important;border-radius:6px;font-weight:700;font-size:10.5px;padding-bottom:2px;box-sizing:border-box}
-.wg-m::after{content:'';position:absolute;left:5px;right:5px;bottom:2.5px;height:2px;border-radius:1px;background:var(--mc)}
+.ico{width:1.05em;height:1.05em;vertical-align:-.18em;display:inline-block;flex:none}
 .cal-ls{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(135deg,#fde7c4 0 4px,#fff4e2 4px 8px)}
 .cal-lh{position:absolute;top:0;bottom:0;width:2px;background:var(--brand);opacity:.75;z-index:2}
 .cal-lb{position:absolute;top:6px;height:16px;border-radius:5px;background:color-mix(in srgb,var(--c) 78%,#fff);border:1px solid var(--c);color:#fff;font-size:10px;font-style:normal;font-weight:700;overflow:hidden;display:flex;align-items:center;padding-left:5px;z-index:1}
@@ -1943,7 +1942,7 @@ html.ios-aberto,html.ios-aberto body{overflow:hidden}
   </div>
   <div class="card">
     <h2>Documentos vazios, falsos ou copiados</h2>
-    <p class="hint">O texto de cada documento entregue é lido pela Box (só leitura) e guardado neste navegador; só os ficheiros novos ou alterados voltam a ser lidos. Um documento <b>vazio</b>, com <b>texto de enchimento</b> ou igual a um <b>modelo por preencher</b> não conta como entregue. Os outros sinais ficam como “⚠ a confirmar”: a decisão é sua.</p>
+    <p class="hint">O texto de cada documento entregue é lido pela Box (só leitura) e guardado neste navegador; só os ficheiros novos ou alterados voltam a ser lidos. Um documento <b>vazio</b>, com <b>texto de enchimento</b> ou igual a um <b>modelo por preencher</b> não conta como entregue. Os outros sinais ficam como «a confirmar»: a decisão é sua.</p>
     <div class="chips" id="qChecks" style="margin-bottom:12px">
       <label class="chip"><input type="checkbox" data-q="modelo">1 · modelo por preencher</label>
       <label class="chip"><input type="checkbox" data-q="enchimento">2 · texto de enchimento</label>
@@ -2369,7 +2368,8 @@ html.ios-aberto,html.ios-aberto body{overflow:hidden}
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.81"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const ICO={"cloud": "<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M17.5 19H8a5 5 0 1 1 1.1-9.9A6 6 0 0 1 20.5 11a4 4 0 0 1-3 8z\"/></svg>", "alert": "<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z\"/><path d=\"M12 9v4M12 17h.01\"/></svg>", "cal": "<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"2\"/><path d=\"M3 10h18M8 3v4M16 3v4\"/></svg>", "eye": "<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/></svg>", "pencil": "<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 20h9\"/><path d=\"M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z\"/></svg>"};const ico=k=>ICO[k]||""; // 0.9.82: ícones de linha em vez de emojis
+const VERSAO="0.9.82"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -2525,7 +2525,7 @@ async function odRepor(){const tok=await odTok(true);const r=await fetch("https:
   try{refreshAll()}catch(e){}return true}
 function odUI(){const el=$("#odEstado");if(!el)return;const card=$("#odCard");if(card)card.hidden=false;
   const t=+(localStorage.getItem("g360_od_t")||0),falta=localStorage.getItem("g360_od_falta")==="1"&&!t;
-  el.innerHTML=t?`<div class="msg ok" style="margin:10px 0 0">☁ Última cópia no OneDrive: ${new Date(t).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"})} (Aplicações › EPISJ 360). Faz-se sozinha uma vez por dia, ao entrar.</div>`
+  el.innerHTML=t?`<div class="msg ok" style="margin:10px 0 0">${ico("cloud")} Última cópia no OneDrive: ${new Date(t).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"})} (Aplicações › EPISJ 360). Faz-se sozinha uma vez por dia, ao entrar.</div>`
     :falta?`<div class="msg info" style="margin:10px 0 0">Para a cópia diária funcionar, carregue em <b>Fazer cópia agora</b> e aceite o acesso à pasta da app no seu OneDrive (só uma vez). Se aparecer que precisa de aprovação do administrador, siga os passos abaixo.</div>`
     :`<p class="hint" style="margin:8px 0 0">Ainda não foi feita nenhuma cópia neste computador.</p>`}
 $("#odAgora").onclick=async()=>{const b=$("#odAgora");b.disabled=true;try{const d=await odCopia(true);try{localStorage.removeItem("g360_od_falta")}catch(e){}toast("Cópia guardada no OneDrive ("+d+")")}catch(e){toast("Não foi possível guardar no OneDrive: "+(e.message||e))}b.disabled=false};
@@ -3361,10 +3361,10 @@ function renderReport(){
       <div class="bar"><i style="width:${pc}%"></i></div><span>${t.ok}/${t.tot}</span>
       ${t.miss?`<span class="tag bad">${t.miss} em falta</span>`:`<span class="tag ok">completo</span>`}${t.miss&&t.p.id!=="_"?`<button class="b s pdfb" data-rpdf="${t.p.id}" title="Exportar em PDF o que este formador tem em falta">PDF</button>`:""}</div>
       <div style="padding:4px 12px 10px;overflow-x:auto"><table class="rtab rt"><thead><tr><th>Turma</th><th>Disciplina</th><th>Módulo/UFCD</th><th>Localização na Box</th><th>O que está em falta</th><th>Observações</th></tr></thead><tbody>
-      ${rows.map(r=>`<tr class="s-${r.state}"><td>${esc(r.turma)}</td><td>${esc(r.disc)}</td><td>${esc(r.mod)}</td><td>${esc(r.loc)}</td><td class="f">${{ok:"✓",warn:"⚠",blank:"✗",missing:"✗"}[r.state]} ${esc(r.falta)}</td><td class="o">${esc(r.obs||(r.state==="ok"?"entregue":""))}${sf&&r.item.hits.length?`<br><b>Ficheiros:</b> ${r.item.hits.map(h=>esc(h.name)).join(", ")}`:""}${fpBtns(r.item)}</td></tr>`).join("")}
+      ${rows.map(r=>`<tr class="s-${r.state}"><td>${esc(r.turma)}</td><td>${esc(r.disc)}</td><td>${esc(r.mod)}</td><td>${esc(r.loc)}</td><td class="f">${{ok:"✓",warn:ico("alert"),blank:"✗",missing:"✗"}[r.state]} ${esc(r.falta)}</td><td class="o">${esc(r.obs||(r.state==="ok"?"entregue":""))}${sf&&r.item.hits.length?`<br><b>Ficheiros:</b> ${r.item.hits.map(h=>esc(h.name)).join(", ")}`:""}${fpBtns(r.item)}</td></tr>`).join("")}
       </tbody></table>${resto>0?`<div style="text-align:center;margin:8px 0 2px"><button class="b s" data-relmais="${esc(t.p.id)}" type="button">Mostrar mais ${Math.min(500,resto)} linhas (faltam ${resto})</button></div>`:""}</div></div>`;}
   if(nTot>nVis)html+=`<div style="text-align:center;margin:6px 0 18px"><button class="b s" id="relMais" type="button">Mostrar mais ${Math.min(30,nTot-nVis)} formadores (faltam ${nTot-nVis})</button></div>`;
-  $("#report").innerHTML=html||`<div class="card"><p class="hint" style="margin:0">${ativos().length?"Nada a mostrar com estes filtros. 🎉":"Defina primeiro os módulos em Atribuições."}</p></div>`;
+  $("#report").innerHTML=html||`<div class="card"><p class="hint" style="margin:0">${ativos().length?"Nada a mostrar com estes filtros.":"Defina primeiro os módulos em Atribuições."}</p></div>`;
   const bm=$("#relMais");if(bm)bm.onclick=()=>{REL_N+=30;renderReport()};
   $("#report").querySelectorAll("[data-relmais]").forEach(b=>b.onclick=()=>{const k=b.dataset.relmais;REL_L[k]=(REL_L[k]||150)+500;renderReport()});
 }
@@ -4145,7 +4145,7 @@ async function runScan(full,auto){
     scanRun++; // impede atualizações tardias da mensagem
     useListing(j);showLast();scanHint();setTimeout(()=>correrAvisos(),800);
     const secs=Math.round((agora-st.t0)/1000);
-    let msg=`Concluído em ${secs} s (${st.modo}${res.full?"":`: ${st.mudancas} alteração(ões) registadas pela Box, ${st.opened} pasta(s) relidas`}) · ${nP} pastas, ${nF} ficheiros${RATE.hits?` · a Box pediu ${RATE.hits} pausa(s)`:""}${st.failed.length?` · ⚠ ${st.failed.length} pasta(s) sem acesso: ${st.failed.slice(0,3).join("; ")}${st.failed.length>3?"…":""}`:""}.`;
+    let msg=`Concluído em ${secs} s (${st.modo}${res.full?"":`: ${st.mudancas} alteração(ões) registadas pela Box, ${st.opened} pasta(s) relidas`}) · ${nP} pastas, ${nF} ficheiros${RATE.hits?` · a Box pediu ${RATE.hits} pausa(s)`:""}${st.failed.length?` · ${ico("alert")} ${st.failed.length} pasta(s) sem acesso: ${st.failed.slice(0,3).join("; ")}${st.failed.length>3?"…":""}`:""}.`;
     if(d){const n=d.novos.length+d.alterados.length+d.apagados.length;msg+=n?` Desde ${prev.quando}: ${d.novos.length} colocado(s), ${d.alterados.length} substituído(s) ou movido(s), ${d.apagados.length} apagado(s) — veja “Alterações”.`:` Nada mudou desde ${prev.quando}.`;
       if(n&&!auto)toast(`${n} alteração(ões) desde a última análise — veja “Alterações”`)}
     $("#scanMsg").textContent=msg;
@@ -4253,7 +4253,7 @@ function sbUI(){const el=$("#sbEstado");if(!el)return;const c=sbCfg();if($("#sbU
   el.innerHTML=!c?`<div class="msg info" style="margin:10px 0 0">Ainda não configurada: a app continua a guardar como antes. Siga os passos abaixo e cole aqui o endereço e a chave publicável do projeto.</div>`
    :!em?`<div class="msg info" style="margin:10px 0 0">Configurada. Falta entrar com a conta da Microsoft da escola. <button class="b s" id="sbGo" style="margin-left:6px">Entrar com a Microsoft</button></div>`
    :SBERR?`<div class="msg bad" style="margin:10px 0 0">Entrou como <b>${esc(em)}</b>, mas: ${esc(SBERR)}. <button class="b s" id="sbOut" style="margin-left:6px">Sair</button></div>`
-   :nuvSB()?`<div class="msg ok" style="margin:10px 0 0">☁ Ligada como <b>${esc(em)}</b> (${esc(SBMEMBRO.admin?"administrador":PERFIL_CURTO[SBMEMBRO.perfil]||SBMEMBRO.perfil)}). A nuvem da EPISJ 360 é agora esta base de dados. <button class="b s" id="sbPush" style="margin-left:6px">Enviar tudo agora</button><button class="b s" id="sbOut" style="margin-left:6px">Sair</button></div>`
+   :nuvSB()?`<div class="msg ok" style="margin:10px 0 0">${ico("cloud")} Ligada como <b>${esc(em)}</b> (${esc(SBMEMBRO.admin?"administrador":PERFIL_CURTO[SBMEMBRO.perfil]||SBMEMBRO.perfil)}). A nuvem da EPISJ 360 é agora esta base de dados. <button class="b s" id="sbPush" style="margin-left:6px">Enviar tudo agora</button><button class="b s" id="sbOut" style="margin-left:6px">Sair</button></div>`
    :`<div class="msg bad" style="margin:10px 0 0">Entrou como <b>${esc(em)}</b>, mas esta conta não está na tabela <code>g360_membros</code> como Direção. Acrescente-a no Supabase (Table Editor › g360_membros). <button class="b s" id="sbOut" style="margin-left:6px">Sair</button></div>`;
   const g=$("#sbGo");if(g)g.onclick=()=>sbEntrar().catch(e=>toast(e.message||String(e)));
   const o=$("#sbOut");if(o)o.onclick=()=>sbSair();
@@ -4320,7 +4320,7 @@ function nuvemUI(){const el=$("#nuvemMsg");if(!el)return;
   if(!NUVOK()){el.innerHTML="";return}
   if(nuvDesl()){el.innerHTML=nuvMS()?`<div class="msg info">Para guardar tudo na nuvem com a conta do Office 365, atualize o serviço de avisos na Cloudflare com o ficheiro <code>servidor/boxcheck-avisos.js</code> da EPISJ 360 (versão 0.9.37 ou mais recente). Até lá, fica tudo guardado só neste navegador.</div>`:`<div class="msg info">Para guardar tudo na nuvem e continuar noutro computador sem repetir a análise, falta ligar o armazenamento ao serviço de login (3 passos no LEIA-ME). Até lá, fica tudo guardado só neste navegador.</div>`;return}
   if(NUV.erro){el.innerHTML=`<div class="msg bad">Não foi possível guardar na nuvem (${esc(NUV.erro)}). Fica guardado neste navegador; volta a tentar sozinho.</div>`;return}
-  el.innerHTML=NUV.ultimo?`<div class="msg ok">☁ Tudo guardado na nuvem às ${new Date(NUV.ultimo).toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"})} — noutro computador basta entrar com ${nuvMS()?"a conta do Office 365":"a Box"}.</div>`:NUV.ativo?`<div class="msg ok">☁ Guardado na nuvem — noutro computador basta entrar com ${nuvMS()?"a conta do Office 365":"a Box"}.</div>`:""}
+  el.innerHTML=NUV.ultimo?`<div class="msg ok">${ico("cloud")} Tudo guardado na nuvem às ${new Date(NUV.ultimo).toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"})} — noutro computador basta entrar com ${nuvMS()?"a conta do Office 365":"a Box"}.</div>`:NUV.ativo?`<div class="msg ok">${ico("cloud")} Guardado na nuvem — noutro computador basta entrar com ${nuvMS()?"a conta do Office 365":"a Box"}.</div>`:""}
 // configuração e o resto do estado (pequeno): enviado alguns segundos depois de cada alteração
 function estadoAtual(){lgDoNavegador();let root="";try{root=localStorage.getItem("box_last_root")||""}catch(e){}
   return{cfg:JSON.stringify(cfg),logos:LOGOS,pontos:(()=>{try{if(nuvSB())return[]}catch(e){}return rpList()})(),tpl:TPL,folder:curFolder,root,bases:basesIdx(),resumos:resumos()}} // 0.9.48: no Supabase os pontos de restauro não viajam (a base de dados guarda o histórico de versões)
@@ -5171,7 +5171,7 @@ function srvEstadoHTML(){const A=avCfg();if(!A.servidor)return "";
   if(SRV.erro)return `<div class="msg bad">Serviço de avisos: ${esc(SRV.erro)}</div>`;
   const e=SRV.estado;if(!e)return `<div class="msg info">Serviço de avisos ligado — a confirmar o estado…</div>`;
   const hm=t=>t?new Date(t).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"}):"nunca";
-  return `<div class="msg ${e.erro?"bad":"ok"}">☁ Os avisos saem pelo <b>serviço de avisos</b>, de hora a hora, mesmo com o computador desligado (Box: ${esc(SRV.box)}). Última verificação: ${hm(e.ultimo)} · plano recebido: ${hm(e.planoT)}${e.porEnviar?` · ${e.porEnviar} por enviar na próxima hora`:""}${e.erro?`<br>${esc(e.erro)}`:""}</div>`}
+  return `<div class="msg ${e.erro?"bad":"ok"}">${ico("cloud")} Os avisos saem pelo <b>serviço de avisos</b>, de hora a hora, mesmo com o computador desligado (Box: ${esc(SRV.box)}). Última verificação: ${hm(e.ultimo)} · plano recebido: ${hm(e.planoT)}${e.porEnviar?` · ${e.porEnviar} por enviar na próxima hora`:""}${e.erro?`<br>${esc(e.erro)}`:""}</div>`}
 
 $("#srvUrl").placeholder=AVISOS_WORKER;
 function srvUI(){const A=avCfg();$("#srvOn").checked=!!A.servidor;if(document.activeElement!==$("#srvUrl"))$("#srvUrl").value=A.url||"";if(document.activeElement!==$("#srvFrom"))$("#srvFrom").value=A.remetente||"";$("#srvFrom").placeholder=(MSACC&&MSACC.username)||"direcao@escola.pt";$("#srvLigar").href=srvUrl()+"/ligar"}
@@ -5332,7 +5332,7 @@ const WIDGETS=[
    const sem=Math.max(0,Math.ceil(wgDias(fim)/7));
    return `<div class="wg-big">${h<ini?"—":p+"%"}</div>${wgBarra(h<ini?0:p)}
      <p class="wg-t">${h<ini?`Começa a <b>${wgDM(ini)}</b> (daqui a ${wgDias(ini)} dias).`:h>fim?`Terminou a ${wgDM(fim)}.`:`Faltam <b>${sem}</b> semana${sem===1?"":"s"} — termina a ${wgDM(fim)}.`}</p>
-     <p class="wg-t">${ag?`🏖 Agora: <b>${esc(ag.nome||"interrupção")}</b>, até ${wgDM(ag.ate)}.`:px?`Próxima interrupção: <b>${esc(px.nome||"interrupção")}</b>, de ${wgDM(px.de)} a ${wgDM(px.ate)} (daqui a ${wgDias(px.de)} dias).`:`Sem interrupções marcadas. `+wgIr("anos","Marcar")}</p>`}},
+     <p class="wg-t">${ag?`${ico("cal")} Agora: <b>${esc(ag.nome||"interrupção")}</b>, até ${wgDM(ag.ate)}.`:px?`Próxima interrupção: <b>${esc(px.nome||"interrupção")}</b>, de ${wgDM(px.de)} a ${wgDM(px.ate)} (daqui a ${wgDias(px.de)} dias).`:`Sem interrupções marcadas. `+wgIr("anos","Marcar")}</p>`}},
  {id:"anocur",mod:"escola",nome:"Turmas por ano curricular",desc:"Quantas turmas há no 1.º, 2.º e 3.º ano e quais terminam este ano",r(){
    const a=anoAtivo(),T=turmasDoAno(a);if(!T.length)return wgVazio("Ainda não há turmas neste ano letivo.")+wgIr("tur","Criar turmas");
    const G=new Map();T.forEach(t=>{const k=anoCurricular(t,a)||"sem ano de início";(G.get(k)||G.set(k,[]).get(k)).push(t)});const mx=Math.max(...[...G.values()].map(x=>x.length));
@@ -5389,7 +5389,7 @@ const WIDGETS=[
    const U=AVL.slice(-4).reverse(),fmt=t=>new Date(t).toLocaleString("pt-PT",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
    return `<p class="wg-k2">Próximos</p>${R.length?`<div class="wg-lst">${R.slice(0,3).map(r=>`<div class="wg-li"><span class="wg-el">${esc(r.p.nome||"Prazo")}</span><span class="wg-sub">${fmt(r.t)}</span></div>`).join("")}</div>`:wgVazio("Sem envios marcados.")}
      <p class="wg-k2">Últimos</p>${U.length?`<div class="wg-lst">${U.map(x=>`<div class="wg-li"><span class="wg-el">${esc(x.nome||"")}</span><i class="wg-tag ${x.ok?"o":"b"}">${x.ok?"enviado":"falhou"}</i><span class="wg-sub">${fmt(x.t)}</span></div>`).join("")}</div>`:wgVazio("Ainda não saiu nenhum aviso deste computador.")}
-     <p class="wg-sub">${avCfg().servidor?"☁ Enviados pelo serviço da EPISJ 360, mesmo com o computador desligado.":avCfg().auto?"Enviados a partir deste navegador.":"Envio automático desligado."}</p>`+wgIr("pra","Abrir Prazos")}},
+     <p class="wg-sub">${avCfg().servidor?ico("cloud")+" Enviados pelo serviço da EPISJ 360, mesmo com o computador desligado.":avCfg().auto?"Enviados a partir deste navegador.":"Envio automático desligado."}</p>`+wgIr("pra","Abrir Prazos")}},
  {id:"estbox",mod:"boxcheck",nome:"Estado da Box",desc:"Ligação à Box, última análise, pastas excluídas e serviço de avisos",r(){
    const nF=lastListing?(lastListing.itens||[]).filter(x=>x.type==="file").length:0,ex=Object.keys(cfg.excluir||{}).length,A=avCfg(),e=SRV.estado;
    return `<div class="wg-lst">
@@ -6094,7 +6094,7 @@ function renderDSD(){const a=anoAtivo(),M=dsdDados(a.id),out=$("#dsdOut"),soEu=d
     if(!me){out.innerHTML=`<div class="msg info">A sua conta (<b>${esc(EU&&EU.email||"")}</b>) não aparece entre os formadores da escola.</div>`;$("#dsdPdf").disabled=true;return}}
   else{$("#dsdSel").disabled=false;$("#dsdFilterL").style.display="";$("#dsdPdfAll").style.display="";
     if(DSD_SEL&&DSD_SEL!=="_sem"&&!pcProf(DSD_SEL))DSD_SEL="";
-    $("#dsdSel").innerHTML=`<option value="">Todos os formadores (resumo)</option>`+(M.has("")?`<option value="_sem" ${DSD_SEL==="_sem"?"selected":""}>⚠ Sem formador atribuído</option>`:"")+
+    $("#dsdSel").innerHTML=`<option value="">Todos os formadores (resumo)</option>`+(M.has("")?`<option value="_sem" ${DSD_SEL==="_sem"?"selected":""}>— Sem formador atribuído —</option>`:"")+
       P.map(p=>{const r=M.get(p.id);return `<option value="${p.id}" ${p.id===DSD_SEL?"selected":""}>${esc(p.nome)}${p.cod?` (${esc(p.cod)})`:""}${r?` · ${pcNum(r.h+r.hnl)} h`:""}</option>`}).join("")}
   $("#dsdPdf").disabled=!DSD_SEL||DSD_SEL==="_sem";
   const nPl=pcPlanos().filter(p=>p.anoId===a.id).length;
@@ -6516,8 +6516,8 @@ if(curMod!=="boxcheck"){const M=MODULOS.find(x=>x.id===curMod);if(M)show(M.inici
    try{const ms=nuvMS(),od=+(localStorage.getItem("g360_od_t")||0);
      if(nuvDesl()&&ms&&!nuvSB()){t="Guardado só neste navegador";tit="A nuvem com o Office 365 só funciona depois de atualizar o serviço de avisos na Cloudflare (ficheiro servidor/boxcheck-avisos.js)."}
      else if(NUV.erro)t="Guardado neste navegador (a nuvem volta a tentar)";
-     else if(NUV.ultimo)t="☁ Guardado "+(NUV.via==="sb"?"na base de dados (Supabase)":"na nuvem"+(ms?" (Office 365)":""))+" às "+hm(NUV.ultimo);
-     else if(NUV.ativo)t="☁ Guardado "+(NUV.via==="sb"?"na base de dados (Supabase)":"na nuvem"+(ms?" (Office 365)":""));
+     else if(NUV.ultimo)t="Guardado "+(NUV.via==="sb"?"na base de dados (Supabase)":"na nuvem"+(ms?" (Office 365)":""))+" às "+hm(NUV.ultimo);
+     else if(NUV.ativo)t="Guardado "+(NUV.via==="sb"?"na base de dados (Supabase)":"na nuvem"+(ms?" (Office 365)":""));
      if(od)tit=(tit?tit+"\n":"")+"Última cópia no OneDrive: "+new Date(od).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"});
      if(RO){t=PUB&&PUB.t?"Só leitura · publicado a "+new Date(PUB.t).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"}):"Só leitura";tit="Os dados são os que a Direção publicou; só a Direção os muda."} // 0.9.50
      const b=document.getElementById("subUp");if(b)b.hidden=!!RO}catch(e){}el.textContent=t;el.title=tit};
@@ -6568,7 +6568,7 @@ async function rcTrazer(enviar){try{if(!NUVOK()||nuvDesl()){rcNuvUI();return}
     rcNuvOk=Date.now();rcNuvErr="";if(mudouAqui&&curTab.startsWith("rc"))rcRender(curTab)}
   catch(e){if(e.kind!=="nokv")rcNuvErr=e.message||String(e)}rcNuvUI()}
 function rcNuvUI(){const el=$("#rcNuv");if(!el)return;
-  el.innerHTML=!NUVOK()?"":nuvDesl()?`<div class="msg info">Sem armazenamento na nuvem: as reservas ficam só neste navegador.</div>`:rcNuvErr?`<div class="msg bad">Não foi possível guardar na nuvem (${esc(rcNuvErr)}). Volta a tentar sozinho.</div>`:rcNuvOk?`<div class="msg ok">☁ Reservas guardadas na nuvem às ${new Date(rcNuvOk).toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"})}.</div>`:""}
+  el.innerHTML=!NUVOK()?"":nuvDesl()?`<div class="msg info">Sem armazenamento na nuvem: as reservas ficam só neste navegador.</div>`:rcNuvErr?`<div class="msg bad">Não foi possível guardar na nuvem (${esc(rcNuvErr)}). Volta a tentar sozinho.</div>`:rcNuvOk?`<div class="msg ok">${ico("cloud")} Reservas guardadas na nuvem às ${new Date(rcNuvOk).toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"})}.</div>`:""}
 /* atualiza com a vista aberta e à vista (para ver as reservas feitas noutro computador) */
 setInterval(()=>{if(curTab&&curTab.startsWith("rc")&&document.visibilityState==="visible"&&$("#rcDw").hidden)rcTrazer(false)},60000);
 
@@ -6974,7 +6974,7 @@ function aplicarPerfil(){
   const ro=soLeitura()&&!PREV;document.body.classList.toggle("ro",ro);const u=document.querySelector(".undo");if(u)u.style.display=ro||RO?"none":"";
   const pf=perfilAtual(),l=$("[data-mhlbl]");if(l)l.textContent=pf==="form"?"Horário da turma":pf==="prof"?"O meu horário":"Horários publicados";
   let bar=$("#pvbar");if(PREV){if(!bar){bar=document.createElement("div");bar.id="pvbar";bar.className="pvbar";document.querySelector("main").prepend(bar)}
-    bar.innerHTML=`👁 A pré-visualizar como <b>${esc(PERFIL_CURTO[PREV])}</b> — é só o que aparece; os dados continuam os seus.<button class="b s" id="pvOut">Sair da pré-visualização</button>`;$("#pvOut").onclick=()=>{PREV="";aplicarPerfil();show("uti")}}
+    bar.innerHTML=`${ico("eye")} A pré-visualizar como <b>${esc(PERFIL_CURTO[PREV])}</b> — é só o que aparece; os dados continuam os seus.<button class="b s" id="pvOut">Sair da pré-visualização</button>`;$("#pvOut").onclick=()=>{PREV="";aplicarPerfil();show("uti")}}
   else if(bar)bar.remove();
   if(!primeiroPermitido(curMod)){const m=MODULOS.find(x=>primeiroPermitido(x.id));if(m)mostrarModulo(m.id,true);else if(podeVer("def"))show("def")}
   else if(!podeVer(curTab))mostrarModulo(curMod,true)}
@@ -7457,7 +7457,7 @@ WIDGETS.push({id:"cal",mod:"escola",nome:"Calendário escolar",desc:"Hoje no cal
   const a=anoAtivo(),NL=calNaoLetivos(a),P=calPeriodos(a),hj=calHoje(),x=NL.get(hj),pa=calPeriodoDe(a,hj,P),pf=perfilAtual();
   const minha=pf==="form"?turmasDoAno(a).find(t=>norm(t.cod)===norm(EU&&EU.turma||"")):null;
   const per=P.find(p=>p.n===pa),rest=per?calLetivos(a,calMais(hj,1),per.fim,NL):0;
-  let h=`<p class="wg-t">${x?(x.t==="int"?"🏖 ":"🎉 ")+`Hoje: <b>${esc(x.n)}</b>.`:pa?`Hoje: dia letivo do <b>${pa}.º período</b> — faltam ${rest} dia${rest===1?"":"s"} letivo${rest===1?"":"s"} até ${calDM(per.fim)}.`:hj<(a.inicio||"9")?`As aulas começam a <b>${calDM(a.inicio)}</b>.`:P.length?"Fora dos períodos letivos.":"Calendário por importar."}</p>`;
+  let h=`<p class="wg-t">${x?ico("cal")+` Hoje: <b>${esc(x.n)}</b>.`:pa?`Hoje: dia letivo do <b>${pa}.º período</b> — faltam ${rest} dia${rest===1?"":"s"} letivo${rest===1?"":"s"} até ${calDM(per.fim)}.`:hj<(a.inicio||"9")?`As aulas começam a <b>${calDM(a.inicio)}</b>.`:P.length?"Fora dos períodos letivos.":"Calendário por importar."}</p>`;
   const M=calMarcos(a,minha?minha.id:"").filter(m=>(m.ate||m.de)>=hj).sort((p,q)=>p.de.localeCompare(q.de)).slice(0,6);
   h+=M.length?`<div class="wg-lst">${M.map(m=>{const t=calTurmaDoMarco(m,a),c=(CAL_TIPOS[m.tipo]||CAL_TIPOS.outro)[1],n=calDias(hj,m.de);
       return `<div class="wg-li"><i class="wg-dot" style="background:${c}"></i><span class="wg-el">${t&&!minha?`<b>${esc(t.cod)}</b> · `:""}${esc(m.nome)}<br><span class="wg-sub">${calDatasTxt(m)} · ${m.de<=hj?"a decorrer":n===0?"hoje":"daqui a "+n+" dia"+(n===1?"":"s")}</span></span></div>`}).join("")}</div>`
@@ -7663,7 +7663,7 @@ function crPs(){const a=crAnoSel(),asof=CR_SEL.asof||calHoje(),M=crMotor(a,asof)
 function crDetalhe(T,r,M){const f=M.fator,me=crMeuId();
   const pd=crPodeEditar()&&!me;return `<table class="rt crdt crlab"><thead><tr><th>Disciplina</th><th>Formador</th><th class="crn">Plano</th><th class="crn">Dadas</th><th class="crn">Por dar</th><th class="crn" title="Horas que o horário ainda dá até ao fim das aulas da turma">No horário até ao fim</th><th class="crn">Saldo</th><th class="crn" title="Tempos por semana: os que o horário tem agora → os que seriam precisos para acabar a tempo">Por semana</th><th>Módulos</th><th>Fim previsto</th><th>Estado</th></tr></thead><tbody>`+
     r.L.slice().sort(crOrdArea).map(o=>{const fs=[...o.f.entries()].sort((x,y)=>y[1]-x[1]).map(([id])=>(cfg.profs.find(p=>p.id===id)||{}).nome).filter(Boolean),fe=o.mods.filter(m=>m.estado==="feito").length,cur=o.mods.find(m=>m.estado==="curso");
-      return `<tr><td><b>${esc(o.disc)}</b><div class="hint" style="margin:0">${esc(PC_AREA_NOME[o.area]||"")}${cur?" · agora: "+esc(cur.mod):""}</div></td><td>${esc(fs.slice(0,2).join(", ")||"—")}</td><td class="crn">${crNum(crH1(o.P,f))}</td><td class="crn">${crNum(crH1(o.G,f))}${pd?`<button class="crdd" type="button" data-crdd="${T.t.id}|${esc(o.k)}" title="Corrigir as horas dadas até ${esc(calDM(M.asof))} (por exemplo, pelos sumários do pleon)">✎</button>`:""}</td><td class="crn">${crNum(crH1(Math.max(0,o.P-o.G),f))}</td><td class="crn">${crNum(crH1(o.cap,f))}</td><td class="crn${o.saldo<0?" crneg":""}">${o.saldo>=0?"+":""}${crNum(crH1(o.saldo,f))}</td><td class="crn">${o.est==="concluida"?"—":`${crNum(o.tlSem)} → <b${o.tlNec>o.tlSem+1e-6?' class="crneg"':""}>${crNum(Math.ceil(o.tlNec*10-1e-6)/10)}</b>`}</td><td>${fe}/${o.mods.length}</td><td>${o.fimPrev?calDM(o.fimPrev):o.est==="concluida"?"—":`<span class="crneg">não acaba</span>`}</td><td>${crTag(o.est)}</td></tr>`}).join("")+`</tbody></table>`}
+      return `<tr><td><b>${esc(o.disc)}</b><div class="hint" style="margin:0">${esc(PC_AREA_NOME[o.area]||"")}${cur?" · agora: "+esc(cur.mod):""}</div></td><td>${esc(fs.slice(0,2).join(", ")||"—")}</td><td class="crn">${crNum(crH1(o.P,f))}</td><td class="crn">${crNum(crH1(o.G,f))}${pd?`<button class="crdd" type="button" data-crdd="${T.t.id}|${esc(o.k)}" title="Corrigir as horas dadas até ${esc(calDM(M.asof))} (por exemplo, pelos sumários do pleon)">${ico("pencil")}</button>`:""}</td><td class="crn">${crNum(crH1(Math.max(0,o.P-o.G),f))}</td><td class="crn">${crNum(crH1(o.cap,f))}</td><td class="crn${o.saldo<0?" crneg":""}">${o.saldo>=0?"+":""}${crNum(crH1(o.saldo,f))}</td><td class="crn">${o.est==="concluida"?"—":`${crNum(o.tlSem)} → <b${o.tlNec>o.tlSem+1e-6?' class="crneg"':""}>${crNum(Math.ceil(o.tlNec*10-1e-6)/10)}</b>`}</td><td>${fe}/${o.mods.length}</td><td>${o.fimPrev?calDM(o.fimPrev):o.est==="concluida"?"—":`<span class="crneg">não acaba</span>`}</td><td>${crTag(o.est)}</td></tr>`}).join("")+`</tbody></table>`}
 // Cronogramas (diagrama de Gantt dos módulos de cada disciplina, ao longo do ano)
 function crCron(){const a=crAnoSel(),asof=CR_SEL.asof||calHoje(),M=crMotor(a,asof),me=crMeuId(),f=M.fator,sel=$("#crCronT").value||"";
   const T=M.turmas.get(sel)||[...M.turmas.values()].find(T=>[...T.discs.values()].some(o=>crDoFormador(o,me)));$("#crCronAviso").innerHTML=crAvisoBase(a,M);
@@ -8454,7 +8454,7 @@ $("#utiGuardar").onclick=async()=>{if(!UTI)return;utiLerCampos();const pad=UTI.l
    A página do módulo está em social360/ e abre numa janela dentro da EPISJ 360 (como o Horário360).
    A EPISJ 360 dá-lhe só o que precisa: a sessão do Office 365 (para ler e gravar na tabela s360_docs do Supabase,
    protegida por regras: a Direção vê tudo, os outros só os espaços onde foram juntados), quem é a conta e a lista de formadores. */
-var S3_VER="0.3",S3_OK=false,S3_PEND="feed",S3_RES=null; // var e funções: o arranque pode abrir o Social360 antes de este bloco correr
+var S3_VER="0.4",S3_OK=false,S3_PEND="feed",S3_RES=null; // var e funções: o arranque pode abrir o Social360 antes de este bloco correr
 function s3View(t){return ({s3feed:"feed",s3cal:"calendario",s3grid:"grelha",s3list:"lista",s3ap:"aprovacoes",s3inbox:"inbox",s3an:"analise",s3media:"media",s3def:"definicoes"})[t]||"feed"}
 function s3Tab(v){return ({feed:"s3feed",calendario:"s3cal",grelha:"s3grid",lista:"s3list",aprovacoes:"s3ap",inbox:"s3inbox",analise:"s3an",media:"s3media",definicoes:"s3def"})[v]||""}
 document.querySelectorAll("[data-s3ver]").forEach(e=>e.textContent=S3_VER);

@@ -293,17 +293,17 @@ function preview0(p, pageId, opts = {}) {
   switch (pg.platform) {
     case 'instagram': {
       const story = ['story', 'reel'].includes(p.format);
-      if (story) return vertical(p, pg, t, pageId, opts, '♡ 💬 ➤');
+      if (story) return vertical(p, pg, t, pageId, opts, 'heart chat send');
       return `<div class="pv">
         <div class="hd">${av}<div><div class="nm">${esc(pg.handle || pg.name)}</div><div class="sb">${esc(ws.name)}</div></div><span style="margin-left:auto">${I.dots.replace('<svg', '<svg width="18"')}</span></div>
         ${pvMedia(p, 'sq', pageId, Object.assign({ placeholder: true, carousel: true }, opts))}
-        <div class="icons"><span>♡</span><span>💬</span><span>➤</span><span class="r">🔖</span></div>
+        <div class="icons"><span>${ii('heart')}</span><span>${ii('chat')}</span><span>${ii('send')}</span><span class="r">${ii('bookmark')}</span></div>
         <div class="tx" style="padding-top:4px"><b>${esc(pg.handle || pg.name)}</b> ${tx}</div>${fc}
         <div class="tx sb" style="font-size:11px;color:var(--ink3);text-transform:uppercase">${esc(when)}</div></div>`;
     }
-    case 'tiktok': return vertical(p, pg, t, pageId, opts, '♡ 💬 ↗');
+    case 'tiktok': return vertical(p, pg, t, pageId, opts, 'heart chat up');
     case 'youtube': {
-      if (p.format === 'short') return vertical(p, pg, t, pageId, opts, '👍 👎 💬');
+      if (p.format === 'short') return vertical(p, pg, t, pageId, opts, 'thumb thumbdown chat');
       const [title, ...rest] = t.split('\n');
       return `<div class="pv">${pvMedia(p, 'wide', pageId, Object.assign({ placeholder: true }, opts))}<div class="yt-t">${esc(title) || '<span class="muted">Título do vídeo</span>'}</div><div class="hd" style="padding-top:4px">${av.replace('lg', '')}<div class="sb">${esc(pg.name)} · ${esc(when)}</div></div><div class="tx" style="color:var(--ink2);font-size:13px">${richText(rest.join('\n').trim())}</div></div>`;
     }
@@ -314,24 +314,24 @@ function preview0(p, pageId, opts = {}) {
     case 'gbp': return `<div class="pv"><div class="hd">${av}<div><div class="nm">${esc(pg.name)}</div><div class="sb">${esc(FMT[p.format] || 'Novidade')} · ${esc(when)}</div></div></div>${pvMedia(p, 'wide', pageId, opts)}<div class="tx" style="padding-top:10px">${tx}</div><span class="gbtn">Saber mais</span></div>`;
     case 'x': case 'threads': {
       const handle = '@' + (pg.handle || '').replace(/^@/, '');
-      return `<div class="pv" style="padding:12px;display:flex;gap:10px">${av}<div style="flex:1;min-width:0"><div style="font-size:13.5px"><b>${esc(pg.name)}</b> <span class="muted">${esc(handle)} · ${esc(when)}</span></div><div class="tx" style="padding:3px 0 8px">${tx}</div><div style="border-radius:14px;overflow:hidden">${pvMedia(p, 'wide', pageId, Object.assign({ grid: true }, opts))}</div><div style="display:flex;justify-content:space-between;color:var(--ink3);font-size:13px;margin-top:8px;max-width:320px"><span>💬</span><span>🔁</span><span>♡</span><span>📊</span></div></div></div>`;
+      return `<div class="pv" style="padding:12px;display:flex;gap:10px">${av}<div style="flex:1;min-width:0"><div style="font-size:13.5px"><b>${esc(pg.name)}</b> <span class="muted">${esc(handle)} · ${esc(when)}</span></div><div class="tx" style="padding:3px 0 8px">${tx}</div><div style="border-radius:14px;overflow:hidden">${pvMedia(p, 'wide', pageId, Object.assign({ grid: true }, opts))}</div><div style="display:flex;justify-content:space-between;color:var(--ink3);font-size:13px;margin-top:8px;max-width:320px"><span>${ii('chat')}</span><span>${ii('repeat')}</span><span>${ii('heart')}</span><span>${ii('bars')}</span></div></div></div>`;
     }
-    case 'linkedin': return `<div class="pv"><div class="hd">${av}<div><div class="nm">${esc(pg.name)}</div><div class="sb">${nf(1200 + hash(pg.id) % 9000)} seguidores<br>${esc(when)} · 🌐</div></div></div><div class="tx">${tx}</div>${linkedinExtra(p) ?? pvMedia(p, 'wide', pageId, Object.assign({ grid: true }, opts))}<div class="acts"><span>👍 Gosto</span><span>💬 Comentar</span><span>🔁 Republicar</span><span>➤ Enviar</span></div></div>`;
+    case 'linkedin': return `<div class="pv"><div class="hd">${av}<div><div class="nm">${esc(pg.name)}</div><div class="sb">${nf(1200 + hash(pg.id) % 9000)} seguidores<br>${esc(when)} · ${ii('globe')}</div></div></div><div class="tx">${tx}</div>${linkedinExtra(p) ?? pvMedia(p, 'wide', pageId, Object.assign({ grid: true }, opts))}<div class="acts"><span>${ii('thumb')} Gosto</span><span>${ii('chat')} Comentar</span><span>${ii('repeat')} Republicar</span><span>${ii('send')} Enviar</span></div></div>`;
     case 'universal': {
       const [title, ...rest] = t.split('\n');
       return `<div class="pv" style="padding:18px"><div class="muted" style="text-transform:uppercase;font-size:11px;letter-spacing:.06em">${esc(FMT[p.format] || 'Conteúdo')} · ${esc(pg.name)}</div><h2 style="margin:6px 0 10px;font-family:Georgia,serif">${esc(title) || 'Sem título'}</h2>${pvMedia(p, 'wide', pageId, opts)}<div class="tx" style="padding:10px 0 0">${richText(rest.join('\n').trim())}</div></div>`;
     }
     default: {
       const story = ['story', 'reel'].includes(p.format);
-      if (story) return vertical(p, pg, t, pageId, opts, '👍 💬 ↗');
-      return `<div class="pv"><div class="hd">${av}<div><div class="nm">${esc(pg.name)}</div><div class="sb">${esc(when)} · 🌐</div></div></div><div class="tx">${tx}</div>${pvMedia(p, 'wide', pageId, Object.assign({ grid: true }, opts))}<div class="acts"><span>👍 Gosto</span><span>💬 Comentar</span><span>↗ Partilhar</span></div></div>`;
+      if (story) return vertical(p, pg, t, pageId, opts, 'thumb chat up');
+      return `<div class="pv"><div class="hd">${av}<div><div class="nm">${esc(pg.name)}</div><div class="sb">${esc(when)} · ${ii('globe')}</div></div></div><div class="tx">${tx}</div>${pvMedia(p, 'wide', pageId, Object.assign({ grid: true }, opts))}<div class="acts"><span>${ii('thumb')} Gosto</span><span>${ii('chat')} Comentar</span><span>${ii('up')} Partilhar</span></div></div>`;
     }
   }
 }
 function vertical(p, pg, t, pageId, opts, ic) {
-  const [a, b, c] = ic.split(' ');
+  const [a, b, c] = ic.split(' ').map(ii);
   const trial = pg.platform === 'instagram' && p.format === 'reel' && p.trial && p.trial.on;
-  return `<div class="pv vert">${pvMedia(p, '', pageId, Object.assign({ placeholder: true, carousel: true }, opts))}${trial ? '<span class="trialb">Reel de teste · só para não seguidores</span>' : ''}<div class="vside"><div>${a}<small>${nf(hash(p.id) % 900 + 40)}</small></div><div>${b}<small>${hash(p.id) % 90}</small></div><div>${c}</div></div><div class="vov"><div class="nm">@${esc(pg.handle || pg.name)}</div>${richText(t)}${p.music && ['instagram', 'tiktok'].includes(pg.platform) ? `<div class="mus">♪ ${esc(p.music)}</div>` : ''}</div></div>`;
+  return `<div class="pv vert">${pvMedia(p, '', pageId, Object.assign({ placeholder: true, carousel: true }, opts))}${trial ? '<span class="trialb">Reel de teste · só para não seguidores</span>' : ''}<div class="vside"><div>${a}<small>${nf(hash(p.id) % 900 + 40)}</small></div><div>${b}<small>${hash(p.id) % 90}</small></div><div>${c}</div></div><div class="vov"><div class="nm">@${esc(pg.handle || pg.name)}</div>${richText(t)}${p.music && ['instagram', 'tiktok'].includes(pg.platform) ? `<div class="mus">${ii('music')} ${esc(p.music)}</div>` : ''}</div></div>`;
 }
 
 /* ---------- casca da app ---------- */
@@ -415,9 +415,9 @@ function topHTML(ws) {
   </div>`;
 }
 function bannerHTML() {
-  if (Store.readOnly) return `<div class="banner">🔒 Tem acesso só de leitura — pode ver tudo mas não alterar.</div>`;
+  if (Store.readOnly) return `<div class="banner">${ii('lock')} Tem acesso só de leitura — pode ver tudo mas não alterar.</div>`;
   if (Store.slow) return `<div class="banner">⏳ Ainda não foi possível confirmar os dados mais recentes; o que vês pode estar desatualizado.</div>`;
-  if (Store.mode === 'local') return EMBED ? `<div class="banner">💾 Sem ligação à base de dados da EPISJ 360${Store.sbErro ? ' (' + esc(Store.sbErro) + ')' : ''}: entre com o Office 365 da escola para partilhar com a equipa. Por agora, o que fizer fica só neste navegador.</div>` : `<div class="banner">💾 Modo local: os dados ficam guardados só neste browser.</div>`;
+  if (Store.mode === 'local') return EMBED ? `<div class="banner">${ii('save')} Sem ligação à base de dados da EPISJ 360${Store.sbErro ? ' (' + esc(Store.sbErro) + ')' : ''}: entre com o Office 365 da escola para partilhar com a equipa. Por agora, o que fizer fica só neste navegador.</div>` : `<div class="banner">${ii('save')} Modo local: os dados ficam guardados só neste navegador.</div>`;
   return '';
 }
 function filtersHTML(ws) {
@@ -426,11 +426,11 @@ function filtersHTML(ws) {
     <button class="btn sm" data-act="fstatus">Estado ${f.status.length ? `(${f.status.length})` : ''} ▾</button>
     <button class="btn sm" data-act="flabels">Etiquetas ${f.labels.length ? `(${f.labels.length})` : ''} ▾</button>
     <button class="btn sm" data-act="fpages">Páginas ${f.pages.length ? `(${f.pages.length})` : ''} ▾</button>
-    ${EMBED ? `<button class="btn sm" data-act="viewsmenu">☆ Vistas guardadas ▾</button>` : ''}
+    ${EMBED ? `<button class="btn sm" data-act="viewsmenu">${ii('star')} Vistas guardadas ▾</button>` : ''}
     ${f.pages.map(id => { const pg = pageOf(ws, id); return pg ? `<span class="chip on">${pfBadge(pg.platform, 'sm')}${esc(pg.name)}<button data-act="fpage" data-id="${id}">×</button></span>` : ''; }).join('')}
     ${f.labels.map(id => { const l = labelOf(ws, id); return l ? `<span class="chip on"><span class="dot" style="background:${l.color};width:8px;height:8px"></span>${esc(l.name)}<button data-act="flabel" data-id="${id}">×</button></span>` : ''; }).join('')}
     ${f.status.map(s => `<span class="chip on">${STATUS[s].n}<button data-act="fst" data-v="${s}">×</button></span>`).join('')}
-    ${any ? `<button class="btn ghost sm" data-act="fclear">Limpar filtros</button><button class="btn ghost sm" data-act="saveview">☆ Guardar vista</button>` : ''}
+    ${any ? `<button class="btn ghost sm" data-act="fclear">Limpar filtros</button><button class="btn ghost sm" data-act="saveview">${ii('star')} Guardar vista</button>` : ''}
     <div style="flex:1"></div><span class="muted">${filtered(ws).length} publicações</span></div>`;
 }
 function viewHTML(ws) {
@@ -449,14 +449,14 @@ function viewHTML(ws) {
 function onboardingHTML() {
   if (Store.mode === 'sb' || (EMBED && Store.mode === 'local')) {
     if (!canNewWS()) return `<div class="onb"><h1>Social360</h1><p class="muted" style="font-size:14px">Ainda não foi adicionado a nenhum espaço de trabalho do Social360. Peça à Direção para o juntar à equipa (Definições → Membros).</p></div>`;
-    return `<div class="onb"><h1>Bem-vindo ao Social360 👋</h1><p class="muted" style="font-size:14px">Planeie, reveja, aprove e agende as publicações das redes sociais da escola num só sítio. Cada espaço de trabalho tem as suas páginas, a sua equipa e as suas regras de aprovação.</p>
+    return `<div class="onb"><h1>Bem-vindo ao Social360</h1><p class="muted" style="font-size:14px">Planeie, reveja, aprove e agende as publicações das redes sociais da escola num só sítio. Cada espaço de trabalho tem as suas páginas, a sua equipa e as suas regras de aprovação.</p>
       <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap"><button class="btn pri" data-act="wsepisj">${I.plus} Criar o espaço da EPISJ</button><button class="btn" data-act="newws">Criar outro espaço</button></div>
       <p class="muted" style="margin-top:16px">“Criar o espaço da EPISJ” já traz as páginas de Facebook, Instagram, LinkedIn e YouTube da escola e aprovação pela Direção. Pode mudar tudo depois em Definições.</p>
       ${Store.mode === 'local' ? `<p class="muted"><button class="btn sm ghost" data-act="example">Carregar dados de exemplo (só neste navegador)</button></p>` : ''}</div>`;
   }
-  return `<div class="onb"><h1>Bem-vindo ao Social360 👋</h1><p class="muted" style="font-size:14px">Planeie, colabore, aprove e agende conteúdo para redes sociais num só sítio. Comece por criar um espaço de trabalho para cada marca ou cliente.</p>
+  return `<div class="onb"><h1>Bem-vindo ao Social360</h1><p class="muted" style="font-size:14px">Planeie, colabore, aprove e agende conteúdo para redes sociais num só sítio. Comece por criar um espaço de trabalho para cada marca ou cliente.</p>
     ${Store.readOnly ? '<p>Ainda não há espaços de trabalho e só tem acesso de leitura.</p>' : `<div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap"><button class="btn pri" data-act="newws">${I.plus} Criar espaço de trabalho</button><button class="btn" data-act="example">Carregar dados de exemplo</button></div>
-    <p class="muted" style="margin-top:16px">Os dados de exemplo criam duas marcas fictícias (Café Aurora e Livraria Maré) com publicações, comentários e mensagens para experimentares.</p>`}</div>`;
+    <p class="muted" style="margin-top:16px">Os dados de exemplo criam duas marcas fictícias (Café Aurora e Livraria Maré) com publicações, comentários e mensagens para experimentar.</p>`}</div>`;
 }
 
 /* ---------- Feed ---------- */
@@ -518,8 +518,8 @@ function actionButtons(p, ws, small) {
   if (canApprove(p, ws) && p.status !== 'review' && ['draft', 'changes'].includes(p.status)) b.push(`<button class="btn ok ${s}" data-act="approve" data-pid="${p.id}">${I.check} Aprovar</button>`);
   return b.join('');
 }
-function emptyPages(ws) { return `<div class="empty"><div style="font-size:40px">🔌</div><h3>Ligue a primeira página</h3><p>Adicione as páginas de redes sociais deste espaço para começar a planear.</p>${canAdmin(ws) ? `<button class="btn pri" data-act="addpage">${I.plus} Adicionar página</button>` : ''}</div>`; }
-function emptyPosts(ws) { const any = UI.f.pages.length || UI.f.labels.length || UI.f.status.length || UI.f.q; return `<div class="empty"><div style="font-size:40px">📝</div><h3>${any ? 'Nada corresponde aos filtros' : 'Ainda não há publicações'}</h3>${any ? `<button class="btn" data-act="fclear">Limpar filtros</button>` : canEdit(ws) ? `<button class="btn pri" data-act="new">${I.plus} Criar publicação</button>` : ''}</div>`; }
+function emptyPages(ws) { return `<div class="empty"><div class="eic">${I.plug}</div><h3>Ligue a primeira página</h3><p>Adicione as páginas de redes sociais deste espaço para começar a planear.</p>${canAdmin(ws) ? `<button class="btn pri" data-act="addpage">${I.plus} Adicionar página</button>` : ''}</div>`; }
+function emptyPosts(ws) { const any = UI.f.pages.length || UI.f.labels.length || UI.f.status.length || UI.f.q; return `<div class="empty"><div class="eic">${I.note}</div><h3>${any ? 'Nada corresponde aos filtros' : 'Ainda não há publicações'}</h3>${any ? `<button class="btn" data-act="fclear">Limpar filtros</button>` : canEdit(ws) ? `<button class="btn pri" data-act="new">${I.plus} Criar publicação</button>` : ''}</div>`; }
 
 /* ---------- Calendário ---------- */
 function calBase() { return UI.calDate ? new Date(UI.calDate) : new Date(); }
@@ -559,7 +559,7 @@ function evHTML(p, ws, big) {
   const col = { publishing: '#2a78d6', failed: '#d03b3b', draft: '#8a909c', review: '#c98500', changes: '#d03b3b', approved: '#0ca30c', scheduled: '#2a78d6', published: '#6d4fc2' }[p.status];
   const m = mediaOf(p.mediaIds?.[0]);
   return `<div class="ev ${lock ? 'locked' : ''}" style="border-left-color:${col}" ${lock ? '' : 'draggable="true"'} data-pid="${p.id}" data-act="open">
-    <div class="t">${p.pageIds.slice(0, 4).map(id => { const g = pageOf(ws, id); return g ? pfBadge(g.platform, 'sm') : ''; }).join('')}${p.pageIds.length > 4 ? `<span class="muted">+${p.pageIds.length - 4}</span>` : ''}<span>${fmtTime(p.date)}</span>${unreadC(p) ? '<i class="newdot" title="Comentários novos"></i>' : ''}${(p.comments || []).filter(c => !c.resolved).length ? `<span class="muted" style="margin-left:auto">💬${p.comments.filter(c => !c.resolved).length}</span>` : ''}</div>
+    <div class="t">${p.pageIds.slice(0, 4).map(id => { const g = pageOf(ws, id); return g ? pfBadge(g.platform, 'sm') : ''; }).join('')}${p.pageIds.length > 4 ? `<span class="muted">+${p.pageIds.length - 4}</span>` : ''}<span>${fmtTime(p.date)}</span>${unreadC(p) ? '<i class="newdot" title="Comentários novos"></i>' : ''}${(p.comments || []).filter(c => !c.resolved).length ? `<span class="muted" style="margin-left:auto">${ii('chat')} ${p.comments.filter(c => !c.resolved).length}</span>` : ''}</div>
     ${big && m ? mTag(m, 'th') : ''}
     <div class="x">${esc((pg ? textFor(p, pg.id) : p.text) || '(sem texto)')}</div>
     <div style="display:flex;gap:4px;align-items:center">${stPill(p.status).replace('class="st', 'style="font-size:10.5px;padding:0 6px" class="st')}${(p.labels || []).slice(0, 2).map(id => { const l = labelOf(ws, id); return l ? `<span class="dot" style="background:${l.color};width:8px;height:8px" title="${esc(l.name)}"></span>` : ''; }).join('')}</div>
@@ -576,7 +576,7 @@ function gridHTML(ws) {
   return `<div class="gwrap">
     <div class="gprof"><span class="pf lg" style="width:64px;height:64px;font-size:20px;background:${ws.color}">${esc(initials(pg.name))}</span><div style="flex:1"><div style="font-weight:700;font-size:16px">${esc(pg.handle || pg.name)}</div><div class="muted">${posts.length} publicações planeadas e publicadas · arraste para reorganizar</div></div>
       <select class="inp" style="width:auto" data-ch="gridpage">${ig.map(p => `<option value="${p.id}" ${p.id === pg.id ? 'selected' : ''}>${esc(PLAT[p.platform].n)} — ${esc(p.name)}</option>`).join('')}</select></div>
-    ${posts.length ? `<div class="ggrid">${posts.slice(0, UI.gridN || 60).map(p => { const m = mediaOf(p.mediaIds?.[0]); const lock = p.status === 'published' || p.status === 'publishing' || !canEdit(ws); return `<div class="gt ${lock ? 'lock' : ''}" ${lock ? '' : 'draggable="true"'} data-pid="${p.id}" data-drop="grid:${p.id}" data-act="open">${m ? mTag(m) : `<div class="noimg">${esc(textFor(p, pg.id))}</div>`}<span class="gs">${stPill(p.status).replace('class="st', 'style="font-size:10px" class="st')}</span>${p.mediaIds?.length > 1 ? `<span class="gl">▣ ${p.mediaIds.length}</span>` : lock ? '<span class="gl">🔒</span>' : ''}<div class="gd">${fmtDT(p.date)}</div></div>`; }).join('')}</div>${posts.length > (UI.gridN || 60) ? `<div style="text-align:center;margin:12px 0"><button class="btn sm" data-act="more" data-k="gridN" data-n="60">Mostrar mais (${posts.length - (UI.gridN || 60)})</button></div>` : ''}` : `<div class="empty">Ainda sem publicações para esta página.</div>`}
+    ${posts.length ? `<div class="ggrid">${posts.slice(0, UI.gridN || 60).map(p => { const m = mediaOf(p.mediaIds?.[0]); const lock = p.status === 'published' || p.status === 'publishing' || !canEdit(ws); return `<div class="gt ${lock ? 'lock' : ''}" ${lock ? '' : 'draggable="true"'} data-pid="${p.id}" data-drop="grid:${p.id}" data-act="open">${m ? mTag(m) : `<div class="noimg">${esc(textFor(p, pg.id))}</div>`}<span class="gs">${stPill(p.status).replace('class="st', 'style="font-size:10px" class="st')}</span>${p.mediaIds?.length > 1 ? `<span class="gl">${ii('images')} ${p.mediaIds.length}</span>` : lock ? '<span class="gl">' + ii('lock') + '</span>' : ''}<div class="gd">${fmtDT(p.date)}</div></div>`; }).join('')}</div>${posts.length > (UI.gridN || 60) ? `<div style="text-align:center;margin:12px 0"><button class="btn sm" data-act="more" data-k="gridN" data-n="60">Mostrar mais (${posts.length - (UI.gridN || 60)})</button></div>` : ''}` : `<div class="empty">Ainda sem publicações para esta página.</div>`}
   </div>`;
 }
 
@@ -590,7 +590,7 @@ function listHTML(ws) {
   const all = ids.length && ids.every(i => selected.has(i));
   const th = (k, n) => `<th class="s" data-act="sort" data-k="${k}">${n}${s.k === k ? (s.d > 0 ? ' ↑' : ' ↓') : ''}</th>`;
   if (!posts.length) return emptyPosts(ws);
-  return `<div class="lwrap"><table class="tb"><thead><tr><th style="width:34px"><input type="checkbox" data-act="selall" ${all ? 'checked' : ''}></th><th style="width:50px"></th>${th('text', 'Publicação')}<th>Páginas</th>${th('date', 'Data')}${th('status', 'Estado')}<th>Etiquetas</th>${th('comments', '💬')}${th('updated', 'Alterada')}</tr></thead><tbody>
+  return `<div class="lwrap"><table class="tb"><thead><tr><th style="width:34px"><input type="checkbox" data-act="selall" ${all ? 'checked' : ''}></th><th style="width:50px"></th>${th('text', 'Publicação')}<th>Páginas</th>${th('date', 'Data')}${th('status', 'Estado')}<th>Etiquetas</th>${th('comments', 'Coment.')}${th('updated', 'Alterada')}</tr></thead><tbody>
     ${posts.slice(0, UI.listN || 150).map(p => { const m = mediaOf(p.mediaIds?.[0]); return `<tr class="r ${selected.has(p.id) ? 'sel' : ''}" data-act="open" data-pid="${p.id}"><td data-stop><input type="checkbox" data-act="selone" data-pid="${p.id}" ${selected.has(p.id) ? 'checked' : ''}></td><td>${m ? mTag(m, 'th') : '<div class="th"></div>'}</td><td><div class="tx">${esc(p.text || '(sem texto)')}</div></td><td>${p.pageIds.map(id => { const g = pageOf(ws, id); return g ? pfBadge(g.platform, 'sm') : ''; }).join(' ')}</td><td style="white-space:nowrap">${fmtDT(p.date)}</td><td>${stPill(p.status)}</td><td>${(p.labels || []).map(id => lblChip(labelOf(ws, id))).join(' ')}</td><td>${(p.comments || []).length || ''}${unreadC(p) ? ' <i class="newdot"></i>' : ''}</td><td class="muted" style="white-space:nowrap">${p.updatedAt ? ago(p.updatedAt) : ''}</td></tr>`; }).join('')}
   </tbody></table>${posts.length > (UI.listN || 150) ? `<div style="text-align:center;margin:12px 0"><button class="btn sm" data-act="more" data-k="listN" data-n="150">Mostrar mais (${posts.length - (UI.listN || 150)})</button> <span class="muted">“Selecionar tudo” inclui as ${posts.length} publicações filtradas.</span></div>` : ''}</div>`;
 }
@@ -616,7 +616,7 @@ function kcard(p, ws) {
     <div class="m">${p.pageIds.slice(0, 5).map(id => { const g = pageOf(ws, id); return g ? pfBadge(g.platform, 'sm') : ''; }).join('')}<span style="margin-left:auto">${p.date ? fmtDT(p.date) : 'Sem data'}</span></div>
     <div class="x">${esc(p.text || '(sem texto)')}</div>
     ${st.total && p.status !== 'published' ? `<div class="apbar">${st.ss.map(s => `<span class="s ${st.isDone(s) ? 'done' : ''}" title="${esc(s.name)}"></span>`).join('')}</div>` : ''}
-    <div class="m">${(p.labels || []).map(id => { const l = labelOf(ws, id); return l ? `<span class="dot" style="background:${l.color};width:8px;height:8px"></span>` : ''; }).join('')}${(p.comments || []).length ? `<span>💬 ${p.comments.length}</span>` : ''}${unreadC(p) ? '<i class="newdot"></i>' : ''}${p.status === 'review' && canApprove(p, ws) ? `<button class="btn ok sm" style="margin-left:auto;height:24px" data-act="approve" data-pid="${p.id}">Aprovar</button>` : ''}</div></div>`;
+    <div class="m">${(p.labels || []).map(id => { const l = labelOf(ws, id); return l ? `<span class="dot" style="background:${l.color};width:8px;height:8px"></span>` : ''; }).join('')}${(p.comments || []).length ? `<span>${ii('chat')} ${p.comments.length}</span>` : ''}${unreadC(p) ? '<i class="newdot"></i>' : ''}${p.status === 'review' && canApprove(p, ws) ? `<button class="btn ok sm" style="margin-left:auto;height:24px" data-act="approve" data-pid="${p.id}">Aprovar</button>` : ''}</div></div>`;
 }
 function kanbanDrop(p, to) {
   const ws = S.workspaces[p.ws];

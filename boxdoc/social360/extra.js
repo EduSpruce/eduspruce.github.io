@@ -118,14 +118,14 @@ const Inbox = {
       <select class="inp" style="width:auto;height:30px" data-ch="ibplat"><option value="">Todas as redes</option>${plats.map(p => `<option value="${p}" ${UI.inboxPlat === p ? 'selected' : ''}>${PLAT[p].n}</option>`).join('')}</select>
       <select class="inp" style="width:auto;height:30px" data-ch="ibsort"><option value="prio" ${UI.inboxSort === 'prio' ? 'selected' : ''}>Prioridade</option><option value="new" ${UI.inboxSort === 'new' ? 'selected' : ''}>Mais recentes</option></select>
       ${canEdit(ws) ? `<button class="btn sm ghost" data-act="ibadd">+ Registar mensagem</button>` : ''}</div>
-      <div class="l">${l.map(i => { const pg = pageOf(ws, i.pageId); return `<div class="ibi ${UI.inboxSel === i.id ? 'on' : ''} ${i.done ? 'done' : ''} ${i.read ? '' : 'unread'}" data-act="ibsel" data-id="${i.id}"><span class="avatar" style="background:${colorFor(i.author)}">${esc(initials(i.author))}</span><div class="b"><div class="n">${pg ? pfBadge(pg.platform, 'sm') : ''}${esc(i.author)}<span class="sent sent-${i.sentiment}">${{ pos: 'Positivo', neu: 'Neutro', neg: 'Negativo' }[i.sentiment]}</span><span class="tm">${ago(i.at)}</span></div><div class="t">${esc(IB_T[i.type] || '')} · ${esc(i.text)}</div></div></div>`; }).join('') || '<div class="empty">Tudo tratado 🎉</div>'}</div></div>
+      <div class="l">${l.map(i => { const pg = pageOf(ws, i.pageId); return `<div class="ibi ${UI.inboxSel === i.id ? 'on' : ''} ${i.done ? 'done' : ''} ${i.read ? '' : 'unread'}" data-act="ibsel" data-id="${i.id}"><span class="avatar" style="background:${colorFor(i.author)}">${esc(initials(i.author))}</span><div class="b"><div class="n">${pg ? pfBadge(pg.platform, 'sm') : ''}${esc(i.author)}<span class="sent sent-${i.sentiment}">${{ pos: 'Positivo', neu: 'Neutro', neg: 'Negativo' }[i.sentiment]}</span><span class="tm">${ago(i.at)}</span></div><div class="t">${esc(IB_T[i.type] || '')} · ${esc(i.text)}</div></div></div>`; }).join('') || '<div class="empty"><div class="eic">' + I.checkc + '</div>Tudo tratado</div>'}</div></div>
       <div class="ibd">${it ? Inbox.detail(it, ws) : '<div class="empty" style="margin:auto">Escolha uma conversa.</div>'}</div></div>`;
   },
   detail(it, ws) {
     const pg = pageOf(ws, it.pageId); const post = it.postId && S.posts[it.postId];
     const ids = [...new Set([...(ws.members || []).map(m => m.id), Store.me])];
     return `<div class="h"><span class="avatar" style="background:${colorFor(it.author)}">${esc(initials(it.author))}</span><div><b>${esc(it.author)}</b><div class="muted">${pg ? esc(PLAT[pg.platform].n + ' · ' + pg.name) : ''} · ${esc(IB_T[it.type] || '')}</div></div><div style="flex:1"></div>
-      <select class="inp" style="width:auto;height:30px" data-ch="ibsent" data-id="${it.id}" ${canEdit(ws) ? '' : 'disabled'}>${[['pos', '🙂 Positivo'], ['neu', '😐 Neutro'], ['neg', '🙁 Negativo']].map(([k, n]) => `<option value="${k}" ${it.sentiment === k ? 'selected' : ''}>${n}</option>`).join('')}</select>
+      <select class="inp" style="width:auto;height:30px" data-ch="ibsent" data-id="${it.id}" ${canEdit(ws) ? '' : 'disabled'}>${[['pos', 'Positivo'], ['neu', 'Neutro'], ['neg', 'Negativo']].map(([k, n]) => `<option value="${k}" ${it.sentiment === k ? 'selected' : ''}>${n}</option>`).join('')}</select>
       <select class="inp" style="width:auto;height:30px" data-ch="ibassign" data-id="${it.id}" ${canEdit(ws) ? '' : 'disabled'}><option value="">Sem responsável</option>${ids.map(id => `<option value="${id}" ${it.assignee === id ? 'selected' : ''}>${esc(Store.name(id))}</option>`).join('')}</select>
       ${canEdit(ws) ? `<button class="btn sm ${it.done ? '' : 'ok'}" data-act="ibdone" data-id="${it.id}">${it.done ? 'Reabrir' : I.check + ' Marcar como tratada'}</button>` : ''}</div>
       <div class="th">${post ? `<div class="card" style="font-size:12.5px;align-self:stretch;cursor:pointer" data-act="open" data-pid="${post.id}"><span class="muted">Na publicação:</span> ${esc((post.text || '').slice(0, 140))}</div>` : ''}
@@ -253,7 +253,7 @@ const Settings = {
       return `<select class="inp" data-pgmeta="${pg.id}" style="width:210px;height:30px" title="Conta da Meta onde esta página publica"><option value="">Publicar à mão (sem ligação)</option>${ops.map(c => `<option value="${esc(c.fb)}" ${pg.meta && pg.meta.fb === c.fb ? 'selected' : ''}>${esc(pg.platform === 'instagram' ? '@' + c.igNome : c.fbNome)}</option>`).join('')}</select>`; };
     return `<h3>Páginas</h3><p class="muted" style="margin:0">${sb ? 'As páginas do Facebook e do Instagram ligadas à Meta publicam sozinhas à hora marcada, mesmo com os computadores desligados. As outras redes ficam «por publicar à mão»: o Social360 lembra e regista.' : 'Cada página corresponde a uma conta numa rede. Sem a base de dados da EPISJ 360, o envio é simulado.'}</p>
       ${sb && a ? `<div class="metabox"><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><b style="flex:1">Facebook e Instagram</b><button class="btn pri" data-act="metaligar">${contas.length ? 'Ligar mais páginas / voltar a ligar' : 'Ligar ao Facebook e Instagram'}</button>${contas.length ? '<button class="btn" data-act="metaauto">Usar estas contas nas páginas</button>' : ''}</div>
-        ${contas.length ? contas.map(c => `<div class="rowl">${pfBadge('facebook')}<div class="g"><b>${esc(c.fbNome)}</b>${c.ig ? ` · ${pfBadge('instagram', 'sm')} @${esc(c.igNome)}` : ' · <span class="muted">sem Instagram profissional associado</span>'}<div class="muted">${c.estado === 'ok' ? 'Ligada' : '⚠ ' + esc(c.erro || 'A autorização expirou: volte a ligar.')} · por ${esc(Store.name(c.por))} · ${ago(c.em)}</div></div><button class="btn sm bad" data-act="metadesligar" data-id="${esc(c.fb)}">Desligar</button></div>`).join('') : `<p class="muted" style="margin:6px 0 0">Entre com uma conta que administre a página do Facebook da escola. O Instagram tem de ser uma conta profissional associada a essa página.</p>`}</div>` : ''}
+        ${contas.length ? contas.map(c => `<div class="rowl">${pfBadge('facebook')}<div class="g"><b>${esc(c.fbNome)}</b>${c.ig ? ` · ${pfBadge('instagram', 'sm')} @${esc(c.igNome)}` : ' · <span class="muted">sem Instagram profissional associado</span>'}<div class="muted">${c.estado === 'ok' ? 'Ligada' : ii('alert') + ' ' + esc(c.erro || 'A autorização expirou: volte a ligar.')} · por ${esc(Store.name(c.por))} · ${ago(c.em)}</div></div><button class="btn sm bad" data-act="metadesligar" data-id="${esc(c.fb)}">Desligar</button></div>`).join('') : `<p class="muted" style="margin:6px 0 0">Entre com uma conta que administre a página do Facebook da escola. O Instagram tem de ser uma conta profissional associada a essa página.</p>`}</div>` : ''}
       <div>${ws.pages.map(pg => `<div class="rowl">${pfBadge(pg.platform, 'lg')}<div class="g"><input class="inp" data-pgf="name" data-id="${pg.id}" value="${esc(pg.name)}" ${a ? '' : 'readonly'} style="height:30px"></div><input class="inp" data-pgf="handle" data-id="${pg.id}" value="${esc(pg.handle || '')}" placeholder="@utilizador" style="width:150px;height:30px" ${a ? '' : 'readonly'}>${sel(pg) || `<span class="muted" style="width:210px">${esc(PLAT[pg.platform].n)}${sb ? ' · publicar à mão' : ''}</span>`}${a ? `<button class="btn sm bad" data-act="rmpage" data-id="${pg.id}">Remover</button>` : ''}</div>`).join('') || '<div class="muted">Sem páginas.</div>'}</div>
       ${canAdmin(ws) ? `<div><button class="btn pri" data-act="addpage">${I.plus} Adicionar página</button></div>` : ''}`;
   },
@@ -295,7 +295,7 @@ const Settings = {
       <div>${ts.map(t => `<div class="rowl"><div class="g"><b>${esc(t.name)}</b><div class="muted" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(t.text)}</div></div>${canEdit(ws) ? `<button class="btn sm pri" data-act="usetpl" data-id="${t.id}">Usar</button><button class="btn sm bad" data-act="rmtpl" data-id="${t.id}">Eliminar</button>` : ''}</div>`).join('') || '<div class="muted">Sem modelos.</div>'}</div>`;
   },
   dados(ws) {
-    return `<h3>Dados</h3><div class="muted">Social360 ${S360_VER} · armazenamento: <b>${Store.mode === 'sb' ? 'base de dados da EPISJ 360 (Supabase), partilhada com a equipa e com tempo real' : Store.mode === 'db' ? 'partilhado (todas as pessoas com acesso veem os mesmos dados)' : 'local (só neste browser)'}</b></div>
+    return `<h3>Dados</h3><div class="muted">Social360 ${S360_VER} · armazenamento: <b>${Store.mode === 'sb' ? 'base de dados da EPISJ 360 (Supabase), partilhada com a equipa e com tempo real' : Store.mode === 'db' ? 'partilhado (todas as pessoas com acesso veem os mesmos dados)' : 'local (só neste navegador)'}</b></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-act="export">Copiar exportação deste espaço (JSON)</button>${canNewWS() ? `<button class="btn imp" data-act="import">Importar JSON</button>` : ''}${Store.mode !== 'sb' && canEdit(ws) && !Store.all('workspaces').some(w => w.name === 'Café Aurora') ? `<button class="btn" data-act="example">Carregar dados de exemplo</button>` : ''}${Store.mode === 'local' ? `<button class="btn bad" data-act="wipe">Apagar todos os dados locais</button>` : ''}</div>`;
   }
 };
@@ -388,7 +388,7 @@ function shareDialog(p) {
     body: `<p style="margin:0">Para outra pessoa ver, comentar e aprovar:</p>
       <ol style="margin:0;padding-left:20px;line-height:1.7"><li>Na página desta app no Claude, abre <b>Partilhar</b> e dá acesso à pessoa (nível <b>Contribuidor</b> para comentar e aprovar).</li><li>Nas <b>Definições → Membros</b>, adiciona-a ao espaço com a função certa (ex.: <i>Aprovador / cliente</i>, que não vê notas internas).</li><li>Envia-lhe a ligação da app com este final, para abrir diretamente ${p ? 'esta publicação' : 'esta vista'}:</li></ol>
       <div style="display:flex;gap:8px"><input class="inp" readonly value="${esc(anchor)}"><button class="btn pri" id="cpy">Copiar</button></div>
-      ${Store.mode === 'local' ? '<div class="banner" style="border-radius:8px">Está em modo local: os dados só existem neste browser, por isso outras pessoas não os veem.</div>' : ''}`,
+      ${Store.mode === 'local' ? '<div class="banner" style="border-radius:8px">Está em modo local: os dados só existem neste navegador, por isso outras pessoas não os veem.</div>' : ''}`,
     onOpen: ov => $('#cpy', ov).onclick = () => copyText(anchor)
   });
 }
@@ -422,7 +422,7 @@ const A = {
   viewsmenu(el) {
     const ws = curWS(); const vs = Store.all('views').filter(v => v.ws === ws.id);
     const any = UI.f.pages.length || UI.f.labels.length || UI.f.status.length || UI.f.q;
-    openPop(el, `${vs.map(v => `<button class="pi" data-v="o:${v.id}">☆ ${esc(v.name)} <span class="muted" style="margin-left:auto">${esc(VIEWS[v.view] || '')}</span></button>`).join('') || '<div class="muted" style="padding:8px">Ainda sem vistas guardadas.</div>'}${any ? '<hr><button class="pi" data-v="save">＋ Guardar a vista atual</button>' : ''}${vs.length ? '<hr><div class="ph">Apagar</div>' + vs.map(v => `<button class="pi bad" data-v="d:${v.id}">✕ ${esc(v.name)}</button>`).join('') : ''}`, v => {
+    openPop(el, `${vs.map(v => `<button class="pi" data-v="o:${v.id}">${ii('star')} ${esc(v.name)} <span class="muted" style="margin-left:auto">${esc(VIEWS[v.view] || '')}</span></button>`).join('') || '<div class="muted" style="padding:8px">Ainda sem vistas guardadas.</div>'}${any ? '<hr><button class="pi" data-v="save">＋ Guardar a vista atual</button>' : ''}${vs.length ? '<hr><div class="ph">Apagar</div>' + vs.map(v => `<button class="pi bad" data-v="d:${v.id}">✕ ${esc(v.name)}</button>`).join('') : ''}`, v => {
       if (v === 'save') A.saveview();
       else if (v.startsWith('o:')) { const x = S.views[v.slice(2)]; if (x) { UI.f = clone(x.f); go(x.view); } }
       else if (v.startsWith('d:')) Store.del('views', v.slice(2));
@@ -434,7 +434,7 @@ const A = {
   new: () => Comp.start(null),
   newmenu(el) {
     const ws = curWS(); const ts = Store.all('templates').filter(t => t.ws === ws.id);
-    openPop(el, `<button class="pi" data-v="new">✏️ Nova publicação</button><button class="pi" data-v="newnd">📌 Ideia sem data</button>${ts.length ? '<hr><div class="ph">A partir de modelo</div>' + ts.map(t => `<button class="pi" data-v="t:${t.id}">📄 ${esc(t.name)}</button>`).join('') : ''}`, v => {
+    openPop(el, `<button class="pi" data-v="new">${ii('pencil')} Nova publicação</button><button class="pi" data-v="newnd">${ii('pin')} Ideia sem data</button>${ts.length ? '<hr><div class="ph">A partir de modelo</div>' + ts.map(t => `<button class="pi" data-v="t:${t.id}">${ii('file')} ${esc(t.name)}</button>`).join('') : ''}`, v => {
       if (v === 'new') Comp.start(null);
       else if (v === 'newnd') Comp.start(null, { data: { date: null } });
       else useTemplate(v.slice(2));
@@ -494,7 +494,7 @@ const A = {
   },
   wsmenu(el) {
     const ws = curWS();
-    openPop(el, `<button class="pi" data-v="set">⚙️ Definições do espaço</button><button class="pi" data-v="pages">🔌 Páginas</button><button class="pi" data-v="mem">👥 Membros</button><button class="pi" data-v="ap">✅ Fluxo de aprovação</button>`, v => { UI.setTab = { set: 'geral', pages: 'paginas', mem: 'membros', ap: 'aprovacoes' }[v]; go('definicoes'); });
+    openPop(el, `<button class="pi" data-v="set">${ii('gear')} Definições do espaço</button><button class="pi" data-v="pages">${ii('plug')} Páginas</button><button class="pi" data-v="mem">${ii('users')} Membros</button><button class="pi" data-v="ap">${ii('checkc')} Fluxo de aprovação</button>`, v => { UI.setTab = { set: 'geral', pages: 'paginas', mem: 'membros', ap: 'aprovacoes' }[v]; go('definicoes'); });
   },
   addpage: () => addPageDialog(curWS()),
   addlabel: () => labelDialog(curWS()),
@@ -645,7 +645,7 @@ const A = {
       UI.ws = w.id; saveUI(); toast('Importado.');
     } });
   },
-  wipe() { dialog({ title: 'Apagar dados locais', danger: true, ok: 'Apagar tudo', body: '<p style="margin:0">Apaga todos os espaços, publicações e media guardados neste browser.</p>', onOk: () => { COLLS.forEach(c => S[c] = {}); lsSet(LSKEY, '{}'); UI.ws = null; Store.emit(); } }); }
+  wipe() { dialog({ title: 'Apagar dados locais', danger: true, ok: 'Apagar tudo', body: '<p style="margin:0">Apaga todos os espaços, publicações e media guardados neste navegador.</p>', onOk: () => { COLLS.forEach(c => S[c] = {}); lsSet(LSKEY, '{}'); UI.ws = null; Store.emit(); } }); }
 };
 function pickWS(anchor, cb) {
   const cur = curWS();

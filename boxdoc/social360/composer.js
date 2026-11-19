@@ -75,7 +75,7 @@ const Comp = {
   renderHead() {
     const ws = this.ws(), p = this.post, el = $('#c-head'); if (!el) return;
     el.innerHTML = `<span class="pf lg" style="background:${ws.color}">${esc(initials(ws.name))}</span><h3>${this.isNew ? 'Nova publicação' : 'Editar publicação'} <span class="muted" style="font-weight:400">· ${esc(ws.name)}</span></h3>${stPill(p.status)}${p.autoSchedule ? '<span class="muted">· agenda automaticamente ao aprovar</span>' : ''}${p.status === 'failed' ? '<span class="muted" style="color:#b42318">· veja o motivo em Atividade</span>' : ''}<div style="flex:1"></div>
-      <button class="btn sm ghost" data-cact="toggleside" id="ctgl" style="display:none">💬 Comentários</button>
+      <button class="btn sm ghost" data-cact="toggleside" id="ctgl" style="display:none">${ii('chat')} Comentários</button>
       <button class="icbtn" data-cact="close" title="Fechar (Esc)">${I.x}</button>`;
     if (innerWidth <= 1100) $('#ctgl').style.display = '';
   },
@@ -98,10 +98,10 @@ const Comp = {
       ${fmts.length > 1 ? `<div class="fld"><label>Formato <span class="muted" style="font-weight:400">· mudar o formato mantém comentários e aprovações</span></label><select class="inp" data-cch="format" ${ed ? '' : 'disabled'}>${fmts.map(f => `<option value="${f}" ${p.format === f ? 'selected' : ''}>${FMT[f] || f}</option>`).join('')}</select></div>` : ''}
       ${this.fmtExtra(p, plats, ed)}
       <div>
-        <div class="etabs"><button class="etab ${this.tab === 'all' ? 'on' : ''}" data-cact="etab" data-id="all">✦ Todas as páginas</button>${sel.map(pg => `<button class="etab ${this.tab === pg.id ? 'on' : ''}" data-cact="etab" data-id="${pg.id}">${pfBadge(pg.platform, 'sm')}${esc(PLAT[pg.platform].n)}${p.custom?.[pg.id]?.on ? '<span class="cu" title="Personalizado"></span>' : ''}</button>`).join('')}</div>
+        <div class="etabs"><button class="etab ${this.tab === 'all' ? 'on' : ''}" data-cact="etab" data-id="all">${ii('globe')} Todas as páginas</button>${sel.map(pg => `<button class="etab ${this.tab === pg.id ? 'on' : ''}" data-cact="etab" data-id="${pg.id}">${pfBadge(pg.platform, 'sm')}${esc(PLAT[pg.platform].n)}${p.custom?.[pg.id]?.on ? '<span class="cu" title="Personalizado"></span>' : ''}</button>`).join('')}</div>
         ${tabPage ? `<div style="display:flex;align-items:center;gap:8px;padding:8px 0"><span class="tgl ${cust ? 'on' : ''}" data-cact="custom"><i></i>Personalizar para ${esc(tabPage.name)}</span><span class="muted">${cust ? 'Este texto só vai para esta página.' : 'Use o texto comum.'}</span></div>` : '<div style="height:8px"></div>'}
         <div class="ed drop" id="c-drop"><textarea id="ctext" placeholder="Escreva a sua publicação… (arraste imagens para aqui)" ${ed && (this.tab === 'all' || cust) ? '' : 'readonly'}>${esc(val)}</textarea>
-          <div class="tb2"><button data-cact="emoji" title="Emoji">😊</button><button data-cact="hashtag" title="Hashtags">#</button><button data-cact="mentionp" title="Mencionar">@</button>${Store.sample ? `<button data-cact="aiopen" title="Assistente de escrita" style="color:#6d4fc2;font-weight:600">${I.spark.replace('<svg', '<svg width="14" height="14" style="vertical-align:-2px"')} IA</button>` : ''}<span class="sp"></span><span class="limits" id="c-lim"></span></div></div>
+          <div class="tb2"><button data-cact="emoji" title="Emoji">${ii('smile')}</button><button data-cact="hashtag" title="Hashtags">#</button><button data-cact="mentionp" title="Mencionar">@</button>${Store.sample ? `<button data-cact="aiopen" title="Assistente de escrita" style="color:#6d4fc2;font-weight:600">${I.spark.replace('<svg', '<svg width="14" height="14" style="vertical-align:-2px"')} IA</button>` : ''}<span class="sp"></span><span class="limits" id="c-lim"></span></div></div>
       </div>
       <div class="fld"><label>Media <span class="muted" style="font-weight:400">· arraste para reordenar</span></label><div class="mthumbs" id="c-thumbs">${p.mediaIds.map((id, i) => { const m = mediaOf(id); return m ? `<div class="mth" draggable="${ed}" data-mi="${i}">${mTag(m)}<span class="ix">${i + 1}</span>${ed ? `<button class="rm" data-cact="mrm" data-i="${i}">×</button>` : ''}</div>` : ''; }).join('')}
         ${ed ? `<button class="madd imp" data-cact="upload"><b>+</b>Carregar</button><button class="madd" data-cact="library"><b>▦</b>Biblioteca</button>` : ''}</div>
@@ -161,7 +161,7 @@ const Comp = {
     if (!p.pageIds.includes(this.pv)) this.pv = p.pageIds[0] || null;
     const hasMedia = p.mediaIds.length > 0;
     el.innerHTML = `<div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;width:100%;align-items:center">${p.pageIds.map(id => { const pg = pageOf(ws, id); return pg ? `<button class="ptab ${this.pv === id ? 'on' : ''}" data-cact="pv" data-id="${id}">${pfBadge(pg.platform, 'sm')}${esc(pg.name)}</button>` : ''; }).join('')}
-      ${hasMedia && !Store.readOnly ? `<button class="btn sm ${this.annot ? 'pri' : ''}" data-cact="annot" style="margin-left:8px">📍 ${this.annot ? 'A anotar — clique na imagem' : 'Anotar imagem'}</button>` : ''}</div>
+      ${hasMedia && !Store.readOnly ? `<button class="btn sm ${this.annot ? 'pri' : ''}" data-cact="annot" style="margin-left:8px">${ii('pin')} ${this.annot ? 'A anotar — clique na imagem' : 'Anotar imagem'}</button>` : ''}</div>
       <div class="${this.annot ? 'annot-on' : ''}" id="c-pvbox" style="width:100%;display:flex;justify-content:center">${preview(p, this.pv, { pins: true })}</div>
       <div class="muted" style="text-align:center;max-width:460px">Pré-visualização aproximada. ${Act.problems(p).map(esc).join(' ')}</div>`;
     const box = $('#c-pvbox');
@@ -182,9 +182,9 @@ const Comp = {
     const annIdx = c => (p.comments || []).filter(x => x.mediaId).indexOf(c) + 1;
     let body = '';
     if (this.side === 'comments') {
-      body = `<div class="clist" id="c-clist">${cs.map(c => `<div class="cm ${c.internal ? 'int' : ''} ${c.resolved ? 'res' : ''}" id="cm-${c.id}">${avatar(c.by, 'sm')}<div class="bd"><div class="bx"><div class="who">${esc(Store.name(c.by))}<span class="tm">${ago(c.at)}</span>${c.internal ? '<span class="tm">· 🔒 interno</span>' : ''}</div><div class="txt">${c.mediaId ? `<span class="pn">${annIdx(c)}</span>` : ''}${esc(c.text).replace(/@([\p{L}][\p{L}\s]{0,30}?)(?=[\s.,!?]|$)/gu, '<span class="mn">@$1</span>')}</div></div>
+      body = `<div class="clist" id="c-clist">${cs.map(c => `<div class="cm ${c.internal ? 'int' : ''} ${c.resolved ? 'res' : ''}" id="cm-${c.id}">${avatar(c.by, 'sm')}<div class="bd"><div class="bx"><div class="who">${esc(Store.name(c.by))}<span class="tm">${ago(c.at)}</span>${c.internal ? '<span class="tm">· ' + ii('lock') + ' interno</span>' : ''}</div><div class="txt">${c.mediaId ? `<span class="pn">${annIdx(c)}</span>` : ''}${esc(c.text).replace(/@([\p{L}][\p{L}\s]{0,30}?)(?=[\s.,!?]|$)/gu, '<span class="mn">@$1</span>')}</div></div>
         <div class="ca">${!Store.readOnly ? `<button data-cact="resolve" data-id="${c.id}">${c.resolved ? 'Reabrir' : 'Resolver'}</button>${c.by === Store.me || canAdmin(ws) ? `<button data-cact="delc" data-id="${c.id}">Eliminar</button>` : ''}` : ''}</div></div></div>`).join('') || `<div class="empty" style="padding:30px 10px">Sem comentários.<br>Deixe feedback, faça perguntas ou anote a imagem.</div>`}</div>
-        ${!Store.readOnly ? `<div class="cin">${this.pendingAnnot ? `<div class="muted">📍 Comentário na imagem (${this.pendingAnnot.x}%, ${this.pendingAnnot.y}%) <button class="morel" data-cact="cancelannot">cancelar</button></div>` : ''}<textarea id="c-cin" placeholder="Comentar… use @ para mencionar"></textarea><div class="r">${!hideInternal ? `<span class="tgl ${this.internal ? 'on' : ''}" data-cact="internal"><i></i>Interno</span>` : ''}<button class="btn sm ghost" data-cact="mention">@</button><div style="flex:1"></div><button class="btn pri sm" data-cact="send">Comentar</button></div></div>` : ''}`;
+        ${!Store.readOnly ? `<div class="cin">${this.pendingAnnot ? `<div class="muted">${ii('pin')} Comentário na imagem (${this.pendingAnnot.x}%, ${this.pendingAnnot.y}%) <button class="morel" data-cact="cancelannot">cancelar</button></div>` : ''}<textarea id="c-cin" placeholder="Comentar… use @ para mencionar"></textarea><div class="r">${!hideInternal ? `<span class="tgl ${this.internal ? 'on' : ''}" data-cact="internal"><i></i>Interno</span>` : ''}<button class="btn sm ghost" data-cact="mention">@</button><div style="flex:1"></div><button class="btn pri sm" data-cact="send">Comentar</button></div></div>` : ''}`;
     } else if (this.side === 'activity') {
       const st = apState(p, ws);
       body = `<div class="clist">${pubHTML(p) ? `<div class="card" style="padding:10px"><b style="font-size:13px">Publicação nas redes</b><div style="margin-top:6px">${pubHTML(p)}</div></div>` : ''}${st.total ? `<div class="card" style="padding:10px"><b style="font-size:13px">Aprovações (${st.done}/${st.total})</b>${st.ss.map((s, i) => { const a = (p.approvals || []).find(x => x.step === s.id); return `<div class="step" style="margin-top:6px;background:${a ? '#e3f6e3' : 'var(--bg)'}"><span class="n" style="${a ? 'background:var(--ok)' : ''}">${a ? '✓' : i + 1}</span><div style="flex:1"><div style="font-weight:600;font-size:12.5px">${esc(s.name)}</div><div class="muted">${a ? 'por ' + esc(Store.name(a.by)) + ' · ' + ago(a.at) : s.approver ? 'aguarda ' + esc(Store.name(s.approver)) : 'qualquer membro'}</div></div></div>`; }).join('')}</div>` : ''}
@@ -198,7 +198,7 @@ const Comp = {
         <div class="muted">O texto é gerado pelo Claude e aplica-se ao separador aberto no editor.</div></div></div>`;
     }
     const nC = cs.filter(c => !c.resolved).length;
-    el.innerHTML = `<div class="ctabs"><button class="${this.side === 'comments' ? 'on' : ''}" data-cact="side" data-v="comments">Comentários${nC ? ' (' + nC + ')' : ''}</button><button class="${this.side === 'activity' ? 'on' : ''}" data-cact="side" data-v="activity">Atividade</button>${Store.sample && canEdit(ws) ? `<button class="${this.side === 'ai' ? 'on' : ''}" data-cact="side" data-v="ai">✨ IA</button>` : ''}</div>${body}`;
+    el.innerHTML = `<div class="ctabs"><button class="${this.side === 'comments' ? 'on' : ''}" data-cact="side" data-v="comments">Comentários${nC ? ' (' + nC + ')' : ''}</button><button class="${this.side === 'activity' ? 'on' : ''}" data-cact="side" data-v="activity">Atividade</button>${Store.sample && canEdit(ws) ? `<button class="${this.side === 'ai' ? 'on' : ''}" data-cact="side" data-v="ai">${ii('spark')} IA</button>` : ''}</div>${body}`;
     const ci = $('#c-cin'); if (ci) ci.addEventListener('keydown', e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); this.sendComment(); } });
     const cl = $('#c-clist'); if (cl) cl.scrollTop = cl.scrollHeight;
   },
@@ -207,7 +207,7 @@ const Comp = {
     const ed = canEdit(ws); const st = apState(p, ws); const pub = p.status === 'published';
     const L = [];
     if (!this.isNew && ed) L.push(`<button class="btn ghost sm bad" data-cact="delete">Eliminar</button>`, `<button class="btn ghost sm" data-cact="dup">Duplicar</button>`, `<button class="btn ghost sm" data-cact="tpl">Guardar como modelo</button>`);
-    if (!this.isNew) L.push(`<button class="btn ghost sm" data-cact="link">🔗 Copiar ligação</button>`);
+    if (!this.isNew) L.push(`<button class="btn ghost sm" data-cact="link">${ii('link')} Copiar ligação</button>`);
     const R = [];
     if (pub) R.push(`<span class="muted">Publicada ${p.publishedAt ? ago(p.publishedAt) : ''}${Store.mode === 'sb' ? '' : ' (envio simulado)'}</span>`);
     else if (p.status === 'publishing') R.push('<span class="muted">A publicar… (o servidor trata disto; pode fechar)</span>');
@@ -360,7 +360,7 @@ const CA = {
   sched() { Comp.run(p => { const r = Act.schedule(p); return r; }); if (S.posts[Comp.post.id]?.status === 'scheduled') Comp.close(true); },
   schedmenu(el) {
     const ws = Comp.ws(); const st = apState(Comp.post, ws);
-    openPop(el, `<button class="pi" data-v="now" ${needsApproval(ws) && !st.full ? 'disabled style="opacity:.4"' : ''}>🚀 Publicar agora</button><button class="pi" data-v="sched">🗓️ Agendar para a data escolhida</button><hr><button class="pi" data-v="draft">💾 Guardar como rascunho</button>`, v => {
+    openPop(el, `<button class="pi" data-v="now" ${needsApproval(ws) && !st.full ? 'disabled style="opacity:.4"' : ''}>${ii('zap')} Publicar agora</button><button class="pi" data-v="sched">${ii('cal')} Agendar para a data escolhida</button><hr><button class="pi" data-v="draft">${ii('save')} Guardar como rascunho</button>`, v => {
       if (v === 'now') { if (needsApproval(ws) && !st.full) { toast('Precisa de aprovação primeiro.', 'err'); return; } Comp.run(p => Act.publishNow(p)); }
       if (v === 'sched') CA.sched();
       if (v === 'draft') CA.save();

@@ -482,3 +482,10 @@ textarea.inp{height:auto;padding:9px 10px;resize:vertical;line-height:1.45}
 }
 
 number-flow{--number-flow-char-height:1.05em;font-variant-numeric:tabular-nums}
+
+/* 0.4: ícones de linha em vez de emojis, como na EPISJ 360 */
+.ii{width:1.05em;height:1.05em;vertical-align:-.18em;flex:none;display:inline-block}
+.eic{width:56px;height:56px;margin:0 auto 12px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(180deg,#f6f8fc,#edf1f8);box-shadow:inset 0 0 0 1px rgba(22,50,105,.07);color:#41506b}
+.eic svg{width:26px;height:26px;stroke-width:1.65}
+.pv .icons span,.pv .acts span{display:inline-flex;align-items:center;gap:5px}
+.pv .vside .ii{width:26px;height:26px}
