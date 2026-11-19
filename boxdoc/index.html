@@ -1106,6 +1106,72 @@ i.crgm span{overflow:hidden;text-overflow:ellipsis}
 .crcj{border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:10px;background:#fff}.crcjh{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .crcj ul{margin:8px 0 2px;padding-left:18px}.crcj li{margin:5px 0;line-height:1.45}
 .crdefg{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-bottom:6px}
+
+/* 0.9.78: Anos letivos redesenhados */
+.ay-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+.ay-hero{border:1px solid var(--line);border-radius:14px;padding:18px 20px;background:linear-gradient(180deg,var(--brandbg),transparent 70%)}
+.ay-top{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px}
+.ay-name{font-size:30px;font-weight:650;letter-spacing:-.03em;color:var(--ink);line-height:1;border:0;background:transparent;width:5.6em;padding:2px 0;font-family:inherit}
+.ay-name:focus{outline:2px solid var(--ring);border-radius:6px}
+.ay-dates{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:13px}
+.ay-dates input{padding:4px 6px;font-size:13px;width:auto}
+.ay-top .grow{flex:1}
+.ay-pct{font-size:13px;color:var(--muted);text-align:right}.ay-pct b{display:block;font-size:26px;color:var(--brand);font-weight:650;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.ay-rib{position:relative;height:38px;margin:22px 0 26px;border-radius:9px;background:#e9edf4;overflow:visible}
+.ay-rib .seg{position:absolute;top:0;bottom:0}
+.ay-rib .per{background:var(--sky);border-right:2px solid #fff}
+.ay-rib .per:nth-child(even){background:#c3d4f6}
+.ay-rib .per span{position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:11.5px;font-weight:600;color:var(--brand);white-space:nowrap;overflow:hidden;max-width:calc(100% - 10px)}
+.ay-rib .done{background:var(--brand);opacity:.16;border-radius:9px 0 0 9px;pointer-events:none}
+.ay-rib .int{background:repeating-linear-gradient(135deg,#f5b84a 0 4px,#fde7bd 4px 8px);min-width:3px}
+.ay-rib .fer{background:#dc4a4a;min-width:2px;top:6px;bottom:6px;border-radius:2px}
+.ay-rib .mes{position:absolute;top:100%;margin-top:5px;font-size:10.5px;color:var(--muted);transform:translateX(-50%);text-transform:capitalize}
+.ay-rib .mes:before{content:"";position:absolute;left:50%;top:-9px;height:5px;border-left:1px solid #c5ccd8}
+.ay-rib .hoje{position:absolute;top:-8px;bottom:-8px;width:2px;background:var(--ink);border-radius:2px;z-index:2}
+.ay-rib .hoje:after{content:"hoje";position:absolute;top:-17px;left:50%;transform:translateX(-50%);font-size:10.5px;font-weight:600;color:var(--ink)}
+.ay-leg{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--muted);margin:-6px 0 14px}
+.ay-leg i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:5px}
+.ay-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.ay-st{background:var(--card,#fff);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.ay-st small{display:block;color:var(--muted);font-size:12px}.ay-st b{font-size:20px;font-weight:650;color:var(--ink);font-variant-numeric:tabular-nums}.ay-st em{font-style:normal;color:var(--muted);font-size:12px;display:block}
+.ay-tur{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px;align-items:flex-start}
+.ay-tg{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.ay-tg>span{font-size:12px;color:var(--muted);margin-right:2px}
+.ay-chip{font-size:12px;font-weight:600;padding:3px 8px;border-radius:999px;background:var(--brandbg);color:var(--brand);border:1px solid transparent}
+.ay-chip.c1{background:#e8f1ff;color:#1d4ed8}.ay-chip.c2{background:#eef0ff;color:#4338ca}.ay-chip.fin{background:#fff4e0;color:#a16207;border-color:#f5d48f}
+.ay-acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.ay-others{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:12px;margin-top:14px}
+.ay-o{border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;position:relative}
+.ay-o .ay-name{font-size:19px}
+.ay-o .ay-mini{height:6px;border-radius:4px;background:#e9edf4;overflow:hidden}.ay-o .ay-mini i{display:block;height:100%;background:#9aa6ba}
+.ay-o .ay-dates{display:grid;grid-template-columns:1fr auto 1fr}.ay-o .ay-dates input{font-size:12px;width:100%;min-width:0;box-sizing:border-box}
+.ay-others{align-items:start}
+.ay-new input[type=date],.ay-new input[type=text]{width:100%;min-width:0;box-sizing:border-box}.ay-new form .r2 label{min-width:0}
+.ay-o .x{position:absolute;top:8px;right:8px}
+.ay-o.prep{border-style:dashed;border-color:#b9c7e6;background:var(--brandbg)}
+.ay-new{border:1.5px dashed #b9c7e6;border-radius:12px;padding:12px 14px;background:transparent;display:flex;flex-direction:column;gap:8px}
+.ay-new summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;color:var(--brand);font-weight:600}
+.ay-new summary::-webkit-details-marker{display:none}
+.ay-new summary .pl{width:30px;height:30px;border-radius:50%;background:var(--brandbg);display:grid;place-items:center;font-size:20px;line-height:1}
+.ay-new form{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.ay-new form .r2{display:flex;gap:8px}.ay-new form .r2 label{flex:1}
+.ay-new .prev{font-size:12px;color:var(--muted);line-height:1.5}
+.ay-g{overflow-x:auto}
+.ay-g table{border-collapse:separate;border-spacing:0;width:100%;min-width:560px}
+.ay-g th{font-size:11.5px;font-weight:600;color:var(--muted);padding:6px 4px;text-align:center;white-space:nowrap}
+.ay-g th.on,.ay-g td.on{background:var(--brandbg)}
+.ay-g th.on{color:var(--brand);border-radius:8px 8px 0 0}
+.ay-g td{padding:4px 0;border-top:1px solid #eef1f5;height:32px}
+.ay-g td.nm{text-align:left;padding-right:12px;font-size:12.5px;white-space:nowrap;max-width:280px;overflow:hidden;text-overflow:ellipsis}
+.ay-g td.nm b{color:var(--ink)}.ay-g td.nm span{color:var(--muted)}
+.ay-g .bar{height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#fff;background:#6b86c4}
+.ay-g .bar.s{border-radius:7px 0 0 7px}.ay-g .bar.e{border-radius:0 7px 7px 0}.ay-g .bar.s.e{border-radius:7px}
+.ay-g .bar.y1{background:#7aa2e8}.ay-g .bar.y2{background:#4f74c9}.ay-g .bar.y3{background:var(--brand)}
+.ay-g .bar.past{opacity:.45}
+.ay-g .bar.fin{box-shadow:inset -3px 0 0 #f5b84a}
+.ay-g th.nx{color:#b0b7c4;font-weight:500}
+.ay-g td.bc{padding:4px 0}
+@media(max-width:640px){.ay-name{font-size:24px}.ay-rib .per span{display:none}.ay-pct{text-align:left}}
 </style>
 <style>
 /* 0.9.60: o verde é só dos botões de importar — nenhum outro botão é verde, para se distinguirem logo */
@@ -1288,25 +1354,17 @@ html.ios-aberto,html.ios-aberto body{overflow:hidden}
 </section>
 
 <section id="anos">
-  <div class="card">
-    <h2>Anos letivos</h2>
-    <p class="hint">Só um ano letivo está <b>ativo</b> de cada vez — é o que todos os módulos usam (relatórios e emails do Box360, horário do Horário360). As turmas passam de um ano para o outro sozinhas, pelo ano de início e de fim de cada uma.</p>
-    <table class="rt">
-      <thead><tr><th>Ano letivo</th><th>Início das aulas</th><th>Fim das aulas</th><th>Estado</th><th class="hm">Turmas</th><th></th></tr></thead>
-      <tbody id="tbAnos"></tbody>
-    </table>
+  <div class="card ay-card">
+    <div class="ay-head"><div><h2>Anos letivos</h2>
+    <p class="hint" style="margin:2px 0 0">Só um ano letivo está <b>ativo</b> de cada vez — é o que todos os módulos usam. As turmas passam de um ano para o outro sozinhas, pelo ano de início e de fim de cada uma.</p></div></div>
+    <div id="ayHero"></div>
+    <div class="ay-others" id="ayOthers"></div>
+    <div id="naMsg"></div>
   </div>
   <div class="card">
-    <h2>Criar ano letivo</h2>
-    <form id="naForm" class="row" autocomplete="off">
-      <label style="width:140px">Ano letivo<input type="text" id="naNome"></label>
-      <label>Início<input type="date" id="naIni"></label>
-      <label>Fim<input type="date" id="naFim"></label>
-      <label class="chip" style="align-self:flex-end"><input type="checkbox" id="naCopiar" checked> copiar as interrupções do ano anterior</label>
-      <label class="chip" style="align-self:flex-end"><input type="checkbox" id="naAtivo"> tornar ativo</label>
-      <button class="b" type="submit" style="align-self:flex-end">Criar ano letivo</button>
-    </form>
-    <div id="naMsg"></div>
+    <div class="ay-head"><div><h2>Percurso das turmas</h2>
+    <p class="hint" style="margin:2px 0 0">Cada turma do 1.º ano à conclusão, ano letivo a ano letivo. A coluna destacada é o ano ativo; o traço laranja marca o ano em que a turma termina.</p></div></div>
+    <div id="ayGantt"></div>
   </div>
   <div class="card">
     <h2>Interrupções letivas e feriados</h2>
@@ -2266,7 +2324,7 @@ html.ios-aberto,html.ios-aberto body{overflow:hidden}
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.77"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.78"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -5433,16 +5491,96 @@ function escImportarBox(){let T=[];try{T=turmasSNQ()}catch(x){}
   toast(`Da Box: ${nt} turma(s) nova(s), ${nu} atualizada(s), ${nc} curso(s) novo(s)`)}
 
 /* ---------- anos letivos ---------- */
-function renderAnos(){const e=escData(),at=anoAtivo();
-  $("#tbAnos").innerHTML=anosOrd().reverse().map(a=>{const est=a.id===e.ativo?`<span class="tag" style="background:var(--okbg);color:var(--ok)">Ativo</span>`:a.ini>at.ini?`<span class="tag" style="background:var(--brandbg);color:var(--brand)">Em preparação</span>`:`<span class="tag" style="background:#eef1f5;color:#4a5260">Encerrado</span>`;
-    const nT=turmasDoAno(a).length,tem=ESD.porAno[a.id]&&ESD.porAno[a.id].estado;
-    return `<tr data-id="${a.id}"><td><input type="text" data-k="nome" value="${esc(a.nome)}" style="width:110px"></td>
-     <td><input type="date" data-k="inicio" value="${esc(a.inicio||"")}"></td><td><input type="date" data-k="fim" value="${esc(a.fim||"")}"></td>
-     <td>${est}</td><td class="hm" style="color:var(--muted)">${nT} turma(s)${tem?" · horário":""}</td>
-     <td style="white-space:nowrap">${a.id===e.ativo?"":`<button class="b s" data-ativar>Tornar ativo</button> `}<button class="x" title="Apagar" data-del ${a.id===e.ativo?"disabled":""}>×</button></td></tr>`}).join("");
-  const s=$("#ferAno");const cur=s.value;s.innerHTML=anosOrd().map(a=>`<option value="${a.id}">${esc(a.nome)}</option>`).join("");s.value=anosOrd().some(a=>a.id===cur)?cur:e.ativo;
-  renderFerias();
-  const y=Math.max(...e.anos.map(a=>a.ini))+1;$("#naNome").placeholder=y+"/"+(y+1)}
+/* 0.9.78: Anos letivos redesenhados — o ano ativo em destaque com a linha do tempo do ano (períodos, interrupções, feriados, hoje),
+   os outros anos em cartões, um cartão para preparar o ano seguinte com datas sugeridas, e o percurso de cada turma ano a ano. */
+function ayEstado(a){const e=escData(),at=anoAtivo();return a.id===e.ativo?"ativo":a.ini>at.ini?"prep":"enc"}
+function ayTag(a){const s=ayEstado(a);return s==="ativo"?`<span class="tag" style="background:var(--okbg);color:var(--ok)">Ativo</span>`:s==="prep"?`<span class="tag" style="background:var(--brandbg);color:var(--brand)">Em preparação</span>`:`<span class="tag" style="background:#eef1f5;color:#4a5260">Encerrado</span>`}
+// a Páscoa do ano civil em que calha o 2.º período do ano letivo
+const ayPascoa=a=>calS(calPascoa((+a.ini||0)+1));
+// datas sugeridas para o ano seguinte: o mesmo dia da semana do início deste ano; o fim no mesmo dia e mês
+function aySugestao(y){const ant=escData().anos.find(x=>x.ini===y-1);if(!ant||!ant.inicio)return{ini:y+"-09-01",fim:(y+1)+"-06-30"};
+  const d=calD(ant.inicio),n=calD((+ant.inicio.slice(0,4)+1)+ant.inicio.slice(4));let df=d.getDay()-n.getDay();if(df>3)df-=7;if(df<-3)df+=7;n.setDate(n.getDate()+df);
+  return{ini:calS(n),fim:ant.fim?(+ant.fim.slice(0,4)+1)+ant.fim.slice(4):(y+1)+"-06-30"}}
+// interrupções do ano anterior com as datas no ano novo: as que andam com a Páscoa (Carnaval, Páscoa) acompanham-na; as outras avançam um ano
+function ayCopiarFerias(ant,a){const p0=ayPascoa(ant),p1=ayPascoa(a),mais1=s=>s?(+s.slice(0,4)+1)+s.slice(4):"";
+  return (ant.ferias||[]).filter(f=>f).map(f=>{const off=f.de?calDias(p0,f.de):999,mov=off>=-50&&off<=15,o={nome:f.nome,de:"",ate:""};if(f.tipo)o.tipo=f.tipo;
+    if(mov){o.de=calMais(p1,off);o.ate=f.ate?calMais(p1,calDias(p0,f.ate)):o.de}else{o.de=mais1(f.de);o.ate=mais1(f.ate)}return o})}
+function ayNumeros(a){const hj=calHoje(),o={tot:0,feitos:0,falta:0,pct:0};if(!a.inicio||!a.fim||a.fim<a.inicio)return o;let NL;try{NL=calNaoLetivos(a)}catch(e){NL=new Map()}
+  o.NL=NL;o.tot=calLetivos(a,a.inicio,a.fim,NL);o.feitos=hj<a.inicio?0:hj>a.fim?o.tot:calLetivos(a,a.inicio,calMais(hj,-1),NL);o.falta=o.tot-o.feitos;o.pct=o.tot?Math.round(o.feitos/o.tot*100):0;return o}
+function ayFita(a,N){if(!a.inicio||!a.fim||a.fim<=a.inicio)return `<div class="msg info" style="margin:14px 0">Indique o início e o fim das aulas para ver a linha do tempo do ano.</div>`;
+  const T=calDias(a.inicio,a.fim)+1,pos=d=>Math.max(0,Math.min(100,calDias(a.inicio,d)/T*100)),w=(x,y)=>Math.max(0,(calDias(x,y)+1)/T*100),hj=calHoje();
+  let P=[];try{P=calPeriodos(a).filter(p=>p.ini&&p.fim)}catch(e){}
+  let h=P.length?P.map(p=>`<div class="seg per" style="left:${pos(p.ini)}%;width:${w(p.ini>a.inicio?p.ini:a.inicio,p.fim<a.fim?p.fim:a.fim)}%" title="${p.n}.º período · ${calDM(p.ini)} a ${calDM(p.fim)}"><span>${p.n}.º período</span></div>`).join("")
+    :`<div class="seg per" style="left:0;width:100%"></div>`;
+  // dias sem aulas seguidos (interrupções) e feriados soltos
+  const NL=N.NL||new Map(),run=[];let cur=null;
+  for(let d=a.inicio,k=0;d<=a.fim&&k<500;d=calMais(d,1),k++){const x=NL.get(d);if(x){if(cur&&cur.t===x.t&&cur.n===x.n&&calMais(cur.ate,1)===d)cur.ate=d;else{cur={t:x.t,n:x.n,de:d,ate:d};run.push(cur)}}}
+  for(const r of run){const wd=calD(r.de).getDay();if(r.t==="fer"&&(wd===0||wd===6))continue;
+    h+=r.t==="fer"?`<div class="seg fer" style="left:${pos(r.de)}%;width:${w(r.de,r.ate)}%" title="${esc(r.n)} · ${calDM(r.de,{weekday:"short",day:"numeric",month:"short"})}"></div>`
+      :`<div class="seg int" style="left:${pos(r.de)}%;width:${w(r.de,r.ate)}%" title="${esc(r.n)} · ${calDM(r.de)}${r.ate!==r.de?" a "+calDM(r.ate):""}"></div>`}
+  if(hj>a.inicio)h+=`<div class="seg done" style="left:0;width:${hj>a.fim?100:pos(hj)}%"></div>`;
+  for(let m=calD(a.inicio);;){m=new Date(m.getFullYear(),m.getMonth()+1,1,12);const s=calS(m);if(s>a.fim)break;h+=`<span class="mes" style="left:${pos(s)}%">${m.toLocaleDateString("pt-PT",{month:"short"}).replace(".","")}</span>`}
+  if(hj>=a.inicio&&hj<=a.fim)h+=`<div class="hoje" style="left:${pos(hj)}%" title="Hoje, ${calDM(hj,{weekday:"long",day:"numeric",month:"long"})}"></div>`;
+  return `<div class="ay-rib">${h}</div><div class="ay-leg"><span><i style="background:var(--sky)"></i>Aulas${P.length?" (por período)":""}</span><span><i style="background:repeating-linear-gradient(135deg,#f5b84a 0 3px,#fde7bd 3px 6px)"></i>Interrupções</span><span><i style="background:#dc4a4a;width:4px"></i>Feriados</span>${P.length?"":`<span>Os períodos aparecem quando importar o <a href="#" data-ayir="cal">Calendário Escolar</a></span>`}</div>`}
+function ayStats(a,N){const hj=calHoje(),st=[],s=(t,v,em)=>st.push(`<div class="ay-st"><small>${t}</small><b>${v}</b>${em?`<em>${em}</em>`:""}</div>`);
+  if(!N.tot)return "";
+  if(hj<a.inicio){const d=calDias(hj,a.inicio);s("As aulas começam",d===1?"amanhã":`daqui a ${d} dias`,calDM(a.inicio,{weekday:"long",day:"numeric",month:"long"}));s("Dias letivos no ano",N.tot,`≈ ${Math.round(N.tot/5)} semanas de aulas`)}
+  else if(hj>a.fim){s("Ano concluído",N.tot+" dias letivos",`${calDM(a.inicio)} a ${calDM(a.fim)}`)}
+  else{s("Dias letivos que faltam",N.falta,`de ${N.tot} · ≈ ${Math.round(N.falta/5)} semanas`);
+    let P=[];try{P=calPeriodos(a)}catch(e){}const np=calPeriodoDe(a,hj,P),p=P.find(x=>x.n===np);
+    if(p){const f=calLetivos(a,hj,p.fim,N.NL);s(`${np}.º período`,f===1?"último dia":`faltam ${f} dias`,`termina a ${calDM(p.fim,{weekday:"short",day:"numeric",month:"short"})}`)}
+    let FER=[];try{FER=calFeriados(a)}catch(e){}
+    const prox=(a.ferias||[]).filter(f=>f&&f.de&&f.de>hj&&!calEhFeriado(f,FER)).sort((x,y)=>x.de.localeCompare(y.de))[0];
+    if(prox){const d=calLetivos(a,hj,calMais(prox.de,-1),N.NL);s("Próxima pausa",esc(prox.nome||"Interrupção"),`${d===0?"começa já":`daqui a ${d} dia${d===1?"":"s"} de aulas`} · ${calDM(prox.de)}${prox.ate&&prox.ate!==prox.de?" a "+calDM(prox.ate):""}`)}
+    const pf=FER.filter(f=>f.data>=hj&&f.data<=a.fim&&calD(f.data).getDay()%6!==0)[0];
+    if(pf)s("Próximo feriado",esc(pf.nome),calDM(pf.data,{weekday:"long",day:"numeric",month:"long"}))}
+  return `<div class="ay-stats">${st.join("")}</div>`}
+function ayTurmas(a){const T=turmasDoAno(a);if(!T.length)return `<p class="hint" style="margin:14px 0 0">Ainda não há turmas neste ano letivo — crie-as em <a href="#" data-ayir="tur">Turmas</a>.</p>`;
+  const G=new Map();for(const t of T){const fin=t.anoFim&&t.anoFim===a.ini+1,k=fin?"fin":anoCurricular(t,a)||"—";if(!G.has(k))G.set(k,[]);G.get(k).push(t)}
+  const ord=[...G.keys()].sort((x,y)=>x==="fin"?1:y==="fin"?-1:String(x).localeCompare(String(y),"pt",{numeric:true}));
+  return `<div class="ay-tur">${ord.map(k=>`<div class="ay-tg"><span>${k==="fin"?"Finalistas":k==="1.º ano"?"Entram este ano":esc(k)}</span>${G.get(k).map(t=>`<span class="ay-chip ${k==="fin"?"fin":k==="1.º ano"?"c1":"c2"}" title="${esc(turmaNome(t))}">${esc(t.cod)}</span>`).join("")}</div>`).join("")}</div>`}
+function ayDatas(a,ed){return `<span class="ay-dates"><input type="date" data-k="inicio" value="${esc(a.inicio||"")}" title="Início das aulas" ${ed?"":"disabled"}> → <input type="date" data-k="fim" value="${esc(a.fim||"")}" title="Fim das aulas" ${ed?"":"disabled"}></span>`}
+function renderAnos(){const e=escData(),at=anoAtivo(),ed=!RO;
+  // ---- o ano ativo ----
+  const N=ayNumeros(at),nT=turmasDoAno(at).length,tem=ESD.porAno&&ESD.porAno[at.id]&&ESD.porAno[at.id].estado;
+  $("#ayHero").innerHTML=`<div class="ay-hero" data-ano="${at.id}">
+    <div class="ay-top"><input class="ay-name" data-k="nome" value="${esc(at.nome)}" ${ed?"":"disabled"} aria-label="Ano letivo">${ayTag(at)}${ayDatas(at,ed)}<span class="grow"></span>
+      ${N.tot?`<div class="ay-pct"><b>${N.pct}%</b>${N.feitos} de ${N.tot} dias letivos dados</div>`:""}</div>
+    ${ayFita(at,N)}${ayStats(at,N)}${ayTurmas(at)}
+    <div class="ay-acts"><button class="b s" data-ayir="cal">Calendário Escolar</button><button class="b s" data-ayir="ferias">Interrupções e feriados (${(at.ferias||[]).length})</button><button class="b s" data-ayir="tur">${nT} turma${nT===1?"":"s"}</button>${tem?`<button class="b s" data-ayir="esch">Horário</button>`:""}</div></div>`;
+  // ---- os outros anos e o seguinte ----
+  const outros=anosOrd().reverse().filter(a=>a.id!==e.ativo);
+  const y=Math.max(...e.anos.map(a=>a.ini))+1,sg=aySugestao(y),seg={ini:y},ant=e.anos.find(x=>x.ini===y-1);
+  const Tn=turmasDoAno(seg),cont=Tn.filter(t=>t.anoIni&&t.anoIni<y).length,novas=Tn.filter(t=>t.anoIni===y).length,acabam=ant?turmasDoAno(ant).filter(t=>t.anoFim===y).length:0;
+  const nf=ant?(ant.ferias||[]).length:0;
+  const novo=ed?`<details class="ay-new" id="ayNew"><summary><span class="pl">+</span>Preparar ${y}/${y+1}</summary>
+    <form id="naForm" autocomplete="off">
+      <label>Ano letivo<input type="text" id="naNome" placeholder="${y}/${y+1}"></label>
+      <div class="r2"><label>Início<input type="date" id="naIni" value="${sg.ini}"></label><label>Fim<input type="date" id="naFim" value="${sg.fim}"></label></div>
+      <label class="chip"><input type="checkbox" id="naCopiar" ${nf?"checked":"disabled"}> copiar as ${nf} interrupções de ${esc(ant?ant.nome:"—")}</label>
+      <label class="chip"><input type="checkbox" id="naAtivo"> tornar ativo já</label>
+      <div class="prev">${cont} turma${cont===1?"":"s"} continua${cont===1?"":"m"} · ${acabam} conclu${acabam===1?"i":"em"} em ${y-1}/${y}${novas?` · ${novas} nova${novas===1?"":"s"} já registada${novas===1?"":"s"}`:""}.<br>O início sugerido cai no mesmo dia da semana do deste ano; o Carnaval e a Páscoa acompanham a data da Páscoa de ${y+1}.</div>
+      <button class="b" type="submit">Criar ${y}/${y+1}</button></form></details>`:"";
+  $("#ayOthers").innerHTML=outros.map(a=>{const n=ayNumeros(a),s=ayEstado(a),nt=turmasDoAno(a).length;
+    return `<div class="ay-o ${s==="prep"?"prep":""}" data-ano="${a.id}">
+      <div style="display:flex;align-items:center;gap:8px"><input class="ay-name" data-k="nome" value="${esc(a.nome)}" ${ed?"":"disabled"} aria-label="Ano letivo">${ayTag(a)}</div>
+      ${ayDatas(a,ed)}<div class="ay-mini" title="${n.pct}% dos dias letivos"><i style="width:${n.pct}%"></i></div>
+      <span class="hint" style="margin:0">${nt} turma${nt===1?"":"s"} · ${n.tot||"—"} dias letivos · ${(a.ferias||[]).length} interrupções/feriados</span>
+      ${ed?`<div style="display:flex;gap:6px"><button class="b s" data-ativar>Tornar ativo</button></div><button class="x" title="Apagar" data-del>×</button>`:""}</div>`}).join("")+novo;
+  // ---- interrupções (o seletor de ano) ----
+  const sel=$("#ferAno");const cur=sel.value;sel.innerHTML=anosOrd().map(a=>`<option value="${a.id}">${esc(a.nome)}</option>`).join("");sel.value=anosOrd().some(a=>a.id===cur)?cur:e.ativo;
+  renderFerias();ayGantt()}
+// percurso das turmas: uma linha por turma, uma coluna por ano letivo
+function ayGantt(){const e=escData(),at=anoAtivo(),T=e.turmas.filter(t=>t.anoIni&&t.anoFim&&t.anoFim>t.anoIni);
+  if(!T.length){$("#ayGantt").innerHTML=`<p class="hint">As turmas aparecem aqui quando tiverem ano de início e de fim (em <a href="#" data-ayir="tur">Turmas</a>).</p>`;return}
+  const ys=[...e.anos.map(a=>a.ini),...T.map(t=>t.anoIni),...T.map(t=>t.anoFim-1)],y0=Math.min(...ys),y1=Math.max(...ys),Y=[];for(let y=y0;y<=y1&&Y.length<12;y++)Y.push(y);
+  const L=T.slice().sort((a,b)=>a.anoIni-b.anoIni||String(a.cod).localeCompare(String(b.cod),"pt",{numeric:true}));const sem=e.turmas.length-T.length;
+  const yy=n=>String(n).slice(-2);
+  $("#ayGantt").innerHTML=`<div class="ay-g"><table><thead><tr><th></th>${Y.map(y=>`<th class="${y===at.ini?"on":""} ${e.anos.some(a=>a.ini===y)?"":"nx"}" ${e.anos.some(a=>a.ini===y)?"":`title="Ano letivo ainda não criado"`}>${yy(y)}/${yy(y+1)}</th>`).join("")}</tr></thead><tbody>
+    ${L.map(t=>{const c=cursoById(t.cursoId),dur=t.anoFim-t.anoIni;return `<tr><td class="nm" title="${esc(turmaNome(t))}"><b>${esc(t.cod)}</b> <span>${esc(c?c.nome:"")}</span></td>${Y.map(y=>{const i=y-t.anoIni;if(i<0||i>=dur)return `<td class="${y===at.ini?"on":""}"></td>`;
+      return `<td class="${y===at.ini?"on":""}"><div class="bar y${Math.min(3,i+1)} ${i===0?"s":""} ${i===dur-1?"e fin":""} ${y<at.ini?"past":""}" title="${esc(t.cod)} · ${i+1}.º ano em ${y}/${y+1}">${i+1}.º</div></td>`}).join("")}</tr>`}).join("")}</tbody></table></div>
+    ${sem?`<p class="hint" style="margin:8px 0 0">${sem} turma${sem===1?"":"s"} sem ano de início e de fim não aparece${sem===1?"":"m"} aqui.</p>`:""}`}
+
 function renderFerias(){const a=escData().anos.find(x=>x.id===$("#ferAno").value)||anoAtivo(),FER=calFeriados(a),SEM=["dom","seg","ter","qua","qui","sex","sáb"];
   // mostra por ordem de data (sem mexer na ordem guardada); as linhas sem data ficam no fim
   const L=(a.ferias||[]).map((f,i)=>({f,i})).filter(x=>x.f).sort((x,y)=>(x.f.de?0:1)-(y.f.de?0:1)||String(x.f.de).localeCompare(String(y.f.de)));
@@ -5463,20 +5601,23 @@ function renderFerias(){const a=escData().anos.find(x=>x.id===$("#ferAno").value
   $("#ferRes").innerHTML=`<div class="fer-res"><span><b>${nInt}</b> interrupç${nInt===1?"ão":"ões"}</span><span><b>${nFer}</b> feriado${nFer===1?"":"s"}</span><span><b>${nUteis}</b> dia${nUteis===1?"":"s"} úte${nUteis===1?"l":"is"} sem aulas</span>${let_!==""?`<span><b>${let_}</b> dias letivos no ano</span>`:""}</div>`
     +(falta.length?`<div class="msg info" style="margin:0 0 10px">Falta${falta.length===1?"":"m"} ${falta.length} feriado${falta.length===1?"":"s"} em dia útil: ${falta.map(x=>`${esc(x.nome)} (${esc(calDM(x.data,{weekday:"short",day:"numeric",month:"short"}))})`).join(", ")}. O Horário360 conta-${falta.length===1?"o":"os"} como dia${falta.length===1?"":"s"} de aulas. <button class="b s" id="ferFaltaAdd" style="margin-left:6px">Acrescentar</button></div>`:"");
   const fb=$("#ferFaltaAdd");if(fb)fb.onclick=()=>{ponto("Antes de acrescentar feriados");falta.forEach(x=>a.ferias.push({id:"cal-f-"+x.data,nome:x.nome,de:x.data,ate:x.data,tipo:"feriado"}));save();renderFerias();try{esRecarregar()}catch(e){}toast(falta.length+" feriado(s) acrescentado(s)")}}
-$("#tbAnos").addEventListener("change",e=>{const tr=e.target.closest("tr");const a=escData().anos.find(x=>x.id===tr.dataset.id);if(!a)return;const k=e.target.dataset.k;
-  a[k]=e.target.value.trim();if(k==="nome"){const m=a.nome.match(/(\d{4})/);if(m)a.ini=+m[1]}save();escRender();esRecarregar()});
-$("#tbAnos").addEventListener("click",e=>{const tr=e.target.closest("tr");if(!tr)return;const E=escData(),a=E.anos.find(x=>x.id===tr.dataset.id);if(!a)return;
-  if(e.target.hasAttribute("data-ativar")){mudarAnoAtivo(a.id);return}
-  if(e.target.hasAttribute("data-del")){if(a.id===E.ativo)return;if(!confirm(`Apagar o ano letivo ${a.nome}? As turmas e os cursos não são apagados; o horário desse ano deixa de aparecer.`))return;
+function ayIr(k){if(k==="ferias"){const c=$("#ferAno");if(c){c.value=escData().ativo;renderFerias();c.closest(".card").scrollIntoView({behavior:"smooth",block:"start"})}return}show(k)}
+$("#anos").addEventListener("click",e=>{const l=e.target.closest("[data-ayir]");if(l){e.preventDefault();ayIr(l.dataset.ayir);return}
+  const box=e.target.closest("[data-ano]");if(!box)return;const E=escData(),a=E.anos.find(x=>x.id===box.dataset.ano);if(!a)return;
+  if(e.target.closest("[data-ativar]")){mudarAnoAtivo(a.id);return}
+  if(e.target.closest("[data-del]")){if(a.id===E.ativo)return;if(!confirm(`Apagar o ano letivo ${a.nome}? As turmas e os cursos não são apagados; o horário desse ano deixa de aparecer.`))return;
     ponto("Antes de apagar o ano letivo "+a.nome);E.anos=E.anos.filter(x=>x!==a);save();escRender();toast("Ano letivo apagado (pode anular)")}});
-$("#naForm").addEventListener("submit",e=>{e.preventDefault();const E=escData();const y0=Math.max(...E.anos.map(a=>a.ini))+1;
+$("#anos").addEventListener("change",e=>{const box=e.target.closest("[data-ano]"),k=e.target.dataset.k;if(!box||!k)return;const a=escData().anos.find(x=>x.id===box.dataset.ano);if(!a)return;
+  const v=e.target.value.trim();if(k==="nome"&&!v){e.target.value=a.nome;return}
+  a[k]=v;if(k==="nome"){const m=a.nome.match(/(\d{4})/);if(m)a.ini=+m[1]}save();escRender();esRecarregar()});
+$("#anos").addEventListener("submit",e=>{if(e.target.id!=="naForm")return;e.preventDefault();const E=escData();const y0=Math.max(...E.anos.map(a=>a.ini))+1;
   const nome=$("#naNome").value.trim()||(y0+"/"+(y0+1)),m=nome.match(/(\d{4})/),y=m?+m[1]:y0;
   if(E.anos.some(a=>norm(a.nome)===norm(nome))){escLinhaMsg("#naMsg",`O ano letivo ${esc(nome)} já existe.`,"bad");return}
   const a=novoAno(y);a.nome=nome;if($("#naIni").value)a.inicio=$("#naIni").value;if($("#naFim").value)a.fim=$("#naFim").value;
-  // as interrupções do ano anterior servem de ponto de partida, com as datas avançadas um ano
-  const ant=E.anos.find(x=>x.ini===y-1);if(ant&&$("#naCopiar").checked)a.ferias=ant.ferias.map(f=>({nome:f.nome,de:f.de?(+f.de.slice(0,4)+1)+f.de.slice(4):"",ate:f.ate?(+f.ate.slice(0,4)+1)+f.ate.slice(4):""}));
-  E.anos.push(a);const ativar=$("#naAtivo").checked;if(ativar)E.ativo=a.id;save();$("#naForm").reset();escRender();if(ativar)esRecarregar();
-  const nT=turmasDoAno(a).length;escLinhaMsg("#naMsg",`Ano letivo ${esc(nome)} criado${ativar?" e ativo":""}. ${nT} turma(s) continuam nesse ano (pelas datas de início e fim de cada turma).`,"ok")});
+  const ant=E.anos.find(x=>x.ini===y-1);if(ant&&$("#naCopiar").checked)a.ferias=ayCopiarFerias(ant,a);
+  const ativar=$("#naAtivo").checked;E.anos.push(a);if(ativar)E.ativo=a.id;save();escRender();if(ativar)esRecarregar();
+  const nT=turmasDoAno(a).length;escLinhaMsg("#naMsg",`Ano letivo ${esc(nome)} criado${ativar?" e ativo":""} com ${a.ferias.length} interrupções. ${nT} turma(s) estão nesse ano (pelas datas de início e fim de cada turma).`,"ok")});
+
 $("#ferAno").addEventListener("change",renderFerias);
 $("#tbFer").addEventListener("change",e=>{const a=escData().anos.find(x=>x.id===$("#ferAno").value);const tr=e.target.closest("tr");if(!a||!tr||!e.target.dataset.k)return;const f=a.ferias[+tr.dataset.i],k=e.target.dataset.k;f[k]=e.target.value;
   if(k==="de"&&f.de&&(!f.ate||f.ate<f.de))f.ate=f.de;save();if(k!=="nome")renderFerias();esRecarregar()});
