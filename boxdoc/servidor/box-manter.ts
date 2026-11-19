@@ -1,3 +1,5 @@
+// DESLIGADA na EPISJ 360 0.9.70 (tarefa episj360-box-manter em pausa): a Box passa a ser renovada só no navegador de quem
+// usa o Box360, uma vez por código, sem pedidos de madrugada a partir de servidores. Fica aqui só como registo.
 // EPISJ 360 — função box-manter do Supabase (publicada pelo Claude; guardada aqui para referência).
 // Mantém viva a ligação à Box guardada no cofre (tabela g360_box): corre uma vez por dia (pg_cron, 03:41 UTC) e renova
 // as ligações com mais de 4 dias, para nunca caducarem por falta de uso (a Box deita fora o código ao fim de 60 dias sem uso).
@@ -30,7 +32,7 @@ Deno.serve(async () => {
     const tem = vez.ok ? await vez.json() : [];
     if (!Array.isArray(tem) || !tem.length) continue;
     let { estado, j } = await renovar(x.r);
-    if (!(estado >= 200 && estado < 300) && recusa(estado, j)) { await espera(4000); ({ estado, j } = await renovar(x.r)); }
+    // 0.9.70: um código recusado nunca volta a ser enviado (cada código de renovação só serve uma vez)
     const agoraIso = new Date().toISOString();
     if (estado >= 200 && estado < 300 && typeof j.access_token === "string") {
       await fetch(`${url}/rest/v1/g360_box?email=eq.${em}`, { method: "PATCH", headers: H, body: JSON.stringify({ a: j.access_token, r: (j.refresh_token as string) || x.r, exp: Date.now() + (Number(j.expires_in) || 3600) * 1000 - 120000, t: Date.now(), bloqueio_ate: 0, erro: null, renovada: agoraIso, atualizado: agoraIso }) });

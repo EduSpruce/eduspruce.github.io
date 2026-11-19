@@ -2200,7 +2200,7 @@ html.ios-aberto,html.ios-aberto body{overflow:hidden}
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.69"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.70"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -3222,10 +3222,10 @@ $("#qRef").addEventListener("change",async e=>{cfg.qual.refRoot=e.target.value;s
 async function boxRaw(url,hints,asText){
   const h=new URL(url).hostname;if(!/(^|\.)box\.com$|(^|\.)boxcloud\.com$/.test(h))throw new Error("endereço inesperado");
   const api=/(^|\.)api\.box\.com$/.test(h);
-  for(let t=0;t<6;t++){if(api)await vez();const tok=await accessToken();const H={Authorization:"Bearer "+tok};if(hints)H["x-rep-hints"]=hints;
+  for(let t=0;t<6;t++){if(api)await vez();else await vezConteudo();const tok=await accessToken();const H={Authorization:"Bearer "+tok};if(hints)H["x-rep-hints"]=hints;
     let r;try{r=await fetch(url,{method:"GET",headers:H})}catch(e){if(api)travar(1500*(t+1));if(t<3)continue;throw new Error("rede")}
     if(r.status===202){await sleep(1500);continue}
-    if(r.status===429){travar((+r.headers.get("Retry-After")||2)*1000);continue}
+    if(r.status===429){travar(esperaBox(r));continue}
     if(r.status>=500){await sleep(800*2**t);continue}
     if(r.status===401&&SES&&SES.mode==="oauth"&&t===0){await accessToken(true);continue}
     if(!r.ok)throw new Error("Box "+r.status);
@@ -3250,11 +3250,13 @@ const precisaLer=f=>!!(f&&f.fid&&f.sha1&&TEXT_EXT.test(f.name||f.n||"")&&f.size!
 // lê o texto de uma lista de ficheiros {fid, sha1, name, size} e guarda-o (por impressão digital) neste navegador
 async function checkFiles(list,onProg,cancel,conc){
   let done=0,err=0,idx=0;
-  const worker=async()=>{while(idx<list.length&&SES&&!(cancel&&cancel())){const f=list[idx++];
+  const worker=async()=>{while(idx<list.length&&SES&&!(cancel&&cancel())){
+    if(cancel&&document.visibilityState==="hidden"){await sleep(3000);continue} // 0.9.70: leitura de fundo pára com a janela escondida
+    const f=list[idx++];
     try{if(!TX.has(f.sha1)){const r=await textoDe(f.fid);if(r.txt!=null)await guardarTexto(f.sha1,r.txt);else{err++;if(r.err!=="texto ainda não disponível")await guardarSemTexto(f.sha1)}}}
     catch(e){if(e.kind==="auth")throw e;err++}
     done++;onProg&&onProg(done,list.length)}};
-  await Promise.all(Array.from({length:Math.min(conc||6,list.length)},worker));
+  await Promise.all(Array.from({length:Math.min(conc||3,list.length)},worker));
   return{done,err};
 }
 function porLer(){const todo=new Map();for(const e of evaluate())for(const i of e.items)for(const f of i.hits)if(precisaLer(f))todo.set(f.sha1,f);return[...todo.values()]}
@@ -3264,7 +3266,7 @@ async function verificarFundo(){
   if(!SES||bgOn)return;const list=porLer(),el=$("#bg")||$("#bgp")||document.createElement("span");if(!list.length){el.style.display="none";return} // 0.9.50: o indicador chama-se #bgp
   const my=++bgRun;bgOn=true;el.style.display="";let last=0;
   try{const r=await checkFiles(list,(d,n)=>{el.textContent=`a ler documentos ${d}/${n}`;
-      if(Date.now()-last>15000){last=Date.now();if(curTab==="rel")renderReport();if(curTab==="alt")renderAlt()}},()=>my!==bgRun,4);
+      if(Date.now()-last>15000){last=Date.now();if(curTab==="rel")renderReport();if(curTab==="alt")renderAlt()}},()=>my!==bgRun,2);
     el.textContent=`${r.done-r.err} documentos lidos`;setTimeout(()=>{if(!bgOn)el.style.display="none"},6000)}
   catch(e){el.textContent="leitura interrompida"}
   bgOn=false;nuvemTextos();if(curTab==="rel")renderReport();if(curTab==="alt")renderAlt();
@@ -3634,7 +3636,7 @@ async function boxCofreGuardar(x){if(!boxCofreOk()||!x||x.mode!=="oauth"||!x.r)r
   try{const j=await sbRpc("g360_box_guardar",{p:{a:x.a,r:x.r,exp:x.exp,t:x.t||Date.now(),login:x.login||"",nome:x.nome||""}});
     if(j&&j.ok===false&&j.r&&(+j.t||0)>(x.t||0)&&SES&&SES.r===x.r){SES=sesNova(j,SES);saveSes()}}catch(e){}}
 async function boxCofreReclamar(r){if(!boxCofreOk())return{ok:true,sem:true};try{return (await sbRpc("g360_box_reclamar",{p_r:r,p_ms:20000}))||{ok:true}}catch(e){return{ok:true,sem:true}}}
-// sem sessão neste navegador: vai buscá-la ao cofre (outro computador, o iPad ou a renovação diária do Supabase)
+// sem sessão neste navegador: vai buscá-la ao cofre (outro computador ou o iPad)
 async function boxRecuperar(){if(SES&&sesMinha(SES))return SES;const l=lerSesLocal();if(l&&sesMinha(l)){SES=l;return SES}
   try{await gpAte(SB_PRONTO,8000)}catch(e){}
   const c=await boxCofreLer();if(c&&!c.morta){SES=sesNova(c,null);saveSes();return SES}return null}
@@ -3653,7 +3655,7 @@ async function boxRenovar(force,volta){
   // 1) outra janela pode já ter renovado
   const l=lerSesLocal();if(l&&sesMinha(l)&&(l.t||0)>(SES.t||0))SES=Object.assign({},l,{dono:SES.dono||l.dono});
   if(!force&&Date.now()<SES.exp)return SES.a;
-  // 2) outro computador (ou a renovação diária do Supabase) pode ter uma sessão mais recente no cofre
+  // 2) outro computador pode ter uma sessão mais recente no cofre (a renovação diária no Supabase foi desligada na 0.9.70)
   let c=await boxCofreLer();
   if(c&&!c.morta&&c.r!==SES.r&&(+c.t||0)>(SES.t||0)){boxAdotar(c,SES);if(!force&&Date.now()<SES.exp)return SES.a}
   else if(c&&c.r!==SES.r&&(SES.t||0)>(+c.t||0))await boxCofreGuardar(SES); // a deste navegador é mais recente: passa a ser a do cofre
@@ -3671,8 +3673,8 @@ async function boxRenovar(force,volta){
   if(!definitivo){const x=new Error("A Box não respondeu agora ("+r.status+") — a ligação mantém-se e volto a tentar sozinho.");x.kind="net";throw x}
   // 5) o código foi recusado: pode haver um mais recente noutra janela ou no cofre
   if(!volta){const l2=lerSesLocal(),c2=await boxCofreLer(),alt=[l2,c2].filter(x=>x&&x.r&&x.r!==SES.r&&!x.morta&&sesMinha(x)).sort((p,q)=>(+q.t||0)-(+p.t||0))[0];
-    if(alt){boxAdotar(alt,SES);if(Date.now()<SES.exp)return SES.a;return boxRenovar(true,true)}
-    await new Promise(z=>setTimeout(z,2500));return boxRenovar(true,true)} // o serviço de login responde da mesma forma a uma falha da Box: tenta outra vez antes de desistir
+    if(alt){boxAdotar(alt,SES);if(Date.now()<SES.exp)return SES.a;return boxRenovar(true,true)}}
+  // 0.9.70: um código recusado nunca volta a ser enviado à Box (cada código só serve uma vez); pede-se nova entrada, só com um clique
   boxSessaoMorta(j.erro||j.error_description||j.error||("a Box respondeu "+r.status));
   const x=new Error("A Box pediu para voltar a ligar a conta (a autorização foi retirada ou caducou). Carregue em «Entrar com a Box».");x.kind="auth";throw x;
 }
@@ -3684,10 +3686,16 @@ function boxSessaoMorta(msg){const old=SES;
   try{$("#boxBrowse").style.display="none";$("#tokOut").style.display="none";$("#loginBox").style.display="";$("#devTok").style.display="";$("#boxAuth").innerHTML="";loginUI();
     boxEstado("login","A Box pediu para voltar a ligar a conta"+(old&&old.login?" "+old.login:"")+". Carregue em «Entrar com a Box» para continuar.")}catch(e){}}
 // ÚNICA porta de acesso aos ficheiros da Box: só pedidos GET (leitura). Não há neste código nada que escreva na Box.
-// ritmo: a Box aceita cerca de 1000 pedidos por minuto por utilizador. A app pede a um ritmo constante logo abaixo
-// desse limite e abranda quando a Box o pede (HTTP 429); assim a leitura avança sempre, sem paragens longas.
-const RPS0=+lsJ("boxcheck_rps",0)||14;
-const RATE={rps:RPS0,max:Math.max(16,RPS0),min:3,ok:0,hits:0,pauseUntil:0,next:0,cut:0};
+// ritmo (0.9.70, regras da Box): a Box aceita cerca de 1000 pedidos por minuto por utilizador. A app fica muito abaixo:
+// no máximo 8 pedidos por segundo (~480/min, menos de metade do limite), nunca mais de 10, e quando a Box pede para
+// abrandar (HTTP 429) espera exatamente o tempo que ela indica (Retry-After) e baixa o ritmo antes de voltar.
+const RPS_TETO=10;
+const RPS0=Math.min(RPS_TETO,+lsJ("boxcheck_rps",0)||8);
+const RATE={rps:RPS0,max:RPS0,min:2,ok:0,hits:0,pauseUntil:0,next:0,cut:0};
+// pedidos aos servidores de conteúdo da Box (texto dos documentos): ritmo próprio, mais lento, para não parecer descarga em massa
+const RATE_CONT={next:0,int:700};
+async function vezConteudo(){const t=Math.max(RATE_CONT.next,Date.now(),RATE.pauseUntil);RATE_CONT.next=t+RATE_CONT.int;const w=t-Date.now();if(w>0)await sleep(w)}
+const esperaBox=r=>{const v=+r.headers.get("Retry-After");return (v>0?v:10)*1000};
 const sleep=ms=>new Promise(s=>setTimeout(s,ms));
 async function vez(){const t=Math.max(RATE.next,Date.now());RATE.next=t+1000/RATE.rps;
   for(;;){const w=Math.max(t,RATE.pauseUntil)-Date.now();if(w<=0)return;await sleep(w)}}
@@ -3705,7 +3713,7 @@ async function boxGet(path,params){
       if(t<5)continue;
       const er=new Error("O navegador não conseguiu falar com a Box. Se acontecer logo ao entrar, confirme que o endereço deste site ("+location.origin+") está em “CORS Domains” na sua aplicação da Box.");er.kind="net";throw er}
     if(r.ok){if(++RATE.ok>=200&&RATE.rps<RATE.max){RATE.rps=Math.min(RATE.max,RATE.rps+1);RATE.ok=0}return r.json()}
-    if(r.status===429){travar((+r.headers.get("Retry-After")||2)*1000);continue}
+    if(r.status===429){travar(esperaBox(r));continue}
     if(r.status===401){if(!renewed&&SES&&SES.mode==="oauth"){renewed=true;await accessToken(true);continue}
       if(SES&&SES.mode==="oauth")boxSessaoMorta("a Box recusou o acesso (401)");else logout(false,"O acesso à Box expirou. Volte a entrar.");const er=new Error("O acesso à Box expirou. Volte a entrar.");er.kind="auth";throw er}
     if(r.status>=500){await sleep(Math.min(20,0.5*2**t)*1000);continue}
