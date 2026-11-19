@@ -1025,10 +1025,10 @@ html body .cdet h3{margin:14px 0 6px;font-size:14px}
 html body .cdet-l{margin:0;padding-left:18px;font-size:13px}
 @media print{html body .cpcr-f,html body .cpcr-b,html body .cpcr-hj,html body .cpcr-leg b{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 /* ===================== 1.138 · SpruceNote/JornalNote: quadro de demonstração ===================== */
-html body .mq-cv .mq-demob{position:absolute;right:12px;bottom:12px;z-index:6;display:inline-flex;align-items:center;gap:6px;padding:7px 12px;font:600 13px/1 inherit;color:#fff;background:var(--acc);border:0;border-radius:10px;cursor:pointer;box-shadow:0 4px 14px -4px color-mix(in srgb,var(--acc) 70%,transparent);transition:transform .15s,box-shadow .15s}
+html body .mq-cv .mq-demob{position:absolute;right:12px;bottom:12px;z-index:6;display:inline-flex;align-items:center;gap:6px;padding:7px 12px;font-family:inherit;font-weight:600;font-size:13px;line-height:1;color:#fff;background:var(--acc);border:0;border-radius:10px;cursor:pointer;box-shadow:0 4px 14px -4px color-mix(in srgb,var(--acc) 70%,transparent);transition:transform .15s,box-shadow .15s}
 html body .mq-cv .mq-demob:hover{transform:translateY(-1px);box-shadow:0 8px 20px -6px color-mix(in srgb,var(--acc) 80%,transparent)}
 html body .mq-cv .mq-demob:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
-html body #mqdemo{position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(15,23,42,.55);backdrop-filter:blur(3px);animation:mqdIn .25s ease}
+html body #mqdemo{font-family:inherit;position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(15,23,42,.55);backdrop-filter:blur(3px);animation:mqdIn .25s ease}
 html body #mqdemo.sai{animation:mqdOut .22s ease forwards}
 @keyframes mqdIn{from{opacity:0}}@keyframes mqdOut{to{opacity:0}}
 html body #mqdemo .mqd-pn{position:relative;width:min(1240px,100%);max-height:100%;display:flex;flex-direction:column;overflow:hidden;border-radius:18px;background:linear-gradient(172deg,#2b3a4c 0 58%,var(--panel) 58.2%);box-shadow:0 30px 80px -20px rgba(0,0,0,.6);color:#fff}
@@ -1036,10 +1036,10 @@ html body #mqdemo .mqd-x{position:absolute;top:12px;right:12px;width:34px;height
 html body #mqdemo .mqd-x:hover{background:rgba(255,255,255,.22)}
 html body #mqdemo .mqd-hero{text-align:center;padding:18px 24px 4px}
 html body #mqdemo .mqd-marca{display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:13px;letter-spacing:.04em;text-transform:uppercase;opacity:.75}
-html body #mqdemo .mqd-hero h2{margin:8px 0 4px;font:700 clamp(24px,3.6vw,44px)/1.08 Georgia,'Times New Roman',serif;color:#fff;animation:mqdSob .6s .05s both}
-html body #mqdemo .mqd-hero p{margin:0 auto;max-width:640px;font-size:clamp(14px,1.6vw,19px);color:#cbd5e1;animation:mqdSob .6s .15s both}
+html body #mqdemo .mqd-hero h2{margin:8px 0 4px;font-family:inherit;font-weight:700;font-size:clamp(24px,3.6vw,44px);line-height:1.08;letter-spacing:-.01em;color:#fff;animation:mqdSob .6s .05s both}
+html body #mqdemo .mqd-hero p{margin:0 auto;max-width:640px;font-size:clamp(14px,1.6vw,19px);font-weight:400;color:#cbd5e1;animation:mqdSob .6s .15s both}
 html body #mqdemo .mqd-bts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px;animation:mqdSob .6s .25s both}
-html body #mqdemo .mqd-bts button{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 15px/1 inherit;border-radius:8px;cursor:pointer;border:1px solid transparent}
+html body #mqdemo .mqd-bts button{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font-family:inherit;font-weight:600;font-size:15px;line-height:1;border-radius:8px;cursor:pointer;border:1px solid transparent}
 html body #mqdemo .mqd-go{background:#f97316;color:#fff}
 html body #mqdemo .mqd-go:hover{background:#ea580c}
 html body #mqdemo .mqd-ex{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.25)!important}
@@ -1050,7 +1050,7 @@ html body #mqdemo .mqd-mold{position:relative;border:4px solid #f15a2b;border-ra
 html body #mqdemo .mqd-esc{width:1100px;height:640px;transform-origin:0 0;position:absolute;left:0;top:0}
 html body #mqdemo .mqd-pe{padding:4px 16px 10px;text-align:center;font-size:12.5px;color:var(--mut)}
 /* a «app» falsa — cores fixas, iguais em claro e escuro, como uma imagem */
-html body #mqdemo .mqd-app{width:1100px;height:640px;display:flex;flex-direction:column;background:#fff;color:#1f2937;font:13px/1.35 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;text-align:left}
+html body #mqdemo .mqd-app{width:1100px;height:640px;display:flex;flex-direction:column;background:#fff;color:#1f2937;font-family:inherit;font-size:13px;line-height:1.35;text-align:left}
 html body #mqdemo .mqd-tb{display:flex;align-items:center;gap:8px;padding:9px 14px;font-size:11.5px;color:#475569}
 html body #mqdemo .mqd-bc i{margin:0 6px;font-style:normal;color:#cbd5e1}
 html body #mqdemo .mqd-b{font-weight:600;color:#111827}
@@ -1058,7 +1058,7 @@ html body #mqdemo .mqd-b.c1::before,html body #mqdemo .mqd-b.c2::before{content:
 html body #mqdemo .mqd-b.c2{font-weight:400;color:#64748b}html body #mqdemo .mqd-b.c2::before{background:#e07a5f}
 html body #mqdemo .mqd-tbi{margin-left:auto;display:flex;gap:12px;color:#64748b}
 html body #mqdemo .mqd-ti{position:relative;text-align:center;padding:2px 0 9px;border-bottom:1px solid #e5e7eb}
-html body #mqdemo .mqd-ti b{font:700 17px Georgia,serif;color:#111827}
+html body #mqdemo .mqd-ti b{font-family:inherit;font-weight:700;font-size:17px;color:#111827}
 html body #mqdemo .mqd-tia{position:absolute;right:14px;top:4px;display:flex;align-items:center;gap:6px;font-size:11px;color:#475569}
 html body #mqdemo .mqd-tia span{margin-left:10px}
 html body #mqdemo .mqd-bd{flex:1;display:flex;min-height:0}
@@ -1068,7 +1068,7 @@ html body #mqdemo .mqd-bar span:nth-child(5) i{background:#3b82f6;color:#fff;bor
 html body #mqdemo .mqd-cv{flex:1;position:relative;background:#eceef1;overflow:hidden}
 html body #mqdemo .mqd-c{position:absolute;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.12);animation:mqdCart .55s var(--d,0s) cubic-bezier(.2,.8,.3,1.2) both}
 @keyframes mqdCart{from{opacity:0;transform:translateY(18px) scale(.96)}}
-html body #mqdemo .mqd-c h5{margin:0;text-align:center;font:700 14px Georgia,serif;color:#111827}
+html body #mqdemo .mqd-c h5{margin:0;text-align:center;font-family:inherit;font-weight:700;font-size:14px;color:#111827}
 html body #mqdemo .mqd-c>small{display:block;text-align:center;color:#94a3b8;font-size:10.5px;margin-bottom:8px}
 html body #mqdemo .mqd-sobre{left:46px;top:18px;width:250px;padding:14px 12px 10px}
 html body #mqdemo .mqd-sobre p{margin:0 0 10px;font-size:11.5px;line-height:1.45;color:#334155;border:1px solid #f1f5f9;padding:8px}
@@ -1082,12 +1082,12 @@ html body #mqdemo .mqd-cor{left:432px;top:206px;width:122px}
 html body #mqdemo .mqd-cor div{height:78px;background:var(--k);color:#fff;font-size:11px;padding:8px}
 html body #mqdemo .mqd-cor span{display:block;padding:8px;font-size:10.5px;color:#334155}
 html body #mqdemo .mqd-logo{left:40px;top:300px;width:262px;height:118px;display:flex;align-items:center;justify-content:center;background:#d4d7dc}
-html body #mqdemo .mqd-logo b{font:900 26px/1 'Arial Black',Impact,sans-serif;letter-spacing:.02em;color:#111;transform:scaleY(1.25)}
+html body #mqdemo .mqd-logo b{font-family:inherit;font-weight:900;font-size:26px;line-height:1;letter-spacing:.02em;color:#111;transform:scaleY(1.25)}
 html body #mqdemo .mqd-seta{position:absolute;left:292px;top:272px;width:118px;height:58px;fill:none;stroke:#22c55e;stroke-width:3;stroke-linecap:round;stroke-dasharray:180;stroke-dashoffset:180;animation:mqdTraco .9s 1.3s ease forwards}
 @keyframes mqdTraco{to{stroke-dashoffset:0}}
 html body #mqdemo .mqd-insp{left:566px;top:18px;width:236px;padding:12px 10px 8px}
 html body #mqdemo .mqd-abc{height:96px;display:flex;align-items:center;justify-content:center;background:#22c55e}
-html body #mqdemo .mqd-abc b{font:900 62px/1 'Arial Black',Impact,sans-serif;color:#052e16}
+html body #mqdemo .mqd-abc b{font-family:inherit;font-weight:900;font-size:62px;line-height:1;color:#052e16}
 html body #mqdemo .mqd-leg{display:block;padding:7px 4px 10px;font-size:10.5px;color:#334155}
 html body #mqdemo .mqd-vid{height:92px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1e3a5f,#64748b 60%,#e2e8f0)}
 html body #mqdemo .mqd-vid i{width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.45);color:#fff;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:13px;animation:mqdPulsa 2.4s 3s infinite}
@@ -1136,3 +1136,52 @@ html body #mqdemo .mqd-cursor svg{width:100%;height:100%;fill:#111827;stroke:#ff
 @media (max-width:640px){html body #mqdemo{padding:0}html body #mqdemo .mqd-pn{border-radius:0;height:100%}html body #mqdemo .mqd-palco{height:auto}}
 /* tema SGE: cantos retos */
 html body.est-sge #mqdemo .mqd-pn,html body.est-sge #mqdemo .mqd-mold,html body.est-sge #mqdemo .mqd-bts button,html body.est-sge .mq-cv .mq-demob{border-radius:0!important}
+/* ===================== 1.139 · ecrã do código: cartão mais compacto, teclado novo e animações ===================== */
+html body #login.pinmode .lgb.pinc{width:min(400px,calc(100vw - 28px))!important;padding:22px 30px 18px!important;outline:none!important;animation:pnIn .55s cubic-bezier(.2,.9,.3,1.15) both;transform-origin:50% 60%}
+html body #login.pinmode .lgb.pinc:focus,html body #login.pinmode .lgb.pinc:focus-visible{outline:none!important;box-shadow:0 30px 80px -20px rgba(0,0,0,.55)!important}
+html body.est-sge #login.pinmode .lgb.pinc:focus,html body.est-sge #login.pinmode .lgb.pinc:focus-visible{box-shadow:0 2px 10px rgba(0,0,0,.18)!important}
+@keyframes pnIn{from{opacity:0;transform:translateY(26px) scale(.96)}}
+html body #login.pinmode .pinside{animation:pnLado .7s .15s ease both}@keyframes pnLado{from{opacity:0;transform:translateX(24px)}}
+html body #login.pinmode .lgh{margin-bottom:2px}
+/* avatar + saudação */
+html body #login.pinmode .plav{width:62px!important;height:62px!important;font-size:22px!important;margin:12px auto 8px!important;animation:pnPop .5s .15s cubic-bezier(.3,1.6,.5,1) both}
+html body #login.pinmode .plav i{width:24px;height:24px;right:-5px;bottom:-5px;animation:pnCad 2.8s 1s ease-in-out infinite}
+@keyframes pnPop{from{opacity:0;transform:scale(.5)}}
+@keyframes pnCad{0%,86%,100%{transform:rotate(0)}89%{transform:rotate(-14deg)}93%{transform:rotate(12deg)}97%{transform:rotate(-6deg)}}
+html body #login.pinmode h1{font-size:21px!important;margin:2px 0 0!important;animation:pnSob .5s .22s ease both}
+html body #login.pinmode .plsub{font-size:13.5px;margin:2px 0 0;animation:pnSob .5s .28s ease both}
+@keyframes pnSob{from{opacity:0;transform:translateY(8px)}}
+/* pontos */
+html body #login.pinmode .pdots{gap:14px!important;margin:14px 0 2px!important;min-height:18px;align-items:center}
+html body #login.pinmode .pdots i{width:13px!important;height:13px!important;transition:background .15s,border-color .15s}
+html body #login.pinmode .pdots i.on{animation:pnPonto .28s cubic-bezier(.3,1.8,.5,1)}
+@keyframes pnPonto{0%{transform:scale(.4)}60%{transform:scale(1.35)}100%{transform:scale(1)}}
+html body #login.pinmode .pdots.ok i{animation:pnOk .45s calc(var(--k,0)*60ms) ease both;background:#16a34a!important;border-color:#16a34a!important}
+html body #login.pinmode .pdots i:nth-child(2){--k:1}html body #login.pinmode .pdots i:nth-child(3){--k:2}html body #login.pinmode .pdots i:nth-child(4){--k:3}
+@keyframes pnOk{50%{transform:translateY(-6px) scale(1.2)}}
+html body #login.pinmode .pderr{min-height:16px;margin:2px 0 6px;font-size:12.5px}
+html body #login.pinmode .pinc:where(.eh-z):not(._h._h){animation:pnAbana .42s ease}
+@keyframes pnAbana{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+html body #login.pinmode.sai .lgb.pinc{animation:pnSai .3s ease forwards}@keyframes pnSai{to{opacity:0;transform:scale(1.04)}}
+/* teclado */
+html body #login.pinmode .pdk{display:grid!important;grid-template-columns:repeat(3,76px)!important;gap:10px 12px!important;width:max-content!important;margin:0 auto 2px!important;justify-items:stretch!important}
+html body #login.pinmode .pdk button{position:relative;overflow:hidden;width:76px!important;height:56px!important;border-radius:min(var(--pin-kr,14px),14px)!important;font-size:23px!important;font-weight:500!important;line-height:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-variant-numeric:tabular-nums;
+  box-shadow:0 1px 0 rgba(0,0,0,.08),inset 0 -2px 0 rgba(0,0,0,.05);transition:background .12s,transform .12s,box-shadow .12s!important;animation:pnTecla .4s calc(.3s + var(--i,0)*35ms) cubic-bezier(.3,1.4,.5,1) both;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+html body #login.pinmode .pdk button small{font-size:8.5px;font-weight:700;letter-spacing:.14em;opacity:.45;height:9px}
+html body #login.pinmode .pdk button:hover{transform:translateY(-2px);box-shadow:0 6px 14px -6px rgba(0,0,0,.28),inset 0 -2px 0 rgba(0,0,0,.05)}
+html body #login.pinmode .pdk button:active,html body #login.pinmode .pdk button.prem{transform:translateY(1px) scale(.95)!important;box-shadow:inset 0 2px 4px rgba(0,0,0,.12)}
+html body #login.pinmode .pdk button:focus-visible{outline:2px solid var(--pin-acc)!important;outline-offset:2px}
+html body #login.pinmode .pdk button.pdc,html body #login.pinmode .pdk button.pdb{box-shadow:none!important;font-size:13.5px!important;color:var(--pin-mut)!important;border-color:transparent!important}
+html body #login.pinmode .pdk button.pdc:hover,html body #login.pinmode .pdk button.pdb:hover{background:var(--pin-key)!important;color:var(--pin-ink)!important}
+@keyframes pnTecla{from{opacity:0;transform:translateY(10px) scale(.85)}}
+html body #login.pinmode .pdk .pnond{position:absolute;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:var(--pin-acc);opacity:.35;pointer-events:none;animation:pnOnda .5s ease-out forwards}
+@keyframes pnOnda{to{transform:scale(11);opacity:0}}
+/* rodapé */
+html body #login.pinmode .plesq{margin:8px auto 0!important;min-height:30px;padding:4px 10px;font-size:12.5px}
+html body #login.pinmode .lgnota{margin-top:4px!important;font-size:12px}
+html body #login.pinmode .lgnota:empty{display:none}
+@media (max-height:700px){html body #login.pinmode .plav{width:50px!important;height:50px!important;font-size:18px!important;margin:6px auto 4px!important}html body #login.pinmode .pdk button{height:48px!important;width:70px!important}html body #login.pinmode .pdk{grid-template-columns:repeat(3,70px)!important;gap:8px 10px!important}}
+@media (max-width:420px){html body #login.pinmode .lgb.pinc{padding:20px 18px 14px!important}}
+@media (prefers-reduced-motion:reduce){html body #login.pinmode *,html body #login.pinmode .lgb.pinc{animation:none!important}}
+html body.est-sge #login.pinmode .pdk button{border-radius:0!important}
+html body.est-sge #login.pinmode .pdk button:not(.pdc):not(.pdb){border:1px solid #d5dbe0!important}
