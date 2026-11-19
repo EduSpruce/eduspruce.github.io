@@ -4,7 +4,7 @@
 @font-face{font-family:Poppins;font-style:normal;font-weight:700;font-display:swap;src:url(../fonts/poppins-latin-700.woff2) format("woff2")}
 :root{
   --bg:#f7f8fa;--panel:#fff;--line:#e4e7eb;--line2:#eef0f3;--ink:#222;--ink2:#4f5661;--ink3:#868d97;
-  --acc:#1a5fd0;--acc2:#eaf1fd;--acc-ink:#164fb0;
+  --acc:#163269;--acc2:#eef3fc;--acc-ink:#163269;
   --ok:#0ca30c;--warn:#c98500;--bad:#d03b3b;--info:#2a78d6;
   --r:10px;--sh:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.08);--sh2:0 12px 32px rgba(16,24,40,.18);
   --font:Poppins,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
@@ -68,7 +68,7 @@ a{color:var(--acc)}
 .btn{border:1px solid var(--line);background:#fff;border-radius:8px;height:34px;padding:0 12px;display:inline-flex;align-items:center;gap:6px;font-weight:500;white-space:nowrap}
 .btn:hover{background:var(--bg)}
 .btn.pri{background:var(--acc);border-color:var(--acc);color:#fff}
-.btn.pri:hover{background:#164fb0}
+.btn.pri:hover{background:#0f2552}
 .btn.ok{background:#163269;border-color:#163269;color:#fff} /* EPISJ 360: verde só nos botões de importar */
 .btn.ok:hover{background:#0c1d40}
 .btn.imp,.madd.imp{background:#2f9e57;border-color:#2f9e57;color:#fff;box-shadow:0 1px 2px rgba(47,158,87,.3)}
@@ -164,7 +164,7 @@ body.embed .top{padding-left:14px}
 .pv.vert .vside small{display:block;font-size:10px}
 .pv .yt-t{font-weight:700;padding:10px 12px 2px}
 .pv .pin{border-radius:16px;overflow:hidden;margin:10px}
-.pv .gbtn{margin:0 12px 12px;display:inline-block;border:1px solid var(--line);border-radius:18px;padding:6px 14px;color:#1a5fd0;font-weight:600;font-size:13px}
+.pv .gbtn{margin:0 12px 12px;display:inline-block;border:1px solid var(--line);border-radius:18px;padding:6px 14px;color:var(--acc);font-weight:600;font-size:13px}
 .pv .more{color:var(--ink3)}
 .pv .fc{border-top:1px solid var(--line2);padding:8px 12px;font-size:12.5px;color:var(--ink2)}
 .pin-dot{position:absolute;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;background:var(--acc);color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;border:2px solid #fff;box-shadow:var(--sh);z-index:2;cursor:pointer}
@@ -474,3 +474,5 @@ textarea.inp{height:auto;padding:9px 10px;resize:vertical;line-height:1.45}
   .mwrap{grid-template-columns:1fr}
   .mdet{width:auto;position:static}
 }
+
+number-flow{--number-flow-char-height:1.05em;font-variant-numeric:tabular-nums}
