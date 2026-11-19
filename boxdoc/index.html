@@ -1818,7 +1818,7 @@ main>section{max-width:none}
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.48"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.49"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -3551,7 +3551,7 @@ var SB_CFG_KEY="g360_sb",SB_SES_KEY="episj360.sb";
 // 0.9.42: projeto "episj360" já criado; a chave publicável é pública por natureza (a proteção está nas regras RLS)
 var SB_PADRAO={url:"https://oovqekytlhkbinfdxjwf.supabase.co",key:"sb_publishable_-RFfe7R5-JQ6ok2Hfmdmmw_YTlcnYpr"};
 function sbCfg(){try{const c=JSON.parse(localStorage.getItem(SB_CFG_KEY)||"null");return c&&c.url&&c.key?c:SB_PADRAO}catch(e){return SB_PADRAO}}
-var SBC=null,SBSES=null,SBMEMBRO=null,SBERR="",SBEU=null; // var: usadas cedo no arranque (sem TDZ)
+var SBC=null,SBSES=null,SBMEMBRO=null,SBERR="",SBEU=null,SBSID=Math.random().toString(36).slice(2,10),SBRT=null; // var: usadas cedo no arranque (sem TDZ)
 async function sbCliente(){if(SBC)return SBC;const c=sbCfg();if(!c)throw new Error("A base de dados (Supabase) ainda não está configurada.");
   const {createClient}=await import(new URL("../esm/supabase-2.117.3.min.js",location.href).href);
   SBC=createClient(c.url,c.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:"pkce",storageKey:SB_SES_KEY}});
@@ -3564,6 +3564,11 @@ function sbErroMsg(e){const m=(e&&e.message)||String(e);if(e&&(e.code==="42501"|
   if(e&&(e.code==="PGRST205"||e.code==="42P01")||/does not exist|schema cache/i.test(m))return "a base de dados ainda não foi preparada (falta correr o script SQL)";
   if(/JWT|401|not authenticated/i.test(m))return "a sessão da base de dados terminou — entre de novo";return m}
 function nuvSB(){try{return !!(SBSES&&sbCfg()&&!RO&&SBMEMBRO&&(SBMEMBRO.admin||SBMEMBRO.perfil==="dexec"||SBMEMBRO.perfil==="dped"))}catch(e){return false}}
+
+/* 0.9.49: tempo real — quando outro computador (ou o iPad) da Direção grava, este vai buscar logo a alteração */
+function sbTempoReal(){if(SBRT||!nuvSB())return;let h=null;
+  sbCliente().then(sb=>{SBRT=sb.channel("g360-estado").on("postgres_changes",{event:"*",schema:"public",table:"g360_estado"},p=>{const r=p.new||{};if(String(r.por||"").endsWith("#"+SBSID))return;
+      clearTimeout(h);h=setTimeout(()=>{if(!NUV.ocupado)nuvemSincMS().then(()=>{try{refreshAll()}catch(e){}try{if(curTab&&curTab.startsWith("rc"))rcRender(curTab)}catch(e){}})},1200)}).subscribe()}).catch(()=>{})}
 function sbAtivo(){try{return !!(SBSES&&sbCfg())}catch(e){return false}}
 async function sbRpc(f,a){const sb=await sbCliente();const {data,error}=await sb.rpc(f,a||{});if(error){const x=new Error(error.code==="42501"?(error.message||"Sem permissão."):sbErroMsg(error));x.code=error.code;throw x}return data}
 const b64DeBuf=buf=>{const u=new Uint8Array(buf);let s="";for(let i=0;i<u.length;i+=32768)s+=String.fromCharCode.apply(null,u.subarray(i,i+32768));return btoa(s)};
@@ -3574,7 +3579,7 @@ async function sbNuvem(method,name,body,t){const sb=await sbCliente();
   if(method==="GET"){const {data,error}=await sb.from("g360_estado").select("dados").eq("nome",name).maybeSingle();if(error)throw new Error(sbErroMsg(error));
     if(!data)return new Response(null,{status:404});return new Response(bufDeB64(data.dados))}
   const buf=body instanceof ArrayBuffer?body:await new Response(body).arrayBuffer();
-  const {error}=await sb.from("g360_estado").upsert({nome:name,dados:b64DeBuf(buf),t:t||Date.now(),por:String(SBSES&&SBSES.user&&SBSES.user.email||"")},{onConflict:"nome"});
+  const {error}=await sb.from("g360_estado").upsert({nome:name,dados:b64DeBuf(buf),t:t||Date.now(),por:String(SBSES&&SBSES.user&&SBSES.user.email||"")+"#"+SBSID},{onConflict:"nome"});
   if(error)throw new Error(sbErroMsg(error));return new Response(JSON.stringify({ok:true}),{headers:{"Content-Type":"application/json"}})}
 async function sbEntrar(){const sb=await sbCliente();let hint="";try{hint=EU&&EU.email||""}catch(e){}
   const {error}=await sb.auth.signInWithOAuth({provider:"azure",options:{scopes:"email openid profile offline_access",redirectTo:location.origin+location.pathname,queryParams:hint?{login_hint:hint}:{}}});if(error)throw error}
@@ -3677,7 +3682,7 @@ async function nuvemTrazer(){
     const E=idx.estado;
     if(E&&(E.t||0)>cfgT()){const e=await nuvemGet("estado");
       const vazio=!cfg.mods.length&&!cfg.profs.length;
-      if(!vazio&&e.cfg!==JSON.stringify(cfg))ponto("Antes de trazer da nuvem a configuração de outro computador");
+      if(!vazio&&e.cfg!==JSON.stringify(cfg)&&Date.now()-(window.__pontoNuv||0)>30*60e3){window.__pontoNuv=Date.now();ponto("Antes de trazer da nuvem a configuração de outro computador")} // 0.9.49: no máximo um ponto por meia hora (com o tempo real)
       cfg=juntarCfg(JSON.parse(e.cfg),cfg);migrate();lastJSON=JSON.stringify(cfg);cfgRev++;persist(lastJSON); // 0.9.22: junta, não substitui
       const fica=lastJSON!==e.cfg; // havia aqui coisas que a nuvem não tinha: voltam a ser enviadas
       try{localStorage.setItem("boxcheck_cfg_t",String(fica?Date.now():E.t));if(fica)setTimeout(nuvemAgendar,0);
@@ -5296,7 +5301,8 @@ async function pdfPlano(todos){const a=anoAtivo(),E=escData();
   const TT=todos?E.turmas.filter(t=>pcDe(t.id)).sort((x,y)=>String(x.cod).localeCompare(String(y.cod),"pt",{numeric:true})):[E.turmas.find(x=>x.id===PC_T)].filter(t=>t&&pcDe(t.id));
   if(!TT.length){toast("Não há planos curriculares neste ano letivo");return}
   const J=await loadPDF(),doc=new J({unit:"mm",format:"a4"});
-  TT.forEach((t,i)=>{if(i)doc.addPage();pdfPlanoSec(doc,t,pcDe(t.id),a)});
+  const muitos=TT.length>3;if(muitos)ovAbrir("A preparar os Planos Curriculares");
+  try{for(let i=0;i<TT.length;i++){if(i)doc.addPage();pdfPlanoSec(doc,TT[i],pcDe(TT[i].id),a);if(muitos)await ovPasso(3+85*(i+1)/TT.length,`Turma ${i+1} de ${TT.length}: ${TT[i].cod}`)}}finally{if(muitos)ovFechar(300)}
   const n=doc.getNumberOfPages();for(let pg=1;pg<=n;pg++){doc.setPage(pg);pdfOfLogos(doc,"Plano Curricular Detalhado",a);pdfDsdRodape(doc,pg,n)}
   doc.save(pdfTxt(todos?`Planos Curriculares ${a.nome.replace("/","-")} - todas as turmas.pdf`:`Plano Curricular ${TT[0].cod} ${a.nome.replace("/","-")}.pdf`))}
 /* 0.9.31: DSD no formato da folha oficial da escola (cabeçalho com os dois logótipos e o título ao centro, tabela com grelha preta,
@@ -5348,8 +5354,10 @@ function pdfDsdSec(doc,id,M,a){const r=M.get(id),p=pcProf(id);if(!p)return null;
 async function pdfDsd(todos){const a=anoAtivo(),M=dsdDados(a.id),J=await loadPDF(),doc=new J({unit:"mm",format:"a4"});
   const ids=todos?cfg.profs.filter(p=>M.has(p.id)).sort((x,y)=>String(x.cod||"").localeCompare(String(y.cod||""),"pt",{numeric:true})||String(x.nome).localeCompare(String(y.nome),"pt")).map(p=>p.id):[DSD_SEL];
   if(!ids.length||!ids[0]){toast("Não há formadores com serviço atribuído");return}
-  const secs=[];ids.forEach((id,i)=>{if(i)doc.addPage();const S=pdfDsdSec(doc,id,M,a);if(S)secs.push(S)});
-  for(const S of secs)for(let pg=S.ini;pg<=S.fim;pg++){doc.setPage(pg);pdfDsdCab(doc,S.a,S.p,S.areas,pg===S.ini);pdfDsdRodape(doc,pg-S.ini+1,S.fim-S.ini+1)}
+  const muitos=ids.length>5;if(muitos)ovAbrir("A preparar a Distribuição de Serviço Docente");
+  try{const secs=[];for(let i=0;i<ids.length;i++){if(i)doc.addPage();const S=pdfDsdSec(doc,ids[i],M,a);if(S)secs.push(S);if(muitos&&i%8===0)await ovPasso(2+80*i/ids.length,`Formador ${i+1} de ${ids.length}`)}
+    let k=0;for(const S of secs){for(let pg=S.ini;pg<=S.fim;pg++){doc.setPage(pg);pdfDsdCab(doc,S.a,S.p,S.areas,pg===S.ini);pdfDsdRodape(doc,pg-S.ini+1,S.fim-S.ini+1)}if(muitos&&++k%25===0)await ovPasso(82+15*k/secs.length,"A pôr cabeçalhos e rodapés…")}
+    if(muitos)await ovPasso(99,"A guardar o PDF…")}finally{if(muitos)ovFechar(300)}
   const p=pcProf(ids[0]);doc.save(pdfTxt(todos?`DSD ${a.nome.replace("/","-")} - todos os formadores.pdf`:`${p?(p.cod?p.cod+" - ":"")+p.nome:"DSD"}.pdf`))}
 $("#pcPdf").onclick=()=>pdfPlano(false).catch(e=>toast(e.message));
 $("#pcPdfAll").onclick=()=>pdfPlano(true).catch(e=>toast(e.message));
@@ -5974,6 +5982,7 @@ async function guideEntrarSB(){
   if(curTab&&curTab.startsWith("rc"))try{rcRender(curTab)}catch(e){}
   prog(100,"Pronto!");await gpEspera(GP.v<99?650:350);
   gateState("off");try{sbUI();window.__subEst&&window.__subEst()}catch(e){}
+  try{sbTempoReal()}catch(e){}
   if(window.__goBox&&podeVer("box"))show("box")}
 // liga o MSAL sem janelas (para enviar email e copiar para o OneDrive), aproveitando a sessão do Office 365 que já existe no navegador
 async function msSilencioso(email){try{const p=await msInit();if(MSACC)return;const acc=p.getAllAccounts().find(a=>String(a.username).toLowerCase()===String(email).toLowerCase());

@@ -191,3 +191,6 @@ language sql stable set search_path = public as $$
               then lower(coalesce(auth.jwt() ->> 'email', '')) else '' end $$;
 revoke all on function public.g360_email() from public, anon;
 grant execute on function public.g360_email() to authenticated;
+
+-- formandos: sem emails, sem lista de formandos, sem planos e sem formandos dentro dos horários (ver migração g360_publico_filtro_formandos)
+-- tempo real: alter publication supabase_realtime add table public.g360_estado;
