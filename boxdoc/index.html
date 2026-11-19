@@ -1726,7 +1726,7 @@ body.ro #pcOut input,body.ro #pcOut select{pointer-events:none}body.ro #pcOut bu
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.34"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.35"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -1753,6 +1753,8 @@ const MAIL_BODY="Olá {primeiro_nome},\n\nRemeto a lista de materiais e document
 const OLD_BODY="Caro(a) {nome},\n\nNa verificação das pastas da Box, constatei que ainda falta entregar a seguinte documentação ({total} documento(s)):\n\n{lista}\n\nPeço que a coloque nas pastas respetivas até {prazo}.\n\nObrigado,\nA Direção";
 const defaultCfg=()=>({schema:2,docTypes:dtpTypes(),profs:[],mods:[],grid:{},desig:{},envios:[],
   mail:{subj:MAIL_SUBJ,prazo:"",ano:"",body:MAIL_BODY,relatorio_para:""},qual:{min:40,dup:true}});
+let LIMPAR=false,lastStored=null; // 0.9.22: o que esta página leu/escreveu da última vez (para não esmagar o que outro separador gravou)
+// 0.9.35: tem de estar declarado ANTES de load(); se não, load() dava erro (TDZ), devolvia null e a app arrancava vazia e gravava por cima
 let cfg=load()||defaultCfg();
 {const g=+(localStorage.getItem("episj_ger")||0);if(g&&!cfg.ger)cfg.ger=g} // 0.9.22: geração (recomeço) a que estes dados pertencem
 const GOPEN=new Set(); // disciplinas abertas na grelha
@@ -1764,9 +1766,22 @@ let rawRows=null, rawHead=null;
 // contadores de alterações: servem para o relatório só ser recalculado quando alguma coisa mudou
 let filesRev=0,IDX=null,cfgRev=0,txRev=0,refRev=0,tplRev=0;
 
-let LIMPAR=false,lastStored=null; // 0.9.22: o que esta página leu/escreveu da última vez (para não esmagar o que outro separador gravou)
+// (LIMPAR e lastStored passaram para antes de let cfg=load(): declarados depois, o load() falhava e a app arrancava com a configuração vazia)
 function load(){try{const t=localStorage.getItem(KEY);lastStored=t;return t?JSON.parse(t):null}catch(e){return null}}
-function persist(s){if(RO||LIMPAR)return;try{s=s||JSON.stringify(cfg);localStorage.setItem(KEY,s);lastStored=s}catch(e){}}
+/* 0.9.35: gravar sem perder nada — se o localStorage estiver cheio (os pontos de restauro guardam cópias inteiras), os pontos mais antigos
+   passam para a base de dados do navegador (IndexedDB) e volta-se a tentar; além disso, cada gravação fica também copiada no IndexedDB,
+   e ao abrir a app, se essa cópia for mais recente do que o localStorage, junta-se (nada se perde ao atualizar a app). */
+let PERSIST_OK=true,persistAviso=false,cfgCopiaH=null;
+function rpPassarParaIDB(manter){try{const l=JSON.parse(localStorage.getItem("boxcheck_pontos")||"[]");if(l.length<=manter)return false;
+  const sai=l.slice(manter);localStorage.setItem("boxcheck_pontos",JSON.stringify(l.slice(0,manter)));
+  try{DB.get("kv","pontosAntigos").then(v=>DB.put("kv","pontosAntigos",[...sai,...(Array.isArray(v)?v:[])].slice(0,60)))}catch(e){}return true}catch(e){try{const l=JSON.parse(localStorage.getItem("boxcheck_pontos")||"[]");try{DB.put("kv","pontosAntigos",l)}catch(x){}localStorage.removeItem("boxcheck_pontos");return true}catch(x){return false}}}
+function cfgCopiaIDB(s){clearTimeout(cfgCopiaH);cfgCopiaH=setTimeout(()=>{try{DB.put("kv","cfgCopia",{t:Date.now(),s})}catch(e){}},250)}
+function persist(s){if(RO||LIMPAR)return false;s=s||JSON.stringify(cfg);let ok=false;
+  for(const manter of[null,8,3,0]){if(manter!==null&&!rpPassarParaIDB(manter))continue;try{localStorage.setItem(KEY,s);lastStored=s;ok=true;break}catch(e){}}
+  if(ok){try{localStorage.setItem(KEY+"_t",String(Date.now()))}catch(e){}}
+  PERSIST_OK=ok;cfgCopiaIDB(s);
+  if(!ok&&!persistAviso){persistAviso=true;setTimeout(()=>{try{toast("O espaço do navegador está cheio: os dados ficam guardados na base de dados do navegador")}catch(e){}},0)}
+  return ok}
 /* ---------- 0.9.22: a informação do utilizador nunca se perde ----------
    Antes, ao trazer da nuvem (ou com outro separador aberto, por exemplo depois de uma atualização da app), a configuração
    mais recente substituía a outra por inteiro — e o que só existia na outra perdia-se. Agora junta-se tudo:
@@ -1821,7 +1836,8 @@ document.addEventListener("keydown",e=>{
 /* ---------- pontos de restauro ---------- */
 const RPKEY="boxcheck_pontos";
 function rpList(){try{return JSON.parse(localStorage.getItem(RPKEY)||"[]")}catch(e){return[]}}
-function ponto(label){try{const l=rpList();l.unshift({t:Date.now(),label,cfg:JSON.stringify(cfg)});localStorage.setItem(RPKEY,JSON.stringify(l.slice(0,25)))}catch(e){}renderRP();nuvemAgendar()}
+function ponto(label){const P={t:Date.now(),label,cfg:JSON.stringify(cfg)};try{const l=rpList();l.unshift(P);if(l.length>9)rpPassarParaIDB(9);const k=rpList();k.unshift(P);
+  try{localStorage.setItem(RPKEY,JSON.stringify(k.slice(0,10)))}catch(e){rpPassarParaIDB(2);try{const k2=rpList();k2.unshift(P);localStorage.setItem(RPKEY,JSON.stringify(k2.slice(0,3)))}catch(x){try{DB.get("kv","pontosAntigos").then(v=>DB.put("kv","pontosAntigos",[P,...(Array.isArray(v)?v:[])].slice(0,60)))}catch(y){}}}}catch(e){}renderRP();nuvemAgendar()}
 function renderRP(){const el=$("#rpList");if(!el)return;const l=rpList();
   el.innerHTML=l.map((p,i)=>{let n="";try{const c=JSON.parse(p.cfg);n=`${c.profs.length} formadores · ${c.mods.length} módulos`}catch(e){}
     return `<div class="rp"><span class="d">${new Date(p.t).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"})}</span><span class="l">${esc(p.label)} <span class="hint" style="margin:0">· ${n}</span></span><button class="b s" data-rp="${i}">Restaurar</button></div>`}).join("")||`<p class="hint">Ainda não há pontos de restauro.</p>`}
@@ -1905,6 +1921,10 @@ const DB=(()=>{let p=null;
     put:(s,k,v)=>tx(s,"readwrite",st=>st.put(v,k)).then(()=>true).catch(e=>{console.warn("DB",e);return false}),
     all:s=>tx(s,"readonly",st=>st.getAll()).catch(()=>[]),
     del:(s,k)=>tx(s,"readwrite",st=>st.delete(k)).catch(()=>{})}})();
+// 0.9.35: ao abrir, se a cópia no IndexedDB for mais recente do que a do localStorage (por exemplo, porque o localStorage estava cheio), junta-se
+DB.get("kv","cfgCopia").then(c=>{if(!c||!c.s||RO||LIMPAR)return;const lt=+(localStorage.getItem(KEY+"_t")||0);
+  if(c.t>lt+500&&c.s!==lastStored){try{const o=JSON.parse(c.s);cfg=juntarCfg(o,cfg);try{migrate()}catch(e){}lastJSON=JSON.stringify(cfg);cfgRev++;persist(lastJSON);try{refreshAll()}catch(e){}}catch(e){console.warn("cópia",e)}}}).catch(()=>{});
+
 
 /* ---------- análise do texto de um documento: palavras, enchimento e "impressão" para comparar textos ---------- */
 const TX=new Map(); // sha1 -> {sha1, n: início do texto normalizado, w: n.º de palavras, u, top, lorem, rep, sig} (w=null: a Box não tem texto)
@@ -4886,7 +4906,7 @@ async function pcImportar(file){const msg=t=>escLinhaMsg("#pcMsg",t,"info");msg(
     <p class="hint" style="margin:6px 0 0">Nada é gravado antes de carregar em <b>Importar dados</b>. Turmas, cursos e formadores que faltem são acrescentados; nada é apagado.</p></div>`;
   $("#pcImpX").onclick=()=>{PC_IMP=null;escLinhaMsg("#pcMsg","Importação cancelada — nada foi alterado.","info")};
   $("#pcImpOk").onclick=()=>pcImportarAplicar($("#pcImpAno").value,$("#pcImpSub").checked)}
-function pcImportarAplicar(anoSel,subst){if(!PC_IMP)return;const {R,file}=PC_IMP;const E=escData();
+async function pcImportarAplicar(anoSel,subst){if(!PC_IMP)return;const {R,file}=PC_IMP;const E=escData();
   let ano=null,anoNovo=false;
   ponto("Antes de importar os planos curriculares de "+file);
   if(String(anoSel).startsWith("novo:")){const y=+anoSel.slice(5);ano=E.anos.find(x=>x.ini===y);if(!ano){ano=novoAno(y);E.anos.push(ano);anoNovo=true}}
@@ -4905,6 +4925,7 @@ function pcImportarAplicar(anoSel,subst){if(!PC_IMP)return;const {R,file}=PC_IMP
   save();
   // confirma que ficou mesmo gravado neste navegador
   let gravados=0;try{const st=JSON.parse(localStorage.getItem(KEY)||"{}");gravados=((st.escola||{}).planos||[]).filter(x=>x.anoId===ano.id).length}catch(e){}
+  if(!gravados){const sj=JSON.stringify(cfg);if(await DB.put("kv","cfgCopia",{t:Date.now(),s:sj}))try{const c=await DB.get("kv","cfgCopia");gravados=((JSON.parse(c.s).escola||{}).planos||[]).filter(x=>x.anoId===ano.id).length}catch(e){}}
   ponto("Depois de importar os planos curriculares de "+file);try{nuvemAgendar()}catch(e){}
   PC_IMP=null;
   try{renderAll()}catch(x){}escRender();try{esRecarregar()}catch(x){}renderPC();
