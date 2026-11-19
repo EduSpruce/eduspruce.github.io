@@ -279,3 +279,12 @@ begin
 end $function$;
 revoke all on function public.g360_publico_gravar(jsonb) from public, anon;
 grant execute on function public.g360_publico_gravar(jsonb) to authenticated;
+
+-- 0.9.55: os formadores e formandos guardam no aparelho o que a Direção publicou e só voltam a descarregar quando há outra publicação
+create or replace function public.g360_publico_versao() returns bigint
+language sql stable security definer set search_path to 'public' as $$
+  select case when (public.g360_perfil_de(public.g360_email()) ->> 'perfil') is null then null
+              else (select c.t from public.g360_config c where c.chave = 'publico') end
+$$;
+revoke all on function public.g360_publico_versao() from public, anon;
+grant execute on function public.g360_publico_versao() to authenticated;

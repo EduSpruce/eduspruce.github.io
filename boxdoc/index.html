@@ -1848,7 +1848,7 @@ main>section{max-width:none}
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.54"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.55"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -6267,8 +6267,17 @@ function aplicarPerfil(){
 
 /* dados publicados pela Direção (só leitura para Formador e Formando) */
 let PUB=null;
+// 0.9.55: o que a Direção publicou fica guardado no aparelho e só se descarrega de novo quando há outra publicação
+// (com 1000 formadores são ~1 MB por entrada: assim entra-se logo e gasta-se muito menos rede)
+async function publicoLer(){if(!sbAtivo())return guideApi("/guide/publico");
+  const ck="g360_pub:"+String(EU&&EU.email||"").toLowerCase()+":"+(EU&&EU.perfil||"");let c=null,v=null;
+  try{c=await DB.get("kv",ck)}catch(e){}
+  try{v=await sbRpc("g360_publico_versao")}catch(e){}
+  if(c&&c.j&&v!=null&&+c.t===+v)return c.j;
+  try{const j=await guideApi("/guide/publico");try{if(j&&typeof j==="object"&&v!=null)await DB.put("kv",ck,{t:+v,j})}catch(e){}return j}
+  catch(e){if(c&&c.j){toast("Sem ligação: a mostrar o que foi publicado da última vez");return c.j}throw e}}
 async function carregarPublico(){
-  let j={};try{j=await guideApi("/guide/publico")}catch(e){toast("Não foi possível trazer os dados da escola: "+e.message)}
+  let j={};try{j=await publicoLer()}catch(e){toast("Não foi possível trazer os dados da escola: "+e.message)}
   RO=true;PUB=j||{};
   cfg=Object.assign(defaultCfg(),j&&j.escola?{escola:j.escola,profs:Array.isArray(j.profs)?j.profs:[]}:{});lastJSON=JSON.stringify(cfg);undoS=[];redoS=[];undoUI();
   try{await esdPronto}catch(e){}
@@ -6283,7 +6292,8 @@ let pubH=null,PUBT=+(localStorage.getItem("guide_pub_t")||0),PUBERR="";
 function guidePubAgendar(){if(!podePublicar()||RO)return;clearTimeout(pubH);pubH=setTimeout(()=>guidePublicar(false),15000)}
 async function guidePublicar(manual){if(!podePublicar()||RO)return;
   if(!cfg.profs.length&&!escData().turmas.length){if(manual)toast("Ainda não há turmas nem formadores para publicar");return}
-  const porAno={};for(const [k,v] of Object.entries(ESD.porAno||{}))if(v&&v.estado)porAno[k]={estado:v.estado,quando:v.quando||0};
+  const porAno={},E0=escData(),hj=hoje(),anoOk=k=>{if(k===E0.ativo)return true;const a=E0.anos.find(x=>x.id===k);return !!(a&&a.inicio&&a.inicio>hj)}; // 0.9.55: só o ano ativo e os que ainda vão começar
+  for(const [k,v] of Object.entries(ESD.porAno||{}))if(v&&v.estado&&anoOk(k))porAno[k]={estado:v.estado,quando:v.quando||0};
   const body={v:1,t:Date.now(),por:EU.email,escola:cfg.escola,profs:cfg.profs.map(p=>({id:p.id,nome:p.nome,abrev:p.abrev||"",email:String(p.email||"").trim().toLowerCase()})),es:{porAno,mapaT:ESD.mapaT||{},mapaC:ESD.mapaC||{}}};
   // 0.9.50: o que já está publicado não volta a ser enviado (com o tempo real, cada computador da Direção publicaria o mesmo)
   const sx=JSON.stringify({...body,t:0,por:""}),sig=sx.length+":"+esHash(sx);let sig0="";try{sig0=localStorage.getItem("guide_pub_sig")||""}catch(e){}
