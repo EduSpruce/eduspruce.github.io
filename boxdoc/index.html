@@ -1726,7 +1726,7 @@ body.ro #pcOut input,body.ro #pcOut select{pointer-events:none}body.ro #pcOut bu
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.32"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.33"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -5418,6 +5418,26 @@ function rcFechar(){$("#rcDw").hidden=true}
 $("#rcDwX").onclick=rcFechar;$("#rcDw").addEventListener("mousedown",e=>{if(e.target.id==="rcDw")rcFechar()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#rcDw").hidden)rcFechar()});
 
+/* 0.9.33: na reserva, "Reservado por" e "Turma" vêm dos dados da escola (formadores e turmas do ano letivo ativo);
+   se o formador escolhido dá Tecnologias da Informação e Comunicação, o motivo fica "Tecnologias de Informação e Comunicação" */
+const RC_TIC="Tecnologias de Informação e Comunicação";
+function rcProfPorNome(n){n=String(n||"").trim().toLowerCase();return n?(cfg.profs||[]).find(p=>String(p.nome||"").trim().toLowerCase()===n)||null:null}
+function rcEhTIC(prof){if(!prof)return false;const re=/tecnologias\s+d[ae]\s+informa|(^|\D)1400(\D|$)|\bTIC\b/i;
+  try{const a=anoAtivo().id;if(pcPlanos().some(p=>p.anoId===a&&(p.linhas||[]).some(l=>l.f===prof.id&&re.test(l.disc||""))))return true}catch(e){}
+  return re.test([prof.grupo,prof.area,prof.disc,prof.disciplina].filter(Boolean).join(" "))}
+function rcTurmaTxt(t){try{return dsdTurmaTxt(t)}catch(e){return t.cod+(t.nome?" — "+t.nome:"")}}
+function rcCamposHTML(sf,v){v=v||{};const P=(cfg.profs||[]).filter(p=>p.nome).slice().sort((a,b)=>String(a.nome).localeCompare(String(b.nome),"pt"));
+  let T=[];try{T=turmasDoAno().map(rcTurmaTxt)}catch(e){}
+  const pIn=!v.p||P.some(p=>p.nome===v.p),tIn=!v.t||T.includes(v.t);
+  return `<label>Reservado por<select id="rcPs${sf}"><option value="">— escolha o formador —</option>${P.map(p=>`<option value="${esc(p.nome)}"${p.nome===v.p?" selected":""}>${esc(p.cod?p.cod+" - "+p.nome:p.nome)}</option>`).join("")}<option value="__o"${pIn?"":" selected"}>Outro (serviço ou pessoa de fora)…</option></select></label>
+    <input type="text" id="rcP${sf}" value="${esc(v.p||"")}" maxlength="80" placeholder="Nome do serviço ou da pessoa" ${pIn?"hidden":""}>
+    <label><span>Turma <span class="rc-mut">(opcional)</span></span><select id="rcTs${sf}"><option value="">— sem turma —</option>${T.map(t=>`<option value="${esc(t)}"${t===v.t?" selected":""}>${esc(t)}</option>`).join("")}${tIn?"":`<option value="${esc(v.t)}" selected>${esc(v.t)}</option>`}</select></label>
+    <input type="hidden" id="rcT${sf}" value="${esc(v.t||"")}">
+    <label><span>Motivo <span class="rc-mut">(opcional)</span></span><input type="text" id="rcM${sf}" value="${esc(v.m||"")}" maxlength="200" placeholder="Ex.: aula prática, teste, reunião"></label>`}
+function rcCamposLigar(sf){const ps=$("#rcPs"+sf),pi=$("#rcP"+sf),ts=$("#rcTs"+sf),ti=$("#rcT"+sf),mi=$("#rcM"+sf);let auto=mi.value===RC_TIC?RC_TIC:"";
+  const motivo=()=>{const tic=rcEhTIC(rcProfPorNome(pi.value));if(tic&&(!mi.value.trim()||mi.value===auto)){mi.value=RC_TIC;auto=RC_TIC}else if(!tic&&auto&&mi.value===auto){mi.value="";auto=""}};
+  ps.onchange=()=>{if(ps.value==="__o"){pi.hidden=false;if(rcProfPorNome(pi.value))pi.value="";pi.focus()}else{pi.hidden=true;pi.value=ps.value}motivo()};
+  pi.oninput=motivo;ts.onchange=()=>{ti.value=ts.value};motivo()}
 /* ---------- nova reserva ---------- */
 function rcNova(o){const hoje=rcHoje(),E=RC.esp.filter(e=>e.on);const e=(o.e&&o.e!=="\u0000"?o.e:"")||RCV.esp||(E[0]||{}).id;
   const d=o.d&&o.d>=hoje?o.d:((RCV.sem||hoje)>hoje?RCV.sem:hoje);const h0=Number.isFinite(o.h0)?o.h0:600,h1=Number.isFinite(o.h1)?o.h1:Math.min(1439,h0+90);
@@ -5429,9 +5449,7 @@ function rcNova(o){const hoje=rcHoje(),E=RC.esp.filter(e=>e.on);const e=(o.e&&o.
     <div class="rc-tps"><span class="rc-mut">Tempos:</span>${rcTempos().map((t,i)=>`<button class="b s" data-rctp="${i}" title="${rcHm(t[0])}–${rcHm(t[1])}">${rcHm(t[0])}</button>`).join("")}</div>
     <div class="rc-dur"><span class="rc-mut">Duração:</span>${[45,50,90,100,180].map(m=>`<button class="b s" data-rcdur="${m}">${Math.floor(m/60)}h${rcPad(m%60)}</button>`).join("")}</div>
     <div id="rcLivre" class="rc-livre" aria-live="polite"></div>
-    <label>Reservado por<input type="text" id="rcP" list="rcPL" maxlength="80" placeholder="Nome do formador ou serviço"></label><datalist id="rcPL">${profs.map(p=>`<option value="${esc(p)}">`).join("")}</datalist>
-    <label><span>Turma <span class="rc-mut">(opcional)</span></span><input type="text" id="rcT" list="rcTL" maxlength="80"></label><datalist id="rcTL">${turmas.map(t=>`<option value="${esc(t)}">`).join("")}</datalist>
-    <label><span>Motivo <span class="rc-mut">(opcional)</span></span><input type="text" id="rcM" maxlength="200" placeholder="Ex.: aula prática, teste, reunião"></label>
+    ${rcCamposHTML("",{p:(()=>{try{const me=dsdEu();return me?me.nome:""}catch(e){return""}})()})}
     <label class="rc-chk"><input type="checkbox" id="rcRep"> Repetir todas as semanas, no mesmo dia e hora</label>
     <div id="rcRepW" hidden><label>Até<input type="date" id="rcAte" min="${rcMais(d,7)}" value="${rcMais(d,56)}"></label><p class="hint" style="margin:4px 0 0">No máximo 60 semanas. Os dias já ocupados ficam de fora e a EPISJ 360 diz quais.</p></div>
     ${temMail?`<label class="rc-chk"><input type="checkbox" id="rcMail"> Enviar confirmação por email ao formador (Office 365)</label>`:""}
@@ -5449,7 +5467,7 @@ function rcNova(o){const hoje=rcHoje(),E=RC.esp.filter(e=>e.on);const e=(o.e&&o.
   document.querySelectorAll("[data-rcdur]").forEach(b=>b.onclick=()=>{const h=rcMin($("#rcH0").value);if(Number.isFinite(h)){$("#rcH1").value=rcHm(Math.min(1439,h+ +b.dataset.rcdur));livre();tpUI()}});
   $("#rcRep").onchange=ev=>{$("#rcRepW").hidden=!ev.target.checked};
   $("#rcD").addEventListener("change",()=>{const v=$("#rcD").value;if(v){$("#rcAte").min=rcMais(v,7);if($("#rcAte").value<=v)$("#rcAte").value=rcMais(v,56)}});
-  $("#rcX").onclick=rcFechar;
+  $("#rcX").onclick=rcFechar;rcCamposLigar("");
   $("#rcOk").onclick=async()=>{const x=val(),p=$("#rcP").value.trim();
     if(!x.e)return toast("Escolha o espaço");if(!x.d||x.d<hoje)return toast("Escolha um dia a partir de hoje");
     if(!Number.isFinite(x.h0)||!Number.isFinite(x.h1)||x.h1<=x.h0)return toast("Verifique as horas");if(!p)return toast("Indique quem reserva");
@@ -5479,9 +5497,9 @@ function rcVer(r){if(!r)return;const e=rcE(r.e),hoje=rcHoje(),serie=r.s?rcAtivas
   $("#rcMud").onclick=()=>{const E=RC.esp.filter(x=>x.on||x.id===r.e);
     rcAbrir("Mudar reserva",`<div class="rc-f"><span class="rc-l">Espaço</span><div class="rc-ops">${E.map(x=>`<label class="rc-op" style="--c:${esc(x.c)}"><input type="radio" name="rcE2" value="${esc(x.id)}" ${x.id===r.e?"checked":""}><i></i>${esc(x.n)}</label>`).join("")}</div>
       <div class="rc-3c"><label>Dia<input type="date" id="rcD2" value="${r.d}"></label><label>Das<input type="time" id="rcA2" value="${rcHm(r.h0)}" step="300"></label><label>Às<input type="time" id="rcB2" value="${rcHm(r.h1)}" step="300"></label></div>
-      <label>Reservado por<input type="text" id="rcP2" value="${esc(r.p)}" maxlength="80"></label><label>Turma<input type="text" id="rcT2" value="${esc(r.t||"")}" maxlength="80"></label><label>Motivo<input type="text" id="rcM2" value="${esc(r.m||"")}" maxlength="200"></label>
+      ${rcCamposHTML("2",{p:r.p,t:r.t,m:r.m})}
       <div class="row"><button class="b" id="rcG2">Guardar</button><button class="b s" id="rcX2">Voltar</button></div></div>`);
-    $("#rcX2").onclick=()=>rcVer(RC.res[r.id]);
+    $("#rcX2").onclick=()=>rcVer(RC.res[r.id]);rcCamposLigar("2");
     $("#rcG2").onclick=async()=>{const e2=(document.querySelector('input[name="rcE2"]:checked')||{}).value,d=$("#rcD2").value,h0=rcMin($("#rcA2").value),h1=rcMin($("#rcB2").value),p=$("#rcP2").value.trim();
       if(!d||!Number.isFinite(h0)||!Number.isFinite(h1)||h1<=h0)return toast("Verifique o dia e as horas");if(!p)return toast("Indique quem reserva");
       await rcTrazer(false);const c=rcChoque(e2,d,h0,h1,r.id);if(c)return toast(`Ocupado: ${c.p} das ${rcHm(c.h0)} às ${rcHm(c.h1)}`);
