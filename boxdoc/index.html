@@ -1614,14 +1614,14 @@ body.ro #pcOut input,body.ro #pcOut select{pointer-events:none}body.ro #pcOut bu
       <label class="grow">Chave publicável<input type="text" id="sbKey" spellcheck="false" placeholder="sb_publishable_…"></label>
       <button class="b s" id="sbSave" style="align-self:flex-end">Guardar</button></div>
     <div id="sbEstado"></div>
-    <details style="margin-top:10px"><summary class="hint" style="cursor:pointer;margin:0">Como preparar a base de dados (uma vez, cerca de 15 minutos)</summary>
+    <details style="margin-top:10px"><summary class="hint" style="cursor:pointer;margin:0">Ligar o login da Microsoft à base de dados (uma vez, cerca de 10 minutos)</summary>
+      <p class="hint" style="margin:6px 0 0">A base de dados <b>episj360</b> já está criada e preparada (tabelas, histórico e regras). Falta só ligar o login da Microsoft:</p>
       <ol class="hint" style="margin:6px 0 0 18px;padding:0">
-        <li>Em <b>supabase.com</b> › New project: nome <b>episj360</b>, região <b>Europe (Frankfurt)</b>. Guarde a palavra-passe da base de dados num sítio seguro.</li>
-        <li>No projeto › <b>SQL Editor</b> › New query: carregue em <button class="b s" id="sbSql" type="button">Copiar o script SQL</button> (já leva o seu email como administrador), cole e carregue em <b>Run</b>.</li>
-        <li>No Entra (aplicação da EPISJ 360, ID <code>8ed0cf26-753c-4bba-aa1a-f9ca0d799cae</code>): <b>Certificados e segredos</b> › Novo segredo do cliente (copie o <i>Valor</i>); <b>Autenticação</b> › Adicionar plataforma › <b>Web</b> › URI de redirecionamento <code>https://&lt;o-seu-projeto&gt;.supabase.co/auth/v1/callback</code>.</li>
-        <li>No Supabase › <b>Authentication › Sign In / Providers › Azure</b>: ligar; Client ID <code>8ed0cf26-753c-4bba-aa1a-f9ca0d799cae</code>; Secret = o valor do passo 3; Azure Tenant URL <code>https://login.microsoftonline.com/1f5546c5-0267-4003-b3fa-80c4372f6d2d</code>. Guardar.</li>
-        <li>No Supabase › <b>Authentication › URL Configuration</b>: Site URL <code>https://eduspruce.github.io/boxdoc/</code>; em Redirect URLs acrescente <code>https://eduspruce.github.io/boxdoc/**</code> e <code>https://boxcheck.episj.pt/**</code>.</li>
-        <li>No Supabase › <b>Project Settings › API Keys</b>: copie o <b>endereço (Project URL)</b> e a <b>chave publicável</b> e cole-os acima. Guardar › Entrar com a Microsoft.</li></ol>
+        <li>No Entra, na aplicação da EPISJ 360 (<code>8ed0cf26-753c-4bba-aa1a-f9ca0d799cae</code>): <b>Certificados e segredos</b> › Novo segredo do cliente › copie o <i>Valor</i>.</li>
+        <li>Na mesma aplicação › <b>Autenticação</b> › Adicionar uma plataforma › <b>Web</b> › URI de redirecionamento <code>https://oovqekytlhkbinfdxjwf.supabase.co/auth/v1/callback</code>.</li>
+        <li>No Supabase › projeto episj360 › <b>Authentication › Sign In / Providers › Azure</b>: ligar; Application (client) ID <code>8ed0cf26-753c-4bba-aa1a-f9ca0d799cae</code>; Secret = o valor do passo 1; Azure Tenant URL <code>https://login.microsoftonline.com/1f5546c5-0267-4003-b3fa-80c4372f6d2d</code>. Save.</li>
+        <li>No Supabase › <b>Authentication › URL Configuration</b>: Site URL <code>https://eduspruce.github.io/boxdoc/</code>; Redirect URLs: <code>https://eduspruce.github.io/boxdoc/**</code> e <code>https://boxcheck.episj.pt/**</code>.</li>
+        <li>Aqui: <b>Entrar com a Microsoft</b>. Como ainda não há administradores, a primeira conta a entrar fica administradora.</li></ol>
       <p class="hint" style="margin:6px 0 0">Nunca cole aqui a chave secreta (<i>service_role</i> / <i>secret</i>): só a publicável. A proteção dos dados é feita pelas regras da base de dados (só a Direção lê e grava).</p></details>
   </div>
 </section>
@@ -1781,7 +1781,7 @@ body.ro #pcOut input,body.ro #pcOut select{pointer-events:none}body.ro #pcOut bu
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.41"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.42"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -1949,7 +1949,7 @@ $("#sbSave").onclick=()=>{const url=$("#sbUrl").value.trim().replace(/\/+$/,""),
   if(/service_role|^sb_secret_/i.test(key))return toast("Essa é a chave SECRETA — use a chave publicável (sb_publishable_…)");
   try{if(url&&key)localStorage.setItem(SB_CFG_KEY,JSON.stringify({url,key}));else localStorage.removeItem(SB_CFG_KEY)}catch(e){}
   toast(url&&key?"Base de dados configurada — a recarregar":"Configuração da base de dados removida");setTimeout(()=>location.reload(),700)};
-$("#sbSql").onclick=async()=>{try{let t=await (await fetch("servidor/supabase-episj360.sql",{cache:"no-store"})).text();const em=(EU&&EU.email)||"";if(em)t=t.replace("O_SEU_EMAIL@episj.pt",em.toLowerCase()).replace("'Administrador'","'"+String(EU.nome||"Administrador").replace(/'/g,"''")+"'");
+if($("#sbSql"))$("#sbSql").onclick=async()=>{try{let t=await (await fetch("servidor/supabase-episj360.sql",{cache:"no-store"})).text();const em=(EU&&EU.email)||"";if(em)t=t.replace("O_SEU_EMAIL@episj.pt",em.toLowerCase()).replace("'Administrador'","'"+String(EU.nome||"Administrador").replace(/'/g,"''")+"'");
   await navigator.clipboard.writeText(t);toast(em?"Script copiado (com "+em+" como administrador)":"Script copiado — mude O_SEU_EMAIL@episj.pt para o seu email")}catch(e){toast("Não foi possível copiar: "+(e.message||e))}};
 sbUI();
 
@@ -3495,14 +3495,17 @@ async function ungz(buf){const s=new Blob([buf]).stream().pipeThrough(new Decomp
    a "nuvem" passa a ser o Supabase: as mesmas peças (estado, rc, ES, avisos, L_…, B_…) na tabela g360_estado, com histórico de versões.
    Sem Supabase, tudo continua como antes (nuvem da Cloudflare com o Office 365, ou com a Box). */
 var SB_CFG_KEY="g360_sb",SB_SES_KEY="episj360.sb";
-function sbCfg(){try{const c=JSON.parse(localStorage.getItem(SB_CFG_KEY)||"{}");return c&&c.url&&c.key?c:null}catch(e){return null}}
+// 0.9.42: projeto "episj360" já criado; a chave publicável é pública por natureza (a proteção está nas regras RLS)
+var SB_PADRAO={url:"https://oovqekytlhkbinfdxjwf.supabase.co",key:"sb_publishable_-RFfe7R5-JQ6ok2Hfmdmmw_YTlcnYpr"};
+function sbCfg(){try{const c=JSON.parse(localStorage.getItem(SB_CFG_KEY)||"null");return c&&c.url&&c.key?c:SB_PADRAO}catch(e){return SB_PADRAO}}
 var SBC=null,SBSES=null,SBMEMBRO=null,SBERR=""; // var: usadas cedo no arranque (sem TDZ)
 async function sbCliente(){if(SBC)return SBC;const c=sbCfg();if(!c)throw new Error("A base de dados (Supabase) ainda não está configurada.");
   const {createClient}=await import(new URL("../esm/supabase-2.117.3.min.js",location.href).href);
   SBC=createClient(c.url,c.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:"pkce",storageKey:SB_SES_KEY}});
   SBC.auth.onAuthStateChange((ev,ses)=>{SBSES=ses||null;if(!ses)SBMEMBRO=null;try{sbUI()}catch(e){}});return SBC}
 const SB_PRONTO=(async()=>{if(!sbCfg())return;try{const sb=await sbCliente();const {data}=await sb.auth.getSession();SBSES=data&&data.session||null;
-  if(SBSES){const em=String(SBSES.user&&SBSES.user.email||"").toLowerCase();const r=await sb.from("g360_membros").select("email,nome,perfil,admin").eq("email",em).maybeSingle();
+  if(SBSES){const em=String(SBSES.user&&SBSES.user.email||"").toLowerCase();try{await sb.rpc("g360_reclamar_admin")}catch(e){} // o primeiro a entrar, sem administradores, fica administrador
+    const r=await sb.from("g360_membros").select("email,nome,perfil,admin").eq("email",em).maybeSingle();
     if(r.error)SBERR=sbErroMsg(r.error);else SBMEMBRO=r.data||null}
   if(/[?&]code=/.test(location.search))history.replaceState(null,"",location.pathname+location.hash)}catch(e){SBERR=e.message||String(e)}try{sbUI()}catch(e){}})();
 function sbErroMsg(e){const m=(e&&e.message)||String(e);if(e&&(e.code==="42501"||/row-level security|permission denied/i.test(m)))return "a sua conta não tem permissão na base de dados (não está em g360_membros como Direção)";

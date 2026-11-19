@@ -24,10 +24,8 @@ create table if not exists public.g360_membros (
   atualizado  timestamptz not null default now()
 );
 
--- primeiro administrador (mude o email se não for este)
-insert into public.g360_membros (email, nome, perfil, admin)
-values ('O_SEU_EMAIL@episj.pt', 'Administrador', 'dexec', true)   -- ← a app preenche isto com o seu email ao copiar o script
-on conflict (email) do nothing;
+-- primeiro administrador: quem entrar primeiro e chamar g360_reclamar_admin() enquanto não houver nenhum administrador
+-- (só contas do Office 365 da escola conseguem entrar; a app chama isto sozinha depois do primeiro login do diretor)
 
 -- ---------- peças do estado da app ----------
 create table if not exists public.g360_estado (
@@ -65,7 +63,7 @@ create trigger g360_estado_hist before update on public.g360_estado
 
 -- ---------- quem sou eu (a partir do login) ----------
 create or replace function public.g360_email() returns text
-language sql stable as $$ select lower(coalesce(auth.jwt() ->> 'email', '')) $$;
+language sql stable set search_path = public as $$ select lower(coalesce(auth.jwt() ->> 'email', '')) $$;
 
 create or replace function public.g360_direcao() returns boolean
 language sql stable security definer set search_path = public as $$
@@ -116,3 +114,18 @@ create policy "histórico: direção lê" on public.g360_historico
 grant select, insert, update on public.g360_estado to authenticated;
 grant select on public.g360_historico to authenticated;
 grant select, insert, update, delete on public.g360_membros to authenticated;
+
+create or replace function public.g360_reclamar_admin() returns boolean
+language plpgsql security definer set search_path = public as $$
+declare em text := public.g360_email(); nm text := coalesce(auth.jwt() -> 'user_metadata' ->> 'full_name', auth.jwt() -> 'user_metadata' ->> 'name', '');
+begin
+  if em = '' then return false; end if;
+  if exists (select 1 from public.g360_membros where admin) then
+    return exists (select 1 from public.g360_membros where email = em and admin);
+  end if;
+  insert into public.g360_membros (email, nome, perfil, admin) values (em, nm, 'dexec', true)
+    on conflict (email) do update set admin = true, perfil = 'dexec';
+  return true;
+end $$;
+revoke all on function public.g360_reclamar_admin() from public, anon;
+grant execute on function public.g360_reclamar_admin() to authenticated;
