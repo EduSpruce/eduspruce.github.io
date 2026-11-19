@@ -904,6 +904,9 @@ main>section{max-width:none}
 @media (min-width:2050px){.cols{grid-template-columns:minmax(0,1fr) minmax(560px,.62fr)}
   body:not(.arrastar) .cols:has(>.col[data-col="b"]:empty){grid-template-columns:minmax(0,1fr)}
   body:not(.arrastar) .cols>.col[data-col="b"]:empty{display:none}}
+
+/* 0.9.47: aulas do Horário360 no mapa do Sala360 (não se mexem nem se cancelam aqui) */
+.rc-bl.rc-aula{cursor:default;background:repeating-linear-gradient(-45deg,color-mix(in srgb,var(--c) 9%,#fff) 0 6px,color-mix(in srgb,var(--c) 17%,#fff) 6px 12px);border-left-style:dashed}
 </style>
 </head>
 <body>
@@ -1787,7 +1790,7 @@ main>section{max-width:none}
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.46"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.47"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -4643,7 +4646,7 @@ const WIDGETS=[
    const mx=Math.max(1,T[0].v),med=T.reduce((s,t)=>s+t.v,0)/T.length;
    return `<p class="wg-t">Média: <b>${med.toFixed(1)}</b> tempos por semana</p><div class="wg-scr">${T.map(t=>`<div class="wg-row"><span class="wg-k wg-el" title="${esc(t.n)}">${esc(t.n)}</span>${wgBarra(t.v*100/mx,t.v>med*1.25?"var(--warn,#d97706)":t.v<med*.6?"#94a3b8":"#7c3aed")}<b>${t.v}</b></div>`).join("")}</div>`}},
  {id:"esphoje",mod:"roomcheck",nome:"Espaços hoje",desc:"Cada espaço com os tempos do dia, livres ou ocupados",r(){
-   const h=rcHoje(),T=rcTempos(),E=RC.esp.filter(e=>e.on),A=rcAtivas().filter(r=>r.d===h),m=wgAgora();if(!E.length)return wgVazio("Sem espaços reserváveis.");
+   const h=rcHoje(),T=rcTempos(),E=RC.esp.filter(e=>e.on),A=rcAtivas().filter(r=>r.d===h).concat(rcAulas(h)),m=wgAgora();if(!E.length)return wgVazio("Sem espaços reserváveis.");
    return `<div class="wg-esp" style="--n:${T.length}"><span></span>${T.map(t=>`<i class="hd${m>=t[0]&&m<t[1]?" ag":""}">${rcHm(t[0])}</i>`).join("")}
      ${E.map(e=>`<b style="--c:${esc(e.c)}" title="${esc(e.n)}">${esc(e.sg||e.n)}</b>${T.map(t=>{const r=A.find(r=>r.e===e.id&&r.h0<t[1]&&r.h1>t[0]);return `<i class="${r?"oc":""}${t[1]<=m?" ps":""}" style="--c:${esc(e.c)}" ${r?`data-wgrc="${esc(r.id)}" title="${esc(r.p+(r.t?" · "+r.t:""))}"`:`title="Livre"`}></i>`}).join("")}`).join("")}</div>
      <p class="wg-sub">${A.length?A.length+" reserva"+(A.length>1?"s":"")+" hoje · clique num tempo ocupado para ver":"Sem reservas hoje — tudo livre."}</p>`+wgIr("rcMapa","Abrir o mapa")}},
@@ -4652,7 +4655,7 @@ const WIDGETS=[
    if(!L.length)return wgVazio("Não há reservas marcadas.")+wgIr("rcMapa","Reservar");
    return `<div class="wg-lst">${L.map(r=>{const e=rcE(r.e);return `<div class="wg-li"><i class="wg-dot" style="background:${esc(e.c)}"></i><span class="wg-el"><b>${esc(e.sg||e.n)}</b> · ${r.d===h?"hoje":esc(rcDia(r.d,{weekday:"short",day:"numeric",month:"short"}))} · ${rcHm(r.h0)}–${rcHm(r.h1)}<br><span class="wg-sub">${esc(r.p)}${r.t?" · "+esc(r.t):""}</span></span><button class="b s" data-wgrc="${esc(r.id)}">Ver</button></div>`}).join("")}</div>`}},
  {id:"ocup",mod:"roomcheck",nome:"Ocupação da semana",desc:"Percentagem dos tempos letivos ocupados em cada espaço nesta semana",r(){
-   const s0=rcSeg(rcHoje()),dias=[0,1,2,3,4].map(i=>rcMais(s0,i)),T=rcTempos(),tm=T.reduce((s,t)=>s+t[1]-t[0],0)*dias.length,A=rcAtivas().filter(r=>dias.includes(r.d)),E=RC.esp.filter(e=>e.on);
+   const s0=rcSeg(rcHoje()),dias=[0,1,2,3,4].map(i=>rcMais(s0,i)),T=rcTempos(),tm=T.reduce((s,t)=>s+t[1]-t[0],0)*dias.length,A=rcAtivas().filter(r=>dias.includes(r.d)).concat(dias.flatMap(d=>rcAulas(d))),E=RC.esp.filter(e=>e.on);
    const L=E.map(e=>{let oc=0;A.filter(r=>r.e===e.id).forEach(r=>T.forEach(t=>{oc+=Math.max(0,Math.min(r.h1,t[1])-Math.max(r.h0,t[0]))}));return{e,p:wgPct(oc,tm),n:A.filter(r=>r.e===e.id).length}}).sort((a,b)=>b.p-a.p);
    return L.map(x=>`<div class="wg-row"><span class="wg-k wg-el" title="${esc(x.e.n)}"><i class="wg-dot" style="background:${esc(x.e.c)}"></i>${esc(x.e.n)}</span>${wgBarra(x.p,x.e.c)}<b>${x.p}%</b></div>`).join("")
      +`<p class="wg-sub">Semana de ${wgDM(dias[0])} a ${wgDM(dias[4])} · ${A.length} reserva${A.length===1?"":"s"}</p>`+wgIr("rcMapa","Abrir o mapa")}},
@@ -5327,8 +5330,8 @@ async function esTrazerNuvem(){try{await esdPronto;if(!NUVOK()||nuvDesl())return
 let ES_ANO=null,ES_SIG="";
 function esAno(){return escData().anos.find(a=>a.id===ES_ANO)||anoAtivo()}
 // assinatura do que a EPISJ 360 entrega ao EduSchedule: se mudar, o EduSchedule é reaberto com os dados novos
-function esSig(){const e=escData(),a=anoAtivo();
-  return JSON.stringify([e.nome,a.id,a.nome,a.inicio,a.fim,a.ferias,cfg.profs.map(p=>[p.id,p.nome,p.abrev||""]),turmasDoAno(a).map(t=>[t.id,t.cod,turmaNome(t),t.dt||""]),(e.formandos||[]).map(f=>[f.id,f.num,f.nome,f.turmaId])])}
+function esSig(){const e=escData(),a=anoAtivo();let pl=[],es=[];try{pl=pcPlanos().filter(p=>p.anoId===a.id).map(p=>[p.turmaId,p.semanas,(p.linhas||[]).map(l=>[l.disc,l.h,l.f])])}catch(x){}try{es=RC.esp.filter(x=>x.on).map(x=>[x.id,x.n])}catch(x){}
+  return JSON.stringify([e.nome,a.id,a.nome,a.inicio,a.fim,a.ferias,cfg.profs.map(p=>[p.id,p.nome,p.abrev||""]),turmasDoAno(a).map(t=>[t.id,t.cod,turmaNome(t),t.dt||""]),(e.formandos||[]).map(f=>[f.id,f.num,f.nome,f.turmaId]),pl,es])}
 const GRELHA_ES=[["08:30","09:20"],["09:20","10:10",1],["10:30","11:20"],["11:20","12:10"],["12:10","13:00",1],["14:00","14:50"],["14:50","15:40",1],["15:50","16:40"]];
 function esNovoEstado(a){const e=escData();
   return{v:3,name:e.nome,ano:a.nome,tlMin:50,alvo:1100,tarde:0,days:["Seg","Ter","Qua","Qui","Sex"],periods:GRELHA_ES.map((t,i)=>({label:String(i+1),start:t[0],end:t[1],breakAfter:!!t[2]})),
@@ -5354,6 +5357,8 @@ function esInjetar(st,a){const e=escData(),P=cfg.profs,byId=new Map(P.map(p=>[p.
       t=T.find(x=>!tu.has(x.id)&&norm(x.cod)===norm(c.name));if(!t)return true;ESD.mapaC[c.id]=t.id}
     tu.add(t.id);ESD.ligC[c.id]=1;c.name=t.cod;c.full=turmaNome(t);if(t.dt&&t2p.has(t.dt))c.dt=t2p.get(t.dt);return true});
   for(const t of T)if(!tu.has(t.id)){st.classes.push({id:t.id,name:t.cod,full:turmaNome(t),roomId:"",dt:t.dt&&t2p.has(t.dt)?t2p.get(t.dt):"",minDay:0,maxDay:7,tardesLivres:0,dep:""});ESD.ligC[t.id]=1}
+  // 0.9.47: espaços do Sala360 → salas do Horário360
+  esInjetarLigacoes(st,a,T,tTodas,t2p);
   // formandos da GUIDE → formandos do EduSchedule (nome, número e turma vêm da GUIDE; aulas e opções ficam no EduSchedule)
   ESD.mapaA=ESD.mapaA||{};ESD.ligA=ESD.ligA||{};const t2c=new Map();
   for(const c of st.classes){const tid=tTodas.has(c.id)?c.id:ESD.mapaC[c.id];if(tid)t2c.set(tid,c.id)}
@@ -5364,6 +5369,65 @@ function esInjetar(st,a){const e=escData(),P=cfg.profs,byId=new Map(P.map(p=>[p.
     fu.add(f.id);ESD.ligA[al.id]=1;al.nome=f.nome;al.num=f.num||"";al.classId=t2c.get(f.turmaId);return true});
   for(const f of F)if(!fu.has(f.id)){st.alunos.push({id:f.id,num:f.num||"",nome:f.nome,classId:t2c.get(f.turmaId),fora:[],extra:[]});ESD.ligA[f.id]=1}
   return st}
+
+/* ===================== 0.9.47: Planos Curriculares (DSD) e Sala360 → Horário360 =====================
+   · cada disciplina dos planos do ano letivo passa a disciplina do Horário360 (sigla automática);
+   · cada turma × disciplina passa a aula: TL por semana = horas do plano ÷ semanas de aulas (arredondado para cima, como na folha da escola),
+     formador = quem dá mais horas dessa disciplina na turma;
+   · o que se mudar à mão no Horário360 (formador, TL, sala, duplos…) fica: só se atualiza o que ainda está como a EPISJ 360 o pôs;
+   · os espaços do Sala360 (Auditório, Laboratórios) passam a salas do Horário360. */
+const ES_CORES=["#2563eb","#16a34a","#dc2626","#9333ea","#ea580c","#0891b2","#ca8a04","#db2777","#4f46e5","#059669","#b91c1c","#7c3aed","#0d9488","#c2410c","#65a30d","#be185d"];
+const esHash=v=>{let h=2166136261;for(const ch of String(v)){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return (h>>>0).toString(36)};
+function esSiglaDisc(d,usadas){let n=String(d||"").replace(/^\s*[\dA-Z]{3,6}\s*[-–]\s*/,"").replace(/\(.*?\)/g,"").trim();
+  const partes=n.split(/\s+[-–]\s+/);if(partes.length>1)n=partes[partes.length-1];
+  const sem=x=>x.normalize("NFD").replace(/[̀-ͯ]/g,"");
+  const pal=sem(n).split(/\s+/).filter(w=>w&&!/^(de|da|do|das|dos|e|a|o|em|para|na|no|I|II|III|IV)$/i.test(w));
+  let s=pal.length>1?pal.map(w=>w[0]).join("").slice(0,4):(pal[0]||"D").slice(0,4);s=s.toUpperCase();let k=s,i=2;while(usadas.has(k))k=s+i++;usadas.add(k);return k}
+function esSemanas(p,a){if(+p.semanas>0)return +p.semanas;
+  try{const d0=new Date(a.inicio+"T12:00"),d1=new Date(a.fim+"T12:00");let w=(d1-d0)/6048e5;(a.ferias||[]).forEach(f=>{if(f.de&&f.ate)w-=((new Date(f.ate+"T12:00")-new Date(f.de+"T12:00"))/864e5+1)/7});if(w>5)return Math.round(w)}catch(e){}return 30}
+function esInjetarLigacoes(st,a,T,tTodas,t2p){
+  ESD.ligS=ESD.ligS||{};ESD.ligL=ESD.ligL||{};ESD.pcL=ESD.pcL||{};ESD.ligR=ESD.ligR||{};
+  for(const k of["subjects","lessons","rooms","cards"])if(!Array.isArray(st[k]))st[k]=[];
+  // salas: espaços do Sala360
+  try{const rById=new Map(st.rooms.map(r=>[r.id,r]));for(const e of RC.esp){if(!e||!e.on)continue;const id="rc_"+e.id;const r=rById.get(id);
+      if(!r){st.rooms.push({id,name:e.n,alt:"",ed:""});ESD.ligR[id]=1}else if(ESD.ligR[id])r.name=e.n}}catch(e){}
+  // turma da EPISJ 360 → turma do Horário360
+  const t2c=new Map();for(const c of st.classes){const tid=tTodas.has(c.id)?c.id:ESD.mapaC[c.id];if(tid)t2c.set(tid,c.id)}
+  const sById=new Map(st.subjects.map(x=>[x.id,x])),usadas=new Set(st.subjects.map(x=>String(x.short||"").toUpperCase())),want=new Map();
+  for(const t of T){let p=null;try{p=pcDe(t.id,a.id)}catch(e){}const cid=t2c.get(t.id);if(!p||!cid)continue;const sem=esSemanas(p,a),porD=new Map();
+    for(const l of p.linhas||[]){if(!l||!l.disc)continue;const o=porD.get(l.disc)||{h:0,f:new Map()};const h=+l.h||0;o.h+=h;if(l.f)o.f.set(l.f,(o.f.get(l.f)||0)+h);porD.set(l.disc,o)}
+    for(const [d,o] of porD){if(o.h<=0)continue;const sid="pc_"+esHash(norm(d));
+      if(!sById.has(sid)){const sj={id:sid,short:esSiglaDisc(d,usadas),name:d,color:ES_CORES[sById.size%ES_CORES.length],roomId:"",fator:st.tlMin||50,seq:"",marg:false,cnl:false};st.subjects.push(sj);sById.set(sid,sj);ESD.ligS[sid]=1}
+      else if(ESD.ligS[sid])sById.get(sid).name=d;
+      let pid="",mx=-1;for(const [f,h] of o.f)if(h>mx){mx=h;pid=f}
+      want.set("pc_"+esHash(a.id+"|"+t.id+"|"+norm(d)),{cid,sid,tid:pid&&t2p.has(pid)?t2p.get(pid):"",tl:Math.max(1,Math.min(40,Math.ceil(o.h/sem-1e-9)))})}}
+  const lById=new Map(st.lessons.map(l=>[l.id,l]));
+  for(const [id,w] of want){let l=lById.get(id);const pv=ESD.pcL[id]||{};
+    if(!l){if(ESD.ligL[id]===0)continue; // apagada à mão no Horário360: não volta
+      if(ESD.pcL[id]&&lById.size){ESD.ligL[id]=0;continue} // já tinha sido posta neste horário e não está: foi apagada no Horário360
+      l={id,classIds:[w.cid],linhas:[{s:w.sid,t:w.tid,r:"",tip:""}],tl:w.tl,duplos:0,blocos:"",per:""};st.lessons.push(l);ESD.ligL[id]=1}
+    else{if(!Array.isArray(l.linhas)||!l.linhas.length)l.linhas=[{s:w.sid,t:w.tid,r:"",tip:""}];const ln=l.linhas[0];
+      if(!l.classIds||!l.classIds.length||(pv.cid&&l.classIds.length===1&&l.classIds[0]===pv.cid))l.classIds=[w.cid];
+      if(!ln.s||ln.s===pv.s)ln.s=w.sid;if(!ln.t||ln.t===pv.t)ln.t=w.tid;if(!l.tl||l.tl===pv.tl)l.tl=w.tl}
+    ESD.pcL[id]={cid:w.cid,s:w.sid,t:w.tid,tl:w.tl}}
+  // aulas que vieram dos planos e cujo plano já não as tem: saem se ainda não estiverem no horário (as que já têm tempos marcados ficam)
+  const comTempos=new Set(st.cards.map(c=>c.lessonId));
+  st.lessons=st.lessons.filter(l=>{if(!ESD.pcL[l.id]||want.has(l.id))return true;if(comTempos.has(l.id))return true;delete ESD.pcL[l.id];delete ESD.ligL[l.id];return false});
+}
+/* ===================== 0.9.47: as aulas do Horário360 ocupam os espaços do Sala360 ===================== */
+let RCAULAS={k:"",m:null};
+function rcAulasMapa(){let a,x=null;try{a=anoAtivo();x=ESD.porAno[a.id]}catch(e){return null}const txt=x&&x.estado||"",k=a.id+":"+txt.length+":"+(x&&x.quando||0);
+  if(RCAULAS.k===k)return RCAULAS.m;let m=[];
+  try{const st=txt?JSON.parse(txt):null;if(st&&!st.example){const L=new Map((st.lessons||[]).map(l=>[l.id,l])),S=new Map((st.subjects||[]).map(z=>[z.id,z])),C=new Map((st.classes||[]).map(c=>[c.id,c])),P=new Map((st.teachers||[]).map(t=>[t.id,t]));
+    const per=st.periods||[],hm=v=>{const q=String(v||"").split(":").map(Number);return q[0]*60+(q[1]||0)};
+    for(const cd of st.cards||[]){const l=L.get(cd.lessonId);if(!l||!per[cd.period])continue;const fp=per[Math.min(per.length-1,cd.period+(cd.len||1)-1)],h0=hm(per[cd.period].start),h1=hm(fp.end);if(!(h1>h0))continue;
+      const salas=new Set();(l.linhas||[]).forEach((ln,i)=>{const r=(cd.r&&cd.r[i])||ln.r||(S.get(ln.s)||{}).roomId;if(r)salas.add(String(r))});
+      const sg=(l.linhas||[]).map(ln=>(S.get(ln.s)||{}).short).filter(Boolean).join("/"),tu=(l.classIds||[]).map(c=>(C.get(c)||{}).name).filter(Boolean).join(", "),fo=(l.linhas||[]).map(ln=>(P.get(ln.t)||{}).name).filter(Boolean).join(", ");
+      for(const r of salas)if(r.startsWith("rc_"))m.push({dia:cd.day,e:r.slice(3),h0,h1,p:"Aula"+(sg?" · "+sg:""),t:tu,m:fo,id:"aula:"+cd.id+":"+r})}}}catch(e){m=[]}
+  RCAULAS={k,m};return m}
+function rcAulas(d){const m=rcAulasMapa();if(!m||!m.length||!d)return[];let a;try{a=anoAtivo()}catch(e){return[]}
+  if(a.inicio&&d<a.inicio||a.fim&&d>a.fim)return[];if((a.ferias||[]).some(f=>f.de&&f.ate&&d>=f.de&&d<=f.ate))return[];
+  const wd=(rcData(d).getDay()+6)%7;return m.filter(x=>x.dia===wd).map(x=>({...x,id:x.id+":"+d,d,aula:true}))}
 /* EduSchedule → EPISJ 360: formadores e turmas criados ou mudados no EduSchedule passam para o módulo Escola */
 let esRetH=null;
 function esRetorno(txt,a){clearTimeout(esRetH);esRetH=setTimeout(()=>{let st;try{st=JSON.parse(txt)}catch(e){return}
@@ -5517,7 +5581,7 @@ const rcMin=t=>{const p=String(t||"").split(":");return p.length<2||p[0]===""?Na
 const rcE=id=>RC.esp.find(e=>e.id===id)||{id,n:id,sg:id,c:"#64748b",on:0};
 const rcDia=(s,o)=>rcData(s).toLocaleDateString("pt-PT",o||{weekday:"long",day:"numeric",month:"long"});
 const rcAtivas=()=>Object.values(RC.res).filter(r=>r&&!r.x);
-const rcChoque=(e,d,h0,h1,ignorar)=>rcAtivas().find(r=>r.e===e&&r.d===d&&r.h0<h1&&r.h1>h0&&r.id!==ignorar);
+const rcChoque=(e,d,h0,h1,ignorar)=>rcAtivas().concat(rcAulas(d)).find(r=>r.e===e&&r.d===d&&r.h0<h1&&r.h1>h0&&r.id!==ignorar);
 function rcGravar(nuvem){
   const lim=Date.now()-90*864e5;for(const k in RC.res){const r=RC.res[k];if(r&&r.x&&(r.u||0)<lim)delete RC.res[k]}
   if(LIMPAR)return;try{localStorage.setItem("roomcheck",JSON.stringify(RC))}catch(e){toast("Não foi possível guardar neste navegador")}
@@ -5551,7 +5615,8 @@ function rcMapa(){const hoje=rcHoje(),E=RC.esp.filter(e=>e.on);if(RCV.esp&&!E.so
   if(RCV.vista==="mes"||RCV.vista==="ano")return rcMesAno(E,esps);
   const n=RC.cfg.sab?6:5,dias=[...Array(n)].map((_,i)=>rcMais(RCV.sem,i));const A=rcAtivas();
   if(!RC.cfg.sab&&A.some(r=>r.d===rcMais(RCV.sem,5)))dias.push(rcMais(RCV.sem,5));
-  const T=rcTempos();let H0=T[0][0],H1=T[T.length-1][1];A.forEach(r=>{if(dias.includes(r.d)&&esps.some(e=>e.id===r.e)){H0=Math.min(H0,Math.floor(r.h0/30)*30);H1=Math.max(H1,Math.ceil(r.h1/30)*30)}});
+  const AM=A.concat(dias.flatMap(d=>rcAulas(d))); // 0.9.47: com as aulas do Horário360
+  const T=rcTempos();let H0=T[0][0],H1=T[T.length-1][1];AM.forEach(r=>{if(dias.includes(r.d)&&esps.some(e=>e.id===r.e)){H0=Math.min(H0,Math.floor(r.h0/30)*30);H1=Math.max(H1,Math.ceil(r.h1/30)*30)}});
   const PX=rcPx(H1-H0,46),alt=(H1-H0)*PX,estreito=esps.length>1,fim=rcMais(RCV.sem,dias.length-1);
   $("#rcEsps").innerHTML=E.map(e=>`<button class="rc-chip${RCV.esp===e.id?" on":""}" data-rcesp="${esc(e.id)}" style="--c:${esc(e.c)}"><i></i>${esc(e.n)}</button>`).join("");
   $("#rcSem").textContent=rcData(RCV.sem).toLocaleDateString("pt-PT",{day:"numeric",month:"short"})+" – "+rcData(fim).toLocaleDateString("pt-PT",{day:"numeric",month:"short",year:"numeric"});
@@ -5559,13 +5624,14 @@ function rcMapa(){const hoje=rcHoje(),E=RC.esp.filter(e=>e.on);if(RCV.esp&&!E.so
   const gaps=T.slice(1).map((t,i)=>[T[i][1],t[0]]).filter(g=>g[1]>g[0]);
   const bloco=(r,e)=>{const top=(r.h0-H0)*PX,h=Math.max(18,(r.h1-r.h0)*PX-2),curto=h<40,medio=h<62;
     const hh=estreito?`<b>${rcHc(r.h0)}</b>${medio?"":`<b>–${rcHc(r.h1)}</b>`}`:`<b>${rcHm(r.h0)}–${rcHm(r.h1)}</b>`;
+    if(r.aula)return `<div class="rc-bl rc-aula${curto?" curto":""}" data-rcaula="${esc(r.id)}" style="--c:${esc(e.c)};top:${top}px;height:${h}px" title="${esc(e.n+" · "+rcHm(r.h0)+"–"+rcHm(r.h1)+" · "+r.p+(r.t?" · "+r.t:"")+(r.m?" · "+r.m:"")+" (Horário360)")}"><span class="rc-hh">${hh}</span><span>${esc(r.p)}</span>${curto?"":r.t?`<span class="rc-mut">${esc(r.t)}</span>`:""}</div>`;
     return `<button class="rc-bl${curto?" curto":""}" data-rcr="${esc(r.id)}" style="--c:${esc(e.c)};top:${top}px;height:${h}px" title="${esc(e.n+" · "+rcHm(r.h0)+"–"+rcHm(r.h1)+" · "+r.p+(r.t?" · "+r.t:"")+(r.m?" · "+r.m:""))}"><span class="rc-hh">${hh}</span><span>${esc(r.p)}</span>${curto?"":r.t?`<span class="rc-mut">${esc(r.t)}</span>`:""}</button>`};
   const linhas=horas.map(m=>`<i style="top:${(m-H0)*PX}px"></i>`).join("")+T.map(t=>`<i class="t" style="top:${(t[0]-H0)*PX}px"></i><i class="t" style="top:${(t[1]-H0)*PX}px"></i>`).join("")
     +gaps.map(g=>`<b class="rc-int${g[1]-g[0]>=45?" alm":""}" style="top:${(g[0]-H0)*PX}px;height:${(g[1]-g[0])*PX}px"></b>`).join("");
   $("#rcGrid").innerHTML=`<div class="rc-grid${estreito?" rc-3":""}" style="--nd:${dias.length}"><div class="rc-cab"></div>
     ${dias.map(d=>`<div class="rc-cab${d===hoje?" hoje":""}"><b>${esc(rcData(d).toLocaleDateString("pt-PT",{weekday:"short"}).replace(".",""))}</b> <span>${rcData(d).getDate()}</span>${estreito?`<div class="rc-sub" style="grid-template-columns:repeat(${esps.length},1fr)">${esps.map(e=>`<span style="--c:${esc(e.c)}" title="${esc(e.n)}">${esc(e.sg)}</span>`).join("")}</div>`:""}</div>`).join("")}
     <div class="rc-horas" style="height:${alt}px">${horas.map(m=>`<span style="top:${(m-H0)*PX}px">${rcHm(m)}</span>`).join("")}${T.map(t=>`<div class="rc-tp" style="top:${(t[0]-H0)*PX}px;height:${(t[1]-t[0])*PX}px"><b>${rcHm(t[0])}</b><em>${rcHm(t[1])}</em></div>`).join("")}${gaps.filter(g=>g[1]-g[0]>=45).map(g=>`<div class="rc-alm" style="top:${(g[0]-H0)*PX}px;height:${(g[1]-g[0])*PX}px">Almoço</div>`).join("")}</div>
-    ${dias.map(d=>`<div class="rc-dia${d===hoje?" hoje":""}${d<hoje?" pas":""}"><div class="rc-lanes" style="height:${alt}px">${linhas}${esps.map(e=>`<div class="rc-lane" data-rcd="${d}" data-rce="${esc(e.id)}" style="--c:${esc(e.c)}">${A.filter(r=>r.d===d&&r.e===e.id).map(r=>bloco(r,e)).join("")}</div>`).join("")}</div></div>`).join("")}</div>`;
+    ${dias.map(d=>`<div class="rc-dia${d===hoje?" hoje":""}${d<hoje?" pas":""}"><div class="rc-lanes" style="height:${alt}px">${linhas}${esps.map(e=>`<div class="rc-lane" data-rcd="${d}" data-rce="${esc(e.id)}" style="--c:${esc(e.c)}">${AM.filter(r=>r.d===d&&r.e===e.id).map(r=>bloco(r,e)).join("")}</div>`).join("")}</div></div>`).join("")}</div>`;
   const prox=A.filter(r=>r.d>=hoje).sort((a,b)=>a.d.localeCompare(b.d)||a.h0-b.h0).slice(0,10);
   $("#rcProx").innerHTML=prox.length?`<div class="rc-lista">${prox.map(r=>{const e=rcE(r.e);return `<div class="rc-it" style="--c:${esc(e.c)}"><i></i><div><b>${esc(e.n)}</b> · ${esc(rcDia(r.d))} · ${rcHm(r.h0)}–${rcHm(r.h1)}<br><span class="rc-mut">${esc(r.p)}${r.t?" · "+esc(r.t):""}${r.m?" · "+esc(r.m):""}${r.s?" · todas as semanas":""}</span></div><button class="b s" data-rcv="${esc(r.id)}">Ver</button></div>`}).join("")}</div>`:`<p class="hint" style="margin:0">Ainda não há reservas marcadas.</p>`;
   document.querySelectorAll("[data-rcesp]").forEach(b=>b.onclick=()=>{RCV.esp=b.dataset.rcesp;rcMapa()});
@@ -5575,7 +5641,8 @@ function rcMapa(){const hoje=rcHoje(),E=RC.esp.filter(e=>e.on);if(RCV.esp&&!E.so
     let h0=H0+Math.floor((m-H0)/30)*30;if(d===hoje&&h0+30<=ag)h0=Math.ceil(ag/15)*15;
     rcNova({e:l.dataset.rce,d,h0,h1:Math.min(1439,h0+90)})});
   document.querySelectorAll("#rcMapa [data-rcr],#rcMapa [data-rcv]").forEach(b=>b.onclick=()=>{if(rcArrastou){rcArrastou=false;return}rcVer(RC.res[b.dataset.rcr||b.dataset.rcv])});
-  document.querySelectorAll("#rcGrid .rc-bl").forEach(b=>b.addEventListener("pointerdown",ev=>rcArrastar(ev,b,{H0,PX,T,hoje})));
+  document.querySelectorAll("#rcGrid .rc-bl[data-rcr]").forEach(b=>b.addEventListener("pointerdown",ev=>rcArrastar(ev,b,{H0,PX,T,hoje})));
+  document.querySelectorAll("#rcGrid [data-rcaula]").forEach(b=>b.onclick=ev=>{ev.stopPropagation();toast(b.title)});
   const sc=$("#rcGrid").closest(".rc-scroll"),dh=$("#rcGrid .rc-dia.hoje");if(sc&&dh&&sc.scrollWidth>sc.clientWidth+4&&sc.dataset.sem!==RCV.sem){sc.dataset.sem=RCV.sem;sc.scrollLeft=Math.max(0,dh.offsetLeft-(window.innerWidth<700?40:52))}}
 /* RoomCheck 1.2: arrastar uma reserva para outra hora, dia ou espaço; nas que se repetem, pergunta se é só este dia ou todas */
 let rcArrastou=false;
