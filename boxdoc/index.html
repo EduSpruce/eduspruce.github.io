@@ -1564,7 +1564,7 @@ body.ro #pcOut input,body.ro #pcOut select{pointer-events:none}body.ro #pcOut bu
     <p class="hint" style="margin:14px 0 0"><b>PNG com fundo transparente, JPG ou SVG</b> — toque numa caixa ou arraste a imagem para cima dela. As imagens são reduzidas e guardadas na sua conta (e incluídas na cópia de segurança).</p>
     <input type="file" id="lgFile" accept="image/png,image/jpeg,image/svg+xml,.png,.jpg,.jpeg,.svg" style="display:none">
   </div>
-  <div class="card">
+  <div class="card" id="msCard" hidden><!-- 0.9.45: escondido — funciona sozinho com a aplicação da escola -->
     <h2>Envio pelo Office 365</h2>
     <p class="hint">Com esta ligação, o Box360 envia os emails <b>a partir da sua conta da escola</b>, com o relatório em <b>PDF em anexo</b> — sem abrir o programa de email. Os emails ficam nos seus Itens Enviados. A app só pede permissão para <b>enviar email em seu nome</b> (e ler o seu nome); não lê a sua caixa de correio.</p>
     <div class="row">
@@ -1781,7 +1781,7 @@ body.ro #pcOut input,body.ro #pcOut select{pointer-events:none}body.ro #pcOut bu
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.44"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.45"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -3780,13 +3780,14 @@ const pdfB64=doc=>{const b=new Uint8Array(doc.output("arraybuffer"));let s="";fo
 async function baixarPDF(fn,nome){try{const d=await fn();d.save(nome)}catch(e){toast(e.message||"Não foi possível gerar o PDF")}}
 
 /* ---------- Office 365 (Microsoft Graph, só Mail.Send) ---------- */
-const msCfg=()=>cfg.ms||(cfg.ms={clientId:"",tenant:"",cc:"",lista:false});
+const msCfg=()=>{const c=cfg.ms||(cfg.ms={clientId:"",tenant:"",cc:"",lista:false});try{if(!c.clientId&&GMS&&GMS.clientId)c.clientId=GMS.clientId;if(!c.tenant&&GMS&&GMS.tenant)c.tenant=GMS.tenant}catch(e){}return c};
 const MS_REDIR=location.origin+location.pathname.replace(/[^/]*$/,"")+"ms.html";
 const MS_SCOPES=["Mail.Send","User.Read"];
 let MSAL=null,MSACC=null;
 // entrada na EPISJ 360: só o nome e o email da conta (User.Read). O Mail.Send só é pedido ao enviar emails no BoxCheck.
 const LOGIN_SCOPES=["User.Read"];
-let GMS=lsJ("guide_ms",null); // ID da aplicação e do diretório, vindos do serviço da EPISJ 360 (não são segredos)
+let GMS=lsJ("guide_ms",null)||{clientId:"8ed0cf26-753c-4bba-aa1a-f9ca0d799cae",tenant:"1f5546c5-0267-4003-b3fa-80c4372f6d2d"}; // 0.9.45: a aplicação da escola já vem configurada
+ // ID da aplicação e do diretório, vindos do serviço da EPISJ 360 (não são segredos)
 function msIds(){const c=cfg.ms||{};return{id:(c.clientId||"").trim()||(GMS&&GMS.clientId)||"",ten:(c.tenant||"").trim()||(GMS&&GMS.tenant)||""}}
 async function msInit(){const {id,ten}=msIds();
   if(!id||!ten)throw new Error("Falta ligar o Office 365: em Definições, indique o ID da aplicação e o ID do diretório.");
@@ -3796,7 +3797,9 @@ async function msInit(){const {id,ten}=msIds();
   await p.initialize();p._k=k;MSAL=p;MSACC=p.getActiveAccount()||p.getAllAccounts()[0]||null;return p}
 async function msLoginPopup(){const p=await msInit();const r=await p.loginPopup({scopes:MS_SCOPES,prompt:"select_account",redirectUri:MS_REDIR});MSACC=r.account;p.setActiveAccount(r.account);msUI();return r.accessToken}
 async function msToken(){const p=await msInit();
-  if(MSACC){try{return (await p.acquireTokenSilent({scopes:MS_SCOPES,account:MSACC})).accessToken}catch(e){}}
+  if(!MSACC){try{if(EU&&EU.email)await msSilencioso(EU.email)}catch(e){}}
+  if(MSACC){try{return (await p.acquireTokenSilent({scopes:MS_SCOPES,account:MSACC})).accessToken}catch(e){}
+    try{return (await p.acquireTokenPopup({scopes:MS_SCOPES,account:MSACC,loginHint:MSACC.username,redirectUri:MS_REDIR})).accessToken}catch(e){}}
   return msLoginPopup()}
 function msErro(e){const m=String(e&&(e.errorMessage||e.message)||e);
   if(/popup_window_error|BrowserAuthError: popup/i.test(m))return "O navegador bloqueou a janela de login da Microsoft — permita pop-ups para este site.";
