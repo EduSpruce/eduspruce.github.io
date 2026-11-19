@@ -1182,6 +1182,37 @@ i.crgm span{overflow:hidden;text-overflow:ellipsis}
 .ay-g th.nx{color:#b0b7c4;font-weight:500}
 .ay-g td.bc{padding:4px 0}
 @media(max-width:640px){.ay-name{font-size:24px}.ay-rib .per span{display:none}.ay-pct{text-align:left}}
+
+/* 0.9.80: Painel da escola — briefing do dia */
+.ep-hero{padding:22px 24px}
+.ep-top{display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.ep-greet{font-size:30px;font-weight:650;letter-spacing:-.03em;color:var(--ink);line-height:1.1}
+.ep-date{color:var(--muted);font-size:14px;margin-top:6px;text-transform:none}.ep-date::first-letter{text-transform:uppercase}.ep-date b{color:var(--ink);font-weight:600}
+.ep-fita{cursor:pointer;margin:4px 0 0}.ep-fita .ay-rib{margin:26px 0 24px;height:26px}.ep-fita .ay-rib .per span{font-size:11px}
+.ep-hero .ay-hero{margin-bottom:18px}.ep-hero .ay-stats{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.ep-k{text-align:left;font:inherit;cursor:pointer;transition:border-color .15s,box-shadow .15s}.ep-k:hover{border-color:var(--brand);box-shadow:0 2px 10px rgba(22,50,105,.08)}
+.ep-th{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:8px}.ep-th h3{margin:0;font-size:15px;color:var(--ink)}
+.ep-th h3 span{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:#fdecec;color:#b91c1c;font-size:11.5px;margin-left:4px;vertical-align:2px}.ep-th h3 span:empty{display:none}
+#escAvisos{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:8px}
+.ep-it{display:flex;align-items:center;gap:12px;text-align:left;border:1px solid var(--line);border-radius:10px;background:var(--card,#fff);padding:10px 12px;cursor:pointer;font:inherit;transition:border-color .15s,box-shadow .15s}
+.ep-it:hover{border-color:var(--brand);box-shadow:0 2px 10px rgba(22,50,105,.08)}.ep-it:hover .ep-go{opacity:1}
+.ep-n{flex:none;min-width:34px;height:34px;padding:0 6px;border-radius:9px;display:grid;place-items:center;font-weight:700;font-size:14px;color:var(--c);background:color-mix(in srgb,var(--c) 11%,transparent);font-variant-numeric:tabular-nums}
+.ep-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.ep-tx b{font-size:13.5px;font-weight:600;color:var(--ink)}.ep-tx small{font-size:12px;color:var(--muted)}
+.ep-bar{display:block;height:4px;border-radius:4px;background:#edf1f7;overflow:hidden;margin-top:3px}.ep-bar i{display:block;height:100%}
+.ep-go{flex:none;font-size:12px;font-weight:600;color:var(--brand);opacity:.55;white-space:nowrap}
+.ep-oks{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}.ep-oks span{font-size:12px;color:var(--ok);background:var(--okbg);padding:3px 9px;border-radius:999px}
+.ep-cfg{margin-top:16px;border-top:1px solid var(--line);padding-top:10px}.ep-cfg summary{cursor:pointer;font-size:12.5px;color:var(--muted);font-weight:500}
+@media(max-width:640px){.ep-greet{font-size:23px}#escAvisos{grid-template-columns:1fr}.ep-go{display:none}.ep-hero .ay-stats{grid-template-columns:1fr 1fr}}
+
+/* 0.9.80: linguagem visual única (a dos Anos letivos) em toda a app — cartões de números compactos e widgets iguais */
+.tile{padding:10px 12px;border-radius:10px;box-shadow:none;gap:2px;justify-content:space-between}
+.tile .l{font-size:12px;font-weight:400;color:var(--muted)}
+.tile .v{font-size:22px;font-weight:650;letter-spacing:-.02em;line-height:1.15}
+.tiles{gap:10px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+.wg{border-radius:10px;box-shadow:none;padding:12px 14px}
+.wg-h b{font-size:13.5px;font-weight:600;color:var(--ink)}
+.wg-big{font-size:26px;font-weight:650}
+.wg-ph{font-weight:600}
 </style>
 <style>
 /* 0.9.60: o verde é só dos botões de importar — nenhum outro botão é verde, para se distinguirem logo */
@@ -1342,15 +1373,19 @@ html.ios-aberto,html.ios-aberto body{overflow:hidden}
 
 <!-- ===================== MÓDULO ESCOLA (EPISJ 360 0.5) ===================== -->
 <section id="esc">
-  <div class="card">
-    <h2>Escola</h2>
-    <p class="hint">O que é comum a todos os módulos da EPISJ 360: o <b>ano letivo ativo</b> (também no topo), os <b>cursos</b>, as <b>turmas</b> e os <b>formadores</b>. O Box360 e o Horário360 usam estes dados; o que se acrescentar no Horário360 aparece aqui.</p>
-    <div class="row" style="margin-bottom:14px">
-      <label class="grow">Nome da escola<input type="text" id="escNome"></label>
-      <button class="b s imp" id="escImport" style="align-self:flex-end" title="Traz as turmas das pastas A01 - Curso (25/28) da análise do Box360">Importar turmas e cursos da Box</button>
+  <div class="card ep-hero">
+    <div class="ay-hero">
+      <div class="ay-top"><div class="ep-hi"><div class="ep-greet" id="epGreet">Olá</div><div class="ep-date" id="epDate"></div></div><span class="grow"></span>
+        <div class="ay-pct" id="epScore" title="Média ponderada dos pontos da lista «Para resolver»: quanto mais importante o ponto, mais conta"></div></div>
+      <div id="epFita" class="ep-fita" data-ir="anos" title="Abrir Anos letivos"></div>
+      <div class="ay-stats" id="escTiles"></div>
     </div>
-    <div class="tiles" id="escTiles"></div>
-    <div id="escAvisos"></div>
+    <div class="ep-todo"><div class="ep-th"><h3>Para resolver <span id="epTodoN"></span></h3><span class="hint" style="margin:0">do mais importante para o menos — carregue para ir lá</span></div><div id="escAvisos"></div></div>
+    <details class="ep-cfg"><summary>Nome da escola e importação</summary>
+      <div class="row" style="margin-top:10px">
+        <label class="grow">Nome da escola<input type="text" id="escNome"></label>
+        <button class="b s imp" id="escImport" style="align-self:flex-end" title="Traz as turmas das pastas A01 - Curso (25/28) da análise do Box360">Importar turmas e cursos da Box</button>
+      </div></details>
     <div id="pubBox" class="row" style="display:none;margin-top:12px;align-items:center"><button class="b s" id="pubGo" title="Envia as turmas, os formadores e os horários para os perfis Formador e Formando verem (só leitura)">Publicar para formadores e formandos</button><span id="pubMsg" class="hint" style="margin:0"></span></div>
   </div>
   <div class="card wg-card" id="wgCard">
@@ -2334,7 +2369,7 @@ html.ios-aberto,html.ios-aberto body{overflow:hidden}
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.79"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.80"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -5152,7 +5187,7 @@ $("#srvTest").onclick=async e=>{e.currentTarget.disabled=true;srvJaLigado=true;t
 /* ---------- tamanho da letra (+/−), guardado neste navegador ---------- */
 const FSZ=[80,90,100,110,120,130,140,150,165,180];
 let fsz=(()=>{const v=+lsJ("boxcheck_letra",100);return FSZ.includes(v)?v:100})();
-function aplicarLetra(){document.body.style.zoom=fsz===100?"":String(fsz/100);$("#fszVal").textContent=fsz+"%";
+function aplicarLetra(){document.body.style.zoom=fsz===100?"":String(fsz/100);setTimeout(()=>{try{document.querySelectorAll(".wg-grid").forEach(wgArrumar)}catch(e){}},30);$("#fszVal").textContent=fsz+"%";
   $("#fszMenos").disabled=fsz===FSZ[0];$("#fszMais").disabled=fsz===FSZ[FSZ.length-1];try{localStorage.setItem("boxcheck_letra",String(fsz))}catch(e){}
   if(typeof curTab!=="undefined"&&curTab==="est")setTimeout(()=>{try{linhaTempo($("#eTime"))}catch(e){}},50)}
 $("#fszMais").onclick=()=>{const i=FSZ.indexOf(fsz);if(i<FSZ.length-1){fsz=FSZ[i+1];aplicarLetra()}};
@@ -5205,22 +5240,61 @@ $("#anoSel").addEventListener("change",e=>mudarAnoAtivo(e.target.value));
 function mudarAnoAtivo(id){const e=escData();if(e.ativo===id)return;e.ativo=id;save();escRender();esRecarregar();aplicarLogos();try{renderDef()}catch(x){}toast("Ano letivo ativo: "+anoAtivo().nome)}
 
 /* ---------- painel da escola ---------- */
-function renderEscPainel(){const e=escData(),a=anoAtivo(),T=turmasDoAno(a);
-  const semMail=cfg.profs.filter(p=>!/\S+@\S+\.\S+/.test(p.email||"")).length,semDT=T.filter(t=>!t.dt).length,semCurso=T.filter(t=>!cursoById(t.cursoId)).length,semCnq=e.cursos.filter(c=>!c.qual).length;
-  const x=ESD.porAno[a.id];let aulas=0;try{if(x&&x.estado){const st=JSON.parse(x.estado);aulas=(st.cards||[]).filter(c=>c.day!=null).length}}catch(_){}
+/* 0.9.80: Painel da escola repensado — em vez de números soltos e avisos, um briefing do dia:
+   saudação e o ponto do ano (dia letivo, período, linha do tempo), a saúde dos dados da escola num só número,
+   uma lista "Para resolver" com o progresso de cada ponto e o atalho para o resolver, e os números da escola numa só faixa. */
+function epPontos(){const e=escData(),a=anoAtivo(),T=turmasDoAno(a),P=cfg.profs||[],L=[];
+  const add=(o)=>{if(o.tot>0)L.push(o)};
+  add({k:"curso",t:"Turmas com curso",ok:T.filter(t=>cursoById(t.cursoId)).length,tot:T.length,ir:"tur",fx:"Atribuir cursos",p:5});
+  add({k:"dt",t:"Turmas com diretor de turma",ok:T.filter(t=>t.dt).length,tot:T.length,ir:"tur",fx:"Atribuir diretores",p:4});
+  add({k:"mail",t:"Formadores com email",ok:P.filter(p=>/\S+@\S+\.\S+/.test(p.email||"")).length,tot:P.length,ir:"prof",fx:"Completar emails",p:4,nota:"sem email não entram na EPISJ 360 nem recebem avisos"});
+  add({k:"fse",t:"Turmas com código FSE",ok:T.filter(t=>t.fse).length,tot:T.length,ir:"tur",fx:"Juntar códigos",p:2});
+  add({k:"pc",t:"Turmas com plano curricular",ok:T.filter(t=>{try{return pcDe(t.id,a.id)}catch(x){return false}}).length,tot:T.length,ir:"pc",fx:"Fazer planos",p:3});
+  add({k:"cnq",t:"Cursos ligados ao Catálogo",ok:e.cursos.filter(c=>c.qual).length,tot:e.cursos.length,ir:"cur",fx:"Ligar ao Catálogo",p:2});
+  const op=e.cursos.filter(c=>(c.itens||[]).some(i=>i.opc)&&c.opcH);
+  add({k:"opc",t:"Cursos com as UFCD opcionais escolhidas",ok:op.filter(c=>{const es=new Set(c.opcEsc||[]);return hSoma((c.itens||[]).filter(i=>i.opc&&es.has(i.cod)))>=c.opcH}).length,tot:op.length,ir:"cur",fx:"Escolher opcionais",p:2});
+  if(modOn("eduschedule")){const st=mhEstado();if(st){const C=st.cards||[];add({k:"hor",t:"Blocos colocados no horário",ok:C.filter(c=>c.day!=null).length,tot:C.length,ir:"esch",fx:"Abrir o Horário360",p:3})}
+    else if(T.length)L.push({k:"hor",t:`Horário de ${a.nome}`,ok:0,tot:1,ir:"esch",fx:"Começar o horário",p:3,txt:"por fazer"})}
+  if(modOn("crono")){try{const M=crMotor(a),me=crMeuId();let n=0,tot=0;for(const X of M.turmas.values()){const r=crTurmaRes(X,me);for(const o of r.L){tot++;if(o.est==="risco"||o.est==="semhorario")n++}}
+    add({k:"crono",t:"Disciplinas a caminho de cumprir o plano",ok:tot-n,tot,ir:"crPs",fx:"Ver o ponto de situação",p:3})}catch(x){}}
+  try{const FER=calFeriados(a),util=d=>{const w=calD(d).getDay();return w>0&&w<6};const f=FER.filter(x=>util(x.data)&&(!a.inicio||x.data>=a.inicio)&&(!a.fim||x.data<=a.fim));
+    const cob=f.filter(x=>(a.ferias||[]).some(y=>y&&y.de&&x.data>=y.de&&x.data<=(y.ate||y.de))).length;add({k:"fer",t:"Feriados marcados no calendário",ok:cob,tot:f.length,ir:"anos",fx:"Marcar feriados",p:1})}catch(x){}
+  return L}
+function epSaude(L){let s=0,w=0;for(const x of L){s+=x.p*(x.ok/x.tot);w+=x.p}return w?Math.round(s/w*100):100}
+function renderEscPainel(){
+  // no arranque o painel é desenhado antes de as funções de datas e dos widgets existirem: espera pelo fim do arranque e volta a desenhar
+  try{calHoje;calDM;hSoma;modOn;wgPct}catch(x){try{$("#escNome").value=escData().nome}catch(_){}setTimeout(()=>{try{if(curTab==="esc")renderEscPainel()}catch(e){console.warn("painel",e)}},0);return}
+  const e=escData(),a=anoAtivo(),T=turmasDoAno(a),hj=calHoje(),hr=new Date().getHours();
   $("#escNome").value=e.nome;
-  $("#escTiles").innerHTML=[[a.nome,"Ano letivo ativo","anos"],[T.length,"Turmas neste ano","tur"],[e.cursos.length,"Cursos","cur"],[cfg.profs.length,"Formadores","prof"],[(e.formandos||[]).length,"Formandos","for"],[`${T.filter(t=>pcDe(t.id,a.id)).length}/${T.length}`,"Planos curriculares","pc"],[aulas?aulas:"—",aulas?"Tempos colocados no horário":"Horário por fazer","esch"]]
-    .map(([v,l,t])=>`<button class="tile" data-ir="${t}" style="text-align:left;cursor:pointer;font:inherit"><div class="v">${esc(v)}</div><div class="l">${esc(l)}</div></button>`).join("");
-  const av=[];
-  if(!e.cursos.length&&!e.turmas.length)av.push(`Ainda não há cursos nem turmas. Use <b>Importar da Box</b> (traz as turmas das pastas <code>A01 - Curso (25/28)</code> da análise do Box360) ou crie-os em <b>Cursos</b> e <b>Turmas</b>.`);
-  if(semCurso)av.push(`${semCurso} turma(s) deste ano sem curso.`);
-  if(semDT)av.push(`${semDT} turma(s) deste ano sem diretor de turma.`);
-  if(semCnq)av.push(`${semCnq} curso(s) ainda não ligados ao Catálogo Nacional de Qualificações.`);
-  if(semMail)av.push(`${semMail} formador(es) sem email — não recebem os avisos do Box360.`);
-  $("#escAvisos").innerHTML=av.length?av.map(t=>`<div class="msg info" style="margin:0 0 8px">${t}</div>`).join(""):`<div class="msg ok" style="margin:0">Tudo em ordem para ${esc(a.nome)}.</div>`;
-  try{renderWidgets()}catch(e){}} // 0.9.21
+  const nome=EU&&EU.nome?String(EU.nome).split(/\s+/)[0]:"";
+  $("#epGreet").textContent=(hr<6?"Boa noite":hr<12?"Bom dia":hr<20?"Boa tarde":"Boa noite")+(nome?", "+nome:"");
+  // o ponto do ano
+  let lin=[calDM(hj,{weekday:"long",day:"numeric",month:"long"})];const N=ayNumeros(a);
+  if(N.tot&&a.inicio&&a.fim){if(hj<a.inicio)lin.push(`${esc(a.nome)} começa daqui a ${calDias(hj,a.inicio)} dias`);else if(hj>a.fim)lin.push(`${esc(a.nome)} terminou`);
+    else{const NL=N.NL,w=calD(hj).getDay(),letivo=w>0&&w<6&&!NL.has(hj),x=NL.get(hj);
+      lin.push(letivo?`<b>${N.feitos+1}.º dia letivo</b> de ${N.tot}`:x?`<b>${esc(x.n)}</b> — sem aulas`:"fim de semana");
+      let P=[];try{P=calPeriodos(a)}catch(_){}const np=calPeriodoDe(a,hj,P),p=P.find(z=>z.n===np);if(p){const f=calLetivos(a,hj,p.fim,NL);lin.push(`${np}.º período: ${f===0?"acabou":f===1?"falta 1 dia":`faltam ${f} dias`}`)}}}
+  $("#epDate").innerHTML=lin.join(" · ");
+  $("#epFita").innerHTML=N.tot?ayFita(a,N).replace(/<div class="ay-leg">[\s\S]*$/,""):"";
+  // saúde dos dados e o que falta resolver
+  const L=epPontos(),sd=epSaude(L),R=L.filter(x=>x.ok<x.tot).sort((x,y)=>y.p*(1-y.ok/y.tot)-x.p*(1-x.ok/x.tot)),OK=L.filter(x=>x.ok>=x.tot);
+  $("#epScore").innerHTML=`<b style="color:${sd>=85?"var(--ok)":sd>=60?"#b45309":"#b91c1c"}">${sd}%</b>dados da escola completos · ${OK.length} de ${L.length} pontos em ordem`;
+  const vz=!e.cursos.length&&!e.turmas.length;
+  $("#escAvisos").innerHTML=vz?`<div class="msg info" style="margin:0">Ainda não há cursos nem turmas. Use <b>Importar turmas e cursos da Box</b> ou crie-os em <a href="#" data-ir="cur">Cursos</a> e <a href="#" data-ir="tur">Turmas</a>.</div>`
+    :R.length?R.map(x=>{const pc=Math.round(x.ok/x.tot*100),f=x.tot-x.ok,cor=pc>=80?"#d97706":pc>=40?"#ea580c":"#dc2626";
+      return `<button class="ep-it" data-ir="${x.ir}" title="${esc(x.fx)}"><span class="ep-n" style="--c:${cor}">${x.txt?"!":f}</span><span class="ep-tx"><b>${esc(x.t)}</b><small>${x.txt?esc(x.txt):`${x.ok} de ${x.tot}`}${x.nota?" · "+esc(x.nota):""}</small><i class="ep-bar"><i style="width:${pc}%;background:${cor}"></i></i></span><span class="ep-go">${esc(x.fx)} →</span></button>`}).join("")
+      +(OK.length?`<div class="ep-oks">${OK.map(x=>`<span>✓ ${esc(x.t)}</span>`).join("")}</div>`:"")
+    :`<div class="wg-okm">✓ Tudo em ordem para ${esc(a.nome)} — ${L.length} pontos verificados.</div>`;
+  $("#epTodoN").textContent=R.length?R.length:"";
+  // os números da escola numa faixa
+  const st=modOn("eduschedule")?mhEstado():null,C=st?st.cards||[]:[],pos=C.filter(c=>c.day!=null).length;
+  $("#escTiles").innerHTML=[[T.length,"Turmas neste ano","tur"],[e.cursos.length,"Cursos","cur"],[(cfg.profs||[]).length,"Formadores","prof"],[(e.formandos||[]).length,"Formandos","for"],[`${T.filter(t=>{try{return pcDe(t.id,a.id)}catch(x){return false}}).length}/${T.length}`,"Planos curriculares","pc"]]
+    .concat(modOn("eduschedule")?[[C.length?wgPct(pos,C.length)+"%":"—","Horário colocado","esch"]]:[])
+    .map(([v,l,t])=>`<button class="ay-st ep-k" data-ir="${t}"><small>${esc(l)}</small><b>${esc(v)}</b></button>`).join("");
+  try{renderWidgets()}catch(x){}}
 $("#escNome").addEventListener("change",e=>{escData().nome=e.target.value.trim()||"Escola Profissional da Ilha de São Jorge";save();esRecarregar()});
-$("#escTiles").addEventListener("click",e=>{const b=e.target.closest("[data-ir]");if(!b)return;if(b.dataset.ir==="esch")mostrarModulo("eduschedule",true);else show(b.dataset.ir)});
+$("#esc").addEventListener("click",e=>{const b=e.target.closest(".ep-hero [data-ir]");if(!b)return;e.preventDefault();const t=b.dataset.ir;if(t==="esch")mostrarModulo("eduschedule",true);else show(t)});
+
 $("#escImport").onclick=()=>escImportarBox();
 $("#escImport2").onclick=()=>escImportarBox();
 
@@ -5395,12 +5469,13 @@ function renderWidgets(){if(!window.__wgOk)return; // só depois de a app arranc
   for(const z of [1,2]){const Z=WGZ[z],g=$(Z.grid);if(!g)continue;const L=Z.sel.map(id=>WIDGETS.find(w=>w.id===id)).filter(w=>w&&vis.has(w.id));
     $(Z.conta).textContent=`${L.length} widget${L.length===1?"":"s"}`;
     g.innerHTML=L.length?L.map(w=>{const M=WG_MOD[w.mod];let c;try{c=w.r()}catch(e){console.warn(w.id,e);c=wgVazio("Não foi possível mostrar este widget.")}
-      return `<div class="wg" data-wg="${w.id}" style="--mc:${M.c}"><div class="wg-h"><span class="wg-m" title="${esc(M.n)}">${M.l}</span><b>${esc(w.nome)}</b><button class="wg-x" data-wgx="${w.id}" title="Esconder este widget" aria-label="Esconder ${esc(w.nome)}">×</button></div><div class="wg-c">${c}</div></div>`}).join("")
+      return `<div class="wg" data-wg="${w.id}" style="--mc:${M.c}"><div class="wg-h"><b title="${esc(M.n)}">${esc(w.nome)}</b><button class="wg-x" data-wgx="${w.id}" title="Esconder este widget" aria-label="Esconder ${esc(w.nome)}">×</button></div><div class="wg-c">${c}</div></div>`}).join("")
       :`<div class="wg-none">Nenhum widget nesta zona. Arraste para aqui um widget da outra zona ou <button class="b s" data-wgesc="${z}">escolha widgets</button>.</div>`;
     wgArrumar(g)}}
 // encaixe sem buracos: cada widget ocupa as linhas (de 4 px) que a sua altura pede
 const wgRO=window.ResizeObserver?new ResizeObserver(es=>{for(const e of es)wgSpan(e.target)}):null;
-function wgSpan(w){if(!w.isConnected)return;w.style.gridRowEnd="span "+Math.max(1,Math.ceil((w.getBoundingClientRect().height+14)/4))}
+let WG_ESC=0;function wgEscala(){if(WG_ESC)return WG_ESC;const d=document.createElement("div");d.style.cssText="position:absolute;visibility:hidden;height:100px;width:1px";document.body.appendChild(d);WG_ESC=d.getBoundingClientRect().height/100||1;d.remove();setTimeout(()=>WG_ESC=0,0);return WG_ESC}
+function wgSpan(w){if(!w.isConnected)return;w.style.gridRowEnd="span "+Math.max(1,Math.ceil((w.getBoundingClientRect().height/wgEscala()+14)/4))} // 0.9.80: altura em px da página, mesmo com A+/A−
 function wgArrumar(g){g.querySelectorAll(":scope>.wg").forEach(w=>{wgSpan(w);if(wgRO)wgRO.observe(w)})}
 // arrastar pelo título: muda a ordem e a zona (o widget mexe-se na grelha enquanto se arrasta)
 function wgArrastar(ev,w){if(ev.button!==0||ev.target.closest("button"))return;const x0=ev.clientX,y0=ev.clientY,G=[$("#wgGrid"),$("#wgGrid2")].filter(Boolean);let fant=null,dx=0,dy=0,ult=null;
@@ -5427,7 +5502,7 @@ window.addEventListener("resize",()=>{clearTimeout(window.__wgRz);window.__wgRz=
 function wgEscolher(z){z=+z||1;const Z=WGZ[z],O=WGZ[z===1?2:1],sel=new Set(Z.sel),out=new Set(O.sel),mods=Object.keys(WG_MOD);
   rcAbrir(Z.nome+" — escolher",`<p class="hint" style="margin-top:0">Escolha os que quer ver nesta zona. Só aparecem os dos módulos ligados; a escolha fica guardada neste navegador. Um widget só está numa zona de cada vez: escolher aqui um que está na outra zona muda-o para esta.</p>
     <div class="row" style="margin-bottom:10px"><button class="b s" id="wgTodos">Todos os que sobram</button><button class="b s" id="wgNenhum">Nenhum</button><button class="b s" id="wgRepor">Repor os sugeridos</button></div>
-    ${mods.map(m=>{const M=WG_MOD[m],on=modOn(m);return `<div class="wg-pg"><div class="wg-ph" style="--mc:${M.c}"><span class="wg-m">${M.l}</span>${esc(M.n)}${on?"":` <i class="wg-tag">módulo desligado</i>`}</div>
+    ${mods.map(m=>{const M=WG_MOD[m],on=modOn(m);return `<div class="wg-pg"><div class="wg-ph" style="--mc:${M.c}">${esc(M.n)}${on?"":` <i class="wg-tag">módulo desligado</i>`}</div>
       ${WIDGETS.filter(w=>w.mod===m).map(w=>`<label class="wg-op${on?"":" off"}"><input type="checkbox" data-wgc="${w.id}"${sel.has(w.id)?" checked":""}${on?"":" disabled"}><span><b>${esc(w.nome)}${out.has(w.id)?` <i class="wg-tag">na outra zona</i>`:""}</b><small>${esc(w.desc)}</small></span></label>`).join("")}</div>`}).join("")}
     <div class="row" style="margin-top:12px"><button class="b" id="wgOk">Feito</button></div>`);
   const ler=()=>{const s=new Set([...document.querySelectorAll("[data-wgc]:checked")].map(x=>x.dataset.wgc));
