@@ -1725,7 +1725,7 @@ body.ro #pcOut input,body.ro #pcOut select{pointer-events:none}body.ro #pcOut bu
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.30"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.31"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -4969,21 +4969,53 @@ async function pdfPlano(){const t=escData().turmas.find(x=>x.id===PC_T),p=pcDe(P
   const tot=pcH(p.linhas),fct=+p.fct.horas||0;
   y=pdfTabela(doc,y,["Resumo","Horas"],[...PC_AREAS.map(([k,n])=>[n,pcNum(pcH(p.linhas.filter(l=>l.area===k)))]),["Total de horas",pcNum(tot)],[`Formação em Contexto de Trabalho${p.fct.semanas?` (${p.fct.semanas} semanas${p.fct.dias?", "+pcNum(p.fct.dias)+" dias":""})`:""}`,pcNum(fct)],["Total global",pcNum(tot+fct)]].map(r=>r.map(pdfTxt)),{1:{cellWidth:30,halign:"right"}});
   pdfAssinatura(doc,y+4);pdfMoldura(doc,PC_RODAPE);doc.save(pdfTxt(`Plano Curricular ${t.cod} ${a.nome.replace("/","-")}.pdf`))}
-function pdfDsdSec(doc,id,M,a){const r=M.get(id),p=pcProf(id);if(!p)return;
-  let y=pdfTitulo(doc,"Distribuição de Serviço Docente",`Ano letivo ${a.nome} · ${pdfData()}`);
-  doc.setFont("helvetica","bold");doc.setFontSize(12);doc.setTextColor(25);doc.text(pdfTxt(`Formador(a): ${p.cod?p.cod+" - ":""}${p.nome}`),14,y);
-  doc.setFont("helvetica","normal");doc.setFontSize(9);doc.setTextColor(95);doc.text(pdfTxt(`Área(s): ${r?[...r.areas].map(k=>PC_AREA_NOME[k]).join(", ")||"-":"-"}`),14,y+5);y+=9;
+/* 0.9.31: DSD no formato da folha oficial da escola (cabeçalho com os dois logótipos e o título ao centro, tabela com grelha preta,
+   totais da componente letiva/não letiva, código DSD_n.ano, projetos FSE, assinatura do Diretor Pedagógico, data da impressão e paginação) */
+function dsdNum(id,M){const ord=cfg.profs.filter(p=>M.has(p.id)).sort((x,y)=>String(x.cod||"").localeCompare(String(y.cod||""),"pt",{numeric:true})||String(x.nome).localeCompare(String(y.nome),"pt")).map(p=>p.id);const i=ord.indexOf(id);return i<0?ord.length+1:i+1}
+function pdfDsdCab(doc,a,p,areas,primeira){const W=210,{main:m,right:r}=LOGOS;
+  if(m){const[w,h]=lgFitArea(m,260,40,18);doc.addImage(m.src,lgFmt(m),14,19-h/2,w,h,"lgMain")}
+  if(r){const[w,h]=lgFitArea(r,260,40,18);doc.addImage(r.src,lgFmt(r),W-14-w,19-h/2,w,h,"lgRight")}
+  doc.setTextColor(0);doc.setFont("helvetica","bold");doc.setFontSize(12);
+  [escData().nome||"Escola Profissional da Ilha de São Jorge","Ano Letivo "+a.nome,"Distribuição de Serviço Docente"].forEach((t,i)=>doc.text(pdfTxt(t),W/2,13+i*6,{align:"center"}));
+  const nome=pdfTxt(`${p.cod?p.cod+" - ":""}${p.nome}`);doc.setFontSize(8);
+  if(primeira){doc.setFont("helvetica","normal");doc.text("Formador(a): ",62,33.5);const x=62+doc.getTextWidth("Formador(a): ");doc.setFont("helvetica","bold");doc.text(nome,x,33.5);
+    const ar=pdfTxt(areas||"-");doc.text(ar,W-16,33.5,{align:"right"});const wa=doc.getTextWidth(ar);doc.setFont("helvetica","normal");doc.text("Área(s):",W-16-wa-1.2,33.5,{align:"right"})}
+  else{doc.setFont("helvetica","normal");doc.text(nome,W/2+18,33.5)}}
+function pdfDsdRodape(doc,pg,tot){const W=210,H=297,f=lgGet("foot");
+  if(f){const[w,h]=lgFit(f,92,11);doc.addImage(f.src,lgFmt(f),(W-w)/2,H-14-h/2,w,h,"lgFoot")}
+  doc.setTextColor(0);doc.setFont("helvetica","normal");doc.setFontSize(8);doc.text("Data da Impressão: "+pdfData(),14,H-10);
+  doc.setFontSize(10);doc.text(`${pg} de ${tot}`,W-14,H-10,{align:"right"})}
+function pdfDsdSec(doc,id,M,a){const r=M.get(id),p=pcProf(id);if(!p)return null;
+  const areas=r?[...r.areas].map(k=>PC_AREA_NOME[k]).join(", "):"",cod=`DSD_${dsdNum(id,M)}.${a.nome}`,ini=doc.getNumberOfPages(),TOP=40;
   const body=r?r.let.slice().sort(dsdOrd).map(x=>[dsdTurmaTxt(x.t),x.l.disc,x.l.mod,pcNum(x.l.h)].map(pdfTxt)):[];
   if(r&&r.nl.length)r.nl.slice().sort(dsdOrd).forEach(x=>body.push([dsdTurmaTxt(x.t),"Cargo",x.c.nome,pcNum(x.c.h)].map(pdfTxt)));
   if(!body.length)body.push([{content:"Sem serviço atribuído nos planos curriculares.",colSpan:4}]);
-  y=pdfTabela(doc,y,["Curso","Disciplina","Módulo / UFCD / UC","Horas"],body,{0:{cellWidth:46},1:{cellWidth:46},3:{cellWidth:16,halign:"right"}})+6;
-  y=pdfTabela(doc,y,["Componente","Horas"],[["Componente letiva",pcNum(r?r.h:0)],["Componente não letiva",pcNum(r?r.hnl:0)],["Total",pcNum(r?r.h+r.hnl:0)]].map(x=>x.map(pdfTxt)),{1:{cellWidth:30,halign:"right"}});
-  pdfAssinatura(doc,y+4)}
+  const tot=(t,v,k)=>[{content:t,colSpan:3,styles:{fontStyle:"bolditalic",cellPadding:{top:1.3,bottom:1.3,left:1,right:1}},_k:k},{content:pcNum(v),styles:{fontStyle:"bolditalic",halign:"center",cellPadding:{top:1.3,bottom:1.3,left:1,right:1}}}];
+  const hl=r?r.h:0,hn=r?r.hnl:0;
+  body.push(tot("Componente Letiva",hl),tot("Componente Não Letiva",hn),tot("Total",hl+hn,"total"));
+  doc.setFont("helvetica","italic");doc.setFontSize(8);doc.setTextColor(0);doc.text(pdfTxt(cod),14,TOP-1.2);
+  let yTot=null,pgTot=null;
+  doc.autoTable({startY:TOP,head:[["Curso","Disciplina","Módulos/UFCDs","Horas"]],body,margin:{top:TOP,bottom:24,left:14,right:14},theme:"grid",
+    styles:{font:"helvetica",fontSize:7.4,textColor:0,lineColor:[0,0,0],lineWidth:.2,cellPadding:{top:3.6,bottom:3.6,left:1,right:1},valign:"middle",overflow:"linebreak"},
+    headStyles:{fillColor:[217,217,217],textColor:0,fontStyle:"bold",fontSize:8,cellPadding:{top:1,bottom:1,left:1,right:1},lineWidth:.2},
+    columnStyles:{0:{cellWidth:49},1:{cellWidth:66},2:{cellWidth:51},3:{cellWidth:16,halign:"center"}},
+    didParseCell:d=>{if(d.section==="head"&&d.column.index===3)d.cell.styles.halign="center"},
+    didDrawCell:d=>{if(d.section==="body"&&d.column.index===0&&d.row.raw&&d.row.raw[0]&&d.row.raw[0]._k==="total"){yTot=d.cell.y;pgTot=doc.getCurrentPageInfo().pageNumber}},
+    didDrawPage:()=>{doc.setDrawColor(0);doc.setLineWidth(.6)}});
+  if(yTot!=null){const cur=doc.getCurrentPageInfo().pageNumber;doc.setPage(pgTot);doc.setDrawColor(0);doc.setLineWidth(.7);doc.line(14,yTot,196,yTot);doc.setPage(cur)}
+  let y=doc.lastAutoTable.finalY;doc.setDrawColor(0);doc.setLineWidth(.7);doc.line(14,y,196,y);
+  if(y>297-24-34){doc.addPage();y=TOP}
+  doc.setFont("helvetica","normal");doc.setFontSize(8.5);doc.text(pdfTxt(cod),196,y+4,{align:"right"});
+  const fse=[...new Set((r?[...r.let,...r.nl]:[]).map(x=>String(x.t.fse||"").trim()).filter(Boolean))];
+  doc.setFont("helvetica","italic");doc.setFontSize(8);fse.forEach((c,i)=>doc.text(pdfTxt(c),14,y+12+i*4.4));
+  doc.setDrawColor(0);doc.setLineWidth(.3);doc.line(120,y+17,196,y+17);doc.setFont("helvetica","normal");doc.setFontSize(8);doc.text("(Diretor Pedagógico)",158,y+20.5,{align:"center"});
+  return {ini,fim:doc.getNumberOfPages(),p,areas,a}}
 async function pdfDsd(todos){const a=anoAtivo(),M=dsdDados(a.id),J=await loadPDF(),doc=new J({unit:"mm",format:"a4"});
-  const ids=todos?cfg.profs.filter(p=>M.has(p.id)).sort((x,y)=>String(x.nome).localeCompare(String(y.nome),"pt")).map(p=>p.id):[DSD_SEL];
+  const ids=todos?cfg.profs.filter(p=>M.has(p.id)).sort((x,y)=>String(x.cod||"").localeCompare(String(y.cod||""),"pt",{numeric:true})||String(x.nome).localeCompare(String(y.nome),"pt")).map(p=>p.id):[DSD_SEL];
   if(!ids.length||!ids[0]){toast("Não há formadores com serviço atribuído");return}
-  ids.forEach((id,i)=>{if(i)doc.addPage();pdfDsdSec(doc,id,M,a)});pdfMoldura(doc,PC_RODAPE);
-  const p=pcProf(ids[0]);doc.save(pdfTxt(todos?`DSD ${a.nome.replace("/","-")} - todos os formadores.pdf`:`DSD ${a.nome.replace("/","-")} - ${p?(p.cod?p.cod+" - ":"")+p.nome:""}.pdf`))}
+  const secs=[];ids.forEach((id,i)=>{if(i)doc.addPage();const S=pdfDsdSec(doc,id,M,a);if(S)secs.push(S)});
+  for(const S of secs)for(let pg=S.ini;pg<=S.fim;pg++){doc.setPage(pg);pdfDsdCab(doc,S.a,S.p,S.areas,pg===S.ini);pdfDsdRodape(doc,pg-S.ini+1,S.fim-S.ini+1)}
+  const p=pcProf(ids[0]);doc.save(pdfTxt(todos?`DSD ${a.nome.replace("/","-")} - todos os formadores.pdf`:`${p?(p.cod?p.cod+" - ":"")+p.nome:"DSD"}.pdf`))}
 $("#pcPdf").onclick=()=>pdfPlano().catch(e=>toast(e.message));
 $("#dsdPdf").onclick=()=>pdfDsd(false).catch(e=>toast(e.message));
 $("#dsdPdfAll").onclick=()=>pdfDsd(true).catch(e=>toast(e.message));
