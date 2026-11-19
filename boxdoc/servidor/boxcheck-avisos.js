@@ -20,7 +20,7 @@
  *
  * EPISJ 360 (a partir da EPISJ 360 0.9): toda a gente entra na EPISJ 360 com a conta do Office 365 da escola.
  * Este serviço confirma a conta junto da Microsoft e diz qual é o perfil (Direção Executiva,
- * Direção Pedagógica, Professor ou Formando) e o que esse perfil pode ver. Rotas em /guide/…
+ * Direção Pedagógica, Formador ou Formando) e o que esse perfil pode ver. Rotas em /guide/…
  * Cron Trigger: 0 * * * *   (de hora a hora)
  */
 
@@ -93,15 +93,15 @@ export default {
 
 /* ---------- EPISJ 360: perfis de utilizador (conta do Office 365) ---------- */
 const G = "guide:";
-const PERFIS = { dexec: "Direção Executiva", dped: "Direção Pedagógica", prof: "Professor", form: "Formando" };
+const PERFIS = { dexec: "Direção Executiva", dped: "Direção Pedagógica", prof: "Formador", form: "Formando" };
 // separadores da EPISJ 360 (os mesmos ids da app). "uti" (Utilizadores e perfis) é só para administradores.
-const SEPARADORES = ["esc", "anos", "cur", "tur", "prof", "box", "alt", "pas", "config", "rel", "est", "env", "pra", "cop", "meu", "esch", "mh", "rcMapa", "rcLista", "rcEsp", "def"];
+const SEPARADORES = ["esc", "anos", "cur", "tur", "pc", "prof", "dsd", "for", "box", "alt", "pas", "config", "rel", "est", "env", "pra", "cop", "meu", "esch", "mh", "rcMapa", "rcLista", "rcEsp", "def"];
 // EPISJ 360 0.9.19: separadores de cada módulo — um módulo desligado pelo administrador some para todos os outros
-const MOD_TABS = { escola: ["esc", "anos", "cur", "tur", "prof"], boxcheck: ["box", "alt", "pas", "config", "rel", "est", "env", "pra", "cop", "meu"], eduschedule: ["esch", "mh"], roomcheck: ["rcMapa", "rcLista", "rcEsp"] };
+const MOD_TABS = { escola: ["esc", "anos", "cur", "tur", "pc", "prof", "dsd", "for"], boxcheck: ["box", "alt", "pas", "config", "rel", "est", "env", "pra", "cop", "meu"], eduschedule: ["esch", "mh"], roomcheck: ["rcMapa", "rcLista", "rcEsp"] };
 const VIS_OMISSAO = {
   dexec: SEPARADORES.slice(),
-  dped: ["esc", "anos", "cur", "tur", "prof", "box", "alt", "pas", "config", "rel", "est", "env", "pra", "meu", "esch", "mh", "rcMapa", "rcLista", "rcEsp"],
-  prof: ["meu", "mh"],
+  dped: ["esc", "anos", "cur", "tur", "pc", "prof", "dsd", "for", "box", "alt", "pas", "config", "rel", "est", "env", "pra", "meu", "esch", "mh", "rcMapa", "rcLista", "rcEsp"],
+  prof: ["meu", "mh", "dsd"],
   form: ["mh"]
 };
 const PODE_PUBLICAR = new Set(["dexec", "dped"]);
