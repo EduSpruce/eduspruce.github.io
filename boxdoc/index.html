@@ -1772,8 +1772,8 @@ main>section{max-width:none}
     <h2>Guardar e carregar a configuração</h2>
     <p class="hint">A configuração (documentos, formadores, módulos e atribuições) fica guardada neste navegador, neste computador. Descarregue uma cópia de segurança sempre que fizer alterações importantes — e use-a para abrir a app noutro computador ou navegador.</p>
     <div class="row"><button class="b" id="dlCfg">Descarregar configuração</button><button class="b s" id="cpCfg">Copiar configuração</button><label class="b s" style="cursor:pointer">Carregar ficheiro…<input type="file" id="fileCfg" accept=".json,.txt,application/json" style="display:none"></label></div>
-    <textarea id="cfgTxt" style="margin-top:10px;min-height:200px"></textarea>
-    <div class="row" style="margin-top:8px"><button class="b s" id="loadCfg">Carregar o texto acima</button><button class="b s" id="resetAll" style="border-color:var(--bad);color:var(--bad)">Apagar tudo</button></div>
+    <textarea id="cfgTxt" style="margin-top:10px;min-height:200px" placeholder="Cole aqui o texto de uma configuração e carregue em «Carregar o texto acima» — ou veja a configuração atual com «Mostrar a configuração atual»."></textarea>
+    <div class="row" style="margin-top:8px"><button class="b s" id="loadCfg">Carregar o texto acima</button><button class="b s" id="verCfg" type="button">Mostrar a configuração atual</button><button class="b s" id="resetAll" style="border-color:var(--bad);color:var(--bad)">Apagar tudo</button></div>
     <div id="cfgMsg"></div>
   </div>
   <div class="card">
@@ -1843,7 +1843,7 @@ main>section{max-width:none}
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.50"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.51"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -1955,8 +1955,9 @@ const RPKEY="boxcheck_pontos";
 function rpList(){try{return JSON.parse(localStorage.getItem(RPKEY)||"[]")}catch(e){return[]}}
 function ponto(label){const P={t:Date.now(),label,cfg:JSON.stringify(cfg)};try{const l=rpList();l.unshift(P);if(l.length>9)rpPassarParaIDB(9);const k=rpList();k.unshift(P);
   try{localStorage.setItem(RPKEY,JSON.stringify(k.slice(0,10)))}catch(e){rpPassarParaIDB(2);try{const k2=rpList();k2.unshift(P);localStorage.setItem(RPKEY,JSON.stringify(k2.slice(0,3)))}catch(x){try{DB.get("kv","pontosAntigos").then(v=>DB.put("kv","pontosAntigos",[P,...(Array.isArray(v)?v:[])].slice(0,60)))}catch(y){}}}}catch(e){}renderRP();nuvemAgendar()}
-function renderRP(){const el=$("#rpList");if(!el)return;const l=rpList();
-  el.innerHTML=l.map((p,i)=>{let n="";try{const c=JSON.parse(p.cfg);n=`${c.profs.length} formadores · ${c.mods.length} módulos`}catch(e){}
+var RP_N=null;
+function renderRP(){const el=$("#rpList");if(!el)return;const l=rpList();RP_N=RP_N||new Map();
+  el.innerHTML=l.map((p,i)=>{let n=RP_N.get(p.t+":"+(p.cfg||"").length);if(n==null){n="";try{const c=JSON.parse(p.cfg);n=`${c.profs.length} formadores · ${c.mods.length} módulos`}catch(e){}RP_N.set(p.t+":"+(p.cfg||"").length,n)}
     return `<div class="rp"><span class="d">${new Date(p.t).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"})}</span><span class="l">${esc(p.label)} <span class="hint" style="margin:0">· ${n}</span></span><button class="b s" data-rp="${i}">Restaurar</button></div>`}).join("")||`<p class="hint">Ainda não há pontos de restauro.</p>`}
 $("#rpList").addEventListener("click",e=>{const b=e.target.closest("[data-rp]");if(!b)return;const p=rpList()[+b.dataset.rp];if(!p)return;
   ponto("Antes de restaurar “"+p.label+"”");cfg=JSON.parse(p.cfg);migrate();save();refreshAll();toast("Configuração restaurada")});
@@ -2190,8 +2191,8 @@ $("#nav").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)
 function show(t){if(!podeVer(t)){const f=primeiroPermitido(modDeTab(t)||curMod);if(!f||f===t)return;t=f}
   curTab=t;document.body.classList.toggle("esch",t==="esch");try{if(!(LOGOS.anos&&LOGOS.anos.__ok))lgMigrar();aplicarLogos()}catch(e){}{const m=modDeTab(t);if(m&&m!==curMod)mostrarModulo(m,false)}document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
   document.querySelectorAll("main>section").forEach(s=>s.classList.toggle("on",s.id===t));
-  if(t==="rel")renderReport(); if(t==="est")renderEst(); if(t==="pas")renderTree(); if(t==="alt"){renderAlt();if(SES&&lastListing&&!scanBusy&&Date.now()-(lastListing.t||0)>120000)altAtualizar(true)} if(t==="rel"||t==="alt")verificarFundo(); if(t==="env")renderSend(); if(t==="def")renderDef(); if(t==="cop"){$("#cfgTxt").value=JSON.stringify(cfg,null,2);renderRP()} if(t==="pra")renderPrazos(); if(t==="esc")renderEscPainel(); if(t==="anos")renderAnos(); if(t==="cur")renderCursos(); if(t==="tur")renderTurmas(); if(t==="for")renderFormandos(); if(t==="pc")renderPC(); if(t==="dsd")renderDSD(); if(t==="esch")esMostrar(); if(t==="meu")renderMeu(); if(t==="mh")renderMh(); if(t==="uti")renderUti(); if(t.startsWith("rc"))try{rcRender(t)}catch(e){console.warn(e)}}
-function refreshAll(){renderAll();if(curTab&&curTab.startsWith("rc"))try{rcRender(curTab)}catch(_){}try{escRender();esRecarregar()}catch(_){}if(curTab==="pra")renderPrazos();if(curTab==="rel")renderReport();if(curTab==="est")renderEst();if(curTab==="env")renderSend();if(curTab==="pas")renderTree();if(curTab==="alt")renderAlt();if(curTab==="cop"){$("#cfgTxt").value=JSON.stringify(cfg,null,2);renderRP()}}
+  if(t==="rel")renderReport(); if(t==="est")renderEst(); if(t==="pas")renderTree(); if(t==="alt"){renderAlt();if(SES&&lastListing&&!scanBusy&&Date.now()-(lastListing.t||0)>120000)altAtualizar(true)} if(t==="rel"||t==="alt")verificarFundo(); if(t==="env")renderSend(); if(t==="def")renderDef(); if(t==="cop")renderRP(); if(t==="pra")renderPrazos(); if(t==="esc")renderEscPainel(); if(t==="anos")renderAnos(); if(t==="cur")renderCursos(); if(t==="tur")renderTurmas(); if(t==="for")renderFormandos(); if(t==="pc")renderPC(); if(t==="dsd")renderDSD(); if(t==="esch")esMostrar(); if(t==="meu")renderMeu(); if(t==="mh")renderMh(); if(t==="uti")renderUti(); if(t.startsWith("rc"))try{rcRender(t)}catch(e){console.warn(e)}}
+function refreshAll(){renderAll();if(curTab&&curTab.startsWith("rc"))try{rcRender(curTab)}catch(_){}try{escRender();esRecarregar()}catch(_){}if(curTab==="pra")renderPrazos();if(curTab==="rel")renderReport();if(curTab==="est")renderEst();if(curTab==="env")renderSend();if(curTab==="pas")renderTree();if(curTab==="alt")renderAlt();if(curTab==="cop")renderRP()}
 const debounce=(fn,ms)=>{let h;return()=>{clearTimeout(h);h=setTimeout(fn,ms)}};
 
 /* ---------- documentos exigidos ---------- */
@@ -2775,7 +2776,7 @@ function renderEnvios(){const el=$("#envios");if(!el)return;
 $("#envios").addEventListener("click",e=>{const b=e.target.closest("[data-envdel]");if(!b)return;cfg.envios.splice(+b.dataset.envdel,1);save();renderEnvios();toast("Registo apagado (pode anular)")});
 
 /* ---------- report ---------- */
-["#fProf","#fShow","#fTxt","#chkFiles"].forEach(s=>$(s).addEventListener("input",renderReport));
+{let h=null;["#fProf","#fShow","#fTxt","#chkFiles"].forEach(s=>$(s).addEventListener("input",()=>{REL_N=30;REL_L={};clearTimeout(h);h=setTimeout(renderReport,s==="#fTxt"?150:0)}))}
 function fpBtns(i){const fl=(i.q||[]).filter(x=>x.q),mk=(i.q||[]).filter(x=>x.fp);let h="";
   if(fl.length&&(i.state==="warn"||i.state==="blank"))h+=`<br><button class="b s fpb" data-on="1" data-k="${esc(JSON.stringify(fl.map(x=>fpKey(x.f))))}" data-t="${esc(fl.map(x=>x.f.name+": "+x.q.txt).join("; "))}">Falso positivo — conta como entregue</button>`;
   if(mk.length)h+=`<br><span class="hint" style="margin:0">Assinalado como falso positivo: ${esc(mk.map(x=>x.f.name+" ("+x.fp+")").join("; "))}</span> <button class="b s fpb" data-on="0" data-k="${esc(JSON.stringify(mk.map(x=>fpKey(x.f))))}">Anular</button>`;
@@ -2805,19 +2806,24 @@ function renderReport(){
   $("#warns").innerHTML=w.map(([k,t])=>`<div class="msg ${k==="warn"?"bad":"info"}">${esc(t)}</div>`).join("");
   const mode=$("#fShow").value,q=norm($("#fTxt").value),sf=$("#chkFiles").checked;
   const show=i=>mode==="tudo"||(mode==="desde"?i.since:(!i.ok||(mode==="aviso"&&i.state==="warn")));
-  let html="";
+  REL_N=REL_N||30;REL_L=REL_L||{};let html="",nVis=0,nTot=0; // 0.9.50: com 1000 formadores, 30 de cada vez (eram 111 000 elementos e 2 s)
   for(const t of T){ if(fp&&t.p.id!==fp)continue;
     const rows=rowsFor(t,false).filter(r=>show(r.item)&&(!q||norm(r.turma+" "+r.disc+" "+r.mod+" "+r.loc).includes(q)));
-    if(!rows.length)continue;
+    if(!rows.length)continue;nTot++;if(nVis>=REL_N)continue;nVis++;
+    const lim=REL_L[t.p.id]||150,resto=rows.length-lim;if(resto>0)rows.length=lim; // e no máximo 150 linhas por formador de cada vez (o grupo "sem formador" pode ter milhares)
     const pc=t.tot?Math.round(t.ok/t.tot*100):100;
     html+=`<div class="prof"><div class="hd"><b>${esc(t.p.nome)}</b>${t.p.cod?`<span class="tag" style="background:#eef1f5;color:#4a5260">${esc(t.p.cod)}</span>`:""}<span class="hint" style="margin:0">${esc(t.p.email)}</span><span class="grow"></span>
       <div class="bar"><i style="width:${pc}%"></i></div><span>${t.ok}/${t.tot}</span>
       ${t.miss?`<span class="tag bad">${t.miss} em falta</span>`:`<span class="tag ok">completo</span>`}${t.miss&&t.p.id!=="_"?`<button class="b s pdfb" data-rpdf="${t.p.id}" title="Exportar em PDF o que este formador tem em falta">PDF</button>`:""}</div>
       <div style="padding:4px 12px 10px;overflow-x:auto"><table class="rtab rt"><thead><tr><th>Turma</th><th>Disciplina</th><th>Módulo/UFCD</th><th>Localização na Box</th><th>O que está em falta</th><th>Observações</th></tr></thead><tbody>
       ${rows.map(r=>`<tr class="s-${r.state}"><td>${esc(r.turma)}</td><td>${esc(r.disc)}</td><td>${esc(r.mod)}</td><td>${esc(r.loc)}</td><td class="f">${{ok:"✓",warn:"⚠",blank:"✗",missing:"✗"}[r.state]} ${esc(r.falta)}</td><td class="o">${esc(r.obs||(r.state==="ok"?"entregue":""))}${sf&&r.item.hits.length?`<br><b>Ficheiros:</b> ${r.item.hits.map(h=>esc(h.name)).join(", ")}`:""}${fpBtns(r.item)}</td></tr>`).join("")}
-      </tbody></table></div></div>`;}
+      </tbody></table>${resto>0?`<div style="text-align:center;margin:8px 0 2px"><button class="b s" data-relmais="${esc(t.p.id)}" type="button">Mostrar mais ${Math.min(500,resto)} linhas (faltam ${resto})</button></div>`:""}</div></div>`;}
+  if(nTot>nVis)html+=`<div style="text-align:center;margin:6px 0 18px"><button class="b s" id="relMais" type="button">Mostrar mais ${Math.min(30,nTot-nVis)} formadores (faltam ${nTot-nVis})</button></div>`;
   $("#report").innerHTML=html||`<div class="card"><p class="hint" style="margin:0">${ativos().length?"Nada a mostrar com estes filtros. 🎉":"Defina primeiro os módulos em Atribuições."}</p></div>`;
+  const bm=$("#relMais");if(bm)bm.onclick=()=>{REL_N+=30;renderReport()};
+  $("#report").querySelectorAll("[data-relmais]").forEach(b=>b.onclick=()=>{const k=b.dataset.relmais;REL_L[k]=(REL_L[k]||150)+500;renderReport()});
 }
+var REL_N=30,REL_L={};
 
 /* ---------- opções das verificações ---------- */
 function qualInit(){
@@ -2946,22 +2952,25 @@ function geralCSV(){
 }
 [["#mSubj","subj"],["#mPrazo","prazo"],["#mAno","ano"],["#mBody","body"]].forEach(([s,k])=>$(s).addEventListener("input",e=>{cfg.mail[k]=e.target.value;save();renderMails();$("#geralPrev").textContent=geralText()}));
 $("#mReset").onclick=()=>{cfg.mail.subj=MAIL_SUBJ;cfg.mail.body=MAIL_BODY;save();renderSend();toast("Texto EPISJ reposto (pode anular)")};
-function renderSend(){$("#mSubj").value=cfg.mail.subj;$("#mPrazo").value=cfg.mail.prazo||"";$("#mAno").value=cfg.mail.ano||"";$("#mAno").placeholder=anoLetivo();$("#mBody").value=cfg.mail.body;$("#gTo").value=cfg.mail.relatorio_para||"";$("#geralPrev").textContent=geralText();renderMails();renderEnvios()}
+function renderSend(){MAIL_N=30;$("#mSubj").value=cfg.mail.subj;$("#mPrazo").value=cfg.mail.prazo||"";$("#mAno").value=cfg.mail.ano||"";$("#mAno").placeholder=anoLetivo();$("#mBody").value=cfg.mail.body;$("#gTo").value=cfg.mail.relatorio_para||"";$("#geralPrev").textContent=geralText();renderMails();renderEnvios()}
 let mailCache=[];
 function renderMails(){
   const all=byTeacher(evaluate()).filter(t=>t.miss&&t.p.id!=="_"),sel=$("#mProf"),v=sel.value;
   sel.innerHTML=`<option value="">Todos os formadores com documentos em falta (${all.length})</option>`+all.slice().sort((a,b)=>a.p.nome.localeCompare(b.p.nome,"pt")).map(t=>`<option value="${t.p.id}">${esc(t.p.nome)} — ${t.miss} em falta</option>`).join("");
   sel.value=all.some(t=>t.p.id===v)?v:"";
   const T=sel.value?all.filter(t=>t.p.id===sel.value):all;mailCache=T;
-  const ne=T.filter(t=>t.p.email).length;$("#sendAll").textContent=sel.value?"Enviar a este formador com PDF":`Enviar a todos com PDF (${ne})`;$("#sendAll").disabled=!ne;
-  $("#mails").innerHTML=`<p class="hint" id="msWho"></p>`+(T.map((t,i)=>{const body=fill(cfg.mail.body,t);
+  const ne=T.filter(t=>t.p.email).length;$("#sendAll").textContent=ENVIO_A?"Parar o envio":sel.value?"Enviar a este formador com PDF":`Enviar a todos com PDF (${ne})`;$("#sendAll").disabled=!ne&&!ENVIO_A;
+  MAIL_N=MAIL_N||30;const resto=T.length-MAIL_N; // 0.9.50: com muitos formadores, 30 mensagens de cada vez no ecrã (o envio "a todos" continua a ser para todos)
+  $("#mails").innerHTML=`<p class="hint" id="msWho"></p>`+(T.slice(0,MAIL_N).map((t,i)=>{const body=fill(cfg.mail.body,t);
     let mb=fill(cfg.mail.body,t,true);
     const href=`mailto:${encodeURIComponent(t.p.email)}?subject=${encodeURIComponent(subj(t))}&body=${encodeURIComponent(mb)}`,ok=ENV_OK[t.p.id];
     return `<div class="prof"><div class="hd"><b>${esc(t.p.nome)}</b><span>${esc(t.p.email||"(sem email)")}</span><span class="grow"></span>${ok?`<span class="tag ok">✓ enviado às ${new Date(ok).toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"})}</span>`:""}<span class="tag bad">${t.miss} em falta</span>
      <button class="b s" data-cp="${i}">Copiar mensagem</button><button class="b s" data-pdf="${i}">PDF</button>${t.p.email?`<a class="b s" style="text-decoration:none" data-mt="${i}" href="${href}">Abrir no email</a><button class="b" data-send="${i}">Enviar com PDF</button>`:""}</div>
-     <div class="mailbox" style="margin:10px 14px 14px;max-height:260px;overflow:auto">${esc(msCfg().lista?body:mb)}</div></div>`}).join("")||`<p class="hint">Nenhum formador com documentação em falta.</p>`);
+     <div class="mailbox" style="margin:10px 14px 14px;max-height:260px;overflow:auto">${esc(msCfg().lista?body:mb)}</div></div>`}).join("")+(resto>0?`<div style="text-align:center;margin:6px 0 14px"><button class="b s" id="mailMais" type="button">Mostrar mais ${Math.min(30,resto)} mensagens (faltam ${resto})</button></div>`:"")||`<p class="hint">Nenhum formador com documentação em falta.</p>`);
+  const bm=$("#mailMais");if(bm)bm.onclick=()=>{MAIL_N+=30;renderMails()};
   msUI(true);
 }
+var MAIL_N=30; // var: sem TDZ se a página for desenhada antes desta linha
 $("#mails").addEventListener("click",async e=>{const b=e.target.closest("[data-cp],[data-pdf],[data-mt],[data-send]");if(!b)return;
   if(b.dataset.cp){const t=mailCache[+b.dataset.cp];copy(`Para: ${t.p.email}\nAssunto: ${subj(t)}\n\n${fill(cfg.mail.body,t)}`);return}
   if(b.dataset.pdf){const t=mailCache[+b.dataset.pdf];baixarPDF(()=>pdfFormador(t),pdfNomeF(t));return}
@@ -3005,6 +3014,7 @@ $("#cpCfg").onclick=()=>copy(JSON.stringify(cfg,null,2));
 function loadCfgText(t){try{const c=JSON.parse(t);if(!c.docTypes||!c.mods||!c.profs)throw 0;
   if(c.logos){LOGOS=c.logos;delete c.logos;try{localStorage.setItem(LGKEY,JSON.stringify(LOGOS))}catch(e){}aplicarLogos();lgMigrar()}ponto("Antes de carregar uma configuração");cfg=c;migrate();save();refreshAll();$("#cfgMsg").innerHTML=`<div class="msg ok">Configuração carregada: ${c.profs.length} formadores, ${c.mods.length} módulos. (Pode voltar atrás em Pontos de restauro.)</div>`}catch(e){$("#cfgMsg").innerHTML=`<div class="msg bad">O texto não é uma configuração válida.</div>`}}
 $("#loadCfg").onclick=()=>loadCfgText($("#cfgTxt").value);
+$("#verCfg").onclick=()=>{const t=JSON.stringify(cfg);$("#cfgTxt").value=t.length>300000?t:JSON.stringify(cfg,null,2)}; // 0.9.50: só quando se pede
 $("#fileCfg").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{$("#cfgTxt").value=r.result;loadCfgText(r.result)};r.readAsText(f)};
 let resetArm=false;
 $("#recTxt").oninput=e=>{$("#recBtn").disabled=e.target.value.trim().toUpperCase()!=="APAGAR"};
@@ -3855,8 +3865,13 @@ async function pdfGeral(){const J=await loadPDF(),doc=new J({unit:"mm",format:"a
   const res=T.filter(t=>t.tot).map(t=>[t.p.nome,t.p.email||"",String(t.miss),`${t.tot?Math.round(t.ok/t.tot*100):0}%`].map(pdfTxt));
   doc.setFont("helvetica","bold");doc.setFontSize(11.5);doc.setTextColor(25);doc.text("Resumo por formador",14,y);
   y=pdfTabela(doc,y+3,["Formador","Email","Em falta","Entregue"],res,{2:{halign:"right",cellWidth:20},3:{halign:"right",cellWidth:20}})+12;
-  for(const t of T)if(t.miss)y=pdfFormadorSec(doc,t,y,true);
-  pdfMoldura(doc,"Escola Profissional da Ilha de São Jorge · EPISJ 360 · Box360 · Relatório geral");return doc}
+  // 0.9.50: com muitos formadores, barra de progresso e a página não congela
+  const F=T.filter(t=>t.miss),muitos=F.length>20;if(muitos)ovAbrir("A preparar o relatório geral");
+  try{for(let i=0;i<F.length;i++){y=pdfFormadorSec(doc,F[i],y,true);if(muitos&&i%10===9)await ovPasso(5+i/F.length*88,`Formador ${i+1} de ${F.length}…`)}
+    if(muitos)await ovPasso(95,"A pôr cabeçalhos e rodapés…");
+    pdfMoldura(doc,"Escola Profissional da Ilha de São Jorge · EPISJ 360 · Box360 · Relatório geral")}
+  finally{if(muitos){ovPassoSync(100,"Pronto");ovFechar(300)}}
+  return doc}
 const ficheiroNome=s=>String(s).replace(/[\\/:*?"<>|]+/g,"-").replace(/\s+/g," ").trim();
 const pdfNomeF=t=>ficheiroNome(`Documentos em falta - ${t.p.nome} - ${anoLetivo().replace("/","-")}.pdf`);
 const pdfNomeG=()=>ficheiroNome(`Relatório de documentação não entregue - ${hoje()}.pdf`);
@@ -3920,15 +3935,22 @@ async function enviarFormador(t){const doc=await pdfFormador(t);
   await msEnviar({to:t.p.email,cc:msCfg().cc,subject:subj(t),body:fill(cfg.mail.body,t,!msCfg().lista),anexo:{name:pdfNomeF(t),b64:pdfB64(doc)}});
   ENV_OK[t.p.id]=Date.now()}
 function sendMsg(h,k){$("#sendMsg").innerHTML=h?`<div class="msg ${k||"ok"}">${h}</div>`:""}
-$("#sendAll").onclick=async e=>{const L=mailCache.filter(t=>t.p.email),sem=mailCache.length-L.length;
+// 0.9.50: o Office 365 só deixa enviar cerca de 30 emails por minuto — com muitos formadores o envio vai a esse ritmo, e pode parar-se a meio
+var ENVIO_A=false,ENVIO_PARAR=false;
+$("#sendAll").onclick=async e=>{if(ENVIO_A){ENVIO_PARAR=true;e.currentTarget.textContent="A parar…";return}
+  const L=mailCache.filter(t=>t.p.email),sem=mailCache.length-L.length;
   if(!L.length){sendMsg("Nenhum formador com email para enviar.","bad");return}
-  if(!confirm(`Enviar ${L.length} email(s) com o PDF em anexo, a partir da sua conta Office 365?${sem?`\n(${sem} formador(es) sem email ficam de fora.)`:""}`))return;
-  const btn=e.currentTarget;btn.disabled=true;const falhas=[];let n=0;
-  try{await msToken()}catch(x){sendMsg(esc(msErro(x)),"bad");btn.disabled=false;return}
-  for(const t of L){sendMsg(`A enviar ${n+falhas.length+1} de ${L.length}: ${esc(t.p.nome)}…`,"warn");
+  const pausa=L.length>25?2100:400,min=Math.ceil(L.length*(pausa+900)/60000);
+  if(!confirm(`Enviar ${L.length} email(s) com o PDF em anexo, a partir da sua conta Office 365?${sem?`\n(${sem} formador(es) sem email ficam de fora.)`:""}${L.length>25?`\n\nO Office 365 só deixa enviar cerca de 30 emails por minuto: demora uns ${min} minuto(s). Deixe esta página aberta; pode parar a meio.`:""}`))return;
+  const btn=e.currentTarget;const falhas=[];let n=0;
+  try{await msToken()}catch(x){sendMsg(esc(msErro(x)),"bad");return}
+  ENVIO_A=true;ENVIO_PARAR=false;btn.textContent="Parar o envio";
+  try{for(const t of L){if(ENVIO_PARAR)break;sendMsg(`A enviar ${n+falhas.length+1} de ${L.length}: ${esc(t.p.nome)}…`,"warn");
     try{await enviarFormador(t);n++}catch(x){falhas.push(`${esc(t.p.nome)}: ${esc(msErro(x))}`)}
-    await new Promise(ok=>setTimeout(ok,400))}
-  btn.disabled=false;renderMails();
+    await new Promise(ok=>setTimeout(ok,pausa))}}
+  finally{ENVIO_A=false}
+  const parou=ENVIO_PARAR&&n+falhas.length<L.length;ENVIO_PARAR=false;
+  btn.disabled=false;renderMails();if(parou)toast(`Envio parado: ${n} enviado(s), ${L.length-n-falhas.length} por enviar`);
   if(n&&$("#sendReg").checked)registarEnvio("Envio por email com PDF (Office 365)");
   sendMsg(`${n} email(s) enviado(s) com PDF em anexo.${falhas.length?`<br><b>Não enviados (${falhas.length}):</b><br>${falhas.join("<br>")}`:""}`,falhas.length?"warn":"ok")};
 $("#mProf").addEventListener("change",renderMails);
@@ -6198,7 +6220,7 @@ async function renderUti(force){const m=$("#utiMsg");
   $("#utiPrev").innerHTML=`<option value="">— escolha —</option>`+Object.entries(UTI.perfis).map(([k,n])=>`<option value="${k}">${esc(n)}</option>`).join("");
   $("#utiEstado").innerHTML=UTI_SUJO?`<span style="color:var(--warn)">Alterações por guardar.</span>`:L.t?`Guardado a ${new Date(L.t).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"})}${L.por?" por "+esc(L.por):""}.`:""}
 // 0.9.50: com 1300 contas — 200 linhas de cada vez, a lista de turmas só se enche quando se toca nela, e mudar uma linha só redesenha essa linha
-let UTI_N=200;
+var UTI_N=200;
 function utiLinha(e,u){const PO=Object.entries(UTI.perfis).map(([k,n])=>`<option value="${k}"${k===u.perfil?" selected":""}>${esc(n)}</option>`).join("");
   return `<tr data-ur="${esc(e)}"><td>${esc(e)}</td><td><select data-ue="${esc(e)}" data-k="perfil">${PO}</select></td>
     <td>${u.perfil==="form"?`<select data-ue="${esc(e)}" data-k="turma"><option value="" data-lzk="tcod" data-lzf="${utiLzF()}">—</option>${u.turma?`<option selected>${esc(u.turma)}</option>`:""}</select>`:""}</td>
@@ -6206,7 +6228,7 @@ function utiLinha(e,u){const PO=Object.entries(UTI.perfis).map(([k,n])=>`<option
 function utiLzF(){const f=`<option value="">—</option>`;let i=LZ.first.indexOf(f);if(i<0){LZ.first.push(f);i=LZ.first.length-1}return i}
 function utiTabela(){const L=UTI.loja,f=norm($("#utiFiltro").value);
   const rows=Object.entries(L.utilizadores).filter(([e,u])=>!f||norm(e+" "+UTI.perfis[u.perfil]+" "+(u.turma||"")).includes(f)).sort((a,b)=>a[0].localeCompare(b[0]));
-  const mais=rows.length-UTI_N;
+  UTI_N=UTI_N||200;const mais=rows.length-UTI_N;
   $("#tbUti").innerHTML=rows.slice(0,UTI_N).map(([e,u])=>utiLinha(e,u)).join("")+(mais>0?`<tr><td colspan="4" style="text-align:center"><button class="b s" id="utiMais" type="button">Mostrar mais ${Math.min(mais,500)} (faltam ${mais})</button></td></tr>`:"")
     ||`<tr><td colspan="4" class="hint">${f?"Ninguém com este filtro.":"Ninguém na lista — valem as regras automáticas."}</td></tr>`;
   const b=$("#utiMais");if(b)b.onclick=()=>{UTI_N+=500;utiTabela()}}
