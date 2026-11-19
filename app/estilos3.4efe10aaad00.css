@@ -1507,7 +1507,7 @@ html:root body.est-spruce.est-spruce.est-spruce.escurox{
   --sp-blue:#4fb6e3;--sp-blue2:#7cc9ec;--sp-fill:#14334a;
   --sp-shadow:0 30px 60px -30px rgba(0,0,0,.7),0 0 0 1px var(--sp-line);--sp-shadow-s:0 10px 24px -14px rgba(0,0,0,.7),0 0 0 1px var(--sp-line)}
 /* o «sol» do site: um halo laranja muito leve no canto */
-html:root body.est-spruce.est-spruce.est-spruce::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(42vw 38vh at 100% 0%,rgba(243,146,0,.10),transparent 70%),radial-gradient(50vw 45vh at 0% 100%,rgba(27,147,198,.10),transparent 70%)}
+html:root body.est-spruce.est-spruce.est-spruce::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(60vw 60vh at 100% 0%,rgba(243,146,0,.30),rgba(243,146,0,.10) 45%,transparent 75%),radial-gradient(70vw 70vh at 0% 100%,rgba(27,147,198,.32),rgba(27,147,198,.10) 45%,transparent 75%),linear-gradient(160deg,#eef8fd 0%,#dcedf7 55%,#cfe6f3 100%)}
 html:root body.est-spruce.est-spruce.est-spruce #main{background:transparent!important}
 html:root body.est-spruce.est-spruce.est-spruce :is(h1,h2,h3,#ttl,.ttl,.kpi .v,.dkv){font-family:var(--sp-disp)!important;letter-spacing:-.025em;color:var(--sp-ink)}
 html:root body.est-spruce.est-spruce.est-spruce #view h2{font-weight:800!important}
@@ -1606,6 +1606,9 @@ html:root body.est-spruce.est-spruce.est-spruce #view :is(.seg,.tabs,.chips,.seg
 html:root body.est-spruce.est-spruce.est-spruce.escurox #view :is(.seg,.tabs,.chips,.segc)>:is(button,a,label):is(.on,[aria-selected="true"],[aria-pressed="true"],[aria-current="page"]){background:var(--sp-blue)!important;color:#0a1f2b!important}
 /* Início das apps (heróis coloridos): títulos em branco, não em azul-marinho */
 html:root body.est-spruce.est-spruce.est-spruce #mqdemo .mqd-hero :is(h1,h2,h3){color:#fff!important}
+
+/* 1.152 · modo escuro: o mesmo gradiente, mais contido */
+html:root body.est-spruce.est-spruce.est-spruce.escurox::before{background:radial-gradient(60vw 60vh at 100% 0%,rgba(243,146,0,.16),transparent 70%),radial-gradient(70vw 70vh at 0% 100%,rgba(27,147,198,.22),transparent 70%)}
 /* ===================== 1.150 · modal de novidades ===================== */
 html body dialog.nvmodal{width:min(620px,calc(100vw - 28px));max-height:min(80vh,760px);padding:0;border:1px solid var(--line);border-radius:16px;background:var(--panel);color:var(--ink);box-shadow:0 30px 80px -20px rgba(0,0,0,.45);display:flex;flex-direction:column;overflow:hidden}
 html body dialog.nvmodal:not([open]){display:none}
