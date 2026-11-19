@@ -897,6 +897,10 @@ body.esch.temfundos #esFr{height:calc(100vh - 116px);height:calc(100dvh - 116px)
     <div class="wg-top"><div><h2 style="margin:0">Widgets</h2><p class="hint" style="margin:2px 0 0">Resumo dos módulos ligados — <span id="wgConta"></span>.</p></div><span class="grow"></span><button class="b s" id="wgEsc">Escolher widgets</button></div>
     <div class="wg-grid" id="wgGrid"></div>
   </div>
+  <div class="card wg-card" id="wgCard2">
+    <div class="wg-top"><div><h2 style="margin:0">Mais widgets</h2><p class="hint" style="margin:2px 0 0">Segunda zona, com escolha própria — <span id="wgConta2"></span>.</p></div><span class="grow"></span><button class="b s" id="wgEsc2">Escolher widgets</button></div>
+    <div class="wg-grid" id="wgGrid2"></div>
+  </div>
 </section>
 
 <section id="anos">
@@ -1618,7 +1622,7 @@ body.esch.temfundos #esFr{height:calc(100vh - 116px);height:calc(100dvh - 116px)
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.23"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.24"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -4358,27 +4362,37 @@ const WIDGETS=[
 ];
 
 function wgVisiveis(){return WIDGETS.filter(w=>modOn(w.mod))}
-function renderWidgets(){const g=$("#wgGrid");if(!g||!window.__wgOk)return; // só depois de a app arrancar (antes disso nem tudo está definido)
-  const vis=new Set(wgVisiveis().map(w=>w.id)),L=WG_SEL.map(id=>WIDGETS.find(w=>w.id===id)).filter(w=>w&&vis.has(w.id));
-  $("#wgConta").textContent=`${L.length} de ${vis.size} widgets`;
-  g.innerHTML=L.length?L.map(w=>{const M=WG_MOD[w.mod];let c;try{c=w.r()}catch(e){console.warn(w.id,e);c=wgVazio("Não foi possível mostrar este widget.")}
-    return `<div class="wg" data-wg="${w.id}" style="--mc:${M.c}"><div class="wg-h"><span class="wg-m" title="${esc(M.n)}">${M.l}</span><b>${esc(w.nome)}</b><button class="wg-x" data-wgx="${w.id}" title="Esconder este widget" aria-label="Esconder ${esc(w.nome)}">×</button></div><div class="wg-c">${c}</div></div>`}).join("")
-    :`<div class="wg-none">Nenhum widget escolhido. <button class="b s" id="wgEsc2">Escolher widgets</button></div>`;
-  const b2=$("#wgEsc2");if(b2)b2.onclick=wgEscolher}
-function wgEscolher(){const sel=new Set(WG_SEL),mods=Object.keys(WG_MOD);
-  rcAbrir("Widgets do painel",`<p class="hint" style="margin-top:0">Escolha os que quer ver. Só aparecem os dos módulos ligados; a escolha fica guardada neste navegador.</p>
-    <div class="row" style="margin-bottom:10px"><button class="b s" id="wgTodos">Todos</button><button class="b s" id="wgNenhum">Nenhum</button><button class="b s" id="wgRepor">Repor os sugeridos</button></div>
+// 0.9.24: duas zonas de widgets (cada uma com a sua escolha); um widget só aparece numa zona de cada vez
+const WG_PADRAO2=["anocur","fse","cnq","ultimas","carga","ocup"];
+let WG_SEL2=(()=>{try{const v=JSON.parse(localStorage.getItem(WG_KEY+"2")||"null");return Array.isArray(v)?v:WG_PADRAO2.filter(id=>!WG_SEL.includes(id))}catch(e){return WG_PADRAO2.slice()}})();
+const WGZ={1:{grid:"#wgGrid",conta:"#wgConta",get sel(){return WG_SEL},set sel(v){WG_SEL=v},padrao:WG_PADRAO,nome:"Widgets"},
+           2:{grid:"#wgGrid2",conta:"#wgConta2",get sel(){return WG_SEL2},set sel(v){WG_SEL2=v},padrao:WG_PADRAO2,nome:"Mais widgets"}};
+const wgGuardarZ=()=>{try{localStorage.setItem(WG_KEY,JSON.stringify(WG_SEL));localStorage.setItem(WG_KEY+"2",JSON.stringify(WG_SEL2))}catch(e){}};
+function renderWidgets(){if(!window.__wgOk)return; // só depois de a app arrancar (antes disso nem tudo está definido)
+  const vis=new Set(wgVisiveis().map(w=>w.id));
+  for(const z of [1,2]){const Z=WGZ[z],g=$(Z.grid);if(!g)continue;const L=Z.sel.map(id=>WIDGETS.find(w=>w.id===id)).filter(w=>w&&vis.has(w.id));
+    $(Z.conta).textContent=`${L.length} widget${L.length===1?"":"s"}`;
+    g.innerHTML=L.length?L.map(w=>{const M=WG_MOD[w.mod];let c;try{c=w.r()}catch(e){console.warn(w.id,e);c=wgVazio("Não foi possível mostrar este widget.")}
+      return `<div class="wg" data-wg="${w.id}" style="--mc:${M.c}"><div class="wg-h"><span class="wg-m" title="${esc(M.n)}">${M.l}</span><b>${esc(w.nome)}</b><button class="wg-x" data-wgx="${w.id}" title="Esconder este widget" aria-label="Esconder ${esc(w.nome)}">×</button></div><div class="wg-c">${c}</div></div>`}).join("")
+      :`<div class="wg-none">Nenhum widget nesta zona. <button class="b s" data-wgesc="${z}">Escolher widgets</button></div>`}}
+function wgEscolher(z){z=+z||1;const Z=WGZ[z],O=WGZ[z===1?2:1],sel=new Set(Z.sel),out=new Set(O.sel),mods=Object.keys(WG_MOD);
+  rcAbrir(Z.nome+" — escolher",`<p class="hint" style="margin-top:0">Escolha os que quer ver nesta zona. Só aparecem os dos módulos ligados; a escolha fica guardada neste navegador. Um widget só está numa zona de cada vez: escolher aqui um que está na outra zona muda-o para esta.</p>
+    <div class="row" style="margin-bottom:10px"><button class="b s" id="wgTodos">Todos os que sobram</button><button class="b s" id="wgNenhum">Nenhum</button><button class="b s" id="wgRepor">Repor os sugeridos</button></div>
     ${mods.map(m=>{const M=WG_MOD[m],on=modOn(m);return `<div class="wg-pg"><div class="wg-ph" style="--mc:${M.c}"><span class="wg-m">${M.l}</span>${esc(M.n)}${on?"":` <i class="wg-tag">módulo desligado</i>`}</div>
-      ${WIDGETS.filter(w=>w.mod===m).map(w=>`<label class="wg-op${on?"":" off"}"><input type="checkbox" data-wgc="${w.id}"${sel.has(w.id)?" checked":""}${on?"":" disabled"}><span><b>${esc(w.nome)}</b><small>${esc(w.desc)}</small></span></label>`).join("")}</div>`}).join("")}
+      ${WIDGETS.filter(w=>w.mod===m).map(w=>`<label class="wg-op${on?"":" off"}"><input type="checkbox" data-wgc="${w.id}"${sel.has(w.id)?" checked":""}${on?"":" disabled"}><span><b>${esc(w.nome)}${out.has(w.id)?` <i class="wg-tag">na outra zona</i>`:""}</b><small>${esc(w.desc)}</small></span></label>`).join("")}</div>`}).join("")}
     <div class="row" style="margin-top:12px"><button class="b" id="wgOk">Feito</button></div>`);
-  const ler=()=>{const s=new Set([...document.querySelectorAll("[data-wgc]:checked")].map(x=>x.dataset.wgc));WG_SEL=WG_SEL.filter(id=>s.has(id)).concat(WIDGETS.map(w=>w.id).filter(id=>s.has(id)&&!WG_SEL.includes(id)));wgGuardar();renderWidgets()};
+  const ler=()=>{const s=new Set([...document.querySelectorAll("[data-wgc]:checked")].map(x=>x.dataset.wgc));
+    Z.sel=Z.sel.filter(id=>s.has(id)).concat(WIDGETS.map(w=>w.id).filter(id=>s.has(id)&&!Z.sel.includes(id)));O.sel=O.sel.filter(id=>!s.has(id));wgGuardarZ();renderWidgets()};
   document.querySelectorAll("[data-wgc]").forEach(x=>x.onchange=ler);
   const marcar=f=>{document.querySelectorAll("[data-wgc]:not(:disabled)").forEach(x=>x.checked=f(x.dataset.wgc));ler()};
-  $("#wgTodos").onclick=()=>marcar(()=>true);$("#wgNenhum").onclick=()=>marcar(()=>false);$("#wgRepor").onclick=()=>{WG_SEL=WG_PADRAO.slice();marcar(id=>WG_PADRAO.includes(id))};$("#wgOk").onclick=rcFechar}
-$("#wgEsc").onclick=wgEscolher;
-$("#wgGrid").addEventListener("click",e=>{const x=e.target.closest("[data-wgx]");if(x){WG_SEL=WG_SEL.filter(id=>id!==x.dataset.wgx);wgGuardar();renderWidgets();toast("Widget escondido — volte a pô-lo em Escolher widgets");return}
+  $("#wgTodos").onclick=()=>marcar(id=>sel.has(id)||!out.has(id)||document.querySelector(`[data-wgc="${id}"]`).checked);
+  $("#wgNenhum").onclick=()=>marcar(()=>false);$("#wgRepor").onclick=()=>marcar(id=>Z.padrao.includes(id));$("#wgOk").onclick=rcFechar}
+$("#wgEsc").onclick=()=>wgEscolher(1);$("#wgEsc2").onclick=()=>wgEscolher(2);
+["#wgGrid","#wgGrid2"].forEach((gs,k)=>$(gs).addEventListener("click",e=>{const z=k+1,Z=WGZ[z];
+  const q=e.target.closest("[data-wgesc]");if(q){wgEscolher(+q.dataset.wgesc);return}
+  const x=e.target.closest("[data-wgx]");if(x){Z.sel=Z.sel.filter(id=>id!==x.dataset.wgx);wgGuardarZ();renderWidgets();toast("Widget escondido — volte a pô-lo em Escolher widgets");return}
   const r=e.target.closest("[data-wgrc]");if(r){rcVer(RC.res[r.dataset.wgrc]);return}
-  const b=e.target.closest("[data-wgir]");if(b){const t=b.dataset.wgir;if(t==="esch")mostrarModulo("eduschedule",true);else show(t)}});
+  const b=e.target.closest("[data-wgir]");if(b){const t=b.dataset.wgir;if(t==="esch")mostrarModulo("eduschedule",true);else show(t)}}));
 setInterval(()=>{if(curTab==="esc"&&document.visibilityState==="visible"&&$("#rcDw").hidden)renderWidgets()},60000);
 
 
