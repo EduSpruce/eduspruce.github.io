@@ -898,6 +898,12 @@ body.ro #pcOut input,body.ro #pcOut select{pointer-events:none}body.ro #pcOut bu
 .subup svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .subup:hover{background:var(--brandbg)}.subup[disabled]{opacity:.6;cursor:wait}.subup[hidden]{display:none}
 @media (max-width:1100px){.subup span{display:none}}
+
+/* 0.9.46: os quadros esticam até à largura do ecrã; a 2.ª coluna só aparece quando tem quadros (ou enquanto se arrasta um) */
+main>section{max-width:none}
+@media (min-width:2050px){.cols{grid-template-columns:minmax(0,1fr) minmax(560px,.62fr)}
+  body:not(.arrastar) .cols:has(>.col[data-col="b"]:empty){grid-template-columns:minmax(0,1fr)}
+  body:not(.arrastar) .cols>.col[data-col="b"]:empty{display:none}}
 </style>
 </head>
 <body>
@@ -1781,7 +1787,7 @@ body.ro #pcOut input,body.ro #pcOut select{pointer-events:none}body.ro #pcOut bu
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.45"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.46"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
