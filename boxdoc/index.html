@@ -901,11 +901,11 @@ body.esch.temfundos #esFr{height:calc(100vh - 116px);height:calc(100dvh - 116px)
     <div id="pubBox" class="row" style="display:none;margin-top:12px;align-items:center"><button class="b s" id="pubGo" title="Envia as turmas, os professores e os horários para os perfis Professor e Formando verem (só leitura)">Publicar para professores e formandos</button><span id="pubMsg" class="hint" style="margin:0"></span></div>
   </div>
   <div class="card wg-card" id="wgCard">
-    <div class="wg-top"><div><h2 style="margin:0">Widgets</h2><p class="hint" style="margin:2px 0 0">Resumo dos módulos ligados — <span id="wgConta"></span>. Arraste os widgets pelo título para os mudar de sítio ou de zona.</p></div><span class="grow"></span><button class="b s" id="wgEsc">Escolher widgets</button></div>
+    <div class="wg-top"><span id="wgConta" hidden></span><span class="grow"></span><button class="b s" id="wgEsc">Escolher widgets</button></div>
     <div class="wg-grid" id="wgGrid"></div>
   </div>
   <div class="card wg-card" id="wgCard2">
-    <div class="wg-top"><div><h2 style="margin:0">Mais widgets</h2><p class="hint" style="margin:2px 0 0">Segunda zona, com escolha própria — <span id="wgConta2"></span>. Arraste os widgets pelo título para os mudar de sítio ou de zona.</p></div><span class="grow"></span><button class="b s" id="wgEsc2">Escolher widgets</button></div>
+    <div class="wg-top"><span id="wgConta2" hidden></span><span class="grow"></span><button class="b s" id="wgEsc2">Escolher widgets</button></div>
     <div class="wg-grid" id="wgGrid2"></div>
   </div>
 </section>
@@ -1629,7 +1629,7 @@ body.esch.temfundos #esFr{height:calc(100vh - 116px);height:calc(100dvh - 116px)
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.25"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.26"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
