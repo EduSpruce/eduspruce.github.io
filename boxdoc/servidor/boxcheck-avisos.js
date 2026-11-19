@@ -96,14 +96,14 @@ export default {
 const G = "guide:";
 const PERFIS = { dexec: "Direção Executiva", dped: "Direção Pedagógica", prof: "Formador", form: "Formando" };
 // separadores da EPISJ 360 (os mesmos ids da app). "uti" (Utilizadores e perfis) é só para administradores.
-const SEPARADORES = ["esc", "anos", "cur", "tur", "pc", "prof", "dsd", "for", "box", "alt", "pas", "config", "rel", "est", "env", "pra", "cop", "meu", "esch", "mh", "rcMapa", "rcLista", "rcEsp", "def"];
+const SEPARADORES = ["esc", "anos", "cal", "cur", "tur", "pc", "prof", "dsd", "for", "box", "alt", "pas", "config", "rel", "est", "env", "pra", "cop", "meu", "esch", "mh", "rcMapa", "rcLista", "rcEsp", "crPs", "crCron", "crCump", "crHist", "crDef", "def"];
 // EPISJ 360 0.9.19: separadores de cada módulo — um módulo desligado pelo administrador some para todos os outros
-const MOD_TABS = { escola: ["esc", "anos", "cur", "tur", "pc", "prof", "dsd", "for"], boxcheck: ["box", "alt", "pas", "config", "rel", "est", "env", "pra", "cop", "meu"], eduschedule: ["esch", "mh"], roomcheck: ["rcMapa", "rcLista", "rcEsp"] };
+const MOD_TABS = { escola: ["esc", "anos", "cal", "cur", "tur", "pc", "prof", "dsd", "for"], boxcheck: ["box", "alt", "pas", "config", "rel", "est", "env", "pra", "cop", "meu"], eduschedule: ["esch", "mh"], roomcheck: ["rcMapa", "rcLista", "rcEsp"], crono: ["crPs", "crCron", "crCump", "crHist", "crDef"] };
 const VIS_OMISSAO = {
   dexec: SEPARADORES.slice(),
-  dped: ["esc", "anos", "cur", "tur", "pc", "prof", "dsd", "for", "box", "alt", "pas", "config", "rel", "est", "env", "pra", "meu", "esch", "mh", "rcMapa", "rcLista", "rcEsp"],
-  prof: ["meu", "mh", "dsd"],
-  form: ["mh"]
+  dped: ["esc", "anos", "cal", "cur", "tur", "pc", "prof", "dsd", "for", "box", "alt", "pas", "config", "rel", "est", "env", "pra", "meu", "esch", "mh", "rcMapa", "rcLista", "rcEsp", "crPs", "crCron", "crCump", "crHist", "crDef"],
+  prof: ["meu", "mh", "dsd", "cal", "crPs", "crCron", "crHist"],
+  form: ["mh", "cal"]
 };
 const PODE_PUBLICAR = new Set(["dexec", "dped"]);
 const lst = v => Array.isArray(v) ? v : [];

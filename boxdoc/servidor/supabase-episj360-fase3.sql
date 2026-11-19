@@ -146,3 +146,16 @@ select cron.schedule(
       headers := '{"Content-Type":"application/json"}'::jsonb,
       timeout_milliseconds := 60000)$$
 );
+
+-- 0.9.58: separadores novos — Calendário Escolar (Escola360) e o módulo Crono360 (cronogramas e pontos de situação)
+create or replace function public.g360_const() returns jsonb
+language sql immutable set search_path = public as $$ select '{
+  "perfis": {"dexec":"Direção Executiva","dped":"Direção Pedagógica","prof":"Formador","form":"Formando"},
+  "separadores": ["esc","anos","cal","cur","tur","pc","prof","dsd","for","box","alt","pas","config","rel","est","env","pra","cop","meu","esch","mh","rcMapa","rcLista","rcEsp","crPs","crCron","crCump","crHist","crDef","def"],
+  "modTabs": {"escola":["esc","anos","cal","cur","tur","pc","prof","dsd","for"],"boxcheck":["box","alt","pas","config","rel","est","env","pra","cop","meu"],"eduschedule":["esch","mh"],"roomcheck":["rcMapa","rcLista","rcEsp"],"crono":["crPs","crCron","crCump","crHist","crDef"]},
+  "visOmissao": {
+    "dexec": ["esc","anos","cal","cur","tur","pc","prof","dsd","for","box","alt","pas","config","rel","est","env","pra","cop","meu","esch","mh","rcMapa","rcLista","rcEsp","crPs","crCron","crCump","crHist","crDef","def"],
+    "dped": ["esc","anos","cal","cur","tur","pc","prof","dsd","for","box","alt","pas","config","rel","est","env","pra","meu","esch","mh","rcMapa","rcLista","rcEsp","crPs","crCron","crCump","crHist","crDef"],
+    "prof": ["meu","mh","dsd","cal","crPs","crCron","crHist"],
+    "form": ["mh","cal"]}
+}'::jsonb $$;
