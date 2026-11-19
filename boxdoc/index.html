@@ -1843,7 +1843,7 @@ main>section{max-width:none}
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.51"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.52"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -2045,8 +2045,21 @@ function fillModFields(m){
   if(!m.disc)m.disc=parts.find(isDisc)||(parts.length>=2?parts[parts.length-2]:"");
   if(!m.cod)m.cod=parts.filter(p=>p!==m.disc&&p!==m.turma&&!isTurma(p)).pop()||m.nome||"";
 }
-const profOf=m=>m.profId||gridGet(m)||"";
-const isExc=m=>!!m.profId&&m.profId!==gridGet(m);
+/* 0.9.52: Box360 ← Plano Curricular — quem dá cada disciplina a cada turma (o formador com mais horas no plano desse ano letivo)
+   vale como atribuição enquanto a Direção não escolher outro na grelha. Nada é gravado: é só o que se usa quando a grelha está vazia. */
+var PLP=null;
+function planoMapa(){const k=String(cfgRev);if(PLP&&PLP.k===k)return PLP.m;const M=new Map();
+  try{const E=escData(),anoN=new Map(E.anos.map(a=>[a.id,a.nome])),tById=new Map(E.turmas.map(t=>[t.id,t]));
+    for(const p of pcPlanos()){const t=tById.get(p.turmaId),an=anoN.get(p.anoId);if(!t||!an||!t.cod)continue;const h=new Map();
+      for(const l of p.linhas||[]){if(!l||!l.f||!l.disc)continue;const kk=an+"|"+norm(t.cod)+"|"+discCode(l.disc);const o=h.get(kk)||new Map();o.set(l.f,(o.get(l.f)||0)+(+l.h||0));h.set(kk,o)}
+      for(const [kk,o] of h){let best="",mx=-1;for(const [f,v] of o)if(v>mx){mx=v;best=f}if(best)M.set(kk,best)}}}catch(e){}
+  PLP={k,m:M};return M}
+function planoProf(m){if(!m||!m.ano)return"";const M=planoMapa();if(!M.size)return"";const tc=norm(m.turma),dc=discCode(m.disc);let v=M.get(m.ano+"|"+tc+"|"+dc);
+  if(!v){const t0=tc.split(/[\s\-–—]+/)[0];if(t0&&t0!==tc)v=M.get(m.ano+"|"+t0+"|"+dc)}
+  return v&&cfg.profs.some(p=>p.id===v)?v:""}
+const gridEf=m=>gridGet(m)||planoProf(m);
+const profOf=m=>m.profId||gridEf(m)||"";
+const isExc=m=>!!m.profId&&m.profId!==gridEf(m);
 const profName=id=>(cfg.profs.find(p=>p.id===id)||{}).nome||"";
 const desigOf=m=>cfg.desig[discCode(m.disc)+"|"+modKey(m.cod)]||cfg.desig["*|"+modKey(m.cod)]||snqDesig(m)||nomeDaPasta(m.cod)||"";
 const modTitle=m=>(m.cod?codCurto(m.cod):(m.nome||"(módulo)"))+(desigOf(m)?" — "+desigOf(m):"");
@@ -2304,26 +2317,26 @@ function renderGrid(){
   const q=norm($("#gFilter").value),only=$("#gEmpty").checked,gp=$("#gProf"),pf=gp.value;
   gp.innerHTML=profOpts(pf,`<option value="">Todos os formadores</option>`);gp.value=cfg.profs.some(p=>p.id===pf)?pf:"";const pid=gp.value;
   const all=gridRows(),multi=new Set(all.map(r=>r.ano)).size>1;
-  const rows=all.filter(r=>(!q||q.split(" ").every(w=>norm(r.turma+" "+r.disc+" "+r.ano+" "+profName(gridGet(r.ref))).includes(w)))&&(!only||!gridGet(r.ref))&&(!pid||gridGet(r.ref)===pid||r.mods.some(m=>profOf(m)===pid)));
+  const rows=all.filter(r=>(!q||q.split(" ").every(w=>norm(r.turma+" "+r.disc+" "+r.ano+" "+profName(gridEf(r.ref))).includes(w)))&&(!only||!gridEf(r.ref))&&(!pid||gridEf(r.ref)===pid||r.mods.some(m=>profOf(m)===pid)));
   let html="",last=null;
   for(const r of rows){
     const tk=r.ano+"|"+r.turma;
     if(tk!==last){html+=`<div class="gturma">${esc(r.turma||"(sem turma)")}${multi&&r.ano?` <span class="tag" style="background:#eef1f5;color:#4a5260">${esc(r.ano)}</span>`:""}</div>`;last=tk}
-    const exc=r.mods.filter(isExc),g=gridGet(r.ref);
+    const exc=r.mods.filter(isExc),g=gridGet(r.ref),gp=g?"":planoProf(r.ref);
     const ab=GOPEN.has(r.k);
-    html+=`<div class="grow2${g?"":" vazio"}${ab?" open":""}" data-g="${esc(r.k)}"><span>${esc(r.disc||"(sem disciplina)")}</span><button class="n gopen" data-gopen title="Ver os módulos e atribuir cada um a um formador">${r.mods.length} ${r.mods.length===1?"módulo":"módulos"} <span class="car">▾</span></button>
-      <select data-grid>${lzOpts("prof",g,`<option value="">— sem formador —</option>`)}</select>
+    html+=`<div class="grow2${g||gp?"":" vazio"}${ab?" open":""}" data-g="${esc(r.k)}"${gp?` title="Formador tirado do Plano Curricular da turma — escolha outro para mudar"`:""}><span>${esc(r.disc||"(sem disciplina)")}</span><button class="n gopen" data-gopen title="Ver os módulos e atribuir cada um a um formador">${r.mods.length} ${r.mods.length===1?"módulo":"módulos"} <span class="car">▾</span></button>
+      <select data-grid>${lzOpts("prof",g,gp?`<option value="">↳ do Plano Curricular: ${esc(profName(gp))}</option>`:`<option value="">— sem formador —</option>`)}</select>
       <span class="exc">${exc.length?`<a href="#" data-excf="${esc(r.turma+" "+discShort(r.disc))}">${exc.length} exceção${exc.length===1?"":"ões"}: ${esc([...new Set(exc.map(m=>profName(m.profId)))].join(", "))}</a>`:""}</span></div>`;
     if(ab)html+=`<div class="gsub">${r.mods.slice().sort((a,b)=>String(a.cod).localeCompare(String(b.cod),"pt",{numeric:true})).map(m=>`<div class="gsubr${isExc(m)?" exc":""}" data-mid="${m.id}"><span>${esc(modTitle(m))}</span>
-      <select data-mprof>${lzOpts("prof",m.profId||"",`<option value="">↳ o da disciplina (${esc(profName(g)||"sem formador")})</option>`)}</select></div>`).join("")}</div>`;
+      <select data-mprof>${lzOpts("prof",m.profId||"",`<option value="">↳ o da disciplina (${esc(profName(g||gp)||"sem formador")})</option>`)}</select></div>`).join("")}</div>`;
   }
-  const sem=all.filter(r=>!gridGet(r.ref)).length,outros=cfg.mods.length-ativos().length,anos=[...getIdx().anos.keys()].sort();
+  const sem=all.filter(r=>!gridEf(r.ref)).length,doPlano=all.filter(r=>!gridGet(r.ref)&&planoProf(r.ref)).length,outros=cfg.mods.length-ativos().length,anos=[...getIdx().anos.keys()].sort();
   $("#anoInfo").innerHTML=anos.length?`Ano letivo da análise carregada: <b>${esc(anos.join(", "))}</b>${outros?` · ${outros} módulo(s) de outros anos letivos estão guardados, mas não aparecem aqui nem no relatório`:""}`:(outros?`${outros} módulo(s) de outras análises não aparecem aqui`:"");
-  $("#grid").innerHTML=(all.length?`<p class="hint">${all.length} disciplinas em ${new Set(all.map(r=>r.ano+"|"+r.turma)).size} turmas · ${sem} sem formador</p>`:"")+(html||`<p class="hint">${all.length?"Nada corresponde ao filtro.":"Ainda sem módulos nesta análise: carregue a listagem da Box e clique em “Detetar módulos e UFCD”."}</p>`);
+  $("#grid").innerHTML=(all.length?`<p class="hint">${all.length} disciplinas em ${new Set(all.map(r=>r.ano+"|"+r.turma)).size} turmas · ${sem} sem formador${doPlano?` · ${doPlano} com o formador do Plano Curricular`:""}</p>`:"")+(html||`<p class="hint">${all.length?"Nada corresponde ao filtro.":"Ainda sem módulos nesta análise: carregue a listagem da Box e clique em “Detetar módulos e UFCD”."}</p>`);
 }
 $("#gFilter").addEventListener("input",renderGrid);$("#gEmpty").addEventListener("change",renderGrid);$("#gProf").addEventListener("change",renderGrid);
 $("#grid").addEventListener("change",e=>{if(e.target.matches("[data-mprof]")){const m=cfg.mods.find(x=>x.id===e.target.closest("[data-mid]").dataset.mid);if(!m)return;
-    m.profId=e.target.value===gridGet(m)?"":e.target.value;save();renderGrid();renderMods();renderProfs();toast(m.profId?"Módulo atribuído a "+profName(m.profId)+" (exceção)":"O módulo volta a seguir a disciplina");return}
+    m.profId=e.target.value===gridEf(m)?"":e.target.value;save();renderGrid();renderMods();renderProfs();toast(m.profId?"Módulo atribuído a "+profName(m.profId)+" (exceção)":"O módulo volta a seguir a disciplina");return}
   if(!e.target.matches("[data-grid]"))return;const k=e.target.closest("[data-g]").dataset.g,v=e.target.value;
   const row=gridRows().find(r=>r.k===k);if(!row)return;const leg=legKey(row.ref);
   if(v)cfg.grid[k]=v;else if(k!==leg&&cfg.grid[leg])cfg.grid[k]="";else delete cfg.grid[k];
@@ -2342,7 +2355,7 @@ function renderMods(){
   $("#bulkProf").innerHTML=profOpts("",`<option value="">— escolher —</option><option value="__grid">↩ segue a grelha (desfazer exceções)</option>`);
   const atv=ativos(),vis=atv.filter(modVisible),po=profOpts("","");
   $("#detMsg").textContent=atv.length?`${atv.length} módulos · ${atv.filter(m=>!profOf(m)).length} sem formador · ${atv.filter(isExc).length} exceções`:"";
-  $("#tbMods").innerHTML=vis.slice(0,300).map(m=>{const g=gridGet(m),exc=isExc(m);
+  $("#tbMods").innerHTML=vis.slice(0,300).map(m=>{const g=gridEf(m),exc=isExc(m);
     return `<div class="mcard${profOf(m)?"":" noprof"}${exc?" exc":""}" data-id="${m.id}">
    <label class="f-nome"><span>Módulo / UFCD${exc?` <span class="tag exc">exceção</span>`:""}</span><input type="text" data-k="cod" value="${esc(m.cod)}"></label>
    <label class="f-turma"><span>Turma · disciplina</span><input type="text" value="${esc(m.turma+" · "+m.disc)}" title="${esc(m.turma+" · "+m.disc)}" disabled></label>
@@ -2356,7 +2369,7 @@ $("#modFilter").addEventListener("input",renderMods);
 $("#bulkAssign").onclick=()=>{const pid=$("#bulkProf").value;if(!pid){toast("Escolha um formador");return}
   const vis=ativos().filter(modVisible);if(!vis.length)return;
   ponto(`Antes de mudar o formador de ${vis.length} módulo(s)`);
-  vis.forEach(m=>{m.profId=pid==="__grid"?"":(pid===gridGet(m)?"":pid)});save();renderAll();
+  vis.forEach(m=>{m.profId=pid==="__grid"?"":(pid===gridEf(m)?"":pid)});save();renderAll();
   toast(pid==="__grid"?`${vis.length} módulo(s) voltaram a seguir a grelha`:`${vis.length} módulo(s) mudados`)};
 const modId=m=>(m.ano||"")+"|"+norm(m.turma)+"|"+discCode(m.disc)+"|"+modKey(m.cod);
 function detetar(){
@@ -2392,7 +2405,7 @@ $("#tbMods").addEventListener("input",e=>{const tr=e.target.closest("[data-id]")
   if(e.target.dataset.doc){const id=e.target.dataset.doc;if(e.target.checked){if(!m.docs.includes(id))m.docs.push(id)}else m.docs=m.docs.filter(x=>x!==id);e.target.parentElement.classList.toggle("on",e.target.checked);save();return}
   if(e.target.hasAttribute("data-des")){const k=discCode(m.disc)+"|"+modKey(m.cod);if(e.target.value.trim())cfg.desig[k]=e.target.value.trim();else delete cfg.desig[k];save();return}
   const k=e.target.dataset.k;if(!k)return;
-  if(k==="profId"){m.profId=e.target.value===gridGet(m)?"":e.target.value;save();renderMods();renderGrid();renderProfs();return}
+  if(k==="profId"){m.profId=e.target.value===gridEf(m)?"":e.target.value;save();renderMods();renderGrid();renderProfs();return}
   m[k]=e.target.value;if(k==="cod")m.pasta=pastaDe(m);save();});
 $("#tbMods").addEventListener("click",e=>{if(!e.target.hasAttribute("data-del"))return;const id=e.target.closest("[data-id]").dataset.id;cfg.mods=cfg.mods.filter(x=>x.id!==id);save();renderAll();toast("Módulo removido (pode anular)")});
 $("#addMod").onclick=()=>{const r=gridRows()[0],idx=getIdx(),a=[...idx.anos][0]||["",""];
@@ -3602,9 +3615,12 @@ function sbErroMsg(e){const m=(e&&e.message)||String(e);if(e&&(e.code==="42501"|
 function nuvSB(){try{return !!(SBSES&&sbCfg()&&!RO&&SBMEMBRO&&(SBMEMBRO.admin||SBMEMBRO.perfil==="dexec"||SBMEMBRO.perfil==="dped"))}catch(e){return false}}
 
 /* 0.9.49: tempo real — quando outro computador (ou o iPad) da Direção grava, este vai buscar logo a alteração */
+// 0.9.52: não interrompe quem está a escrever — espera que pare (ou saia da caixa) antes de trazer a alteração do outro computador
+var ULT_ESCRITA=0;["input","keydown","compositionstart"].forEach(ev=>document.addEventListener(ev,e=>{const t=e.target;if(t&&/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))ULT_ESCRITA=Date.now()},true));
+const aEscrever=()=>{const a=document.activeElement,dt=Date.now()-ULT_ESCRITA;return dt<4000||(dt<30000&&!!(a&&/^(INPUT|TEXTAREA)$/.test(a.tagName)&&!/^(checkbox|radio|button|submit|file|range|color)$/i.test(a.type||"")&&a.closest&&a.closest("main")))};
 function sbTempoReal(){if(SBRT||!nuvSB())return;let h=null;
-  sbCliente().then(sb=>{SBRT=sb.channel("g360-estado").on("postgres_changes",{event:"*",schema:"public",table:"g360_estado"},p=>{const r=p.new||{};if(String(r.por||"").endsWith("#"+SBSID))return;
-      clearTimeout(h);h=setTimeout(()=>{if(!NUV.ocupado)nuvemSincMS().then(()=>{try{refreshAll()}catch(e){}try{if(curTab&&curTab.startsWith("rc"))rcRender(curTab)}catch(e){}})},1200)}).subscribe()}).catch(()=>{})}
+  const trazer=()=>{clearTimeout(h);h=setTimeout(()=>{if(NUV.ocupado||aEscrever()||document.querySelector(".impov.on")){trazer();return}nuvemSincMS().catch(()=>{})},1500)};
+  sbCliente().then(sb=>{SBRT=sb.channel("g360-estado").on("postgres_changes",{event:"*",schema:"public",table:"g360_estado"},p=>{const r=p.new||{};if(String(r.por||"").endsWith("#"+SBSID))return;trazer()}).subscribe()}).catch(()=>{})}
 function sbAtivo(){try{return !!(SBSES&&sbCfg())}catch(e){return false}}
 async function sbRpc(f,a){const sb=await sbCliente();const {data,error}=await sb.rpc(f,a||{});if(error){const x=new Error(error.code==="42501"?(error.message||"Sem permissão."):sbErroMsg(error));x.code=error.code;throw x}return data}
 const b64DeBuf=buf=>{const u=new Uint8Array(buf);let s="";for(let i=0;i<u.length;i+=32768)s+=String.fromCharCode.apply(null,u.subarray(i,i+32768));return btoa(s)};
@@ -3752,7 +3768,7 @@ async function nuvemTrazer(){
     NUV.ultimo=NUV.ultimo||Date.now();
   }catch(e){if(e.kind!=="nokv"){NUV.erro=e.message;console.warn(e)}}
   finally{NUV.ocupado=false;nuvemUI()}
-  if(mudou){refreshAll();renderRP();showLast();scanHint();await carregarRef();toast("Trazida da nuvem a informação guardada noutro computador")}
+  if(mudou){refreshAll();renderRP();showLast();scanHint();await carregarRef();if(Date.now()-(window.__toastNuv||0)>60000){window.__toastNuv=Date.now();toast("Trazida da nuvem a informação guardada noutro computador")}}
   return mudou}
 
 /* ---------- logótipos dos documentos (Definições) ---------- */
