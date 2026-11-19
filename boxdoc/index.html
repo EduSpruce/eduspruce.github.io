@@ -960,6 +960,11 @@ main>section{max-width:none}
     background:no-repeat center/16px url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 20H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h3M16 17l5-5-5-5M21 12H9'/%3E%3C/svg%3E")}
   .who a::after{content:""!important}
 }
+
+/* 0.9.50: componente não letiva acrescentada à mão na DSD */
+.dsdnl{margin-top:20px}.dsdnl h3{margin:0 0 4px}
+.dsdnlt input[type=number]{width:100%}
+.dsdnlf{background:#f6f8fb;border:1px solid var(--line);border-radius:10px;padding:12px;margin-top:10px}
 </style>
 </head>
 <body>
@@ -1194,7 +1199,7 @@ main>section{max-width:none}
 <section id="dsd">
   <div class="card">
     <h2>Distribuição de Serviço Docente</h2>
-    <p class="hint">O serviço de cada formador no ano letivo ativo, <b id="dsdAnoLbl"></b>, tirado dos <b>Planos Curriculares</b> das turmas: a <b>componente letiva</b> (módulos, UFCD e UC) e a <b>componente não letiva</b> (cargos). Para mudar quem dá o quê, mude o formador no plano da turma.</p>
+    <p class="hint">O serviço de cada formador no ano letivo ativo, <b id="dsdAnoLbl"></b>, tirado dos <b>Planos Curriculares</b> das turmas: a <b>componente letiva</b> (módulos, UFCD e UC) e a <b>componente não letiva</b> (os cargos dos planos e as horas acrescentadas aqui à mão: escolha o formador). Para mudar quem dá o quê, mude o formador no plano da turma.</p>
     <div class="row" style="margin-bottom:12px">
       <label class="grow">Formador<select id="dsdSel"></select></label>
       <label class="grow" id="dsdFilterL">Procurar<input type="text" id="dsdFilter" placeholder="código, nome, turma ou disciplina"></label>
@@ -1315,7 +1320,7 @@ main>section{max-width:none}
       </details>
       <div id="boxWait" class="hint" style="display:none;margin:10px 0 0"><span class="spin"></span> A ligar à Box…</div>
     </div>
-    <div class="row" style="margin-top:10px"><button class="b s" id="tokOut" style="display:none">Terminar sessão da Box</button></div>
+    <div class="row" style="margin-top:10px"><button class="b s" id="tokOut" style="display:none" title="Só se quiser mesmo desligar a conta da Box (fica desligada em todos os computadores)">Desligar a Box</button></div>
     <div id="boxAuth"></div><div id="nuvemMsg"></div>
     <div id="boxBrowse" style="display:none">
       <h3>Escolha a pasta a analisar</h3>
@@ -1843,7 +1848,7 @@ main>section{max-width:none}
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.52"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.53"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -2899,8 +2904,8 @@ function porLer(){const todo=new Map();for(const e of evaluate())for(const i of 
 // verificação em segundo plano: a app continua utilizável e o relatório atualiza-se no fim
 let bgRun=0,bgOn=false;
 async function verificarFundo(){
-  if(!SES||bgOn)return;const list=porLer();if(!list.length){$("#bg").style.display="none";return}
-  const my=++bgRun;bgOn=true;const el=$("#bg");el.style.display="";let last=0;
+  if(!SES||bgOn)return;const list=porLer(),el=$("#bg")||$("#bgp")||document.createElement("span");if(!list.length){el.style.display="none";return} // 0.9.50: o indicador chama-se #bgp
+  const my=++bgRun;bgOn=true;el.style.display="";let last=0;
   try{const r=await checkFiles(list,(d,n)=>{el.textContent=`a ler documentos ${d}/${n}`;
       if(Date.now()-last>15000){last=Date.now();if(curTab==="rel")renderReport();if(curTab==="alt")renderAlt()}},()=>my!==bgRun,4);
     el.textContent=`${r.done-r.err} documentos lidos`;setTimeout(()=>{if(!bgOn)el.style.display="none"},6000)}
@@ -3232,33 +3237,95 @@ function printText(title,text){
 // ou indicado na própria página, no separador "Gestão Documental".
 const BOXDOC_WORKER="https://boxdoc-login.joel-cunha83.workers.dev";
 const workerUrl=()=>{let u=BOXDOC_WORKER;try{u=u||localStorage.getItem("boxdoc_worker")||""}catch(e){}return u.replace(/\/+$/,"")};
-// Sessão: {mode:"oauth"|"dev", a: access token, r: refresh token, exp: ms}
+// Sessão: {mode:"oauth"|"dev", a: access token, r: refresh token, exp: ms, t: quando foi obtida, dono: conta do Office 365, login: conta da Box}
+/* 0.9.50: a ligação à Box nunca se perde —
+   · «Terminar sessão» na EPISJ 360 já não desliga a Box (só «Desligar a Box», no Box360, o faz — e pede confirmação);
+   · a renovação faz-se uma de cada vez, mesmo com várias janelas abertas (a Box só aceita cada código de renovação uma vez:
+     antes, duas janelas a renovar ao mesmo tempo deitavam a sessão fora);
+   · uma falha passageira (rede, Box ocupada, serviço de login lento) já não apaga a sessão — volta a tentar mais tarde;
+   · a sessão fica também no cofre da EPISJ 360 no Supabase (só a própria conta da Direção a lê): outra janela, outro computador
+     ou o iPad continuam com ela, e o Supabase renova-a sozinho todos os dias, para nunca caducar por falta de uso. */
 let SES=null;
-function loadSes(){try{SES=JSON.parse(localStorage.getItem("boxdoc_ses")||"null")}catch(e){SES=null}
+const BOX_LS="boxdoc_ses";
+const euEmailBox=()=>{try{return String(EU&&EU.email||"").toLowerCase()}catch(e){return ""}};
+const sesMinha=s=>!!s&&(!s.dono||!euEmailBox()||s.dono===euEmailBox());
+function lerSesLocal(){try{const s=JSON.parse(localStorage.getItem(BOX_LS)||"null");return s&&s.mode==="oauth"&&s.r?s:null}catch(e){return null}}
+function loadSes(){SES=lerSesLocal();
   if(!SES){try{const t=sessionStorage.getItem("box_tok");if(t)SES={mode:"dev",a:t,exp:Date.now()+3600e3}}catch(e){}}}
-function saveSes(){try{if(SES&&SES.mode==="oauth")localStorage.setItem("boxdoc_ses",JSON.stringify(SES));else localStorage.removeItem("boxdoc_ses");
+// só se apaga a sessão da Box guardada quando o utilizador a desliga (logout); um token de programador não a apaga
+function saveSes(){try{if(SES&&SES.mode==="oauth")localStorage.setItem(BOX_LS,JSON.stringify(SES));
   if(SES&&SES.mode==="dev")sessionStorage.setItem("box_tok",SES.a);else sessionStorage.removeItem("box_tok")}catch(e){}}
+function sesNova(j,base){return{mode:"oauth",a:j.access_token||j.a,r:j.refresh_token||j.r||(base&&base.r),exp:j.expires_in?Date.now()+(+j.expires_in||3600)*1000-120e3:(+j.exp||Date.now()+3480e3),
+  t:j.access_token?Date.now():(+j.t||Date.now()),dono:(base&&base.dono)||euEmailBox(),login:j.login||(base&&base.login)||"",nome:j.nome||(base&&base.nome)||""}}
 // regresso do login (o serviço devolve o acesso no fim do endereço, depois de #)
 (function(){const h=location.hash;
-  if(h.startsWith("#boxdoc_auth=")){try{const p=JSON.parse(atob(decodeURIComponent(h.slice(13))));SES={mode:"oauth",a:p.a,r:p.r,exp:Date.now()+(p.e||3600)*1000-120e3};saveSes()}catch(e){}
-    history.replaceState(null,"",location.pathname+location.search);window.__goBox=true}
+  if(h.startsWith("#boxdoc_auth=")){try{const p=JSON.parse(atob(decodeURIComponent(h.slice(13))));SES={mode:"oauth",a:p.a,r:p.r,exp:Date.now()+(p.e||3600)*1000-120e3,t:Date.now(),dono:"",login:""};saveSes();localStorage.removeItem("boxdoc_morta")}catch(e){}
+    history.replaceState(null,"",location.pathname+location.search);window.__goBox=true;window.__boxNova=true}
   else if(h.startsWith("#boxdoc_erro=")){window.__authErr=decodeURIComponent(h.slice(13));history.replaceState(null,"",location.pathname+location.search);window.__goBox=true}
   else loadSes();})();
+// outra janela renovou ou voltou a ligar: esta passa a usar a mesma sessão
+window.addEventListener("storage",e=>{if(e.key!==BOX_LS||!e.newValue)return;try{const n=JSON.parse(e.newValue);if(n&&n.mode==="oauth"&&n.r&&sesMinha(n)&&(!SES||SES.mode!=="oauth"||(n.t||0)>=(SES.t||0)))SES=n}catch(x){}});
+// uma renovação de cada vez em todas as janelas deste navegador
+async function boxTrinco(fn){if(navigator.locks&&navigator.locks.request)return navigator.locks.request("episj360-box-renovar",{mode:"exclusive"},fn);
+  for(let i=0;i<60;i++){let l=0;try{l=+localStorage.getItem("boxdoc_trinco")||0}catch(e){}if(Date.now()-l>15000)break;await new Promise(r=>setTimeout(r,250))}
+  try{localStorage.setItem("boxdoc_trinco",String(Date.now()))}catch(e){}
+  try{return await fn()}finally{try{localStorage.removeItem("boxdoc_trinco")}catch(e){}}}
+// cofre da sessão no Supabase (g360_box): só a própria conta, e só a Direção
+const boxCofreOk=()=>{try{return !!(SBSES&&SBMEMBRO&&(SBMEMBRO.admin||SBMEMBRO.perfil==="dexec"||SBMEMBRO.perfil==="dped"))}catch(e){return false}};
+async function boxCofreLer(){if(!boxCofreOk())return null;try{const c=await sbRpc("g360_box_ler");return c&&c.r?c:null}catch(e){return null}}
+async function boxCofreGuardar(x){if(!boxCofreOk()||!x||x.mode!=="oauth"||!x.r)return;
+  try{const j=await sbRpc("g360_box_guardar",{p:{a:x.a,r:x.r,exp:x.exp,t:x.t||Date.now(),login:x.login||"",nome:x.nome||""}});
+    if(j&&j.ok===false&&j.r&&(+j.t||0)>(x.t||0)&&SES&&SES.r===x.r){SES=sesNova(j,SES);saveSes()}}catch(e){}}
+async function boxCofreReclamar(r){if(!boxCofreOk())return{ok:true,sem:true};try{return (await sbRpc("g360_box_reclamar",{p_r:r,p_ms:20000}))||{ok:true}}catch(e){return{ok:true,sem:true}}}
+// sem sessão neste navegador: vai buscá-la ao cofre (outro computador, o iPad ou a renovação diária do Supabase)
+async function boxRecuperar(){if(SES&&sesMinha(SES))return SES;const l=lerSesLocal();if(l&&sesMinha(l)){SES=l;return SES}
+  try{await gpAte(SB_PRONTO,8000)}catch(e){}
+  const c=await boxCofreLer();if(c&&!c.morta){SES=sesNova(c,null);saveSes();return SES}return null}
 let refreshing=null;
 async function accessToken(force){
+  if(!SES){const l=lerSesLocal();if(l&&sesMinha(l))SES=l}
   if(!SES)throw new Error("Não está ligado à Box.");
   if(!force&&Date.now()<SES.exp)return SES.a;
   if(SES.mode!=="oauth"){const m="O token de programador expirou. Gere um novo ou use “Entrar com a Box”.";logout(false,m);throw new Error(m)}
-  if(!refreshing)refreshing=(async()=>{
-    const w=workerUrl();if(!w)throw new Error("Falta o endereço do serviço de login.");
-    let r;try{r=await fetch(w+"/refresh",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({refresh_token:SES.r})})}
-    catch(e){throw new Error("Não foi possível contactar o serviço de login ("+w+").")}
-    const j=await r.json().catch(()=>({}));
-    if(!r.ok||!j.access_token){const m=j.erro||"Sessão expirada. Entre outra vez com a Box.";logout(false,m);throw new Error(m)}
-    SES={mode:"oauth",a:j.access_token,r:j.refresh_token||SES.r,exp:Date.now()+(j.expires_in||3600)*1000-120e3};saveSes();return SES.a;
-  })().finally(()=>{refreshing=null});
+  if(!refreshing)refreshing=boxTrinco(()=>boxRenovar(force,false)).finally(()=>{refreshing=null});
   return refreshing;
 }
+const boxAdotar=(c,base)=>{SES=sesNova(c,base);saveSes();return SES};
+async function boxRenovar(force,volta){
+  const w=workerUrl();if(!w)throw new Error("Falta o endereço do serviço de login.");
+  // 1) outra janela pode já ter renovado
+  const l=lerSesLocal();if(l&&sesMinha(l)&&(l.t||0)>(SES.t||0))SES=Object.assign({},l,{dono:SES.dono||l.dono});
+  if(!force&&Date.now()<SES.exp)return SES.a;
+  // 2) outro computador (ou a renovação diária do Supabase) pode ter uma sessão mais recente no cofre
+  let c=await boxCofreLer();
+  if(c&&!c.morta&&c.r!==SES.r&&(+c.t||0)>(SES.t||0)){boxAdotar(c,SES);if(!force&&Date.now()<SES.exp)return SES.a}
+  else if(c&&c.r!==SES.r&&(SES.t||0)>(+c.t||0))await boxCofreGuardar(SES); // a deste navegador é mais recente: passa a ser a do cofre
+  // 3) só um computador renova de cada vez: os outros esperam e usam o resultado
+  for(let i=0;i<10;i++){const k=await boxCofreReclamar(SES.r);if(k.ok)break;
+    if(k.r&&k.r!==SES.r){if(!k.morta&&(+k.t||0)>=(SES.t||0)){boxAdotar(k,SES);if(Date.now()<SES.exp)return SES.a;continue}await boxCofreGuardar(SES);continue}
+    await new Promise(r=>setTimeout(r,Math.min(4000,Math.max(800,+k.espera||1500))));
+    c=await boxCofreLer();if(c&&!c.morta&&c.r!==SES.r&&(+c.t||0)>=(SES.t||0)){boxAdotar(c,SES);if(Date.now()<SES.exp)return SES.a}}
+  // 4) renovar
+  let r;try{r=await fetch(w+"/refresh",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({refresh_token:SES.r})})}
+  catch(e){const x=new Error("Não foi possível contactar o serviço de login da Box — a ligação mantém-se e volto a tentar sozinho.");x.kind="net";throw x}
+  const j=await r.json().catch(()=>({}));
+  if(r.ok&&j.access_token){SES=sesNova(j,SES);saveSes();boxCofreGuardar(SES);try{localStorage.removeItem("boxdoc_morta")}catch(e){}return SES.a}
+  const txt=JSON.stringify(j||{}),definitivo=r.status===400||r.status===401||/invalid_grant|invalid_token|expired|revoked|refresh token/i.test(txt);
+  if(!definitivo){const x=new Error("A Box não respondeu agora ("+r.status+") — a ligação mantém-se e volto a tentar sozinho.");x.kind="net";throw x}
+  // 5) o código foi recusado: pode haver um mais recente noutra janela ou no cofre
+  if(!volta){const l2=lerSesLocal(),c2=await boxCofreLer(),alt=[l2,c2].filter(x=>x&&x.r&&x.r!==SES.r&&!x.morta&&sesMinha(x)).sort((p,q)=>(+q.t||0)-(+p.t||0))[0];
+    if(alt){boxAdotar(alt,SES);if(Date.now()<SES.exp)return SES.a;return boxRenovar(true,true)}
+    await new Promise(z=>setTimeout(z,2500));return boxRenovar(true,true)} // o serviço de login responde da mesma forma a uma falha da Box: tenta outra vez antes de desistir
+  boxSessaoMorta(j.erro||j.error_description||j.error||("a Box respondeu "+r.status));
+  const x=new Error("A Box pediu para voltar a ligar a conta (a autorização foi retirada ou caducou). Carregue em «Entrar com a Box».");x.kind="auth";throw x;
+}
+// a Box recusou mesmo o acesso: fica registado de quem era, para voltar a ligar com um clique (sem revogar nada)
+function boxSessaoMorta(msg){const old=SES;
+  try{localStorage.setItem("boxdoc_morta",JSON.stringify({dono:old&&old.dono||"",login:old&&old.login||"",quando:Date.now(),msg:String(msg||"")}))}catch(e){}
+  try{if(old&&old.r&&boxCofreOk())sbRpc("g360_box_morta",{p_r:old.r,p_erro:String(msg||"").slice(0,300)}).catch(()=>{})}catch(e){}
+  SES=null;try{localStorage.removeItem(BOX_LS)}catch(e){}bgRun++;
+  try{$("#boxBrowse").style.display="none";$("#tokOut").style.display="none";$("#loginBox").style.display="";$("#devTok").style.display="";$("#boxAuth").innerHTML="";loginUI();
+    boxEstado("login","A Box pediu para voltar a ligar a conta"+(old&&old.login?" "+old.login:"")+". Carregue em «Entrar com a Box» para continuar.")}catch(e){}}
 // ÚNICA porta de acesso aos ficheiros da Box: só pedidos GET (leitura). Não há neste código nada que escreva na Box.
 // ritmo: a Box aceita cerca de 1000 pedidos por minuto por utilizador. A app pede a um ritmo constante logo abaixo
 // desse limite e abranda quando a Box o pede (HTTP 429); assim a leitura avança sempre, sem paragens longas.
@@ -3283,7 +3350,7 @@ async function boxGet(path,params){
     if(r.ok){if(++RATE.ok>=200&&RATE.rps<RATE.max){RATE.rps=Math.min(RATE.max,RATE.rps+1);RATE.ok=0}return r.json()}
     if(r.status===429){travar((+r.headers.get("Retry-After")||2)*1000);continue}
     if(r.status===401){if(!renewed&&SES&&SES.mode==="oauth"){renewed=true;await accessToken(true);continue}
-      logout(false,"O acesso à Box expirou. Volte a entrar.");const er=new Error("O acesso à Box expirou. Volte a entrar.");er.kind="auth";throw er}
+      if(SES&&SES.mode==="oauth")boxSessaoMorta("a Box recusou o acesso (401)");else logout(false,"O acesso à Box expirou. Volte a entrar.");const er=new Error("O acesso à Box expirou. Volte a entrar.");er.kind="auth";throw er}
     if(r.status>=500){await sleep(Math.min(20,0.5*2**t)*1000);continue}
     const er=new Error("A Box respondeu "+r.status+(r.status===403?" (sem permissão para esta pasta)":"")+".");er.kind="http";er.status=r.status;throw er;
   }
@@ -3337,6 +3404,8 @@ function gateState(st,msg,txt){if(txt)$("#gateWaitTxt").textContent=txt;
   $("#gateMsg").innerHTML=msg?`<div class="msg bad" style="text-align:left">${esc(msg)}</div>`:"";
 }
 function connected(me){
+  try{if(SES&&SES.mode==="oauth"){const em=euEmailBox();if(em&&!SES.dono)SES.dono=em;if(me&&me.login)SES.login=me.login;if(me&&me.name)SES.nome=me.name;if(!SES.t)SES.t=Date.now();saveSes();boxCofreGuardar(SES);window.__boxNova=false;
+    if(Date.now()-(SES.t||0)>3*864e5)setTimeout(()=>accessToken(true).catch(()=>{}),6000)}}catch(e){} // 0.9.50
   boxEstado("off");if(RO&&!soLeitura())sairSoLeitura();
   if(!window.__guideLogin)window.__guideLogin=String(me.login||"").toLowerCase();
   $("#tokOut").style.display="";
@@ -3353,13 +3422,14 @@ function connected(me){
   return sinc; // 0.9.13: o arranque espera por isto para chegar aos 100%
 }
 function logout(revoke,msg){
-  const old=SES;SES=null;saveSes();bgRun++;
+  const old=SES;SES=null;try{sessionStorage.removeItem("box_tok");if(revoke||(old&&old.mode==="oauth"))localStorage.removeItem(BOX_LS)}catch(e){}bgRun++;
+  if(revoke)try{if(boxCofreOk())sbRpc("g360_box_esquecer").catch(()=>{})}catch(e){}
   if(revoke&&old&&old.mode==="oauth"&&workerUrl())fetch(workerUrl()+"/logout",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({token:old.r||old.a})}).catch(()=>{});
   $("#boxBrowse").style.display="none";$("#tokOut").style.display="none";$("#loginBox").style.display="";$("#devTok").style.display="";$("#boxAuth").innerHTML="";loginUI();
   boxEstado("login",msg||"");
 }
 $("#tokGo").onclick=tokGo;$("#tok").addEventListener("keydown",e=>{if(e.key==="Enter")tokGo()});
-$("#tokOut").onclick=()=>logout(true);
+$("#tokOut").onclick=()=>{if(confirm("Desligar a Box?\n\nA EPISJ 360 deixa de ler a Box com esta conta em todos os computadores e no iPad, até voltar a carregar em «Entrar com a Box».\n(Para sair da EPISJ 360 use «Terminar sessão», em cima — a Box fica ligada.)"))logout(true)};
 async function browse(id,path){
   $("#subfolders").innerHTML='<div class="sk"></div><div class="sk"></div><div class="sk"></div>';
   try{const it=await listFolder(id);
@@ -4182,7 +4252,7 @@ function prepararDisposicao(){
       for(const bk of L[ck]){const b=sec.querySelector(`[data-blk="${CSS.escape(bk)}"]`);if(b&&!b.contains(cont))cont.appendChild(b)}}})}
 const contKey=c=>c.dataset.col||c.dataset.cont;
 function guardarDisposicao(sec){const o={};sec.querySelectorAll(".col,[data-cont]").forEach(c=>{o[contKey(c)]=[...c.children].filter(x=>x.classList.contains("blk")).map(x=>x.dataset.blk)});
-  LAYOUT[sec.id]=o;try{localStorage.setItem(LAYKEY,JSON.stringify(LAYOUT))}catch(e){}}
+  LAYOUT[sec.id]=o;try{localStorage.setItem(LAYKEY,JSON.stringify(LAYOUT))}catch(e){}prefsAgendar()}
 let DRG=null,MARK=null;
 document.querySelector("main").addEventListener("mousedown",e=>{const h=e.target.closest(".dh");if(h)h.parentElement.draggable=true});
 document.querySelector("main").addEventListener("mouseup",e=>{const h=e.target.closest(".dh");if(h&&!DRG)h.parentElement.draggable=false});
@@ -4198,7 +4268,7 @@ document.querySelector("main").addEventListener("dragover",e=>{if(!DRG)return;co
 document.querySelector("main").addEventListener("drop",e=>{if(!DRG||!MARK||!MARK.parentElement)return;e.preventDefault();MARK.parentElement.insertBefore(DRG,MARK);guardarDisposicao(DRG.closest("section"));
   if(curTab==="est")linhaTempo($("#eTime"))});
 document.querySelector("main").addEventListener("dragend",()=>{if(!DRG)return;DRG.classList.remove("dragging");DRG.draggable=false;DRG=null;if(MARK)MARK.remove();MARK=null;document.body.classList.remove("arrastar")});
-$("#layReset").onclick=()=>{try{localStorage.removeItem(LAYKEY)}catch(e){}location.reload()};
+$("#layReset").onclick=()=>{LAYOUT={};try{localStorage.removeItem(LAYKEY)}catch(e){}prefsAgendar();prefsEnviar().finally(()=>setTimeout(()=>location.reload(),300))};
 prepararDisposicao();
 
 
@@ -4643,7 +4713,7 @@ $("#escImport2").onclick=()=>escImportarBox();
 const WG_KEY="guide_widgets",WG_PADRAO=["ano","incompletas","profs","entregas","prazo","top","horario","agora","esphoje","proxres","meudia"];
 const WG_MOD={escola:{l:"E",c:"#1d4fb8",n:"Escola360"},boxcheck:{l:"B",c:"#0b7fd1",n:"Box360"},eduschedule:{l:"H",c:"#7c3aed",n:"Horário360"},roomcheck:{l:"S",c:"#2f9e57",n:"Sala360"}};
 let WG_SEL=(()=>{try{const v=JSON.parse(localStorage.getItem(WG_KEY)||"null");return Array.isArray(v)?v:WG_PADRAO.slice()}catch(e){return WG_PADRAO.slice()}})();
-const wgGuardar=()=>{try{localStorage.setItem(WG_KEY,JSON.stringify(WG_SEL))}catch(e){}};
+const wgGuardar=()=>{try{localStorage.setItem(WG_KEY,JSON.stringify(WG_SEL))}catch(e){}prefsAgendar()};
 const modOn=m=>!MODS_OFF.includes(m)&&!!primeiroPermitido(m);
 const wgAgora=()=>{const n=new Date();return n.getHours()*60+n.getMinutes()};
 const wgPct=(a,b)=>b?Math.round(a*100/b):0;
@@ -4803,7 +4873,7 @@ const WG_PADRAO2=["anocur","fse","cnq","ultimas","carga","ocup"];
 let WG_SEL2=(()=>{try{const v=JSON.parse(localStorage.getItem(WG_KEY+"2")||"null");return Array.isArray(v)?v:WG_PADRAO2.filter(id=>!WG_SEL.includes(id))}catch(e){return WG_PADRAO2.slice()}})();
 const WGZ={1:{grid:"#wgGrid",conta:"#wgConta",get sel(){return WG_SEL},set sel(v){WG_SEL=v},padrao:WG_PADRAO,nome:"Widgets"},
            2:{grid:"#wgGrid2",conta:"#wgConta2",get sel(){return WG_SEL2},set sel(v){WG_SEL2=v},padrao:WG_PADRAO2,nome:"Mais widgets"}};
-const wgGuardarZ=()=>{try{localStorage.setItem(WG_KEY,JSON.stringify(WG_SEL));localStorage.setItem(WG_KEY+"2",JSON.stringify(WG_SEL2))}catch(e){}};
+const wgGuardarZ=()=>{try{localStorage.setItem(WG_KEY,JSON.stringify(WG_SEL));localStorage.setItem(WG_KEY+"2",JSON.stringify(WG_SEL2))}catch(e){}prefsAgendar()};
 function renderWidgets(){if(!window.__wgOk)return; // só depois de a app arrancar (antes disso nem tudo está definido)
   const vis=new Set(wgVisiveis().map(w=>w.id));
   for(const z of [1,2]){const Z=WGZ[z],g=$(Z.grid);if(!g)continue;const L=Z.sel.map(id=>WIDGETS.find(w=>w.id===id)).filter(w=>w&&vis.has(w.id));
@@ -4857,6 +4927,28 @@ $("#wgEsc").onclick=()=>wgEscolher(1);$("#wgEsc2").onclick=()=>wgEscolher(2);
   const r=e.target.closest("[data-wgrc]");if(r){rcVer(RC.res[r.dataset.wgrc]);return}
   const b=e.target.closest("[data-wgir]");if(b){const t=b.dataset.wgir;if(t==="esch")mostrarModulo("eduschedule",true);else show(t)}}));
 setInterval(()=>{if(curTab==="esc"&&document.visibilityState==="visible"&&$("#rcDw").hidden)renderWidgets()},60000);
+/* 0.9.50: a escolha dos widgets e a disposição dos quadros ficam guardadas na conta (Supabase, tabela g360_prefs, só a própria pessoa):
+   são as mesmas em todos os computadores e no iPad, e mudam em tempo real nos outros aparelhos abertos */
+var PREFS={t:+(localStorage.getItem("guide_prefs_t")||0),h:null,rt:null,ok:false};
+function prefsDados(){let lay={};try{lay=JSON.parse(localStorage.getItem(LAYKEY)||"{}")||{}}catch(e){}return{wg1:WG_SEL,wg2:WG_SEL2,layout:lay}}
+function prefsAgendar(){if(typeof PREFS==="undefined"||!PREFS)return;PREFS.t=Date.now();try{localStorage.setItem("guide_prefs_t",String(PREFS.t))}catch(e){}clearTimeout(PREFS.h);PREFS.h=setTimeout(prefsEnviar,1200)}
+async function prefsEnviar(){if(!PREFS.ok)return;try{const em=String(EU&&EU.email||"").toLowerCase();if(!em||!SBSES)return;const sb=await sbCliente();
+  const {error}=await sb.from("g360_prefs").upsert({email:em,dados:prefsDados(),t:PREFS.t||Date.now(),por:SBSID},{onConflict:"email"});if(error)console.warn("preferências",error.message||error)}catch(e){}}
+function layAplicar(){document.querySelectorAll("main>section").forEach(sec=>{const L=LAYOUT[sec.id];if(!L)return;
+  for(const ck in L){const cont=ck==="a"||ck==="b"?sec.querySelector(`:scope>.cols>.col[data-col="${ck}"]`):sec.querySelector(`[data-cont="${CSS.escape(ck)}"]`);if(!cont)continue;
+    for(const bk of L[ck]){const b=sec.querySelector(`[data-blk="${CSS.escape(bk)}"]`);if(b&&!b.contains(cont))cont.appendChild(b)}}})}
+function prefsAplicar(d,t){if(!d||typeof d!=="object")return;
+  if(Array.isArray(d.wg1))WG_SEL=d.wg1.filter(x=>typeof x==="string");if(Array.isArray(d.wg2))WG_SEL2=d.wg2.filter(x=>typeof x==="string");
+  try{localStorage.setItem(WG_KEY,JSON.stringify(WG_SEL));localStorage.setItem(WG_KEY+"2",JSON.stringify(WG_SEL2))}catch(e){}
+  if(d.layout&&typeof d.layout==="object"&&JSON.stringify(d.layout)!==JSON.stringify(LAYOUT)){LAYOUT=d.layout;try{localStorage.setItem(LAYKEY,JSON.stringify(LAYOUT))}catch(e){}try{layAplicar()}catch(e){}}
+  PREFS.t=t||Date.now();try{localStorage.setItem("guide_prefs_t",String(PREFS.t))}catch(e){}
+  if(curTab==="esc")renderWidgets()}
+async function prefsTrazer(){try{const em=String(EU&&EU.email||"").toLowerCase();if(!em||!SBSES)return;const sb=await sbCliente();
+  const {data,error}=await sb.from("g360_prefs").select("dados,t").eq("email",em).maybeSingle();if(error){console.warn("preferências",error.message||error);return}PREFS.ok=true;
+  if(data&&(+data.t||0)>PREFS.t)prefsAplicar(data.dados,+data.t);
+  else if(!data||PREFS.t>(+data.t||0)){if(!PREFS.t)PREFS.t=Date.now();prefsEnviar()}
+  if(!PREFS.rt&&sb.channel)PREFS.rt=sb.channel("g360-prefs-"+em).on("postgres_changes",{event:"*",schema:"public",table:"g360_prefs",filter:"email=eq."+em},p=>{const r=p.new||{};if(r.por===SBSID)return;if((+r.t||0)>PREFS.t)prefsAplicar(r.dados,+r.t)}).subscribe()}catch(e){}}
+
 
 
 /* importa da análise do BoxCheck as turmas no formato "A04 - Mecatrónica Automóvel (25/28)" e cria os cursos */
@@ -5275,9 +5367,11 @@ function dsdDados(aid){aid=aid||anoAtivo().id;const E=escData(),TT=new Map(E.tur
   for(const p of pcPlanos().filter(p=>p.anoId===aid)){const t=TT.get(p.turmaId);if(!t)continue;pcNorm(p);
     for(const l of p.linhas){const r=get(l.f||""),h=+l.h||0;r.let.push({t,p,l});r.h+=h;r.hs+=pcSemana(h,p);r.areas.add(l.area);r.turmas.add(t.id)}
     for(const c of p.cargos){const r=get(c.f||""),h=+c.h||0;r.nl.push({t,p,c});r.hnl+=h;r.hs+=pcSemana(h,p);r.turmas.add(t.id)}}
+  // 0.9.50: componente não letiva acrescentada à mão na DSD (cargos e outras horas que não estão nos planos das turmas)
+  const semR=dsdSemRef(aid);for(const x of dsdNLs().filter(x=>x.anoId===aid&&x.f)){const r=get(x.f),h=+x.h||0,hs=x.hs!==""&&x.hs!=null?(+x.hs||0):(semR?h/semR:0);r.nl.push({t:null,p:null,c:{nome:x.nome||"Componente não letiva",h},man:x,hs});r.hnl+=h;r.hs+=hs}
   return M}
-const dsdTurmaTxt=t=>{const c=cursoById(t.cursoId);return t.nome?t.nome:`${t.cod}${c?" - "+c.nome:""}${t.anoIni&&t.anoFim?` (${String(t.anoIni).slice(-2)}-${String(t.anoFim).slice(-2)})`:""}`};
-const dsdOrd=(x,y)=>String(x.t.cod).localeCompare(String(y.t.cod),"pt",{numeric:true});
+const dsdTurmaTxt=t=>{if(!t)return "Componente não letiva da escola";const c=cursoById(t.cursoId);return t.nome?t.nome:`${t.cod}${c?" - "+c.nome:""}${t.anoIni&&t.anoFim?` (${String(t.anoIni).slice(-2)}-${String(t.anoFim).slice(-2)})`:""}`};
+const dsdOrd=(x,y)=>String(x.t?x.t.cod:"~").localeCompare(String(y.t?y.t.cod:"~"),"pt",{numeric:true});
 function dsdEu(){if(!EU||!EU.email)return null;return cfg.profs.find(p=>String(p.email||"").trim().toLowerCase()===String(EU.email).toLowerCase())||null}
 const dsdSoEu=()=>perfilAtual()==="prof";
 function renderDSD(){const a=anoAtivo(),M=dsdDados(a.id),out=$("#dsdOut"),soEu=dsdSoEu();$("#dsdAnoLbl").textContent=a.nome;
@@ -5304,15 +5398,44 @@ function renderDSD(){const a=anoAtivo(),M=dsdDados(a.id),out=$("#dsdOut"),soEu=d
   out.innerHTML=h}
 function dsdDetalhe(id,M){const r=M.get(id),p=id?pcProf(id):null,a=anoAtivo();
   const tit=id?`${p?(p.cod?p.cod+" - ":"")+p.nome:"(formador apagado)"}`:"Sem formador atribuído";
-  if(!r)return `<div class="msg info"><b>${esc(tit)}</b> não tem serviço atribuído nos planos curriculares de ${esc(a.nome)}.</div>`;
-  const porT=new Map();for(const x of r.let.concat(r.nl)){if(!porT.has(x.t.id))porT.set(x.t.id,{t:x.t,p:x.p,let:[],nl:[]});(x.l?porT.get(x.t.id).let:porT.get(x.t.id).nl).push(x)}
+  if(!r)return `<div class="msg info"><b>${esc(tit)}</b> não tem serviço atribuído nos planos curriculares de ${esc(a.nome)}.</div>`+dsdNLSec(id,a);
+  const porT=new Map();for(const x of r.let.concat(r.nl)){if(!x.t)continue;if(!porT.has(x.t.id))porT.set(x.t.id,{t:x.t,p:x.p,let:[],nl:[]});(x.l?porT.get(x.t.id).let:porT.get(x.t.id).nl).push(x)}
   let h=`<div class="pchead"><div><b>${esc(tit)}</b><span>${id?`Área(s): ${esc([...r.areas].map(k=>PC_AREA_NOME[k]).join(", ")||"—")} · `:""}${r.turmas.size} turma(s)${p&&p.email?" · "+esc(p.email):""}</span></div></div>
     <div class="tiles pctiles"><div class="tile"><div class="v">${pcNum(r.h)} h</div><div class="l">Componente letiva</div></div><div class="tile"><div class="v">${pcNum(r.hnl)} h</div><div class="l">Componente não letiva</div></div><div class="tile"><div class="v">${pcNum(r.h+r.hnl)} h</div><div class="l">Total</div></div><div class="tile"><div class="v">${r.hs?pcNum(r.hs):"—"}</div><div class="l">Horas por semana</div></div></div>
     <table class="rt pcres"><thead><tr><th>Curso / turma</th><th>Disciplina</th><th>Módulo / UFCD / UC</th><th>Horas</th><th>H/semana</th></tr></thead><tbody>`;
   for(const g of [...porT.values()].sort(dsdOrd)){const all=g.let.map(x=>[x.l.disc,x.l.mod,+x.l.h||0]).concat(g.nl.map(x=>["Cargo",x.c.nome,+x.c.h||0]));
     h+=all.map((v,i)=>`<tr>${i===0?`<td rowspan="${all.length+1}"><b>${esc(dsdTurmaTxt(g.t))}</b><br>${dsdSoEu()?"":`<button class="b s" data-abrirpc="${g.t.id}" style="margin-top:6px">Abrir o plano</button>`}</td>`:""}<td>${esc(v[0])}</td><td>${esc(v[1])}</td><td class="pcn">${pcNum(v[2])}</td><td class="pcn">${+g.p.semanas?pcNum(v[2]/g.p.semanas):"—"}</td></tr>`).join("")+
       `<tr class="pcsub"><td colspan="2">Subtotal ${esc(g.t.cod)}</td><td class="pcn"><b>${pcNum(pcH(all.map(v=>({h:v[2]}))))}</b></td><td></td></tr>`}
-  return h+`</tbody></table>`}
+  return h+`</tbody></table>`+dsdNLSec(id,a)}
+
+/* ---------- 0.9.50: componente não letiva acrescentada à mão na DSD ----------
+   cfg.escola.dsdNL = [{id, anoId, f (formador), nome (cargo ou atividade), h (horas no ano), hs (horas por semana, opcional), obs}] */
+function dsdNLs(){const E=escData();if(!Array.isArray(E.dsdNL))E.dsdNL=[];return E.dsdNL}
+// semanas de aulas de referência: as dos planos do ano (a mais frequente) ou as do calendário do ano letivo
+function dsdSemRef(aid){const c=new Map();pcPlanos().filter(p=>p.anoId===aid&&+p.semanas>0).forEach(p=>c.set(+p.semanas,(c.get(+p.semanas)||0)+1));
+  if(c.size)return [...c].sort((x,y)=>y[1]-x[1]||y[0]-x[0])[0][0];const a=escData().anos.find(x=>x.id===aid);try{return a?esSemanas({semanas:0},a):30}catch(e){return 30}}
+function dsdPodeEditar(){return !RO&&podePublicar()&&!dsdSoEu()}
+var DSD_NL_SUG=["Coordenação de Curso","Coordenação de Departamento","Coordenação Pedagógica","Diretor de Turma","Orientador Educativo","Responsável de Curso","Coordenador de FCT","Orientador de FCT","Acompanhamento da PAP","Biblioteca / Centro de Recursos","Apoio Educativo","Apoio a formandos","Projetos (Erasmus+ e outros)","Gabinete de Inserção Profissional","Secretariado de Exames","Assessoria à Direção","Delegado de Segurança","Desporto Escolar","Clube","Qualidade (EQAVET)","Formação de formadores"];
+function dsdNLSec(id,a){if(!id)return "";const L=dsdNLs().filter(x=>x.anoId===a.id&&x.f===id),ed=dsdPodeEditar(),sem=dsdSemRef(a.id);if(!ed&&!L.length)return "";
+  if(!$("#dsdNLDL")){const dl=document.createElement("datalist");dl.id="dsdNLDL";dl.innerHTML=DSD_NL_SUG.map(v=>`<option value="${esc(v)}">`).join("");document.body.appendChild(dl)}
+  const hsTxt=x=>x.hs!==""&&x.hs!=null?pcNum(x.hs):sem?pcNum((+x.h||0)/sem):"—";
+  let h=`<div class="dsdnl"><h3>Componente não letiva acrescentada à mão</h3><p class="hint" style="margin-top:0">Cargos e outras horas que não vêm dos planos das turmas (coordenações, projetos, biblioteca, apoio…). Contam na componente não letiva, no total, nas horas por semana e no PDF da DSD.${sem?` Sem horas por semana escritas, contam ${pcNum(sem)} semanas de aulas.`:""}</p>
+    <table class="rt dsdnlt"><thead><tr><th>Cargo ou atividade</th><th style="width:120px">Horas no ano</th><th style="width:130px">Horas por semana</th><th>Observações</th>${ed?'<th style="width:40px"></th>':""}</tr></thead><tbody>`;
+  h+=L.map(x=>ed?`<tr data-nl="${esc(x.id)}"><td><input type="text" data-nlk="nome" value="${esc(x.nome||"")}" list="dsdNLDL"></td><td><input type="number" min="0" step="0.5" data-nlk="h" value="${esc(x.h??"")}"></td><td><input type="number" min="0" step="0.25" data-nlk="hs" value="${esc(x.hs??"")}" placeholder="${esc(hsTxt(x))}"></td><td><input type="text" data-nlk="obs" value="${esc(x.obs||"")}"></td><td><button class="x" data-nldel title="Apagar">×</button></td></tr>`
+    :`<tr><td>${esc(x.nome||"")}</td><td class="pcn">${pcNum(x.h)}</td><td class="pcn">${hsTxt(x)}</td><td>${esc(x.obs||"")}</td></tr>`).join("")
+    ||`<tr><td colspan="${ed?5:4}" class="hint">Ainda sem horas não letivas acrescentadas à mão para este formador.</td></tr>`;
+  h+=`</tbody></table>`;
+  if(ed)h+=`<form class="row dsdnlf" data-nlf="${esc(id)}" autocomplete="off"><label class="grow">Cargo ou atividade<input type="text" name="nome" list="dsdNLDL" placeholder="ex.: Coordenação de Departamento" required></label><label style="width:120px">Horas no ano<input type="number" name="h" min="0" step="0.5"></label><label style="width:130px">Horas por semana<input type="number" name="hs" min="0" step="0.25"></label><label class="grow">Observações<input type="text" name="obs"></label><button class="b" type="submit" style="align-self:flex-end">Acrescentar</button></form>`;
+  return h+`</div>`}
+$("#dsdOut").addEventListener("change",e=>{const i=e.target.closest("[data-nlk]");if(!i||!dsdPodeEditar())return;const tr=i.closest("tr[data-nl]"),x=tr&&dsdNLs().find(z=>z.id===tr.dataset.nl);if(!x)return;
+  const k=i.dataset.nlk;let v=i.value;if(k==="h"||k==="hs"){v=v===""?"":Math.max(0,+v||0);if(k==="hs"&&v!==""&&(x.h===""||x.h==null)){const sm=dsdSemRef(x.anoId);if(sm)x.h=Math.round(v*sm*100)/100}}else v=String(v).trim();
+  x[k]=v;save();renderDSD()});
+$("#dsdOut").addEventListener("click",e=>{const b=e.target.closest("[data-nldel]");if(!b||!dsdPodeEditar())return;const id=b.closest("tr[data-nl]").dataset.nl,E=escData(),x=dsdNLs().find(z=>z.id===id);if(!x)return;
+  if(!confirm(`Apagar «${x.nome||"componente não letiva"}» da Distribuição de Serviço Docente?`))return;E.dsdNL=E.dsdNL.filter(z=>z.id!==id);save();renderDSD();toast("Apagado (pode anular)")});
+$("#dsdOut").addEventListener("submit",e=>{const f=e.target.closest("[data-nlf]");if(!f)return;e.preventDefault();if(!dsdPodeEditar())return;const fd=new FormData(f),nome=String(fd.get("nome")||"").trim();if(!nome){toast("Escreva o cargo ou a atividade");return}
+  let h=fd.get("h")===""?"":Math.max(0,+fd.get("h")||0),hs=fd.get("hs")===""?"":Math.max(0,+fd.get("hs")||0);const a=anoAtivo(),sm=dsdSemRef(a.id);
+  if(h===""&&hs===""){toast("Indique as horas no ano ou as horas por semana");return}if(h===""&&sm)h=Math.round(hs*sm*100)/100;
+  dsdNLs().push({id:uid(),anoId:a.id,f:f.dataset.nlf,nome,h,hs,obs:String(fd.get("obs")||"").trim()});save();renderDSD();toast("Acrescentado à componente não letiva")});
 $("#dsdSel").addEventListener("change",e=>{DSD_SEL=e.target.value;try{localStorage.setItem("dsd_sel",DSD_SEL)}catch(x){}renderDSD()});
 $("#dsdFilter").addEventListener("input",()=>{if(DSD_SEL){DSD_SEL="";}renderDSD()});
 $("#dsdOut").addEventListener("click",e=>{const tr=e.target.closest("tr[data-dsd]");if(tr){DSD_SEL=tr.dataset.dsd;renderDSD();$("#dsd").scrollIntoView({behavior:"smooth"});return}
@@ -5396,7 +5519,7 @@ function pdfDsdRodape(doc,pg,tot){const W=210,H=297,f=lgGet("foot");
 function pdfDsdSec(doc,id,M,a){const r=M.get(id),p=pcProf(id);if(!p)return null;
   const areas=r?[...r.areas].map(k=>PC_AREA_NOME[k]).join(", "):"",cod=`DSD_${dsdNum(id,M)}.${a.nome}`,ini=doc.getNumberOfPages(),TOP=40;
   const body=r?r.let.slice().sort(dsdOrd).map(x=>[dsdTurmaTxt(x.t),x.l.disc,x.l.mod,pcNum(x.l.h)].map(pdfTxt)):[];
-  if(r&&r.nl.length)r.nl.slice().sort(dsdOrd).forEach(x=>body.push([dsdTurmaTxt(x.t),"Cargo",x.c.nome,pcNum(x.c.h)].map(pdfTxt)));
+  if(r&&r.nl.length)r.nl.slice().sort(dsdOrd).forEach(x=>body.push([x.t?dsdTurmaTxt(x.t):"-",x.t?"Cargo":"Componente não letiva",x.c.nome,pcNum(x.c.h)].map(pdfTxt)));
   if(!body.length)body.push([{content:"Sem serviço atribuído nos planos curriculares.",colSpan:4}]);
   const tot=(t,v,k)=>[{content:t,colSpan:3,styles:{fontStyle:"bolditalic",cellPadding:{top:1.3,bottom:1.3,left:1,right:1}},_k:k},{content:pcNum(v),styles:{fontStyle:"bolditalic",halign:"center",cellPadding:{top:1.3,bottom:1.3,left:1,right:1}}}];
   const hl=r?r.h:0,hn=r?r.hnl:0;
@@ -5414,7 +5537,7 @@ function pdfDsdSec(doc,id,M,a){const r=M.get(id),p=pcProf(id);if(!p)return null;
   let y=doc.lastAutoTable.finalY;doc.setDrawColor(0);doc.setLineWidth(.7);doc.line(14,y,196,y);
   if(y>297-24-34){doc.addPage();y=TOP}
   doc.setFont("helvetica","normal");doc.setFontSize(8.5);doc.text(pdfTxt(cod),196,y+4,{align:"right"});
-  const fse=[...new Set((r?[...r.let,...r.nl]:[]).map(x=>String(x.t.fse||"").trim()).filter(Boolean))];
+  const fse=[...new Set((r?[...r.let,...r.nl]:[]).filter(x=>x.t).map(x=>String(x.t.fse||"").trim()).filter(Boolean))];
   doc.setFont("helvetica","italic");doc.setFontSize(8);fse.forEach((c,i)=>doc.text(pdfTxt(c),14,y+12+i*4.4));
   doc.setDrawColor(0);doc.setLineWidth(.3);doc.line(120,y+17,196,y+17);doc.setFont("helvetica","normal");doc.setFontSize(8);doc.text("(Diretor Pedagógico)",158,y+20.5,{align:"center"});
   return {ini,fim:doc.getNumberOfPages(),p,areas,a}}
@@ -6055,6 +6178,7 @@ async function guideEntrarSB(){
   prog(100,"Pronto!");await gpEspera(GP.v<99?650:350);
   gateState("off");try{sbUI();window.__subEst&&window.__subEst()}catch(e){}
   try{sbTempoReal()}catch(e){}
+  try{if(curTab==="esc")renderEscPainel()}catch(e){}prefsTrazer(); // 0.9.50: widgets desenhados com os dados da escola e preferências da conta
   if(window.__goBox&&podeVer("box"))show("box")}
 // liga o MSAL sem janelas (para enviar email e copiar para o OneDrive), aproveitando a sessão do Office 365 que já existe no navegador
 async function msSilencioso(email){try{const p=await msInit();if(MSACC)return;const acc=p.getAllAccounts().find(a=>String(a.username).toLowerCase()===String(email).toLowerCase());
@@ -6082,7 +6206,7 @@ async function guideEntrar(tok){
   try{await lgMigrar();aplicarLogos()}catch(e){}
   if(curTab&&curTab.startsWith("rc"))try{rcRender(curTab)}catch(e){}
   prog(100,"Pronto!");await gpEspera(GP.v<99?650:350);
-  gateState("off");
+  gateState("off");try{if(curTab==="esc")renderEscPainel()}catch(e){}
   if(window.__goBox&&podeVer("box"))show("box");
   if(EU.provisorio)setTimeout(()=>toast("Perfis provisórios: falta atualizar o serviço de avisos na Cloudflare"),800);
   pubUI()}
@@ -6102,6 +6226,8 @@ async function guideCarregarModulos(){
   try{await gpAte(pronto,15000)}catch(e){}
   if(soLeitura()){fim("boxcheck","ok");fim("roomcheck","ok");return}
   if(!podeVer("box")){loginUI();fim("boxcheck","ok");fim("roomcheck","ok");return}
+  try{if(SES&&SES.mode==="oauth"&&!sesMinha(SES))SES=null}catch(e){} // 0.9.50: a sessão guardada é de outra conta da Direção
+  if(!SES){prog(66,"Box360: a procurar a ligação à Box…");try{await gpAte(boxRecuperar(),9000)}catch(e){}}
   if(!SES){boxArrancar();fim("boxcheck","off");
     try{await gpAte(SB_PRONTO,6000)}catch(e){}
     if(nuvSB()||nuvMS()){prog(72,"A trazer os dados da escola…");try{await gpAte(nuvemSincMS(),40000)}catch(e){}}
@@ -6115,7 +6241,8 @@ async function guideCarregarModulos(){
 function whoUI(){const n=EU.nome||EU.email,ini=n.split(/\s+/).filter(Boolean).map(w=>w[0]).slice(0,2).join("").toUpperCase();
   $("#who").innerHTML=`<span class="av">${esc(ini)}</span><span title="${esc(EU.email)}">${esc(n)}</span><span class="pf${EU.admin?" adm":""}" title="${esc(EU.admin?"Administrador da EPISJ 360 — perfil: "+(EU.perfilNome||PERFIL_CURTO[EU.perfil]||""):"Perfil da conta")}">${esc(EU.admin?"Administrador":(EU.perfilNome||PERFIL_CURTO[EU.perfil]||""))}</span><a href="#" id="whoOut" title="Terminar sessão" aria-label="Terminar sessão">Terminar sessão</a>`;
   $("#who").style.display="flex";$("#whoOut").onclick=e=>{e.preventDefault();guideSair()}}
-async function guideSair(){if(SES)logout(true);try{await sbSair()}catch(e){}try{const p=await msInit();await p.clearCache({account:MSACC})}catch(e){}MSACC=null;EU=null;location.reload()}
+async function guideSair(){ // 0.9.50: a Box fica ligada (só «Desligar a Box» a desliga)
+  try{await sbSair()}catch(e){}try{const p=await msInit();await p.clearCache({account:MSACC})}catch(e){}MSACC=null;EU=null;location.reload()}
 
 // esconde os módulos e separadores que o perfil não pode abrir
 function aplicarPerfil(){
@@ -6278,7 +6405,7 @@ $("#utiGuardar").onclick=async()=>{if(!UTI)return;utiLerCampos();const pad=UTI.l
   catch(e){$("#utiEstado").innerHTML=`<span style="color:var(--bad)">${esc(e.message)}</span>`}};
 
 if(curTab&&curTab.startsWith("rc"))try{rcRender(curTab)}catch(e){console.warn(e)} // 0.9.19: o mapa aparece logo ao entrar
-window.__wgOk=true;guideArranque();
+window.__wgOk=true;try{if(curTab==="esc")renderWidgets()}catch(e){}guideArranque();
 })();
 
 /* 0.9.48: gaveta do menu (telemóvel e iPad) */
