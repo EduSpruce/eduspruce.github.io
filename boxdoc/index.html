@@ -1848,7 +1848,7 @@ main>section{max-width:none}
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.56"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.57"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -6283,7 +6283,7 @@ async function carregarPublico(){
   cfg=Object.assign(defaultCfg(),j&&j.escola?{escola:j.escola,profs:Array.isArray(j.profs)?j.profs:[]}:{});lastJSON=JSON.stringify(cfg);undoS=[];redoS=[];undoUI();
   try{await esdPronto}catch(e){}
   ESD=Object.assign({t:0,porAno:{},copias:{},mapaT:{},mapaC:{},ligT:{},ligC:{}},j&&j.es||{});
-  try{renderAnoTopo();refreshAll()}catch(e){console.warn(e)}aplicarPerfil();if(curTab==="mh")renderMh()}
+  try{renderAnoTopo();refreshAll()}catch(e){console.warn(e)}aplicarPerfil();if(curTab==="mh")renderMh();try{window.__subEst&&window.__subEst()}catch(e){}}
 function sairSoLeitura(){RO=false;PUB=null;cfg=load()||defaultCfg();lastJSON=JSON.stringify(cfg);
   DB.get("kv","esched").then(v=>{ESD=Object.assign({t:0,porAno:{},copias:{},mapaT:{},mapaC:{},ligT:{},ligC:{}},v&&typeof v==="object"?v:{})}).catch(()=>{});
   try{renderAnoTopo();refreshAll()}catch(e){}aplicarPerfil()}
