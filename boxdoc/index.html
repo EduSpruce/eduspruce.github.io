@@ -2096,7 +2096,7 @@ nav.side button.on{box-shadow:var(--sh),inset 3px 0 0 var(--brand),inset 0 0 0 1
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.60"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.61"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -6003,10 +6003,10 @@ function esAjustar(fr){try{const w=fr.contentWindow,d=fr.contentDocument;if(!d||
   // 0.9.27: no menu do Horário360, o logótipo e o nome do módulo ficam iguais aos das outras páginas (logótipo centrado, linha por baixo, nome do módulo em maiúsculas pequenas)
   {const lg=d.getElementById("logo"),cx=lg&&lg.parentElement;if(cx&&!cx.dataset.guide){cx.dataset.guide="1";cx.style.cssText+=";display:flex;flex-direction:column;align-items:stretch;gap:0";
     const cab=d.createElement("a");cab.href="https://www.episj.com";cab.target="_blank";cab.rel="noopener";cab.title="Escola Profissional da Ilha de São Jorge";
-    cab.style.cssText="display:block;margin:0 0 12px;padding:0 4px 12px;border-bottom:1px solid #e5e7eb";
+    cab.style.cssText="display:block;margin:0 0 12px;padding:0 4px 12px;border-bottom:1px solid #e3e7ee";
     const im=d.createElement("img");im.src=new URL("img/logo-episj.png",location.href).href;im.alt="Escola Profissional da Ilha de São Jorge";im.style.cssText="display:block;width:100%;max-width:92px;height:auto;margin:0 auto";im.onerror=()=>cab.remove();
     cab.appendChild(im);lg.replaceWith(cab);const nm=cx.querySelector(".fd");
-    if(nm){nm.style.cssText+=";line-height:1.35;padding:0 6px";nm.innerHTML='<span style="display:block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#6b7280">Horário360</span><span style="display:block;font-size:12px;font-weight:400;color:#9ca3af">horários da escola</span>'}}}
+    if(nm){nm.style.cssText+=";line-height:normal;padding:9px 5px 8px;font-weight:600";nm.innerHTML='<span style="display:block;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#6b7385">Horário360</span><span style="display:block;margin-top:1px;font-size:11.5px;font-weight:500;letter-spacing:0;text-transform:none;color:#9aa1ad">horários da escola</span>'}}}
   fr.classList.add("pronto")}catch(e){console.warn("Horário360/tema",e);fr.classList.add("pronto")}}
 /* ---------- no EduSchedule, formadores, turmas e formandos só se veem: são dados gerais da EPISJ 360 (mudam-se no módulo Escola) ---------- */
 function esBloquear(d){if(!d||!d.body)return;const TIT="Dado geral da EPISJ 360 — muda-se no módulo Escola";
