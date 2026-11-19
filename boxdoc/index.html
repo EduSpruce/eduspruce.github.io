@@ -1725,7 +1725,7 @@ body.ro #pcOut input,body.ro #pcOut select{pointer-events:none}body.ro #pcOut bu
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.29"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.30"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -3534,11 +3534,13 @@ async function loadPDF(){if(!PDFJ){if(!window.jspdf)await loadScript("lib/jspdf.
 const pdfTxt=s=>String(s??"").replace(/[—–]/g,"-").replace(/[“”«»]/g,'"').replace(/[‘’]/g,"'").replace(/…/g,"...").replace(/[›→]/g,">").replace(/•/g,"-").replace(/⚠/g,"!").replace(/[^\x00-\xff]/g,"");
 const lgFmt=L=>/^data:image\/jpe?g/.test(L.src)?"JPEG":"PNG";
 const lgFit=(L,mw,mh)=>{const r=Math.min(mw/L.w,mh/L.h);return[L.w*r,L.h*r]};
+// 0.9.30: os dois logótipos do cabeçalho com o mesmo "peso" visual (mesma área), mais pequenos e centrados na mesma linha
+const lgFitArea=(L,A,mw,mh)=>{const ar=L.w/L.h;let w=Math.sqrt(A*ar),h=w/ar;const r=Math.min(1,mw/w,mh/h);return[w*r,h*r]};
 const PDF_TOP=36,PDF_BOT=28;
 function pdfMoldura(doc,rodape){const n=doc.getNumberOfPages(),W=210,H=297,{main:m,right:r}=LOGOS,f=lgGet("foot");
   for(let i=1;i<=n;i++){doc.setPage(i);
-    if(m){const[w,h]=lgFit(m,62,18);doc.addImage(m.src,lgFmt(m),14,10+(18-h)/2,w,h,"lgMain")}
-    if(r){const[w,h]=lgFit(r,58,16);doc.addImage(r.src,lgFmt(r),W-14-w,11+(16-h)/2,w,h,"lgRight")}
+    if(m){const[w,h]=lgFitArea(m,230,40,14);doc.addImage(m.src,lgFmt(m),14,19-h/2,w,h,"lgMain")}
+    if(r){const[w,h]=lgFitArea(r,230,40,14);doc.addImage(r.src,lgFmt(r),W-14-w,19-h/2,w,h,"lgRight")}
     doc.setDrawColor(222,226,231);doc.setLineWidth(.2);if(m||r)doc.line(14,31,W-14,31);doc.line(14,H-PDF_BOT+3,W-14,H-PDF_BOT+3);
     if(f){const[w,h]=lgFit(f,120,13);doc.addImage(f.src,lgFmt(f),(W-w)/2,H-PDF_BOT+5+(13-h)/2,w,h,"lgFoot")}
     doc.setFont("helvetica","normal");doc.setFontSize(7.5);doc.setTextColor(130);
