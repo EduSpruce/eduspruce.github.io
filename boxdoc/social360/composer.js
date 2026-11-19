@@ -74,14 +74,14 @@ const Comp = {
   },
   renderHead() {
     const ws = this.ws(), p = this.post, el = $('#c-head'); if (!el) return;
-    el.innerHTML = `<span class="pf lg" style="background:${ws.color}">${esc(initials(ws.name))}</span><h3>${this.isNew ? 'Nova publicação' : 'Editar publicação'} <span class="muted" style="font-weight:400">· ${esc(ws.name)}</span></h3>${stPill(p.status)}${p.autoSchedule ? '<span class="muted">· agenda automaticamente ao aprovar</span>' : ''}<div style="flex:1"></div>
+    el.innerHTML = `<span class="pf lg" style="background:${ws.color}">${esc(initials(ws.name))}</span><h3>${this.isNew ? 'Nova publicação' : 'Editar publicação'} <span class="muted" style="font-weight:400">· ${esc(ws.name)}</span></h3>${stPill(p.status)}${p.autoSchedule ? '<span class="muted">· agenda automaticamente ao aprovar</span>' : ''}${p.status === 'failed' ? '<span class="muted" style="color:#b42318">· veja o motivo em Atividade</span>' : ''}<div style="flex:1"></div>
       <button class="btn sm ghost" data-cact="toggleside" id="ctgl" style="display:none">💬 Comentários</button>
       <button class="icbtn" data-cact="close" title="Fechar (Esc)">${I.x}</button>`;
     if (innerWidth <= 1100) $('#ctgl').style.display = '';
   },
   renderEditor() {
     const ws = this.ws(), p = this.post, el = $('#c-ed'); if (!el) return;
-    const ed = canEdit(ws) && p.status !== 'published';
+    const ed = canEdit(ws) && !['published', 'publishing'].includes(p.status);
     const sel = p.pageIds.map(id => pageOf(ws, id)).filter(Boolean);
     const plats = [...new Set(sel.map(x => x.platform))];
     const fmts = plats.length === 1 ? PLAT[plats[0]].fmts : [...new Set(sel.flatMap(x => PLAT[x.platform].fmts))];
@@ -187,7 +187,7 @@ const Comp = {
         ${!Store.readOnly ? `<div class="cin">${this.pendingAnnot ? `<div class="muted">📍 Comentário na imagem (${this.pendingAnnot.x}%, ${this.pendingAnnot.y}%) <button class="morel" data-cact="cancelannot">cancelar</button></div>` : ''}<textarea id="c-cin" placeholder="Comentar… use @ para mencionar"></textarea><div class="r">${!hideInternal ? `<span class="tgl ${this.internal ? 'on' : ''}" data-cact="internal"><i></i>Interno</span>` : ''}<button class="btn sm ghost" data-cact="mention">@</button><div style="flex:1"></div><button class="btn pri sm" data-cact="send">Comentar</button></div></div>` : ''}`;
     } else if (this.side === 'activity') {
       const st = apState(p, ws);
-      body = `<div class="clist">${st.total ? `<div class="card" style="padding:10px"><b style="font-size:13px">Aprovações (${st.done}/${st.total})</b>${st.ss.map((s, i) => { const a = (p.approvals || []).find(x => x.step === s.id); return `<div class="step" style="margin-top:6px;background:${a ? '#e3f6e3' : 'var(--bg)'}"><span class="n" style="${a ? 'background:var(--ok)' : ''}">${a ? '✓' : i + 1}</span><div style="flex:1"><div style="font-weight:600;font-size:12.5px">${esc(s.name)}</div><div class="muted">${a ? 'por ' + esc(Store.name(a.by)) + ' · ' + ago(a.at) : s.approver ? 'aguarda ' + esc(Store.name(s.approver)) : 'qualquer membro'}</div></div></div>`; }).join('')}</div>` : ''}
+      body = `<div class="clist">${pubHTML(p) ? `<div class="card" style="padding:10px"><b style="font-size:13px">Publicação nas redes</b><div style="margin-top:6px">${pubHTML(p)}</div></div>` : ''}${st.total ? `<div class="card" style="padding:10px"><b style="font-size:13px">Aprovações (${st.done}/${st.total})</b>${st.ss.map((s, i) => { const a = (p.approvals || []).find(x => x.step === s.id); return `<div class="step" style="margin-top:6px;background:${a ? '#e3f6e3' : 'var(--bg)'}"><span class="n" style="${a ? 'background:var(--ok)' : ''}">${a ? '✓' : i + 1}</span><div style="flex:1"><div style="font-weight:600;font-size:12.5px">${esc(s.name)}</div><div class="muted">${a ? 'por ' + esc(Store.name(a.by)) + ' · ' + ago(a.at) : s.approver ? 'aguarda ' + esc(Store.name(s.approver)) : 'qualquer membro'}</div></div></div>`; }).join('')}</div>` : ''}
         ${[...(p.history || [])].reverse().map(h => `<div class="hist">${avatar(h.by, 'sm')}<div><b>${esc(Store.name(h.by))}</b> ${esc(h.what)}<div class="tm">${fmtDT(h.at)}</div></div></div>`).join('') || '<div class="muted">Sem atividade ainda.</div>'}</div>`;
     } else if (this.side === 'ai') {
       body = `<div class="clist"><div class="aibox"><b style="font-size:13px">${I.spark.replace('<svg', '<svg width="14" height="14" style="vertical-align:-2px;color:#6d4fc2"')} Assistente de escrita</b>
@@ -209,7 +209,9 @@ const Comp = {
     if (!this.isNew && ed) L.push(`<button class="btn ghost sm bad" data-cact="delete">Eliminar</button>`, `<button class="btn ghost sm" data-cact="dup">Duplicar</button>`, `<button class="btn ghost sm" data-cact="tpl">Guardar como modelo</button>`);
     if (!this.isNew) L.push(`<button class="btn ghost sm" data-cact="link">🔗 Copiar ligação</button>`);
     const R = [];
-    if (pub) R.push(`<span class="muted">Publicada ${p.publishedAt ? ago(p.publishedAt) : ''} (envio simulado)</span>`);
+    if (pub) R.push(`<span class="muted">Publicada ${p.publishedAt ? ago(p.publishedAt) : ''}${Store.mode === 'sb' ? '' : ' (envio simulado)'}</span>`);
+    else if (p.status === 'publishing') R.push('<span class="muted">A publicar… (o servidor trata disto; pode fechar)</span>');
+    else if (p.status === 'failed' && ed) { R.push(`<button class="btn" data-cact="markpub">Marcar como publicada</button>`, `<button class="btn" data-cact="save" ${this.dirty() ? '' : 'disabled'}>Guardar</button>`, `<button class="btn pri" data-cact="retry">Tentar outra vez</button>`); }
     else {
       if (ed) R.push(`<button class="btn" data-cact="save" ${this.dirty() || this.isNew ? '' : 'disabled'}>${this.isNew ? 'Guardar rascunho' : 'Guardar'}</button>`);
       if (canApprove(p, ws) && p.status === 'review') R.push(`<button class="btn" data-cact="reject">Pedir alterações</button>`, `<button class="btn ok" data-cact="approve">${I.check} Aprovar${st.total > 1 ? ` · passo ${st.done + 1}/${st.total}` : ''}</button>`);
@@ -365,6 +367,8 @@ const CA = {
     }, { alignRight: true });
   },
   unsched() { Comp.run(p => Act.unschedule(p)); },
+  retry() { Comp.run(p => Act.retry(p)); },
+  markpub() { Comp.run(p => Act.markPublished(p)); },
   delete() { const p = S.posts[Comp.post.id]; Comp.close(true); if (p) Act.remove(p); },
   dup() { const p = Comp.commit(true); const n = Act.duplicate(p); toast('Duplicada.'); Comp.close(true); Comp.start(n); },
   tpl() {

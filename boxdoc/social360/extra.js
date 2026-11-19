@@ -59,6 +59,8 @@ const Media = {
           const { error } = await Store.sb.storage.from('s360').upload(path, f, { contentType: f.type, upsert: false });
           if (error) throw error;
           m.storage = path;
+          // o Instagram só aceita JPEG: guarda também uma cópia em JPEG das imagens noutros formatos
+          if (kind === 'image' && !/jpe?g$/i.test(f.type)) { try { const j = await readImage(f, 2048); const b = await (await fetch(j.url)).blob(); const r2 = await Store.sb.storage.from('s360').upload(path + '.jpg', b, { contentType: 'image/jpeg', upsert: true }); if (!r2.error) m.jpg = path + '.jpg'; } catch (e) {} }
         } else if (kind === 'pdf') {
           if (Store.assets) { const r = await Store.assets.upload(f); m.assetId = r.id; m.url = r.url; }
           else if (f.size < 3 * 1024 * 1024) m.url = await new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.onerror = rej; fr.readAsDataURL(f); });
@@ -243,8 +245,16 @@ const Settings = {
       ${a && canNewWS() ? `<hr style="border:0;border-top:1px solid var(--line)"><div><button class="btn bad" data-act="delws">Eliminar espaço de trabalho</button></div>` : ''}`;
   },
   paginas(ws) {
-    return `<h3>Páginas ligadas</h3><p class="muted" style="margin:0">Cada página corresponde a uma conta numa rede. O Social360 não tem acesso às redes: o agendamento e a publicação ficam registados aqui e o envio é simulado.</p>
-      <div>${ws.pages.map(pg => `<div class="rowl">${pfBadge(pg.platform, 'lg')}<div class="g"><input class="inp" data-pgf="name" data-id="${pg.id}" value="${esc(pg.name)}" ${canAdmin(ws) ? '' : 'readonly'} style="height:30px"></div><input class="inp" data-pgf="handle" data-id="${pg.id}" value="${esc(pg.handle || '')}" placeholder="@utilizador" style="width:170px;height:30px" ${canAdmin(ws) ? '' : 'readonly'}><span class="muted" style="width:120px">${esc(PLAT[pg.platform].n)}</span>${canAdmin(ws) ? `<button class="btn sm bad" data-act="rmpage" data-id="${pg.id}">Remover</button>` : ''}</div>`).join('') || '<div class="muted">Sem páginas.</div>'}</div>
+    const sb = Store.mode === 'sb', a = canAdmin(ws);
+    if (sb && a && !Meta.lista[ws.id] && !Meta.aCarregar[ws.id]) Meta.carregar(ws).then(render);
+    const contas = Meta.lista[ws.id] || [];
+    const sel = pg => { if (!sb || !['facebook', 'instagram'].includes(pg.platform)) return ''; const ops = contas.filter(c => pg.platform === 'facebook' || c.ig);
+      if (!a) return `<span class="muted" style="width:170px">${pg.meta ? '✓ publica sozinha' : 'publicar à mão'}</span>`;
+      return `<select class="inp" data-pgmeta="${pg.id}" style="width:210px;height:30px" title="Conta da Meta onde esta página publica"><option value="">Publicar à mão (sem ligação)</option>${ops.map(c => `<option value="${esc(c.fb)}" ${pg.meta && pg.meta.fb === c.fb ? 'selected' : ''}>${esc(pg.platform === 'instagram' ? '@' + c.igNome : c.fbNome)}</option>`).join('')}</select>`; };
+    return `<h3>Páginas</h3><p class="muted" style="margin:0">${sb ? 'As páginas do Facebook e do Instagram ligadas à Meta publicam sozinhas à hora marcada, mesmo com os computadores desligados. As outras redes ficam «por publicar à mão»: o Social360 lembra e regista.' : 'Cada página corresponde a uma conta numa rede. Sem a base de dados da EPISJ 360, o envio é simulado.'}</p>
+      ${sb && a ? `<div class="metabox"><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><b style="flex:1">Facebook e Instagram</b><button class="btn pri" data-act="metaligar">${contas.length ? 'Ligar mais páginas / voltar a ligar' : 'Ligar ao Facebook e Instagram'}</button>${contas.length ? '<button class="btn" data-act="metaauto">Usar estas contas nas páginas</button>' : ''}</div>
+        ${contas.length ? contas.map(c => `<div class="rowl">${pfBadge('facebook')}<div class="g"><b>${esc(c.fbNome)}</b>${c.ig ? ` · ${pfBadge('instagram', 'sm')} @${esc(c.igNome)}` : ' · <span class="muted">sem Instagram profissional associado</span>'}<div class="muted">${c.estado === 'ok' ? 'Ligada' : '⚠ ' + esc(c.erro || 'A autorização expirou: volte a ligar.')} · por ${esc(Store.name(c.por))} · ${ago(c.em)}</div></div><button class="btn sm bad" data-act="metadesligar" data-id="${esc(c.fb)}">Desligar</button></div>`).join('') : `<p class="muted" style="margin:6px 0 0">Entre com uma conta que administre a página do Facebook da escola. O Instagram tem de ser uma conta profissional associada a essa página.</p>`}</div>` : ''}
+      <div>${ws.pages.map(pg => `<div class="rowl">${pfBadge(pg.platform, 'lg')}<div class="g"><input class="inp" data-pgf="name" data-id="${pg.id}" value="${esc(pg.name)}" ${a ? '' : 'readonly'} style="height:30px"></div><input class="inp" data-pgf="handle" data-id="${pg.id}" value="${esc(pg.handle || '')}" placeholder="@utilizador" style="width:150px;height:30px" ${a ? '' : 'readonly'}>${sel(pg) || `<span class="muted" style="width:210px">${esc(PLAT[pg.platform].n)}${sb ? ' · publicar à mão' : ''}</span>`}${a ? `<button class="btn sm bad" data-act="rmpage" data-id="${pg.id}">Remover</button>` : ''}</div>`).join('') || '<div class="muted">Sem páginas.</div>'}</div>
       ${canAdmin(ws) ? `<div><button class="btn pri" data-act="addpage">${I.plus} Adicionar página</button></div>` : ''}`;
   },
   membros(ws) {
@@ -289,6 +299,32 @@ const Settings = {
       <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-act="export">Copiar exportação deste espaço (JSON)</button>${canNewWS() ? `<button class="btn imp" data-act="import">Importar JSON</button>` : ''}${Store.mode !== 'sb' && canEdit(ws) && !Store.all('workspaces').some(w => w.name === 'Café Aurora') ? `<button class="btn" data-act="example">Carregar dados de exemplo</button>` : ''}${Store.mode === 'local' ? `<button class="btn bad" data-act="wipe">Apagar todos os dados locais</button>` : ''}</div>`;
   }
 };
+
+/* ================= LIGAÇÃO À META ================= */
+const Meta = {
+  lista: {}, aCarregar: {},
+  async carregar(ws) {
+    if (Store.mode !== 'sb') return [];
+    this.aCarregar[ws.id] = true;
+    try { const { data, error } = await Store.sb.rpc('s360_meta_listar', { p_ws: ws.id }); if (!error) this.lista[ws.id] = data || []; } catch (e) {}
+    this.aCarregar[ws.id] = false; return this.lista[ws.id] || [];
+  },
+  esperar(ws) {
+    const n0 = (this.lista[ws.id] || []).length; let fim = Date.now() + 5 * 60000;
+    const ver = async () => { const l = await this.carregar(ws); render(); if (Date.now() < fim && l.length === n0 && !this._ok) setTimeout(ver, 4000); };
+    this._ok = false; setTimeout(ver, 4000);
+  }
+};
+window.addEventListener('message', async e => {
+  if (e.origin !== location.origin || !e.data || !e.data.s360meta) return;
+  const ws = curWS(); if (!ws) return;
+  Meta._ok = true; await Meta.carregar(ws);
+  if (e.data.s360meta === 'ok') { A.metaauto(); render(); toast('Ligação à Meta feita.'); }
+});
+function metaSemApp() {
+  dialog({ title: 'Ligação à Meta ainda por ativar', ok: null, cancel: 'Fechar',
+    body: `<p style="margin:0">Para o Social360 publicar no Facebook e no Instagram, a escola precisa de uma <b>aplicação da Meta</b> (gratuita). É um passo único, feito por quem administra a página do Facebook da escola.</p><p style="margin:0">Depois de criada, o administrador da EPISJ 360 guarda o identificador e a chave da aplicação no servidor, e este botão passa a funcionar para toda a gente.</p><p class="muted" style="margin:0">Até lá, as publicações agendadas ficam marcadas como publicadas à hora certa e lembram de publicar à mão.</p>` });
+}
 
 /* ================= DIÁLOGOS ================= */
 function labelDialog(ws, l, cb) {
@@ -414,6 +450,34 @@ const A = {
   reqap(el) { const p = postById(el); if (p) Act.requestApproval(p); },
   sched(el) { const p = postById(el); if (p) Act.schedule(p); },
   unsched(el) { const p = postById(el); if (p) Act.unschedule(p); },
+  retry(el) { const p = postById(el); if (p) Act.retry(p); },
+  markpub(el) { const p = postById(el); if (p) Act.markPublished(p); },
+  async metaligar(el) {
+    const ws = curWS(); const w = window.open('about:blank', 's360meta', 'width=620,height=760');
+    try {
+      const { data, error } = await Store.sb.functions.invoke('s360-meta', { body: { acao: 'inicio', ws: ws.id } });
+      if (error || !data) throw new Error((error && error.message) || 'sem resposta');
+      if (data.erro === 'sem_app') { if (w) w.close(); metaSemApp(); return; }
+      if (data.erro) throw new Error(data.erro === 'sem_permissao' ? 'Só os administradores do espaço podem ligar contas.' : data.erro);
+      if (w) w.location = data.url; else location.href = data.url;
+      Meta.esperar(ws);
+    } catch (e) { if (w) w.close(); toast('Não foi possível começar a ligação: ' + e.message, 'err'); }
+  },
+  async metadesligar(el) {
+    const ws = curWS(); const fb = el.dataset.id; const c = (Meta.lista[ws.id] || []).find(x => x.fb === fb);
+    dialog({ title: 'Desligar da Meta', danger: true, ok: 'Desligar', body: `<p style="margin:0">Desligar <b>${esc(c ? c.fbNome : fb)}</b>${c && c.igNome ? ` e <b>@${esc(c.igNome)}</b>` : ''}? As publicações agendadas para estas páginas deixam de sair sozinhas.</p>`, onOk: async () => {
+      try { await Store.sb.rpc('s360_meta_desligar', { p_ws: ws.id, p_fb: fb }); const w = clone(ws); w.pages.forEach(p => { if (p.meta && p.meta.fb === fb) delete p.meta; }); Store.put('workspaces', w); await Meta.carregar(ws); render(); toast('Desligada.'); } catch (e) { toast('Não foi possível desligar.', 'err'); }
+    } });
+  },
+  metaauto() {
+    const ws = curWS(); const w = clone(ws); let n = 0;
+    (Meta.lista[ws.id] || []).forEach(c => {
+      const ja = p => p.meta && p.meta.fb === c.fb;
+      if (!w.pages.some(p => p.platform === 'facebook' && ja(p))) { const alvo = w.pages.find(p => p.platform === 'facebook' && !p.meta); if (alvo) alvo.meta = { fb: c.fb }; else w.pages.push({ id: w.id + '-' + uid(''), platform: 'facebook', name: c.fbNome, handle: '', meta: { fb: c.fb } }); n++; }
+      if (c.ig && !w.pages.some(p => p.platform === 'instagram' && ja(p))) { const alvo = w.pages.find(p => p.platform === 'instagram' && !p.meta); if (alvo) alvo.meta = { fb: c.fb, ig: c.ig }; else w.pages.push({ id: w.id + '-' + uid(''), platform: 'instagram', name: c.igNome, handle: c.igNome, meta: { fb: c.fb, ig: c.ig } }); n++; }
+    });
+    if (n) Store.put('workspaces', w); toast(n ? `${n} página(s) do Social360 ligada(s).` : 'As páginas já estão ligadas.');
+  },
   dup(el) { const p = postById(el); if (p) { Act.duplicate(p); toast('Duplicada como rascunho.'); } },
   del(el) { const p = postById(el); if (p) Act.remove(p); },
   qc(el) { const i = $('#qc-' + el.dataset.pid); const p = postById(el); if (p && i.value.trim()) { Act.comment(p, i.value.trim(), false); i.value = ''; } },
@@ -489,7 +553,7 @@ const A = {
       used.forEach(p => { const n = clone(p); n.mediaIds = n.mediaIds.filter(x => x !== m.id); n.comments = (n.comments || []).filter(c => c.mediaId !== m.id); Store.put('posts', n); });
       Store.del('media', m.id); UI.mediaSel = null;
       if (m.assetId && Store.assets) try { await Store.assets.delete(m.assetId); } catch (e) {}
-      if (m.storage && Store.mode === 'sb') try { await Store.sb.storage.from('s360').remove([m.storage]); } catch (e) {}
+      if (m.storage && Store.mode === 'sb') try { await Store.sb.storage.from('s360').remove([m.storage].concat(m.jpg ? [m.jpg] : [])); } catch (e) {}
     } });
   },
   /* caixa de entrada */
@@ -634,6 +698,7 @@ document.addEventListener('change', e => {
   if (t.dataset.ch === 'ibsort') { UI.inboxSort = t.value; saveUI(); render(); }
   if (t.dataset.ch === 'ibsent' || t.dataset.ch === 'ibassign') { const n = clone(S.inbox[t.dataset.id]); if (t.dataset.ch === 'ibsent') n.sentiment = t.value; else n.assignee = t.value || null; Store.put('inbox', n); }
   if (t.dataset.wsf) { const w = clone(ws); w[t.dataset.wsf] = t.value.trim() || w[t.dataset.wsf]; Store.put('workspaces', w); toast('Guardado.'); }
+  if (t.dataset.pgmeta) { const w = clone(ws); const pg = w.pages.find(p => p.id === t.dataset.pgmeta); const c = (Meta.lista[ws.id] || []).find(x => x.fb === t.value); if (!c) delete pg.meta; else pg.meta = pg.platform === 'instagram' ? { fb: c.fb, ig: c.ig } : { fb: c.fb }; Store.put('workspaces', w); toast(c ? 'Página ligada.' : 'Ligação retirada.'); return; }
   if (t.dataset.pgf) { const w = clone(ws); const pg = w.pages.find(p => p.id === t.dataset.id); pg[t.dataset.pgf] = t.value.trim().replace(/^@/, ''); Store.put('workspaces', w); }
   if (t.dataset.mrole) { const w = clone(ws); w.members.find(m => m.id === t.dataset.mrole).role = t.value; Store.put('workspaces', w); }
   if (t.hasAttribute('data-apm')) { const w = clone(ws); w.approval = w.approval || { steps: [] }; w.approval.mode = t.value; if (!w.approval.steps?.length) w.approval.steps = [{ id: uid('s'), name: 'Aprovação', approver: null }]; Store.put('workspaces', w); }

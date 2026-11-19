@@ -433,6 +433,12 @@ textarea.inp{height:auto;padding:9px 10px;resize:vertical;line-height:1.45}
 .newdot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#dc2626;vertical-align:middle}
 .nocrop .md img,.nocrop .md video{object-fit:contain!important;background:#111}
 
+.pubbox{display:flex;flex-direction:column;gap:4px;background:var(--bg);border-radius:8px;padding:8px}
+.pubr{font-size:12.5px;line-height:1.5}
+.pubr .pf{vertical-align:-3px;margin-right:2px}
+.pubr.ok{color:#067a06}.pubr.err{color:#b42318}.pubr.man{color:#8a5a00}
+.metabox{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fafbfd;display:flex;flex-direction:column;gap:4px}
+
 /* toast */
 #toasts{position:fixed;bottom:20px;right:20px;display:flex;flex-direction:column;gap:8px;z-index:100}
 .toast{background:#111827;color:#fff;border-radius:10px;padding:10px 14px;box-shadow:var(--sh2);display:flex;align-items:center;gap:12px;font-size:13.5px;max-width:420px;animation:tin .18s ease}

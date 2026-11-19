@@ -1,6 +1,6 @@
 /* Social360 (EPISJ 360) — núcleo: utilitários, plataformas, armazenamento, dados de exemplo */
 'use strict';
-const S360_VER = '0.2';
+const S360_VER = '0.3';
 const EMBED = window.parent !== window;
 /* ponte com a EPISJ 360 (mesma origem): sessão do Office 365, pessoas, vista ativa */
 const Bridge = {
@@ -95,6 +95,8 @@ const STATUS = {
   changes: { n: 'Alterações pedidas', c: 'st-changes' },
   approved: { n: 'Aprovado', c: 'st-approved' },
   scheduled: { n: 'Agendado', c: 'st-scheduled' },
+  publishing: { n: 'A publicar', c: 'st-scheduled' },
+  failed: { n: 'Falhou a publicação', c: 'st-changes' },
   published: { n: 'Publicado', c: 'st-published' }
 };
 const stPill = s => `<span class="st ${STATUS[s]?.c || ''}">${STATUS[s]?.n || s}</span>`;

@@ -68,6 +68,19 @@ function markSeen(p) { const m = seenMap(); m[p.id] = (p.comments || []).reduce(
   const keys = Object.keys(m); if (keys.length > 3000) keys.sort((a, b) => m[a].localeCompare(m[b])).slice(0, 1000).forEach(k => delete m[k]); lsSet(SEENK(), JSON.stringify(m)); }
 function unreadC(p) { const t = seenMap()[p.id] || ''; return (p.comments || []).filter(c => c.by !== Store.me && !c.resolved && c.at > t && !(c.internal && role(S.workspaces[p.ws]) === 'aprovador')).length; }
 const unreadTag = p => { const n = unreadC(p); return n ? `<span class="newc" title="${n} comentário${n > 1 ? 's' : ''} novo${n > 1 ? 's' : ''}">${n} novo${n > 1 ? 's' : ''}</span>` : ''; };
+/* páginas ligadas à Meta (publicação a sério) */
+const ligada = pg => !!(pg && ['facebook', 'instagram'].includes(pg.platform) && pg.meta && pg.meta.fb && Store.mode === 'sb');
+const liga = p => { const ws = S.workspaces[p.ws]; return (p.pageIds || []).some(id => ligada(pageOf(ws, id))); };
+function pubHTML(p) {
+  const ws = S.workspaces[p.ws]; const r = p.pub || {};
+  const linhas = (p.pageIds || []).map(id => { const pg = pageOf(ws, id); const x = r[id]; if (!pg || !x) return ''; 
+    const nome = `${pfBadge(pg.platform, 'sm')} ${esc(pg.name)}`;
+    if (x.estado === 'ok') return `<div class="pubr ok">${nome} · publicada${x.url ? ` · <a href="${esc(x.url)}" target="_blank" rel="noopener">ver ↗</a>` : ''}</div>`;
+    if (x.estado === 'manual') return `<div class="pubr man">${nome} · publicar à mão nesta rede</div>`;
+    if (x.estado === 'aguarda') return `<div class="pubr">${nome} · o Instagram está a processar o vídeo…</div>`;
+    return `<div class="pubr err">${nome} · ${esc(x.erro || 'falhou')}</div>`; }).join('');
+  return linhas ? `<div class="pubbox">${linhas}</div>` : '';
+}
 function textFor(p, pageId) { const c = p.custom?.[pageId]; return c && c.on !== false && typeof c.text === 'string' ? c.text : p.text; }
 
 const Act = {
@@ -169,8 +182,20 @@ const Act = {
     const pr = Act.problems(p);
     if (pr.length) { toast(pr[0], 'err'); return null; }
     if (needsApproval(ws) && !apState(p, ws).full) { toast('Esta publicação precisa de ser aprovada antes de sair.', 'err'); return null; }
+    if (Store.mode === 'sb') {
+      p.date = nowISO(); p.status = 'scheduled'; p.autoSchedule = false; hist(p, 'pediu para publicar agora');
+      Store.put('posts', p); toast(liga(p) ? 'Vai ser publicada dentro de um minuto.' : 'Fica marcada como publicada dentro de um minuto (estas páginas publicam-se à mão).'); return p;
+    }
     p.date = nowISO(); p.status = 'published'; p.publishedAt = nowISO(); hist(p, 'publicou');
     Store.put('posts', p); toast('Marcada como publicada (envio simulado).'); return p;
+  },
+  retry(p) {
+    p = clone(p); p.status = 'scheduled'; p.date = nowISO(); p.autoSchedule = false; hist(p, 'pediu para tentar publicar outra vez');
+    Store.put('posts', p); toast('Vai tentar outra vez dentro de um minuto (as páginas já publicadas não se repetem).'); return p;
+  },
+  markPublished(p) {
+    p = clone(p); p.status = 'published'; p.publishedAt = nowISO(); hist(p, 'marcou como publicada à mão');
+    Store.put('posts', p); toast('Marcada como publicada.'); return p;
   },
   duplicate(p, wsId) {
     const n = clone(p); n.id = uid('p'); n.status = 'draft'; n.approvals = []; n.comments = []; n.rejected = null; n.autoSchedule = false;
@@ -196,9 +221,9 @@ const Act = {
   }
 };
 
-/* Publicação automática simulada quando chega a hora */
+/* Publicação automática simulada quando chega a hora (só sem a base de dados: com ela, publica o servidor a cada minuto) */
 function tick() {
-  if (!Store.ready || Store.readOnly) return;
+  if (!Store.ready || Store.readOnly || Store.mode === 'sb') return;
   const now = Date.now();
   Store.all('posts').forEach(p => {
     if (p.status === 'scheduled' && p.date && new Date(p.date).getTime() <= now) {
@@ -472,6 +497,7 @@ function feedRow(p, ws) {
       ${(p.labels || []).length ? `<div class="row">${p.labels.map(id => lblChip(labelOf(ws, id))).join('')}</div>` : ''}
       ${st.total ? `<div><div class="muted" style="margin-bottom:4px">Aprovação ${st.done}/${st.total}${st.next ? ' · próximo: ' + esc(st.next.name) : ''}</div><div class="apbar">${st.ss.map(s => `<span class="s ${st.isDone(s) ? 'done' : ''}" title="${esc(s.name)}"></span>`).join('')}</div></div>` : ''}
       ${p.status === 'changes' && p.rejected?.reason ? `<div class="mini-c"><div class="b" style="background:#fde8e8"><div class="n">Alterações pedidas</div>${esc(p.rejected.reason)}</div></div>` : ''}
+      ${pubHTML(p)}
       <div class="row">${actionButtons(p, ws, true)}</div>
       ${cs.slice(-2).map(c => `<div class="mini-c">${avatar(c.by, 'sm')}<div class="b ${c.internal ? 'int' : ''}"><div class="n">${esc(Store.name(c.by))} <span class="muted">${ago(c.at)}${c.internal ? ' · interno' : ''}</span></div>${esc(c.text)}</div></div>`).join('')}
       ${cs.length > 2 ? `<button class="morel" data-act="open" data-pid="${p.id}">Ver os ${cs.length} comentários</button>` : ''}
@@ -483,6 +509,8 @@ function actionButtons(p, ws, small) {
   const b = [];
   const ed = canEdit(ws);
   if (p.status === 'published') return `<span class="muted">Publicada ${p.publishedAt ? ago(p.publishedAt) : ''}</span>`;
+  if (p.status === 'publishing') return `<span class="muted">A publicar…</span>`;
+  if (p.status === 'failed') return ed ? `<button class="btn pri ${s}" data-act="retry" data-pid="${p.id}">Tentar outra vez</button><button class="btn ${s}" data-act="markpub" data-pid="${p.id}">Marcar como publicada</button>` : '';
   if (canApprove(p, ws) && p.status === 'review') { b.push(`<button class="btn ok ${s}" data-act="approve" data-pid="${p.id}">${I.check} Aprovar</button>`); b.push(`<button class="btn ${s}" data-act="reject" data-pid="${p.id}">Pedir alterações</button>`); }
   if (ed && ['draft', 'changes'].includes(p.status) && steps(ws).length) b.push(`<button class="btn ${s}" data-act="reqap" data-pid="${p.id}">Pedir aprovação</button>`);
   if (ed && ['draft', 'changes', 'approved'].includes(p.status) && (!needsApproval(ws) || apState(p, ws).full)) b.push(`<button class="btn pri ${s}" data-act="sched" data-pid="${p.id}">Agendar</button>`);
@@ -527,8 +555,8 @@ function calHTML(ws) {
 }
 function evHTML(p, ws, big) {
   const pg = pageOf(ws, p.pageIds[0]);
-  const lock = p.status === 'published' || !canEdit(ws);
-  const col = { draft: '#8a909c', review: '#c98500', changes: '#d03b3b', approved: '#0ca30c', scheduled: '#2a78d6', published: '#6d4fc2' }[p.status];
+  const lock = p.status === 'published' || p.status === 'publishing' || !canEdit(ws);
+  const col = { publishing: '#2a78d6', failed: '#d03b3b', draft: '#8a909c', review: '#c98500', changes: '#d03b3b', approved: '#0ca30c', scheduled: '#2a78d6', published: '#6d4fc2' }[p.status];
   const m = mediaOf(p.mediaIds?.[0]);
   return `<div class="ev ${lock ? 'locked' : ''}" style="border-left-color:${col}" ${lock ? '' : 'draggable="true"'} data-pid="${p.id}" data-act="open">
     <div class="t">${p.pageIds.slice(0, 4).map(id => { const g = pageOf(ws, id); return g ? pfBadge(g.platform, 'sm') : ''; }).join('')}${p.pageIds.length > 4 ? `<span class="muted">+${p.pageIds.length - 4}</span>` : ''}<span>${fmtTime(p.date)}</span>${unreadC(p) ? '<i class="newdot" title="Comentários novos"></i>' : ''}${(p.comments || []).filter(c => !c.resolved).length ? `<span class="muted" style="margin-left:auto">💬${p.comments.filter(c => !c.resolved).length}</span>` : ''}</div>
@@ -548,7 +576,7 @@ function gridHTML(ws) {
   return `<div class="gwrap">
     <div class="gprof"><span class="pf lg" style="width:64px;height:64px;font-size:20px;background:${ws.color}">${esc(initials(pg.name))}</span><div style="flex:1"><div style="font-weight:700;font-size:16px">${esc(pg.handle || pg.name)}</div><div class="muted">${posts.length} publicações planeadas e publicadas · arraste para reorganizar</div></div>
       <select class="inp" style="width:auto" data-ch="gridpage">${ig.map(p => `<option value="${p.id}" ${p.id === pg.id ? 'selected' : ''}>${esc(PLAT[p.platform].n)} — ${esc(p.name)}</option>`).join('')}</select></div>
-    ${posts.length ? `<div class="ggrid">${posts.slice(0, UI.gridN || 60).map(p => { const m = mediaOf(p.mediaIds?.[0]); const lock = p.status === 'published' || !canEdit(ws); return `<div class="gt ${lock ? 'lock' : ''}" ${lock ? '' : 'draggable="true"'} data-pid="${p.id}" data-drop="grid:${p.id}" data-act="open">${m ? mTag(m) : `<div class="noimg">${esc(textFor(p, pg.id))}</div>`}<span class="gs">${stPill(p.status).replace('class="st', 'style="font-size:10px" class="st')}</span>${p.mediaIds?.length > 1 ? `<span class="gl">▣ ${p.mediaIds.length}</span>` : lock ? '<span class="gl">🔒</span>' : ''}<div class="gd">${fmtDT(p.date)}</div></div>`; }).join('')}</div>${posts.length > (UI.gridN || 60) ? `<div style="text-align:center;margin:12px 0"><button class="btn sm" data-act="more" data-k="gridN" data-n="60">Mostrar mais (${posts.length - (UI.gridN || 60)})</button></div>` : ''}` : `<div class="empty">Ainda sem publicações para esta página.</div>`}
+    ${posts.length ? `<div class="ggrid">${posts.slice(0, UI.gridN || 60).map(p => { const m = mediaOf(p.mediaIds?.[0]); const lock = p.status === 'published' || p.status === 'publishing' || !canEdit(ws); return `<div class="gt ${lock ? 'lock' : ''}" ${lock ? '' : 'draggable="true"'} data-pid="${p.id}" data-drop="grid:${p.id}" data-act="open">${m ? mTag(m) : `<div class="noimg">${esc(textFor(p, pg.id))}</div>`}<span class="gs">${stPill(p.status).replace('class="st', 'style="font-size:10px" class="st')}</span>${p.mediaIds?.length > 1 ? `<span class="gl">▣ ${p.mediaIds.length}</span>` : lock ? '<span class="gl">🔒</span>' : ''}<div class="gd">${fmtDT(p.date)}</div></div>`; }).join('')}</div>${posts.length > (UI.gridN || 60) ? `<div style="text-align:center;margin:12px 0"><button class="btn sm" data-act="more" data-k="gridN" data-n="60">Mostrar mais (${posts.length - (UI.gridN || 60)})</button></div>` : ''}` : `<div class="empty">Ainda sem publicações para esta página.</div>`}
   </div>`;
 }
 
@@ -575,14 +603,15 @@ function bulkHTML(ws) {
 }
 
 /* ---------- Aprovações (quadro) ---------- */
-const KCOLS = [['draft', 'Rascunho'], ['review', 'Em aprovação'], ['changes', 'Alterações pedidas'], ['approved', 'Aprovado'], ['scheduled', 'Agendado'], ['published', 'Publicado']];
+const KCOLS = [['draft', 'Rascunho'], ['review', 'Em aprovação'], ['changes', 'Alterações pedidas'], ['approved', 'Aprovado'], ['scheduled', 'Agendado'], ['failed', 'Falhou'], ['published', 'Publicado']];
 function kanbanHTML(ws) {
   const posts = filtered(ws, { ignoreStatus: true }).sort(byDate);
-  return `<div class="kb">${KCOLS.map(([k, n]) => { const ps = posts.filter(p => p.status === k); return `<div class="kcol" data-drop="col:${k}"><h5>${stPill(k)}<span class="n">${ps.length}</span></h5><div class="lst">${ps.slice(0, UI.kN || 30).map(p => kcard(p, ws)).join('') || '<div class="muted" style="text-align:center;padding:14px 0">—</div>'}${ps.length > (UI.kN || 30) ? `<button class="btn sm" data-act="more" data-k="kN" data-n="30">Mostrar mais (${ps.length - (UI.kN || 30)})</button>` : ''}</div></div>`; }).join('')}</div>`;
+  return `<div class="kb">${KCOLS.map(([k, n]) => { const ps = posts.filter(p => p.status === k || (k === 'scheduled' && p.status === 'publishing'));
+    if (k === 'failed' && !ps.length) return ''; return `<div class="kcol" data-drop="col:${k}"><h5>${stPill(k)}<span class="n">${ps.length}</span></h5><div class="lst">${ps.slice(0, UI.kN || 30).map(p => kcard(p, ws)).join('') || '<div class="muted" style="text-align:center;padding:14px 0">—</div>'}${ps.length > (UI.kN || 30) ? `<button class="btn sm" data-act="more" data-k="kN" data-n="30">Mostrar mais (${ps.length - (UI.kN || 30)})</button>` : ''}</div></div>`; }).join('')}</div>`;
 }
 function kcard(p, ws) {
   const m = mediaOf(p.mediaIds?.[0]); const st = apState(p, ws);
-  const lock = p.status === 'published' || Store.readOnly;
+  const lock = p.status === 'published' || p.status === 'publishing' || Store.readOnly;
   return `<div class="kc" ${lock ? '' : 'draggable="true"'} data-pid="${p.id}" data-act="open">${m ? mTag(m) : ''}
     <div class="m">${p.pageIds.slice(0, 5).map(id => { const g = pageOf(ws, id); return g ? pfBadge(g.platform, 'sm') : ''; }).join('')}<span style="margin-left:auto">${p.date ? fmtDT(p.date) : 'Sem data'}</span></div>
     <div class="x">${esc(p.text || '(sem texto)')}</div>
@@ -591,8 +620,8 @@ function kcard(p, ws) {
 }
 function kanbanDrop(p, to) {
   const ws = S.workspaces[p.ws];
-  if (p.status === to) return;
-  if (to === 'published') { Act.publishNow(p); return; }
+  if (p.status === to || to === 'failed') return;
+  if (to === 'published') { if (p.status === 'failed') Act.markPublished(p); else Act.publishNow(p); return; }
   if (to === 'scheduled') { Act.schedule(p); return; }
   if (to === 'review') { Act.requestApproval(p); return; }
   if (to === 'changes') { Act.askReject(p); return; }

@@ -51,3 +51,23 @@ insert into storage.buckets (id, name, public, file_size_limit) values ('s360','
 create policy s360_media_ler on storage.objects for select to authenticated using (bucket_id = 's360' and public.s360_papel(split_part(name,'/',1)) is not null);
 create policy s360_media_criar on storage.objects for insert to authenticated with check (bucket_id = 's360' and public.s360_papel(split_part(name,'/',1)) in ('admin','editor'));
 create policy s360_media_apagar on storage.objects for delete to authenticated using (bucket_id = 's360' and public.s360_papel(split_part(name,'/',1)) in ('admin','editor'));
+
+-- ===================== EPISJ 360 0.9.75 · Social360 0.3: publicação no Facebook e Instagram =====================
+-- Contas ligadas (chaves só no servidor), pedidos de ligação, chave da tarefa agendada e reserva das publicações.
+-- Funções do Supabase: s360-meta (ligação OAuth, servidor/s360-meta.ts) e s360-publicar (publicador, servidor/s360-publicar.ts).
+-- Segredos das funções: META_APP_ID e META_APP_SECRET (da aplicação da Meta da escola); opcionais META_CONFIG_ID, META_GRAPH_VER.
+create table if not exists public.s360_meta(ws text not null, fb_page_id text not null, fb_page_name text not null default '', page_token text not null,
+  ig_user_id text, ig_username text, ligado_por text not null default '', ligado_em timestamptz not null default now(),
+  estado text not null default 'ok', erro text not null default '', primary key (ws, fb_page_id));
+alter table public.s360_meta enable row level security; revoke all on public.s360_meta from anon, authenticated;
+create table if not exists public.s360_meta_pedidos(estado text primary key, ws text not null, email text not null, criado timestamptz not null default now());
+alter table public.s360_meta_pedidos enable row level security; revoke all on public.s360_meta_pedidos from anon, authenticated;
+create table if not exists public.s360_cfg(k text primary key, v text not null);
+alter table public.s360_cfg enable row level security; revoke all on public.s360_cfg from anon, authenticated;
+insert into public.s360_cfg(k, v) values ('cron', encode(extensions.gen_random_bytes(24), 'hex')) on conflict (k) do nothing;
+-- s360_meta_listar(ws) e s360_meta_desligar(ws, fb): só administradores do espaço; s360_reservar(max): só o servidor (service_role)
+-- (definições completas na migração social360_meta do projeto episj360)
+select cron.schedule('episj360-s360-publicar', '* * * * *', $cron$
+  select net.http_post(url := 'https://oovqekytlhkbinfdxjwf.supabase.co/functions/v1/s360-publicar', body := '{}'::jsonb,
+    headers := jsonb_build_object('Content-Type','application/json','x-s360-chave',(select v from public.s360_cfg where k='cron')), timeout_milliseconds := 60000)
+$cron$);
