@@ -1940,7 +1940,7 @@ function save(){
   if(RO)return;juntarOutroSeparador();
   let cur=JSON.stringify(cfg);
   if(cur!==lastJSON){notarApagados(lastJSON);cur=JSON.stringify(cfg);
-    if(Date.now()-lastPush>1500||!undoS.length){undoS.push(lastJSON);if(undoS.length>80)undoS.shift()}
+    if(Date.now()-lastPush>1500||!undoS.length){undoS.push(lastJSON);const mx=cur.length>200000?30:80;while(undoS.length>mx)undoS.shift()}
     redoS=[];lastPush=Date.now();lastJSON=cur;cfgRev++;marcarCfg();
   }
   persist(cur);undoUI();
@@ -2236,17 +2236,19 @@ function renderProfs(){
   const semMail=cfg.profs.filter(p=>!/\S+@\S+\.\S+/.test(p.email||"")).length;
   const cnt={};ativos().forEach(m=>{const p=profOf(m);if(p)cnt[p]=(cnt[p]||0)+1});
   const wEl=$("#profWarn");if(wEl)wEl.innerHTML=cfg.profs.length?(semMail?`<div class="msg bad">${semMail} formador(es) sem email válido — não vão receber mensagens.</div>`:`<div class="msg ok">${cfg.profs.length} formador(es), todos com email.</div>`):"";
-  $("#tbProfs").innerHTML=list.map(p=>`<tr data-id="${p.id}">
+  PROF_N=PROF_N||200;const resto=list.length-PROF_N; // 0.9.53: com 1000 formadores, 200 linhas de cada vez (eram 4000 caixas de texto a cada redesenho)
+  $("#tbProfs").innerHTML=list.slice(0,PROF_N).map(p=>`<tr data-id="${p.id}">
    <td><input type="text" data-k="cod" value="${esc(p.cod||"")}"></td>
    <td><input type="text" data-k="nome" value="${esc(p.nome)}"></td>
    <td><input type="text" data-k="abrev" value="${esc(p.abrev||"")}" maxlength="8"></td>
    <td><input type="email" data-k="email" value="${esc(p.email)}"></td>
    <td class="hm" style="color:var(--muted)">${cnt[p.id]||0}</td>
-   <td><button class="x" title="Remover" data-del>×</button></td></tr>`).join("")||`<tr><td colspan="6" class="hint">${cfg.profs.length?"Ninguém corresponde à procura.":"Ainda sem formadores — adicione no formulário acima ou cole uma lista abaixo."}</td></tr>`;
+   <td><button class="x" title="Remover" data-del>×</button></td></tr>`).join("")+(resto>0?`<tr><td colspan="6" style="text-align:center"><button class="b s" type="button" data-profmais>Mostrar mais ${Math.min(resto,500)} (faltam ${resto}) — ou procure acima</button></td></tr>`:"")||`<tr><td colspan="6" class="hint">${cfg.profs.length?"Ninguém corresponde à procura.":"Ainda sem formadores — adicione no formulário acima ou cole uma lista abaixo."}</td></tr>`;
 }
+var PROF_N=200;
 $("#tbProfs").addEventListener("input",e=>{const tr=e.target.closest("tr");const p=cfg.profs.find(x=>x.id===tr.dataset.id);p[e.target.dataset.k]=e.target.value;save();if(e.target.dataset.k==="nome")nomesMudaram();try{esRecarregar()}catch(_){}});
 const nomesMudaram=debounce(()=>{renderMods();renderGrid()},300);
-$("#tbProfs").addEventListener("click",e=>{if(!e.target.hasAttribute("data-del"))return;const id=e.target.closest("tr").dataset.id;
+$("#tbProfs").addEventListener("click",e=>{if(e.target.hasAttribute("data-profmais")){PROF_N+=500;renderProfs();return}if(!e.target.hasAttribute("data-del"))return;const id=e.target.closest("tr").dataset.id;
   cfg.profs=cfg.profs.filter(x=>x.id!==id);cfg.mods.forEach(m=>{if(m.profId===id)m.profId=""});for(const k in cfg.grid)if(cfg.grid[k]===id)delete cfg.grid[k];save();renderAll();toast("Formador removido (pode anular)")});
 $("#profForm").addEventListener("input",()=>{$("#pFormMsg").innerHTML=""});
 $("#profForm").addEventListener("submit",e=>{e.preventDefault();
@@ -2258,7 +2260,7 @@ $("#profForm").addEventListener("submit",e=>{e.preventDefault();
   if(dup){msg(`Já existe um formador com ${cod&&norm(dup.cod)===norm(cod)?"esse código":"esse email"}: ${dup.nome}.`,"bad");return}
   cfg.profs.push({id:uid(),cod,nome,email,abrev});cfg.profs.sort((a,b)=>a.nome.localeCompare(b.nome,"pt"));save();renderAll();
   msg(`${nome} adicionado(a).`,"ok");$("#profForm").reset();$("#pCod").focus();});
-$("#profFilter").addEventListener("input",renderProfs);
+{let h=null;$("#profFilter").addEventListener("input",()=>{PROF_N=200;clearTimeout(h);h=setTimeout(renderProfs,120)})}
 $("#profImport").onclick=()=>{
   const lines=$("#profBulk").value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);if(!lines.length)return;
   ponto("Antes de colar uma lista de formadores");
@@ -5118,14 +5120,17 @@ function turmaOpts(sel,first){return (first??`<option value="">— sem turma —
 function turmaPorCod(cod){const a=anoAtivo(),L=escData().turmas.filter(t=>norm(t.cod)===norm(cod));return L.find(t=>turmaNoAno(t,a))||L[0]||null}
 function renderFormandos(){const e=escData(),q=norm($("#forFilter").value||""),ft=$("#forTurmaF").value;
   $("#forTurmaF").innerHTML=turmaOpts(ft,`<option value="">Todas as turmas</option>`);$("#fTurma").innerHTML=turmaOpts($("#fTurma").value);$("#forBulkT").innerHTML=turmaOpts($("#forBulkT").value,`<option value="">— na própria lista —</option>`);
-  const cod=id=>(e.turmas.find(t=>t.id===id)||{}).cod||"";
-  const L=e.formandos.filter(f=>(!ft||f.turmaId===ft)&&(!q||norm((f.num||"")+" "+f.nome).includes(q))).sort((a,b)=>cod(a.turmaId).localeCompare(cod(b.turmaId),"pt",{numeric:true})||String(a.num).localeCompare(String(b.num),"pt",{numeric:true})||a.nome.localeCompare(b.nome,"pt"));
-  $("#tbFor").innerHTML=L.slice(0,500).map(f=>`<tr data-id="${f.id}"><td><input type="text" data-k="num" value="${esc(f.num||"")}"></td><td><input type="text" data-k="nome" value="${esc(f.nome)}"></td><td><select data-k="turmaId">${lzOpts("turma",f.turmaId)}</select></td><td><button class="x" data-del title="Apagar">×</button></td></tr>`).join("")
+  const TC=new Map(e.turmas.map(t=>[t.id,t.cod||""])),cod=id=>TC.get(id)||"";
+  const CN=new Intl.Collator("pt",{numeric:true}),CP=new Intl.Collator("pt");
+  const L=e.formandos.filter(f=>(!ft||f.turmaId===ft)&&(!q||norm((f.num||"")+" "+f.nome).includes(q))).sort((a,b)=>CN.compare(cod(a.turmaId),cod(b.turmaId))||CN.compare(String(a.num),String(b.num))||CP.compare(a.nome,b.nome));
+  FOR_N=FOR_N||200;const resto=L.length-FOR_N;
+  $("#tbFor").innerHTML=L.slice(0,FOR_N).map(f=>`<tr data-id="${f.id}"><td><input type="text" data-k="num" value="${esc(f.num||"")}"></td><td><input type="text" data-k="nome" value="${esc(f.nome)}"></td><td><select data-k="turmaId">${lzOpts("turma",f.turmaId)}</select></td><td><button class="x" data-del title="Apagar">×</button></td></tr>`).join("")+(resto>0?`<tr><td colspan="4" style="text-align:center"><button class="b s" type="button" data-formais>Mostrar mais ${Math.min(resto,500)} (faltam ${resto}) — ou escolha a turma acima</button></td></tr>`:"")
     ||`<tr><td colspan="4" class="hint">${e.formandos.length?"Ninguém corresponde à procura.":"Ainda sem formandos — acrescente acima ou cole uma lista."}</td></tr>`;
-  $("#forCnt").textContent=e.formandos.length?`${L.length} de ${e.formandos.length} formando(s)${L.length>500?" — a mostrar os primeiros 500":""}.`:""}
-$("#forFilter").addEventListener("input",renderFormandos);$("#forTurmaF").addEventListener("change",renderFormandos);
+  $("#forCnt").textContent=e.formandos.length?`${L.length} de ${e.formandos.length} formando(s)${resto>0?" — a mostrar os primeiros "+FOR_N:""}.`:""}
+var FOR_N=200;
+{let h=null;$("#forFilter").addEventListener("input",()=>{FOR_N=200;clearTimeout(h);h=setTimeout(renderFormandos,120)})}$("#forTurmaF").addEventListener("change",()=>{FOR_N=200;renderFormandos()});
 $("#tbFor").addEventListener("change",e=>{const tr=e.target.closest("tr");const f=escData().formandos.find(x=>x.id===tr.dataset.id);if(!f)return;f[e.target.dataset.k]=e.target.value.trim();save();esRecarregar()});
-$("#tbFor").addEventListener("click",e=>{if(!e.target.hasAttribute("data-del"))return;const E=escData();const f=E.formandos.find(x=>x.id===e.target.closest("tr").dataset.id);if(!f)return;ponto("Antes de apagar o formando "+f.nome);E.formandos=E.formandos.filter(x=>x!==f);save();renderFormandos();esRecarregar();toast("Formando apagado (pode anular)")});
+$("#tbFor").addEventListener("click",e=>{if(e.target.hasAttribute("data-formais")){FOR_N+=500;renderFormandos();return}if(!e.target.hasAttribute("data-del"))return;const E=escData();const f=E.formandos.find(x=>x.id===e.target.closest("tr").dataset.id);if(!f)return;ponto("Antes de apagar o formando "+f.nome);E.formandos=E.formandos.filter(x=>x!==f);save();renderFormandos();esRecarregar();toast("Formando apagado (pode anular)")});
 $("#forForm").addEventListener("submit",e=>{e.preventDefault();const nome=$("#fNome").value.trim();if(!nome)return;escData().formandos.push({id:uid(),num:$("#fNum").value.trim(),nome,turmaId:$("#fTurma").value});save();const t=$("#fTurma").value;$("#forForm").reset();$("#fTurma").value=t;renderFormandos();esRecarregar();$("#fNum").focus()});
 $("#forImport").onclick=()=>{const lines=$("#forBulk").value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);if(!lines.length)return;
   ponto("Antes de colar uma lista de formandos");const E=escData(),fix=$("#forBulkT").value;let add=0,upd=0,bad=0;
@@ -5374,8 +5379,8 @@ const dsdTurmaTxt=t=>{if(!t)return "Componente não letiva da escola";const c=cu
 const dsdOrd=(x,y)=>String(x.t?x.t.cod:"~").localeCompare(String(y.t?y.t.cod:"~"),"pt",{numeric:true});
 function dsdEu(){if(!EU||!EU.email)return null;return cfg.profs.find(p=>String(p.email||"").trim().toLowerCase()===String(EU.email).toLowerCase())||null}
 const dsdSoEu=()=>perfilAtual()==="prof";
-function renderDSD(){const a=anoAtivo(),M=dsdDados(a.id),out=$("#dsdOut"),soEu=dsdSoEu();$("#dsdAnoLbl").textContent=a.nome;
-  const P=cfg.profs.slice().sort((x,y)=>String(x.nome).localeCompare(String(y.nome),"pt"));
+function renderDSD(){const a=anoAtivo(),M=dsdDados(a.id),out=$("#dsdOut"),soEu=dsdSoEu(),TC=new Map(escData().turmas.map(t=>[t.id,t.cod]));$("#dsdAnoLbl").textContent=a.nome;
+  const CNd=new Intl.Collator("pt",{numeric:true}),CPd=new Intl.Collator("pt");const P=cfg.profs.slice().sort((x,y)=>CPd.compare(String(x.nome),String(y.nome)));
   if(soEu){const me=dsdEu();DSD_SEL=me?me.id:"";$("#dsdSel").innerHTML=me?`<option value="${me.id}">${esc(me.nome)}</option>`:`<option value="">—</option>`;$("#dsdSel").disabled=true;$("#dsdFilterL").style.display="none";$("#dsdPdfAll").style.display="none";
     if(!me){out.innerHTML=`<div class="msg info">A sua conta (<b>${esc(EU&&EU.email||"")}</b>) não aparece entre os formadores da escola.</div>`;$("#dsdPdf").disabled=true;return}}
   else{$("#dsdSel").disabled=false;$("#dsdFilterL").style.display="";$("#dsdPdfAll").style.display="";
@@ -5387,15 +5392,17 @@ function renderDSD(){const a=anoAtivo(),M=dsdDados(a.id),out=$("#dsdOut"),soEu=d
   if(!nPl){out.innerHTML=`<p class="hint">Ainda não há planos curriculares em ${esc(a.nome)}. Faça-os ou importe-os em <b>Escola › Turmas › Planos Curriculares</b>.</p>`;return}
   if(DSD_SEL){out.innerHTML=dsdDetalhe(DSD_SEL==="_sem"?"":DSD_SEL,M);return}
   const q=norm($("#dsdFilter").value||"");
-  const L=P.map(p=>({p,r:M.get(p.id)})).filter(({p,r})=>!q||norm([p.cod,p.nome,...(r?[...r.turmas].map(id=>(escData().turmas.find(t=>t.id===id)||{}).cod):[]),...(r?r.let.map(x=>x.l.disc):[])].join(" ")).includes(q));
+  const L=P.map(p=>({p,r:M.get(p.id)})).filter(({p,r})=>!q||norm([p.cod,p.nome,...(r?[...r.turmas].map(id=>TC.get(id)):[]),...(r?r.let.map(x=>x.l.disc):[])].join(" ")).includes(q));
   const com=L.filter(x=>x.r),sem=L.filter(x=>!x.r),S=M.get("");
   const tl=com.reduce((s,x)=>s+x.r.h,0),tn=com.reduce((s,x)=>s+x.r.hnl,0);
   let h=`<div class="tiles pctiles"><div class="tile"><div class="v">${com.length}</div><div class="l">Formadores com serviço</div></div><div class="tile"><div class="v">${pcNum(tl)} h</div><div class="l">Componente letiva</div></div><div class="tile"><div class="v">${pcNum(tn)} h</div><div class="l">Componente não letiva</div></div><div class="tile"><div class="v">${nPl}</div><div class="l">Planos de turma</div></div></div>`;
   if(S)h+=`<div class="msg bad">${S.let.length+S.nl.length} módulo(s)/cargo(s) sem formador (${pcNum(S.h+S.hnl)} h) — <a href="#" data-dsdsem>ver quais</a>.</div>`;
   h+=`<table class="rt pcres"><thead><tr><th>Código</th><th>Formador</th><th>Área(s)</th><th>Turmas</th><th>Letiva</th><th>Não letiva</th><th>Total</th><th title="Soma das horas de cada turma a dividir pelas suas semanas de aulas">H/semana</th></tr></thead><tbody>`+
-    com.map(({p,r})=>`<tr data-dsd="${p.id}"><td>${esc(p.cod||"")}</td><td><b>${esc(p.nome)}</b></td><td>${esc([...r.areas].map(k=>PC_AREA_NOME[k]).join(", "))}</td><td>${esc([...r.turmas].map(id=>(escData().turmas.find(t=>t.id===id)||{}).cod).sort((x,y)=>String(x).localeCompare(String(y),"pt",{numeric:true})).join(", "))}</td><td class="pcn">${pcNum(r.h)}</td><td class="pcn">${pcNum(r.hnl)}</td><td class="pcn"><b>${pcNum(r.h+r.hnl)}</b></td><td class="pcn">${r.hs?pcNum(r.hs):"—"}</td></tr>`).join("")+`</tbody></table>`;
+    com.slice(0,DSD_N||200).map(({p,r})=>`<tr data-dsd="${p.id}"><td>${esc(p.cod||"")}</td><td><b>${esc(p.nome)}</b></td><td>${esc([...r.areas].map(k=>PC_AREA_NOME[k]).join(", "))}</td><td>${esc([...r.turmas].map(id=>TC.get(id)).sort((x,y)=>CNd.compare(String(x),String(y))).join(", "))}</td><td class="pcn">${pcNum(r.h)}</td><td class="pcn">${pcNum(r.hnl)}</td><td class="pcn"><b>${pcNum(r.h+r.hnl)}</b></td><td class="pcn">${r.hs?pcNum(r.hs):"—"}</td></tr>`).join("")+`</tbody></table>`;
+  if(com.length>(DSD_N||200))h+=`<div style="text-align:center;margin:10px 0"><button class="b s" type="button" data-dsdmais>Mostrar mais ${Math.min(500,com.length-(DSD_N||200))} formadores (faltam ${com.length-(DSD_N||200)}) — ou procure acima</button></div>`; // 0.9.53
   if(sem.length)h+=`<details style="margin-top:12px"><summary class="hint" style="cursor:pointer">${sem.length} formador(es) sem serviço atribuído em ${esc(a.nome)}</summary><p class="hint">${sem.map(({p})=>esc(p.nome)).join(", ")}</p></details>`;
   out.innerHTML=h}
+var DSD_N=200;
 function dsdDetalhe(id,M){const r=M.get(id),p=id?pcProf(id):null,a=anoAtivo();
   const tit=id?`${p?(p.cod?p.cod+" - ":"")+p.nome:"(formador apagado)"}`:"Sem formador atribuído";
   if(!r)return `<div class="msg info"><b>${esc(tit)}</b> não tem serviço atribuído nos planos curriculares de ${esc(a.nome)}.</div>`+dsdNLSec(id,a);
@@ -5437,8 +5444,8 @@ $("#dsdOut").addEventListener("submit",e=>{const f=e.target.closest("[data-nlf]"
   if(h===""&&hs===""){toast("Indique as horas no ano ou as horas por semana");return}if(h===""&&sm)h=Math.round(hs*sm*100)/100;
   dsdNLs().push({id:uid(),anoId:a.id,f:f.dataset.nlf,nome,h,hs,obs:String(fd.get("obs")||"").trim()});save();renderDSD();toast("Acrescentado à componente não letiva")});
 $("#dsdSel").addEventListener("change",e=>{DSD_SEL=e.target.value;try{localStorage.setItem("dsd_sel",DSD_SEL)}catch(x){}renderDSD()});
-$("#dsdFilter").addEventListener("input",()=>{if(DSD_SEL){DSD_SEL="";}renderDSD()});
-$("#dsdOut").addEventListener("click",e=>{const tr=e.target.closest("tr[data-dsd]");if(tr){DSD_SEL=tr.dataset.dsd;renderDSD();$("#dsd").scrollIntoView({behavior:"smooth"});return}
+{let h=null;$("#dsdFilter").addEventListener("input",()=>{if(DSD_SEL){DSD_SEL="";}DSD_N=200;clearTimeout(h);h=setTimeout(renderDSD,120)})}
+$("#dsdOut").addEventListener("click",e=>{if(e.target.closest("[data-dsdmais]")){DSD_N=(DSD_N||200)+500;renderDSD();return}const tr=e.target.closest("tr[data-dsd]");if(tr){DSD_SEL=tr.dataset.dsd;renderDSD();$("#dsd").scrollIntoView({behavior:"smooth"});return}
   if(e.target.closest("[data-dsdsem]")){e.preventDefault();DSD_SEL="_sem";renderDSD();return}
   const b=e.target.closest("[data-abrirpc]");if(b){PC_T=b.dataset.abrirpc;try{localStorage.setItem("pc_t",PC_T)}catch(x){}show("pc")}});
 
