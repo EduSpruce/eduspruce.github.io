@@ -2096,7 +2096,7 @@ nav.side button.on{box-shadow:var(--sh),inset 3px 0 0 var(--brand),inset 0 0 0 1
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.61"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.62"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -4033,7 +4033,7 @@ function nuvemUI(){const el=$("#nuvemMsg");if(!el)return;
   if(NUV.erro){el.innerHTML=`<div class="msg bad">Não foi possível guardar na nuvem (${esc(NUV.erro)}). Fica guardado neste navegador; volta a tentar sozinho.</div>`;return}
   el.innerHTML=NUV.ultimo?`<div class="msg ok">☁ Tudo guardado na nuvem às ${new Date(NUV.ultimo).toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"})} — noutro computador basta entrar com ${nuvMS()?"a conta do Office 365":"a Box"}.</div>`:NUV.ativo?`<div class="msg ok">☁ Guardado na nuvem — noutro computador basta entrar com ${nuvMS()?"a conta do Office 365":"a Box"}.</div>`:""}
 // configuração e o resto do estado (pequeno): enviado alguns segundos depois de cada alteração
-function estadoAtual(){let root="";try{root=localStorage.getItem("box_last_root")||""}catch(e){}
+function estadoAtual(){lgDoNavegador();let root="";try{root=localStorage.getItem("box_last_root")||""}catch(e){}
   return{cfg:JSON.stringify(cfg),logos:LOGOS,pontos:(()=>{try{if(nuvSB())return[]}catch(e){}return rpList()})(),tpl:TPL,folder:curFolder,root,bases:basesIdx(),resumos:resumos()}} // 0.9.48: no Supabase os pontos de restauro não viajam (a base de dados guarda o histórico de versões)
 let nuvH=null;
 function nuvemAgendar(){try{NUV}catch(e){setTimeout(nuvemAgendar,0);return} // pode ser chamada ao arrancar, antes de NUV existir
@@ -4062,7 +4062,7 @@ async function nuvemTrazer(){
       const fica=lastJSON!==e.cfg; // havia aqui coisas que a nuvem não tinha: voltam a ser enviadas
       try{localStorage.setItem("boxcheck_cfg_t",String(fica?Date.now():E.t));if(fica)setTimeout(nuvemAgendar,0);
         const rp=rpList(),ts=new Set(rp.map(p=>p.t));const juntos=rp.concat((e.pontos||[]).filter(p=>!ts.has(p.t))).sort((a,b)=>b.t-a.t).slice(0,25);localStorage.setItem(RPKEY,JSON.stringify(juntos));
-        if(e.logos&&typeof e.logos==="object"){LOGOS=e.logos;localStorage.setItem(LGKEY,JSON.stringify(LOGOS));aplicarLogos();lgMigrar()}
+        if(e.logos&&typeof e.logos==="object"){if(lgJuntar(e.logos))mudou=true}
         if(e.tpl&&e.tpl.itens){TPL=e.tpl;tplRev++;localStorage.setItem("boxcheck_modelos",JSON.stringify(TPL))}
         if(e.bases){const bi=basesIdx();for(const k in e.bases)if(!bi[k]||!bi[k].length)bi[k]=e.bases[k];localStorage.setItem("box_bases",JSON.stringify(bi))}
         if(e.folder&&e.folder.id&&curFolder.id==="0"){curFolder=e.folder;localStorage.setItem("box_last_folder",JSON.stringify(curFolder))}
@@ -4120,7 +4120,16 @@ const IC_UP=`<svg viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M4 15v4a2 2 0
 const IC_DEL=`<svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M6 6l1 14a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-14M10 11v6M14 11v6"/></svg>`;
 const IC_IMG=`<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg>`;
 let lgAlvo="main";
-function guardarLogos(){try{localStorage.setItem(LGKEY,JSON.stringify(LOGOS))}catch(e){toast("Não foi possível guardar a imagem neste navegador (é grande demais?)")}marcarCfg();aplicarLogos();renderDef()}
+function guardarLogos(){LOGOS.t=Date.now();try{localStorage.setItem(LGKEY,JSON.stringify(LOGOS))}catch(e){toast("Não foi possível guardar a imagem neste navegador (é grande demais?)")}marcarCfg();aplicarLogos();renderDef();lgEnviarJa()}
+/* 0.9.62: os logótipos não se perdem entre separadores e computadores — cada gravação leva a hora (LOGOS.t);
+   da nuvem só se aceita uma versão mais recente; a mais antiga junta-se sem tirar nada e a nossa volta a ser enviada */
+function lgDoNavegador(){try{const v=JSON.parse(localStorage.getItem(LGKEY)||"null");if(v&&typeof v==="object"&&(v.t||0)>(LOGOS.t||0)){LOGOS=v;aplicarLogos()}}catch(e){}}
+function lgJuntar(n){lgDoNavegador();const tn=+n.t||0,tl=+LOGOS.t||0;if(JSON.stringify(n)===JSON.stringify(LOGOS))return false;
+  if(tn>tl){LOGOS=n}else{const j=Object.assign({},n,LOGOS);if(n.anos||LOGOS.anos){j.anos=Object.assign({},n.anos||{},LOGOS.anos||{});for(const k in j.anos)if(n.anos&&LOGOS.anos&&n.anos[k]&&LOGOS.anos[k]&&typeof n.anos[k]==="object")j.anos[k]=Object.assign({},n.anos[k],LOGOS.anos[k])}
+    j.t=tl||Date.now();LOGOS=j;setTimeout(()=>{try{localStorage.setItem("boxcheck_cfg_t",String(Date.now()))}catch(e){}lgEnviarJa()},0)}
+  try{localStorage.setItem(LGKEY,JSON.stringify(LOGOS))}catch(e){}aplicarLogos();lgMigrar();try{if(document.querySelector("#lgSlots"))renderDef()}catch(e){}return true}
+function lgEnviarJa(){try{if(nuvDesl()||!NUVOK())return;clearTimeout(nuvH);nuvH=setTimeout(()=>{if(NUV.ocupado){lgEnviarJa();return}nuvemPut("estado",estadoAtual(),cfgT()||Date.now())},1200)}catch(e){}}
+addEventListener("storage",e=>{if(e.key===LGKEY)lgDoNavegador();if(e.key===LGKEY&&document.querySelector("#lgSlots"))try{renderDef()}catch(x){}});
 function aplicarLogos(){const m=LOGOS.main;
   {const fb=document.querySelector("#fundos");let f;try{f=lgFootBarra()}catch(e){f=lgGet("foot")}if(fb){const im=fb.querySelector("img");if(f){if(im.getAttribute("src")!==f.src)im.src=f.src;im.hidden=false}else{im.hidden=true;im.removeAttribute("src")}fb.hidden=false;document.body.classList.add("temfundos");lgNavW()}
    const gf=document.querySelector("#gFundos");if(gf){const gi=gf.querySelector("img");if(f){if(gi.getAttribute("src")!==f.src)gi.src=f.src;gf.hidden=false}else{gf.hidden=true;gi.removeAttribute("src")}}}
