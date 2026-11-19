@@ -1007,6 +1007,18 @@ main>section{max-width:none}
 .cal-lr{display:grid;grid-template-columns:64px 1fr;align-items:stretch;min-width:680px;height:28px;border-bottom:1px solid #f0f2f5}.cal-lr>b{font-size:12.5px;align-self:center}
 .cal-lt{position:relative;height:100%}
 .cal-lm{height:22px;border-bottom:1px solid var(--line)}.cal-lm span{position:absolute;top:3px;font-size:11px;color:var(--muted);padding-left:3px;border-left:1px solid var(--line)}
+.fert input[type=date]{width:150px}.fert td{vertical-align:middle}
+.fer-tp{display:inline-block;font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:6px;border:1px solid}
+.fer-tp.f{background:#eef2ff;color:#3730a3;border-color:#c7d2fe}.fer-tp.i{background:#fff7ed;color:#9a3412;border-color:#fed7aa}
+.fer-dur{font-size:12.5px;color:var(--muted);white-space:nowrap}.fer-dur small{display:block;font-size:11px;white-space:normal}.fer-dur small.warn{color:#b45309}.fer-dur small.bad{color:#b91c1c;font-weight:600}
+tr.fer-bad td{background:#fef2f2}
+.fer-res{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px}.fer-res span{font-size:12.5px;color:var(--muted);background:#f6f8fb;border:1px solid var(--line);border-radius:8px;padding:4px 10px}.fer-res b{color:var(--ink,#111);font-size:13.5px;margin-right:2px}
+.msg.warn{background:#fffbeb;border:1px solid #fde68a;color:#7a4f00}
+.crgl{position:absolute;top:0;bottom:0;width:1px;background:#eef1f5}
+.crhoje{position:absolute;top:2px;transform:translateX(-50%);font-style:normal;font-size:10.5px;font-weight:700;color:#fff;background:var(--brand);border-radius:4px;padding:1px 5px;z-index:3;white-space:nowrap}
+.crsem{position:absolute;top:9px;font-size:11px;color:#b91c1c;border:1px dashed #fca5a5;background:#fef2f2;border-radius:5px;padding:1px 7px;white-space:nowrap;z-index:2;margin-left:4px}
+.crres{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 12px}.crres span{font-size:12.5px;color:var(--muted);background:#f6f8fb;border:1px solid var(--line);border-radius:8px;padding:4px 10px}.crres b{color:#111;font-size:13.5px}.crres span.bad{background:#fef2f2;border-color:#fecaca;color:#991b1b}.crres span.bad b{color:#991b1b}
+.crgr.crgm span{white-space:nowrap}
 .cal-ls{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(135deg,#fde7c4 0 4px,#fff4e2 4px 8px)}
 .cal-lh{position:absolute;top:0;bottom:0;width:2px;background:var(--brand);opacity:.75;z-index:2}
 .cal-lb{position:absolute;top:6px;height:16px;border-radius:5px;background:color-mix(in srgb,var(--c) 78%,#fff);border:1px solid var(--c);color:#fff;font-size:10px;font-style:normal;font-weight:700;overflow:hidden;display:flex;align-items:center;padding-left:5px;z-index:1}
@@ -1024,12 +1036,12 @@ section#cal tr.on td{background:var(--brandbg)}
 .crdt{font-size:12.5px;background:#fff}
 .cral{padding:8px 0;border-bottom:1px dashed #eef1f5}
 .crg{position:relative;overflow-x:auto;padding-bottom:4px}
-.crgr{display:grid;grid-template-columns:210px 1fr;min-width:760px;height:30px;border-bottom:1px solid #f0f2f5;align-items:stretch}
-.crgr>b{font-size:12.5px;align-self:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-right:8px;display:flex;flex-direction:column;line-height:1.2}.crgr>b small{font-weight:400;color:var(--muted);font-size:11px}
+.crgr{display:grid;grid-template-columns:290px 1fr;min-width:860px;height:36px;border-bottom:1px solid #f0f2f5;align-items:stretch}
+.crgr>b{font-size:12.5px;align-self:center;overflow:hidden;white-space:nowrap;padding-right:10px;display:flex;flex-direction:column;line-height:1.25;min-width:0}.crgr>b .crnm{overflow:hidden;text-overflow:ellipsis}.crgr>b small .crneg{color:#b91c1c;font-weight:600}.crgr>b small{font-weight:400;color:var(--muted);font-size:11px}
 .crgt{position:relative;height:100%}
 .crgm.crgr,.crgr.crgm{height:22px;border-bottom:1px solid var(--line)}.crgr.crgm span{position:absolute;top:3px;font-size:11px;color:var(--muted);padding-left:3px;border-left:1px solid var(--line)}
-.crga{min-width:760px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--brand);padding:10px 0 4px}
-i.crgm{position:absolute;top:6px;height:18px;border-radius:5px;background:color-mix(in srgb,var(--c) 24%,transparent);border:1px solid color-mix(in srgb,var(--c) 70%,#fff);font-style:normal;font-size:10px;color:color-mix(in srgb,var(--c) 75%,#000);overflow:hidden;white-space:nowrap;display:flex;align-items:center;padding:0 4px;z-index:1}
+.crga{min-width:860px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--brand);padding:10px 0 4px}
+i.crgm{position:absolute;top:8px;height:20px;border-radius:5px;background:color-mix(in srgb,var(--c) 24%,transparent);border:1px solid color-mix(in srgb,var(--c) 70%,#fff);font-style:normal;font-size:10px;color:color-mix(in srgb,var(--c) 75%,#000);overflow:hidden;white-space:nowrap;display:flex;align-items:center;padding:0 4px;z-index:1}
 i.crgm.nc{background:repeating-linear-gradient(135deg,#fee2e2 0 4px,#fff 4px 8px);border-color:#ef4444;color:#991b1b}
 /* 0.9.67: Crono360 › Cumprir o plano */
 .cpopc{margin:4px 0 6px}.cpopc summary{cursor:pointer;font-size:13.5px;color:var(--brand);font-weight:600;padding:4px 0}
@@ -1259,8 +1271,9 @@ html.ios-aberto,html.ios-aberto body{overflow:hidden}
     <h2>Interrupções letivas e feriados</h2>
     <p class="hint">Vão para o calendário do Horário360 (e para as aulas que se contam em cada período).</p>
     <div class="row" style="margin-bottom:10px"><label style="width:180px">Ano letivo<select id="ferAno"></select></label><button class="b s" id="ferAdd" style="align-self:flex-end">Acrescentar</button><button class="b s imp" id="ferCal" style="align-self:flex-end" title="Lê o documento do calendário escolar (Word ou PDF) e acrescenta as interrupções, os feriados e os marcos das turmas">Importar do calendário escolar (DOCX ou PDF)</button></div>
-    <table class="rt">
-      <thead><tr><th>Designação</th><th>De</th><th>Até</th><th></th></tr></thead>
+    <div id="ferRes"></div>
+    <table class="rt fert">
+      <thead><tr><th style="width:118px">Tipo</th><th>Designação</th><th style="width:160px">De</th><th style="width:160px">Até</th><th style="width:190px">Duração</th><th style="width:36px"></th></tr></thead>
       <tbody id="tbFer"></tbody>
     </table>
   </div>
@@ -2201,7 +2214,7 @@ html.ios-aberto,html.ios-aberto body{overflow:hidden}
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.71"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.72"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -5351,9 +5364,26 @@ function renderAnos(){const e=escData(),at=anoAtivo();
   const s=$("#ferAno");const cur=s.value;s.innerHTML=anosOrd().map(a=>`<option value="${a.id}">${esc(a.nome)}</option>`).join("");s.value=anosOrd().some(a=>a.id===cur)?cur:e.ativo;
   renderFerias();
   const y=Math.max(...e.anos.map(a=>a.ini))+1;$("#naNome").placeholder=y+"/"+(y+1)}
-function renderFerias(){const a=escData().anos.find(x=>x.id===$("#ferAno").value)||anoAtivo();
-  $("#tbFer").innerHTML=a.ferias.map((f,i)=>`<tr data-i="${i}"><td><input type="text" data-k="nome" value="${esc(f.nome)}"></td><td><input type="date" data-k="de" value="${esc(f.de)}"></td><td><input type="date" data-k="ate" value="${esc(f.ate)}"></td><td><button class="x" data-del title="Remover">×</button></td></tr>`).join("")
-    ||`<tr><td colspan="4" class="hint">Sem interrupções letivas nem feriados registados em ${esc(a.nome)}.</td></tr>`}
+function renderFerias(){const a=escData().anos.find(x=>x.id===$("#ferAno").value)||anoAtivo(),FER=calFeriados(a),SEM=["dom","seg","ter","qua","qui","sex","sáb"];
+  // mostra por ordem de data (sem mexer na ordem guardada); as linhas sem data ficam no fim
+  const L=(a.ferias||[]).map((f,i)=>({f,i})).filter(x=>x.f).sort((x,y)=>(x.f.de?0:1)-(y.f.de?0:1)||String(x.f.de).localeCompare(String(y.f.de)));
+  const util=d=>{const w=calD(d).getDay();return w>0&&w<6};let nInt=0,nFer=0,nUteis=0;
+  const linhas=L.map(({f,i})=>{const ate=f.ate||f.de,fer=calEhFeriado(f,FER);let dur="",av="",cls="";
+    if(f.de){if(ate<f.de){av="«Até» é antes de «De»";cls="bad"}else{let n=0,u=0;for(let d=f.de,k=0;d<=ate&&k<400;d=calMais(d,1),k++){n++;if(util(d))u++}
+      fer?nFer++:nInt++;nUteis+=u;
+      dur=n===1?`1 dia · ${SEM[calD(f.de).getDay()]}`:`${n} dias · ${u} út${u===1?"il":"eis"}`;
+      if(!u){av=n===1?"calha ao fim de semana: não tira aulas":"só fim de semana: não tira aulas";cls="warn"}
+      else if((a.inicio&&ate<a.inicio)||(a.fim&&f.de>a.fim)){av="fora das aulas do ano letivo";cls="warn"}
+      else{const sob=L.find(y=>y.i!==i&&y.f.de&&f.de<=(y.f.ate||y.f.de)&&ate>=y.f.de&&!(calEhFeriado(y.f,FER)!==fer));if(sob){av=`sobrepõe-se a «${sob.f.nome||"?"}»`;cls="warn"}}}}
+    else{av="falta a data";cls="warn"}
+    return `<tr data-i="${i}" class="${cls?"fer-"+cls:""}"><td><span class="fer-tp ${fer?"f":"i"}">${fer?"Feriado":"Interrupção"}</span></td><td><input type="text" data-k="nome" value="${esc(f.nome)}"></td><td><input type="date" data-k="de" value="${esc(f.de)}"></td><td><input type="date" data-k="ate" value="${esc(f.ate)}"${f.de?` min="${esc(f.de)}"`:""}></td><td class="fer-dur">${esc(dur)}${av?`<small class="${cls}">${esc(av)}</small>`:""}</td><td><button class="x" data-del title="Remover">×</button></td></tr>`}).join("");
+  $("#tbFer").innerHTML=linhas||`<tr><td colspan="6" class="hint">Sem interrupções letivas nem feriados registados em ${esc(a.nome)}.</td></tr>`;
+  // resumo e feriados que faltam (dias úteis dentro das aulas, sem estarem cobertos por nenhuma linha)
+  const falta=FER.filter(x=>util(x.data)&&(!a.inicio||x.data>=a.inicio)&&(!a.fim||x.data<=a.fim)&&!(a.ferias||[]).some(f=>f&&f.de&&x.data>=f.de&&x.data<=(f.ate||f.de)));
+  let let_="";try{if(a.inicio&&a.fim)let_=calLetivos(a,a.inicio,a.fim)}catch(e){}
+  $("#ferRes").innerHTML=`<div class="fer-res"><span><b>${nInt}</b> interrupç${nInt===1?"ão":"ões"}</span><span><b>${nFer}</b> feriado${nFer===1?"":"s"}</span><span><b>${nUteis}</b> dia${nUteis===1?"":"s"} úte${nUteis===1?"l":"is"} sem aulas</span>${let_!==""?`<span><b>${let_}</b> dias letivos no ano</span>`:""}</div>`
+    +(falta.length?`<div class="msg info" style="margin:0 0 10px">Falta${falta.length===1?"":"m"} ${falta.length} feriado${falta.length===1?"":"s"} em dia útil: ${falta.map(x=>`${esc(x.nome)} (${esc(calDM(x.data,{weekday:"short",day:"numeric",month:"short"}))})`).join(", ")}. O Horário360 conta-${falta.length===1?"o":"os"} como dia${falta.length===1?"":"s"} de aulas. <button class="b s" id="ferFaltaAdd" style="margin-left:6px">Acrescentar</button></div>`:"");
+  const fb=$("#ferFaltaAdd");if(fb)fb.onclick=()=>{ponto("Antes de acrescentar feriados");falta.forEach(x=>a.ferias.push({id:"cal-f-"+x.data,nome:x.nome,de:x.data,ate:x.data,tipo:"feriado"}));save();renderFerias();try{esRecarregar()}catch(e){}toast(falta.length+" feriado(s) acrescentado(s)")}}
 $("#tbAnos").addEventListener("change",e=>{const tr=e.target.closest("tr");const a=escData().anos.find(x=>x.id===tr.dataset.id);if(!a)return;const k=e.target.dataset.k;
   a[k]=e.target.value.trim();if(k==="nome"){const m=a.nome.match(/(\d{4})/);if(m)a.ini=+m[1]}save();escRender();esRecarregar()});
 $("#tbAnos").addEventListener("click",e=>{const tr=e.target.closest("tr");if(!tr)return;const E=escData(),a=E.anos.find(x=>x.id===tr.dataset.id);if(!a)return;
@@ -5369,9 +5399,10 @@ $("#naForm").addEventListener("submit",e=>{e.preventDefault();const E=escData();
   E.anos.push(a);const ativar=$("#naAtivo").checked;if(ativar)E.ativo=a.id;save();$("#naForm").reset();escRender();if(ativar)esRecarregar();
   const nT=turmasDoAno(a).length;escLinhaMsg("#naMsg",`Ano letivo ${esc(nome)} criado${ativar?" e ativo":""}. ${nT} turma(s) continuam nesse ano (pelas datas de início e fim de cada turma).`,"ok")});
 $("#ferAno").addEventListener("change",renderFerias);
-$("#tbFer").addEventListener("change",e=>{const a=escData().anos.find(x=>x.id===$("#ferAno").value);const tr=e.target.closest("tr");if(!a||!tr)return;a.ferias[+tr.dataset.i][e.target.dataset.k]=e.target.value;save();esRecarregar()});
+$("#tbFer").addEventListener("change",e=>{const a=escData().anos.find(x=>x.id===$("#ferAno").value);const tr=e.target.closest("tr");if(!a||!tr||!e.target.dataset.k)return;const f=a.ferias[+tr.dataset.i],k=e.target.dataset.k;f[k]=e.target.value;
+  if(k==="de"&&f.de&&(!f.ate||f.ate<f.de))f.ate=f.de;save();if(k!=="nome")renderFerias();esRecarregar()});
 $("#tbFer").addEventListener("click",e=>{if(!e.target.hasAttribute("data-del"))return;const a=escData().anos.find(x=>x.id===$("#ferAno").value);a.ferias.splice(+e.target.closest("tr").dataset.i,1);save();renderFerias();esRecarregar()});
-$("#ferAdd").onclick=()=>{const a=escData().anos.find(x=>x.id===$("#ferAno").value);a.ferias.push({nome:"Interrupção letiva",de:"",ate:""});save();renderFerias()};
+$("#ferAdd").onclick=()=>{const a=escData().anos.find(x=>x.id===$("#ferAno").value);a.ferias.push({nome:"Interrupção letiva",de:"",ate:""});save();renderFerias();const r=$("#tbFer tr:last-child input[data-k=nome]");if(r){r.focus();r.select()}};
 
 /* ---------- cursos (com o Catálogo Nacional de Qualificações) ---------- */
 const hSoma=a=>a.reduce((s,i)=>s+(i.h||0),0);
@@ -7334,15 +7365,24 @@ function crCron(){const a=crAnoSel(),asof=CR_SEL.asof||calHoje(),M=crMotor(a,aso
   if(!T||!M.D.length){$("#crCronOut").innerHTML=`<p class="hint">Escolha uma turma com plano curricular.</p>`;$("#crCronTab").innerHTML="";return}
   CR_SEL.tc=T.t.id;const D=M.D,N=D.length,x=i=>i/N*100,ix=s=>M.ix.has(s)?M.ix.get(s):s<D[0]?0:N-1;
   const ints=(a.ferias||[]).filter(q=>q&&q.de&&!calEhFeriado(q,calFeriados(a))),iA=M.iA;
-  const meses=[];for(let d=new Date(calD(D[0]).getFullYear(),calD(D[0]).getMonth(),1,12);calS(d)<=D[N-1];d.setMonth(d.getMonth()+1)){const s=calS(d)<D[0]?D[0]:calS(d),n=d.toLocaleDateString("pt-PT",{month:"short"}).replace(".","");meses.push(`<span style="left:${x(ix(s))}%">${n.charAt(0).toUpperCase()+n.slice(1)}</span>`)}
-  const fundo=ints.map(q=>`<i class="cal-ls" style="left:${x(ix(q.de))}%;width:${Math.max(.3,(ix(q.ate||q.de)-ix(q.de)+1)/N*100)}%" title="${esc(q.nome||"Interrupção")}"></i>`).join("")
+  const meses=[],grelha=[];for(let d=new Date(calD(D[0]).getFullYear(),calD(D[0]).getMonth(),1,12);calS(d)<=D[N-1];d.setMonth(d.getMonth()+1)){const s=calS(d)<D[0]?D[0]:calS(d),n=d.toLocaleDateString("pt-PT",{month:"short"}).replace(".","");meses.push(`<span style="left:${x(ix(s))}%">${n.charAt(0).toUpperCase()+n.slice(1)}</span>`);if(s>D[0])grelha.push(`<i class="crgl" style="left:${x(ix(s))}%"></i>`)}
+  const fundo=grelha.join("")+ints.map(q=>`<i class="cal-ls" style="left:${x(ix(q.de))}%;width:${Math.max(.3,(ix(q.ate||q.de)-ix(q.de)+1)/N*100)}%" title="${esc(q.nome||"Interrupção")}"></i>`).join("")
     +T.fct.map(m=>`<i class="crfct" style="left:${x(ix(m.de))}%;width:${Math.max(.3,(ix(m.ate)-ix(m.de)+1)/N*100)}%" title="FCT · ${esc(calDatasTxt(m))}"></i>`).join("")+(iA>=0&&iA<N-1?`<i class="cal-lh" style="left:${x(iA+1)}%" title="Situação a ${esc(calDMA(asof))}"></i>`:"");
   const L=[...T.discs.values()].filter(o=>o.P>0&&crDoFormador(o,me)).sort(crOrdArea);
-  let h=`<div class="crg"><div class="crgr crgm"><b></b><div class="crgt">${meses.join("")}</div></div>`;let area="";
+  const hoje=iA>=0&&iA<N-1?`<em class="crhoje" style="left:${x(iA+1)}%">${esc(calDM(asof))}</em>`:"";
+  // turma sem aulas no horário: dizer porquê o diagrama está vazio e para onde ir
+  const semAula=L.filter(o=>o.totHor<=0&&o.G<o.P-1e-6);
+  if(L.length&&semAula.length===L.length)$("#crCronAviso").innerHTML+=`<div class="msg warn" style="margin:8px 0">A <b>${esc(T.t.cod)}</b> não tem aulas no horário do Horário360, por isso não há previsão para nenhuma disciplina. <a href="#" data-cres>Abrir o Horário360</a> ou <a href="#" data-crir="crCump" data-crcp="${esc(T.t.id)}">criar o horário em Cumprir o plano</a>.</div>`;
+  else if(semAula.length)$("#crCronAviso").innerHTML+=`<div class="msg info" style="margin:8px 0">${semAula.length} disciplina${semAula.length===1?" não tem":"s não têm"} aulas no horário: ${esc(semAula.map(o=>o.disc).join(", "))}.</div>`;
+  const tot=L.reduce((t,o)=>(t.P+=o.P,t.G+=Math.min(o.G,o.P),t),{P:0,G:0}),fins=L.map(o=>o.fimPrev).filter(Boolean).sort(),nc=L.filter(o=>o.mods.some(m=>m.estado==="naocabe"||m.estado==="semaula")).length;
+  let h=`<div class="crres"><span><b>${crNum(crH1(tot.G,f))}</b> de ${crNum(crH1(tot.P,f))} h dadas (${tot.P?Math.round(tot.G/tot.P*100):0}%)</span><span><b>${L.filter(o=>o.G>=o.P-1e-6).length}</b>/${L.length} disciplinas concluídas</span>${fins.length===L.length&&fins.length?`<span>Última acaba a <b>${esc(calDM(fins[fins.length-1],{day:"numeric",month:"short"}))}</b></span>`:""}${nc?`<span class="bad"><b>${nc}</b> não acaba${nc===1?"":"m"} no ano</span>`:""}</div>`
+    +`<div class="crg"><div class="crgr crgm"><b></b><div class="crgt">${meses.join("")}${hoje}</div></div>`;let area="";
   for(const o of L){if(o.area!==area){area=o.area;h+=`<div class="crga">${esc(PC_AREAS.find(z=>z[0]===area)?.[1]||"Outras")}</div>`}
     const seg=o.mods.map((m,j)=>{if(!m.ini)return "";const i0=ix(m.ini),i1=m.fim?ix(m.fim):N-1,c=CR_MOD[m.estado][1];
       return `<i class="crgm${m.estado==="naocabe"?" nc":""}" style="left:${x(i0)}%;width:${Math.max(.4,(i1-i0+1)/N*100)}%;--c:${c}" title="${esc(m.mod+" · "+crNum(crH1(m.h,f))+" h · "+(m.ini?calDM(m.ini):"")+(m.fim?" a "+calDM(m.fim):" — não acaba no ano")+" · "+CR_MOD[m.estado][0])}"><span>${esc(crModCurto(m.mod))}</span></i>`}).join("");
-    h+=`<div class="crgr"><b title="${esc(o.disc)}">${esc(o.disc)}<small>${crNum(crH1(o.G,f))}/${crNum(crH1(o.P,f))} h</small></b><div class="crgt">${fundo}${seg}</div></div>`}
+    const vazio=!o.mods.some(m=>m.ini)&&o.G<o.P-1e-6?`<span class="crsem" style="left:${x(Math.max(0,iA+1))}%">sem aulas no horário — sem previsão</span>`:"";
+    const fim=o.G>=o.P-1e-6?"concluída":o.fimPrev?"acaba "+calDM(o.fimPrev):o.totHor<=0?"":"não acaba no ano";
+    h+=`<div class="crgr"><b title="${esc(o.disc+" · "+crNum(crH1(o.G,f))+" de "+crNum(crH1(o.P,f))+" h"+(o.tlSem?" · "+crNum(crH1(o.tlSem,f))+" h/semana":""))}"><span class="crnm">${esc(o.disc)}</span><small>${crNum(crH1(o.G,f))}/${crNum(crH1(o.P,f))} h${fim?` · <span class="${fim==="não acaba no ano"?"crneg":""}">${esc(fim)}</span>`:""}</small></b><div class="crgt">${fundo}${seg}${vazio}</div></div>`}
   h+=`</div><div class="cal-leg">${Object.entries(CR_MOD).filter(([k])=>k!=="semaula").map(([k,v])=>`<span><b style="background:${v[1]}"></b>${esc(v[0])}</span>`).join("")}<span><b class="crfctl"></b>FCT</span><span><b class="int"></b>Interrupção</span><span><i style="background:var(--brand);width:3px;height:12px;border-radius:1px"></i>Data da situação</span></div>`;
   $("#crCronOut").innerHTML=L.length?h:`<p class="hint">Sem disciplinas para mostrar.</p>`;
   $("#crCronTab").innerHTML=`<table class="rt crct"><thead><tr><th>Disciplina</th><th>Módulo / UFCD / UC</th><th class="crn">Horas</th><th>Início</th><th>Fim</th><th>Estado</th></tr></thead><tbody>`+L.map(o=>o.mods.map((m,j)=>`<tr>${j===0?`<td rowspan="${o.mods.length}"><b>${esc(o.disc)}</b><div class="hint" style="margin:0">${crNum(crH1(o.tlSem,f))} h/semana agora</div></td>`:""}<td>${esc(m.mod)}</td><td class="crn">${crNum(crH1(m.h,f))}</td><td>${m.ini?calDM(m.ini,{weekday:"short",day:"numeric",month:"short"}):"—"}</td><td>${m.fim?calDM(m.fim,{weekday:"short",day:"numeric",month:"short"}):"—"}</td><td><span class="crmt" style="--c:${CR_MOD[m.estado][1]}">${CR_MOD[m.estado][0]}</span></td></tr>`).join("")).join("")+`</tbody></table>`}
@@ -7434,7 +7474,8 @@ $("#crPsOut").addEventListener("click",e=>{const c=e.target.closest("[data-crcum
   const v=prompt(`Horas de ${o.disc} dadas na turma ${t.cod} até ${calDMA(asof)} (por exemplo, pelos sumários do pleon).\n\nA EPISJ 360 calculou ${crNum(crH1(o.G,M.fator))} h a partir do horário.`,crNum(crH1(o.G,M.fator)).replace(/\s/g,""));if(v==null)return;
   const h=parseFloat(String(v).replace(",","."));if(!(h>=0)){toast("Número inválido");return}
   crCfg().corr.push({id:uid(),anoId:a.id,turmaId:tid,disc:k,discNome:o.disc,data:asof,dados:h,nota:"ponto de situação",por:String(EU&&EU.email||""),em:Date.now()});save();CR_CACHE.k="";crPs();toast("Horas dadas corrigidas")});
-document.querySelectorAll("#crPs,#crHist,#crCump,#crCron,#crDef").forEach(s=>s.addEventListener("click",e=>{const l=e.target.closest("[data-crir]");if(l){e.preventDefault();show(l.dataset.crir)}
+document.querySelectorAll("#crPs,#crHist,#crCump,#crCron,#crDef").forEach(s=>s.addEventListener("click",e=>{const l=e.target.closest("[data-crir]");if(l){e.preventDefault();if(l.dataset.crcp){CP.t=l.dataset.crcp;CP.alvo=null;CP.fase=0}show(l.dataset.crir)}
+  if(e.target.closest("[data-cres]"))e.preventDefault();
   if(e.target.closest("[data-cres]"))mostrarModulo("eduschedule",true)}));
 $("#crPsReg").onclick=()=>{const asof=CR_SEL.asof||calHoje(),p=crRegistar(asof,false);if(p){escLinhaMsg("#crPsMsg",`✓ Registado: <b>${esc(p.nome)}</b>. Fica no <a href="#" data-crir="crHist">histórico</a> para comparar com os próximos.`,"ok");crPs()}};
 $("#crPsPdf").onclick=()=>crPdf().catch(e=>toast("Não foi possível fazer o PDF: "+e.message));
