@@ -55,7 +55,11 @@ button{font:inherit}
 @media (prefers-reduced-motion:reduce){.spin{animation:none}}
 @media (max-width:380px){.niv{grid-template-columns:repeat(2,1fr)}}
 
-:root{--fc:#0f6cbd}
+:root{--fc:#15803d;--acc:#15803d;--acc2:#dcfce7}
+@media (prefers-color-scheme:dark){:root{--fc:#22c55e;--acc:#4ade80;--acc2:#12301f}}
+/* aparência do Provas (igual à apresentação): faixa azul-noite e verde */
+header.top{background:#0f172a;color:#fff;padding:12px 16px;border-radius:var(--r,16px);box-shadow:0 6px 18px -10px rgba(15,23,42,.6)}
+header.top b{color:#fff}header.top .logo{background:#22c55e!important;color:#fff}header.top b em{color:#4ade80!important}
 header.top .logo{background:var(--fc)}header.top b em{color:var(--fc)}
 .btn{background:var(--fc)}.btn.sec{color:var(--fc)}
 .fcab{border-top:10px solid var(--fc)}

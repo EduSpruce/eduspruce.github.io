@@ -2,7 +2,7 @@
 <html lang="pt-PT">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-SCnTV443XH+1c8juFqDCuNLMnUIWunmPeFAXhacAN60=' 'sha256-9kXk6U4GCnFoWEn4qxJTtsGr+n3A/+GYheTlKWrzLQs=' 'sha256-CWGCbS2RF2oeerletChUrTNxiQSeTZ8DiBA/wQF2zJk='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-SCnTV443XH+1c8juFqDCuNLMnUIWunmPeFAXhacAN60=' 'sha256-RDNLiNTBK+REu044tQWEsMMzK0E0l2maFlqOJ9dSVfI=' 'sha256-CWGCbS2RF2oeerletChUrTNxiQSeTZ8DiBA/wQF2zJk='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0f6f96">
 <meta name="robots" content="noindex">
@@ -349,6 +349,16 @@ AR.temaEscuro=k=>k==='arena'||k==='neon';
   duelo:()=>{tom(880,0,.06,'sawtooth',.07);tom(660,.07,.06,'sawtooth',.07);tom(990,.14,.15,'sawtooth',.07)},
   testemunho:()=>{[523,784].forEach((f,i)=>tom(f,i*.08,.12,'triangle',.1))}
 }[n];if(x)return x();return _t(n)}}
+/* ---------- 1.145 · aparência «Recreio» (roxo e amarelo, igual à apresentação do Spruce It) e Cubos ---------- */
+AR.TEMAS.recreio={nome:'Recreio',v:{'--bg':'#ede9fe','--surface':'#ffffff','--ink':'#1e1b4b','--muted':'#5b5794','--line':'#d9d0fb','--primary':'#6d28d9','--on-primary':'#fff','--accent':'#facc15','--on-accent':'#3b0764','--hero':'#5b21b6','--hero-ink':'#ffffff','--hero-line':'#facc15','--radius':'18px','--bw':'2px','--display':"'Baloo 2'",'--dw':'800','--case':'none','--track':'-.01em','--shadow':'0 5px 0 #3b0f7a','--shadow-a':'0 4px 0 #a16207','--a1':'#eab308','--a2':'#3b82f6','--a3':'#22c55e','--a4':'#ef4444','--on-a':'#fff'}};
+{const _ok=AR.temaOk;AR.temaOk=k=>AR.TEMAS[k]?k:'recreio'}
+/* Cubos: personagens originais em forma de cubo arredondado com olhos (as mesmas das apresentações) */
+AR.CUBOS_DEF=[['p52','Brasa','#f97316','#c2410c','o'],['p53','Rela','#4ade80','#16a34a',''],['p54','Bip','#60a5fa','#1d4ed8','a'],['p55','Algodão','#f472b6','#be185d','o'],['p56','Sol','#facc15','#a16207',''],['p57','Lilás','#c084fc','#7e22ce','a'],['p58','Maré','#2dd4bf','#0f766e','o'],['p59','Coral','#fb7185','#be123c','']];
+AR.PINHAS.unshift(...AR.CUBOS_DEF.map(([id,nome,c1,c2,o])=>({id,nome,rar:'c',cubo:[c1,c2,o]})));
+AR.CUBOS=AR.CUBOS_DEF.map(x=>x[0]);
+AR.COMUNS=AR.PINHAS.filter(p=>p.rar==='c').map(p=>p.id);
+AR.svgC=(p,sz)=>{sz=sz||64;const [c1,c2,o]=p.cubo;return `<svg class="pinha cubo r-c" viewBox="0 0 60 60" width="${sz}" height="${sz}" role="img" aria-label="${p.nome}"><ellipse cx="30" cy="57" rx="17" ry="2.6" fill="#000" opacity=".15"/>${o==='o'?`<circle cx="14" cy="12" r="6" fill="${c1}" stroke="${c2}" stroke-width="3"/><circle cx="46" cy="12" r="6" fill="${c1}" stroke="${c2}" stroke-width="3"/>`:''}${o==='a'?`<path d="M22 12 L18 3 M38 12 L42 3" stroke="${c2}" stroke-width="3" stroke-linecap="round"/><circle cx="18" cy="3" r="2.4" fill="${c2}"/><circle cx="42" cy="3" r="2.4" fill="${c2}"/>`:''}<rect x="6" y="12" width="48" height="42" rx="12" fill="${c1}" stroke="${c2}" stroke-width="3"/><circle cx="22" cy="29" r="6" fill="#fff"/><circle cx="38" cy="29" r="6" fill="#fff"/><circle cx="23" cy="30" r="3" fill="#111827"/><circle cx="39" cy="30" r="3" fill="#111827"/><path d="M24 42 Q30 47 36 42" stroke="#111827" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`};
+{const _s=AR.svg;AR.svg=(id,sz)=>{const p=AR.PINHAS.find(x=>x.id===id);return p&&p.cubo?AR.svgC(p,sz):_s(id,sz)}}
 /*ARENA-EXTRA-FIM*/
 window.ARENA=AR;
 })();
