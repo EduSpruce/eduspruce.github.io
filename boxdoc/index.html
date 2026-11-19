@@ -1048,6 +1048,16 @@ nav.side button{gap:10px;padding-top:5px;padding-bottom:5px}
 /* 0.9.76: cada módulo com a sua cor (a barra do monograma e o sublinhado do separador ativo) */
 .mods button[data-m="escola"]{--mc:#ff8a5c}.mods button[data-m="boxcheck"]{--mc:#4da3ff}.mods button[data-m="eduschedule"]{--mc:#9b8cff}.mods button[data-m="roomcheck"]{--mc:#ffb547}.mods button[data-m="crono"]{--mc:#2fd0c4}.mods button[data-m="social"]{--mc:#ff6f9e}
 .mods button.on{box-shadow:var(--sh,0 1px 2px rgba(16,24,40,.06)),inset 0 -2px 0 var(--mc,var(--accent))!important}
+/* 0.9.78: realce do menu lateral com a cor de cada módulo (a barra à esquerda); os ícones ficam todos iguais, sem cor, também no ativo */
+.mgrp[data-m="escola"]{--mc:#ff8a5c}.mgrp[data-m="boxcheck"]{--mc:#4da3ff}.mgrp[data-m="eduschedule"]{--mc:#9b8cff}.mgrp[data-m="roomcheck"]{--mc:#ffb547}.mgrp[data-m="crono"]{--mc:#2fd0c4}.mgrp[data-m="social"]{--mc:#ff6f9e}.mgrp.gl{--mc:var(--accent)}
+nav.side .mgrp button.on{color:var(--brand);box-shadow:var(--sh),inset 3px 0 0 var(--mc,var(--accent)),inset 0 0 0 1px var(--line)!important}
+nav.side button.on svg{background:#fff;color:var(--brand);box-shadow:inset 0 0 0 1px var(--line2,#d3d9e3),0 1px 2px rgba(16,24,40,.06)}
+nav.side button.sub.on{border-left-color:var(--mc,var(--accent))}
+/* ícones de linha no resto da app: a mesma pastilha clara do menu lateral */
+.appspop .at .ai.ln{background:linear-gradient(180deg,#f6f8fc,#edf1f8)!important;color:#41506b!important;box-shadow:inset 0 0 0 1px rgba(22,50,105,.07)}
+.appspop .at .ai.ln svg{stroke-width:1.65!important}
+.wg-m{position:relative;background:#163269!important;border-radius:6px;font-weight:700;font-size:10.5px;padding-bottom:2px;box-sizing:border-box}
+.wg-m::after{content:'';position:absolute;left:5px;right:5px;bottom:2.5px;height:2px;border-radius:1px;background:var(--mc)}
 .cal-ls{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(135deg,#fde7c4 0 4px,#fff4e2 4px 8px)}
 .cal-lh{position:absolute;top:0;bottom:0;width:2px;background:var(--brand);opacity:.75;z-index:2}
 .cal-lb{position:absolute;top:6px;height:16px;border-radius:5px;background:color-mix(in srgb,var(--c) 78%,#fff);border:1px solid var(--c);color:#fff;font-size:10px;font-style:normal;font-weight:700;overflow:hidden;display:flex;align-items:center;padding-left:5px;z-index:1}
@@ -5217,7 +5227,7 @@ $("#escImport2").onclick=()=>escImportarBox();
 /* ===================== EPISJ 360 0.9.21: widgets do Painel da escola ===================== */
 // 20 widgets; cada um só aparece se o seu módulo estiver ligado. Cada pessoa escolhe os que vê (fica guardado neste navegador).
 const WG_KEY="guide_widgets",WG_PADRAO=["ano","cal","incompletas","profs","entregas","prazo","top","horario","agora","esphoje","proxres","meudia"];
-const WG_MOD={escola:{l:"E",c:"#1d4fb8",n:"Escola360"},boxcheck:{l:"B",c:"#0b7fd1",n:"Box360"},eduschedule:{l:"H",c:"#7c3aed",n:"Horário360"},roomcheck:{l:"S",c:"#2f9e57",n:"Sala360"}};
+const WG_MOD={escola:{l:"E",c:"#ff8a5c",n:"Escola360"},boxcheck:{l:"B",c:"#4da3ff",n:"Box360"},eduschedule:{l:"H",c:"#9b8cff",n:"Horário360"},roomcheck:{l:"S",c:"#ffb547",n:"Sala360"}};
 let WG_SEL=(()=>{try{const v=JSON.parse(localStorage.getItem(WG_KEY)||"null");return Array.isArray(v)?v:WG_PADRAO.slice()}catch(e){return WG_PADRAO.slice()}})();
 const wgGuardar=()=>{try{localStorage.setItem(WG_KEY,JSON.stringify(WG_SEL))}catch(e){}prefsAgendar()};
 const modOn=m=>!MODS_OFF.includes(m)&&!!primeiroPermitido(m);
@@ -8251,7 +8261,7 @@ function cpAbrirHorario(){const a=crAnoSel(),x=ESD.porAno[a.id];if(x&&x.estado&&
   mostrarModulo("eduschedule",false);show("esch")}
 
 /* ---------- widgets do Painel ---------- */
-WG_MOD.crono={l:"C",c:"#0f8b8d",n:"Crono360"};
+WG_MOD.crono={l:"C",c:"#2fd0c4",n:"Crono360"};
 WIDGETS.push({id:"crcump",mod:"crono",nome:"Cumprimento dos planos",desc:"Quanto do plano curricular já foi dado e as turmas e disciplinas em risco de não cumprir com o horário atual",r(){
   const a=anoAtivo(),M=crMotor(a),me=crMeuId(),f=M.fator,res=[...M.turmas.values()].map(T=>({T,r:crTurmaRes(T,me)})).filter(x=>x.r.L.length);
   if(!res.length)return wgVazio(pcPlanos().some(p=>p.anoId===a.id)?"Sem horário no Horário360 ainda.":"Ainda sem planos curriculares.")+wgIr("crPs","Abrir o Crono360");
@@ -8391,7 +8401,7 @@ window.addEventListener("message",async e=>{const fr=$("#s3Fr");if(e.origin!==lo
   try{aplicarPerfil()}catch(e){}
   const sb=await sbCliente();const {data}=await sb.from("s360_docs").select("id,ws,st:dados->>status,dt:dados->>date").eq("col","posts").limit(5000);S3_RES=data||[];
   if(curTab==="esc")try{renderEscPainel()}catch(e){}}catch(e){}})();
-WG_MOD.social={l:"So",c:"#c13584",n:"Social360"};
+WG_MOD.social={l:"So",c:"#ff6f9e",n:"Social360"};
 WIDGETS.push({id:"s3sem",mod:"social",nome:"Redes sociais esta semana",desc:"Publicações agendadas para os próximos 7 dias e as que esperam aprovação no Social360",r(){
   if(!S3_RES)return wgVazio("A carregar o Social360…")+wgIr("s3feed","Abrir o Social360");
   const ag=Date.now(),fim=ag+7*864e5,sem=S3_RES.filter(p=>p.st==="scheduled"&&p.dt&&+new Date(p.dt)>=ag&&+new Date(p.dt)<=fim),rev=S3_RES.filter(p=>p.st==="review");
