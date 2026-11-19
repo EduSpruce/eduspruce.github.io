@@ -559,7 +559,14 @@ body.esch #esMsg{padding:16px}
 .rc-lanes>b.rc-int.alm{background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--muted) 22%,transparent) 0 1px,transparent 1px 6px),color-mix(in srgb,var(--line) 60%,transparent)}
 /* ===================== EPISJ 360 0.9.21: widgets do Painel da escola ===================== */
 .wg-top{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:14px}
-.wg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;align-items:start}
+.wg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));column-gap:14px;row-gap:0;grid-auto-rows:4px;align-items:start;min-height:120px;grid-auto-flow:row dense}
+.wg-grid>.wg{margin-bottom:14px}.wg-grid>.wg-none{grid-column:1/-1;grid-row:span 30}
+/* 0.9.25: arrastar widgets pelo título, na mesma zona ou para a outra */
+.wg-h{cursor:grab;touch-action:none;user-select:none}.wg-h .wg-x{cursor:pointer}
+.wg.wg-src{opacity:.35;outline:2px dashed var(--brand);outline-offset:-2px}
+.wg-fant{position:fixed;z-index:500;pointer-events:none;opacity:.95;box-shadow:0 18px 40px rgba(16,24,40,.25);transform:rotate(1.2deg);cursor:grabbing;margin:0!important}
+.wg-grid.wg-alvo{background:color-mix(in srgb,var(--brand) 5%,transparent);border-radius:12px;outline:2px dashed color-mix(in srgb,var(--brand) 40%,transparent);outline-offset:4px}
+body.wg-arr,body.wg-arr *{cursor:grabbing!important;user-select:none!important}
 .wg{border:1px solid var(--line);border-radius:12px;background:var(--card,#fff);padding:12px 14px 14px;min-width:0;box-shadow:0 1px 2px rgba(16,24,40,.04);animation:fadeUp .25s ease}
 .wg-h{display:flex;align-items:center;gap:8px;margin-bottom:10px}.wg-h>b{font-size:14px;flex:1;min-width:0}
 .wg-m{width:20px;height:20px;border-radius:6px;background:var(--mc);color:#fff;font-size:11px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;flex:none}
@@ -894,11 +901,11 @@ body.esch.temfundos #esFr{height:calc(100vh - 116px);height:calc(100dvh - 116px)
     <div id="pubBox" class="row" style="display:none;margin-top:12px;align-items:center"><button class="b s" id="pubGo" title="Envia as turmas, os professores e os horários para os perfis Professor e Formando verem (só leitura)">Publicar para professores e formandos</button><span id="pubMsg" class="hint" style="margin:0"></span></div>
   </div>
   <div class="card wg-card" id="wgCard">
-    <div class="wg-top"><div><h2 style="margin:0">Widgets</h2><p class="hint" style="margin:2px 0 0">Resumo dos módulos ligados — <span id="wgConta"></span>.</p></div><span class="grow"></span><button class="b s" id="wgEsc">Escolher widgets</button></div>
+    <div class="wg-top"><div><h2 style="margin:0">Widgets</h2><p class="hint" style="margin:2px 0 0">Resumo dos módulos ligados — <span id="wgConta"></span>. Arraste os widgets pelo título para os mudar de sítio ou de zona.</p></div><span class="grow"></span><button class="b s" id="wgEsc">Escolher widgets</button></div>
     <div class="wg-grid" id="wgGrid"></div>
   </div>
   <div class="card wg-card" id="wgCard2">
-    <div class="wg-top"><div><h2 style="margin:0">Mais widgets</h2><p class="hint" style="margin:2px 0 0">Segunda zona, com escolha própria — <span id="wgConta2"></span>.</p></div><span class="grow"></span><button class="b s" id="wgEsc2">Escolher widgets</button></div>
+    <div class="wg-top"><div><h2 style="margin:0">Mais widgets</h2><p class="hint" style="margin:2px 0 0">Segunda zona, com escolha própria — <span id="wgConta2"></span>. Arraste os widgets pelo título para os mudar de sítio ou de zona.</p></div><span class="grow"></span><button class="b s" id="wgEsc2">Escolher widgets</button></div>
     <div class="wg-grid" id="wgGrid2"></div>
   </div>
 </section>
@@ -1622,7 +1629,7 @@ body.esch.temfundos #esFr{height:calc(100vh - 116px);height:calc(100dvh - 116px)
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.24"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.25"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -4374,7 +4381,34 @@ function renderWidgets(){if(!window.__wgOk)return; // só depois de a app arranc
     $(Z.conta).textContent=`${L.length} widget${L.length===1?"":"s"}`;
     g.innerHTML=L.length?L.map(w=>{const M=WG_MOD[w.mod];let c;try{c=w.r()}catch(e){console.warn(w.id,e);c=wgVazio("Não foi possível mostrar este widget.")}
       return `<div class="wg" data-wg="${w.id}" style="--mc:${M.c}"><div class="wg-h"><span class="wg-m" title="${esc(M.n)}">${M.l}</span><b>${esc(w.nome)}</b><button class="wg-x" data-wgx="${w.id}" title="Esconder este widget" aria-label="Esconder ${esc(w.nome)}">×</button></div><div class="wg-c">${c}</div></div>`}).join("")
-      :`<div class="wg-none">Nenhum widget nesta zona. <button class="b s" data-wgesc="${z}">Escolher widgets</button></div>`}}
+      :`<div class="wg-none">Nenhum widget nesta zona. Arraste para aqui um widget da outra zona ou <button class="b s" data-wgesc="${z}">escolha widgets</button>.</div>`;
+    wgArrumar(g)}}
+// encaixe sem buracos: cada widget ocupa as linhas (de 4 px) que a sua altura pede
+const wgRO=window.ResizeObserver?new ResizeObserver(es=>{for(const e of es)wgSpan(e.target)}):null;
+function wgSpan(w){if(!w.isConnected)return;w.style.gridRowEnd="span "+Math.max(1,Math.ceil((w.getBoundingClientRect().height+14)/4))}
+function wgArrumar(g){g.querySelectorAll(":scope>.wg").forEach(w=>{wgSpan(w);if(wgRO)wgRO.observe(w)})}
+// arrastar pelo título: muda a ordem e a zona (o widget mexe-se na grelha enquanto se arrasta)
+function wgArrastar(ev,w){if(ev.button!==0||ev.target.closest("button"))return;const x0=ev.clientX,y0=ev.clientY,G=[$("#wgGrid"),$("#wgGrid2")].filter(Boolean);let fant=null,dx=0,dy=0,ult=null;
+  const mover=m=>{if(!fant){if(Math.hypot(m.clientX-x0,m.clientY-y0)<6)return;const r=w.getBoundingClientRect();dx=x0-r.left;dy=y0-r.top;
+      fant=w.cloneNode(true);fant.classList.add("wg-fant");fant.style.width=r.width+"px";document.body.appendChild(fant);w.classList.add("wg-src");document.body.classList.add("wg-arr")}
+    m.preventDefault();fant.style.left=m.clientX-dx+"px";fant.style.top=m.clientY-dy+"px";
+    const el=document.elementFromPoint(m.clientX,m.clientY),g=el&&el.closest(".wg-grid");G.forEach(x=>x.classList.toggle("wg-alvo",x===g));if(!g)return;
+    const os=[...g.querySelectorAll(":scope>.wg")].filter(o=>o!==w);let ref=null,depois=false;
+    const t=os.find(o=>{const r=o.getBoundingClientRect();return m.clientX>=r.left&&m.clientX<=r.right&&m.clientY>=r.top&&m.clientY<=r.bottom});
+    if(t){const r=t.getBoundingClientRect();depois=m.clientY>r.top+r.height/2;ref=t}
+    else if(os.length){let best=null,bd=1e9;os.forEach(o=>{const r=o.getBoundingClientRect(),d=Math.hypot(m.clientX-(r.left+r.width/2),m.clientY-(r.top+r.height/2));if(d<bd){bd=d;best=o}});ref=best;const r=best.getBoundingClientRect();depois=m.clientY>r.top+r.height/2}
+    const k=(ref?ref.dataset.wg:"")+"|"+depois+"|"+g.id;if(k===ult)return;ult=k;
+    const vz=g.querySelector(".wg-none");if(vz)vz.remove();
+    if(!ref)g.appendChild(w);else g.insertBefore(w,depois?ref.nextSibling:ref);G.forEach(wgArrumar)};
+  const largar=()=>{document.removeEventListener("pointermove",mover);document.removeEventListener("pointerup",largar);document.removeEventListener("pointercancel",largar);
+    if(!fant)return;fant.remove();w.classList.remove("wg-src");document.body.classList.remove("wg-arr");G.forEach(x=>x.classList.remove("wg-alvo"));
+    const ids=g=>g?[...g.querySelectorAll(":scope>.wg")].map(o=>o.dataset.wg):[];const a=ids($("#wgGrid")),b=ids($("#wgGrid2"));
+    // guarda a nova ordem (os widgets escolhidos mas escondidos por módulo desligado ficam no fim da sua zona)
+    WG_SEL=a.concat(WG_SEL.filter(id=>!a.includes(id)&&!b.includes(id)));WG_SEL2=b.concat(WG_SEL2.filter(id=>!a.includes(id)&&!b.includes(id)));
+    wgGuardarZ();renderWidgets()};
+  document.addEventListener("pointermove",mover);document.addEventListener("pointerup",largar);document.addEventListener("pointercancel",largar)}
+["#wgGrid","#wgGrid2"].forEach(gs=>$(gs).addEventListener("pointerdown",e=>{const h=e.target.closest(".wg-h");if(h&&!e.target.closest("button")){e.preventDefault();wgArrastar(e,h.parentElement)}}));
+window.addEventListener("resize",()=>{clearTimeout(window.__wgRz);window.__wgRz=setTimeout(()=>document.querySelectorAll(".wg-grid").forEach(wgArrumar),120)});
 function wgEscolher(z){z=+z||1;const Z=WGZ[z],O=WGZ[z===1?2:1],sel=new Set(Z.sel),out=new Set(O.sel),mods=Object.keys(WG_MOD);
   rcAbrir(Z.nome+" — escolher",`<p class="hint" style="margin-top:0">Escolha os que quer ver nesta zona. Só aparecem os dos módulos ligados; a escolha fica guardada neste navegador. Um widget só está numa zona de cada vez: escolher aqui um que está na outra zona muda-o para esta.</p>
     <div class="row" style="margin-bottom:10px"><button class="b s" id="wgTodos">Todos os que sobram</button><button class="b s" id="wgNenhum">Nenhum</button><button class="b s" id="wgRepor">Repor os sugeridos</button></div>
@@ -4705,6 +4739,10 @@ function esAjustar(fr){try{const w=fr.contentWindow,d=fr.contentDocument;if(!d||
       new w.MutationObserver(()=>{if(!pend){pend=true;w.requestAnimationFrame(ver)}}).observe(main,{childList:true,subtree:true,characterData:true});ver()}}
   {let pb=false;const bl=()=>{pb=false;try{esBloquear(d)}catch(e){}};new w.MutationObserver(()=>{if(!pb){pb=true;w.requestAnimationFrame(bl)}}).observe(d.body,{childList:true,subtree:true});bl()}
   const f=d.querySelector("#foot");if(f)f.textContent="Os dados ficam guardados na EPISJ 360 (neste navegador e na nuvem da EPISJ 360).";
+  // 0.9.25: no menu do Horário360, o nome do módulo e o logótipo da escola (metade do tamanho do das outras páginas)
+  {const lg=d.getElementById("logo"),cx=lg&&lg.parentElement;if(cx&&!cx.dataset.guide){cx.dataset.guide="1";cx.style.cssText+=";flex-direction:column;align-items:flex-start;gap:8px";
+    const im=d.createElement("img");im.src=new URL("img/logo-episj.png",location.href).href;im.alt="Escola Profissional da Ilha de São Jorge";im.style.cssText="display:block;width:62px;height:auto";im.onerror=()=>im.remove();
+    lg.replaceWith(im);const nm=cx.querySelector(".fd");if(nm)nm.innerHTML='Horário<span style="color:#3db166">360</span><br><span class="text-xs font-medium opacity-60">horários da escola</span>'}}
   fr.classList.add("pronto")}catch(e){console.warn("Horário360/tema",e);fr.classList.add("pronto")}}
 /* ---------- no EduSchedule, professores, turmas e formandos só se veem: são dados gerais da EPISJ 360 (mudam-se no módulo Escola) ---------- */
 function esBloquear(d){if(!d||!d.body)return;const TIT="Dado geral da EPISJ 360 — muda-se no módulo Escola";
