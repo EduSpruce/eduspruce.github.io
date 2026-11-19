@@ -1781,7 +1781,7 @@ body.ro #pcOut input,body.ro #pcOut select{pointer-events:none}body.ro #pcOut bu
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.42"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.43"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -1904,7 +1904,7 @@ $("#rpNow").onclick=()=>{ponto("Ponto criado manualmente");toast("Ponto de resta
 async function guardarAgora(){const b=$("#subUp");if(b)b.disabled=true;const out=[];
   try{save();
     if(NUVOK()){try{NUV.erro="";await nuvemPut("estado",estadoAtual(),cfgT()||Date.now());try{await rcTrazer(true)}catch(e){}try{if(ESD&&ESD.t)await nuvemPut("ES",ESD,ESD.t)}catch(e){}
-      out.push(NUV.ativo===false?"nuvem: falta atualizar o serviço de avisos na Cloudflare":NUV.erro?"nuvem: "+NUV.erro:"nuvem ✓")}catch(e){out.push("nuvem: "+(e.message||e))}}
+      out.push(nuvDesl()?"nuvem: falta atualizar o serviço de avisos na Cloudflare":NUV.erro?"nuvem: "+NUV.erro:"nuvem ✓")}catch(e){out.push("nuvem: "+(e.message||e))}}
     else out.push("nuvem: entre com a conta do Office 365 da Direção");
     if(odPode()){try{await odCopia(true);try{localStorage.removeItem("g360_od_falta")}catch(e){}out.push("OneDrive ✓")}catch(e){out.push("OneDrive: "+(e.message||e))}}else out.push("OneDrive: só para a Direção, com a conta do Office 365")
   }finally{if(b)b.disabled=false;try{window.__subEst&&window.__subEst()}catch(e){}}
@@ -3498,20 +3498,21 @@ var SB_CFG_KEY="g360_sb",SB_SES_KEY="episj360.sb";
 // 0.9.42: projeto "episj360" já criado; a chave publicável é pública por natureza (a proteção está nas regras RLS)
 var SB_PADRAO={url:"https://oovqekytlhkbinfdxjwf.supabase.co",key:"sb_publishable_-RFfe7R5-JQ6ok2Hfmdmmw_YTlcnYpr"};
 function sbCfg(){try{const c=JSON.parse(localStorage.getItem(SB_CFG_KEY)||"null");return c&&c.url&&c.key?c:SB_PADRAO}catch(e){return SB_PADRAO}}
-var SBC=null,SBSES=null,SBMEMBRO=null,SBERR=""; // var: usadas cedo no arranque (sem TDZ)
+var SBC=null,SBSES=null,SBMEMBRO=null,SBERR="",SBEU=null; // var: usadas cedo no arranque (sem TDZ)
 async function sbCliente(){if(SBC)return SBC;const c=sbCfg();if(!c)throw new Error("A base de dados (Supabase) ainda não está configurada.");
   const {createClient}=await import(new URL("../esm/supabase-2.117.3.min.js",location.href).href);
   SBC=createClient(c.url,c.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:"pkce",storageKey:SB_SES_KEY}});
   SBC.auth.onAuthStateChange((ev,ses)=>{SBSES=ses||null;if(!ses)SBMEMBRO=null;try{sbUI()}catch(e){}});return SBC}
 const SB_PRONTO=(async()=>{if(!sbCfg())return;try{const sb=await sbCliente();const {data}=await sb.auth.getSession();SBSES=data&&data.session||null;
-  if(SBSES){const em=String(SBSES.user&&SBSES.user.email||"").toLowerCase();try{await sb.rpc("g360_reclamar_admin")}catch(e){} // o primeiro a entrar, sem administradores, fica administrador
-    const r=await sb.from("g360_membros").select("email,nome,perfil,admin").eq("email",em).maybeSingle();
-    if(r.error)SBERR=sbErroMsg(r.error);else SBMEMBRO=r.data||null}
+  if(SBSES){try{await sb.rpc("g360_reclamar_admin")}catch(e){} // o primeiro a entrar, sem administradores, fica administrador
+    const r=await sb.rpc("g360_eu");if(r.error)SBERR=sbErroMsg(r.error);else{SBEU=r.data||null;SBMEMBRO=SBEU&&SBEU.perfil?SBEU:null}}
   if(/[?&]code=/.test(location.search))history.replaceState(null,"",location.pathname+location.hash)}catch(e){SBERR=e.message||String(e)}try{sbUI()}catch(e){}})();
 function sbErroMsg(e){const m=(e&&e.message)||String(e);if(e&&(e.code==="42501"||/row-level security|permission denied/i.test(m)))return "a sua conta não tem permissão na base de dados (não está em g360_membros como Direção)";
   if(e&&(e.code==="PGRST205"||e.code==="42P01")||/does not exist|schema cache/i.test(m))return "a base de dados ainda não foi preparada (falta correr o script SQL)";
   if(/JWT|401|not authenticated/i.test(m))return "a sessão da base de dados terminou — entre de novo";return m}
 function nuvSB(){try{return !!(SBSES&&sbCfg()&&!RO&&SBMEMBRO&&(SBMEMBRO.admin||SBMEMBRO.perfil==="dexec"||SBMEMBRO.perfil==="dped"))}catch(e){return false}}
+function sbAtivo(){try{return !!(SBSES&&sbCfg())}catch(e){return false}}
+async function sbRpc(f,a){const sb=await sbCliente();const {data,error}=await sb.rpc(f,a||{});if(error){const x=new Error(error.code==="42501"?(error.message||"Sem permissão."):sbErroMsg(error));x.code=error.code;throw x}return data}
 const b64DeBuf=buf=>{const u=new Uint8Array(buf);let s="";for(let i=0;i<u.length;i+=32768)s+=String.fromCharCode.apply(null,u.subarray(i,i+32768));return btoa(s)};
 const bufDeB64=b=>{const s=atob(b),u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u.buffer};
 async function sbNuvem(method,name,body,t){const sb=await sbCliente();
@@ -3538,6 +3539,7 @@ function sbUI(){const el=$("#sbEstado");if(!el)return;const c=sbCfg();if($("#sbU
 /* 0.9.37: a nuvem da EPISJ 360 passa a funcionar com a conta do Office 365 da Direção (serviço de avisos, /guide/sync),
    sem precisar de a Box estar ligada; sem Office 365, continua a usar o serviço de login da Box como antes */
 function nuvMS(){try{return !!(MSACC&&EU&&!EU.provisorio&&!RO&&(EU.admin||EU.perfil==="dexec"||EU.perfil==="dped"))}catch(e){return false}}
+function nuvDesl(){try{return NUV.ativo===false&&!nuvSB()}catch(e){return false}}
 function NUVOK(){try{return nuvSB()||nuvMS()||!!(SES&&workerUrl())}catch(e){return false}}
 async function nuvemSincMS(){if(!nuvMS()&&!nuvSB())return;
   try{await nuvemTrazer()}catch(e){}try{await avTrazerNuvem()}catch(e){}try{await rcTrazer(false)}catch(e){}try{await esTrazerNuvem()}catch(e){}
@@ -3568,21 +3570,21 @@ async function limparLocal(ger){LIMPAR=true;
 async function apagarTudoRecomecar(){
   try{download(`episj360_copia_antes_de_apagar_${hoje()}.json`,JSON.stringify({cfg,logos:LOGOS,roomcheck:RC,horarios:ESD,pontos:rpList(),modelos:TPL},null,1),"application/json")}catch(e){} // cópia de segurança, por precaução
   const ger=Date.now();
-  if(NUVOK()&&NUV.ativo!==false){try{
+  if(NUVOK()&&!nuvDesl()){try{
     await nuvem("PUT","reset",await gz({ger}),ger);
     await nuvem("PUT","estado",await gz({cfg:JSON.stringify({...defaultCfg(),ger}),logos:{},pontos:[],tpl:null,folder:null,root:"",bases:{},resumos:{}}),ger);
     await nuvem("PUT","rc",await gz({esp:RC_ESP0.map(x=>({...x})),cfg:{abre:480,fecha:1140,sab:false},res:{},et:ger,ger}),ger);
     await nuvem("PUT","ES",await gz({t:ger,ger,porAno:{},copias:{},mapaT:{},mapaC:{},ligT:{},ligC:{},mapaA:{},ligA:{}}),ger)}
     catch(e){if(!confirm("Não foi possível apagar na nuvem ("+(e.message||e)+"). Apagar só neste computador? (noutro computador os dados voltariam a aparecer)"))return}}
   await limparLocal(ger);location.reload()}
-async function nuvemPut(name,obj,t){if(NUV.ativo===false||LIMPAR)return;t=t||Date.now();
+async function nuvemPut(name,obj,t){if(nuvDesl()||LIMPAR)return;t=t||Date.now();
   try{await nuvem("PUT",name,await gz(obj),t);nuvSetT(name,t);NUV.ultimo=Date.now();NUV.erro=""}
   catch(e){if(e.kind!=="nokv")NUV.erro=e.message}
   nuvemUI()}
 async function nuvemGet(name){return ungz(await (await nuvem("GET",name)).arrayBuffer())}
 function nuvemUI(){const el=$("#nuvemMsg");if(!el)return;
   if(!NUVOK()){el.innerHTML="";return}
-  if(NUV.ativo===false){el.innerHTML=nuvMS()?`<div class="msg info">Para guardar tudo na nuvem com a conta do Office 365, atualize o serviço de avisos na Cloudflare com o ficheiro <code>servidor/boxcheck-avisos.js</code> da EPISJ 360 (versão 0.9.37 ou mais recente). Até lá, fica tudo guardado só neste navegador.</div>`:`<div class="msg info">Para guardar tudo na nuvem e continuar noutro computador sem repetir a análise, falta ligar o armazenamento ao serviço de login (3 passos no LEIA-ME). Até lá, fica tudo guardado só neste navegador.</div>`;return}
+  if(nuvDesl()){el.innerHTML=nuvMS()?`<div class="msg info">Para guardar tudo na nuvem com a conta do Office 365, atualize o serviço de avisos na Cloudflare com o ficheiro <code>servidor/boxcheck-avisos.js</code> da EPISJ 360 (versão 0.9.37 ou mais recente). Até lá, fica tudo guardado só neste navegador.</div>`:`<div class="msg info">Para guardar tudo na nuvem e continuar noutro computador sem repetir a análise, falta ligar o armazenamento ao serviço de login (3 passos no LEIA-ME). Até lá, fica tudo guardado só neste navegador.</div>`;return}
   if(NUV.erro){el.innerHTML=`<div class="msg bad">Não foi possível guardar na nuvem (${esc(NUV.erro)}). Fica guardado neste navegador; volta a tentar sozinho.</div>`;return}
   el.innerHTML=NUV.ultimo?`<div class="msg ok">☁ Tudo guardado na nuvem às ${new Date(NUV.ultimo).toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"})} — noutro computador basta entrar com ${nuvMS()?"a conta do Office 365":"a Box"}.</div>`:NUV.ativo?`<div class="msg ok">☁ Guardado na nuvem — noutro computador basta entrar com ${nuvMS()?"a conta do Office 365":"a Box"}.</div>`:""}
 // configuração e o resto do estado (pequeno): enviado alguns segundos depois de cada alteração
@@ -3590,15 +3592,15 @@ function estadoAtual(){let root="";try{root=localStorage.getItem("box_last_root"
   return{cfg:JSON.stringify(cfg),logos:LOGOS,pontos:rpList(),tpl:TPL,folder:curFolder,root,bases:basesIdx(),resumos:resumos()}}
 let nuvH=null;
 function nuvemAgendar(){try{NUV}catch(e){setTimeout(nuvemAgendar,0);return} // pode ser chamada ao arrancar, antes de NUV existir
-  if(NUV.ativo===false||!NUVOK()||NUV.ocupado)return;clearTimeout(nuvH);nuvH=setTimeout(()=>nuvemPut("estado",estadoAtual(),cfgT()||Date.now()),8000)}
+  if(nuvDesl()||!NUVOK()||NUV.ocupado)return;clearTimeout(nuvH);nuvH=setTimeout(()=>nuvemPut("estado",estadoAtual(),cfgT()||Date.now()),8000)}
 function nuvemListagem(j){if(!NUVOK())return;nuvemPut("L_"+j.rootId,j,j.t).then(()=>nuvemAgendar())}
-async function nuvemBases(rootId){if(!NUVOK()||NUV.ativo===false)return;const l=basesIdx()[rootId]||[];const out=[];
+async function nuvemBases(rootId){if(!NUVOK()||nuvDesl())return;const l=basesIdx()[rootId]||[];const out=[];
   for(const b of l){const x=await lerBase(rootId,b.t);if(x)out.push(x)}
   await nuvemPut("B_"+rootId,out);nuvemAgendar()}
 const b64=u=>{let s="";const a=new Uint8Array(u.buffer,u.byteOffset,u.byteLength);for(let i=0;i<a.length;i++)s+=String.fromCharCode(a[i]);return btoa(s)};
 const unb64=s=>{const b=atob(s),a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return new Uint32Array(a.buffer)};
 let nuvTxN=-1;
-async function nuvemTextos(force){if(!NUVOK()||NUV.ativo===false)return;if(!force&&TX.size===nuvTxN)return;nuvTxN=TX.size;
+async function nuvemTextos(force){if(!NUVOK()||nuvDesl())return;if(!force&&TX.size===nuvTxN)return;nuvTxN=TX.size;
   const arr=[];for(const r of TX.values())arr.push(r.sig?{...r,sig:b64(r.sig)}:r);
   await nuvemPut("tx",arr);nuvSetT("txN",arr.length)}
 // ao entrar: traz o que for mais recente na nuvem e envia o que for mais recente aqui
@@ -4125,11 +4127,11 @@ const AVLOG="boxcheck_avisos_log";
 let AVL=lsJ(AVLOG,[])||[];
 const avKeys=()=>new Set(AVL.map(x=>x.k));
 function avGuardar(){AVL=AVL.slice(-3000);try{localStorage.setItem(AVLOG,JSON.stringify(AVL))}catch(e){}
-  if(NUVOK()&&NUV.ativo!==false)nuvemPut("avisos",AVL)}
+  if(NUVOK()&&!nuvDesl())nuvemPut("avisos",AVL)}
 function avJuntar(arr){if(!Array.isArray(arr))return 0;const K=new Set(AVL.map(x=>x.k+"|"+x.t));let n=0;
   for(const x of arr)if(x&&x.k&&!K.has(x.k+"|"+x.t)){AVL.push(x);n++}
   if(n){AVL.sort((a,b)=>a.t-b.t);try{localStorage.setItem(AVLOG,JSON.stringify(AVL))}catch(e){}}return n}
-async function avTrazerNuvem(){if(!NUVOK()||NUV.ativo===false)return;
+async function avTrazerNuvem(){if(!NUVOK()||nuvDesl())return;
   try{const idx=(await (await nuvem("GET","")).json()).itens||{};if(!idx.avisos)return;const arr=await nuvemGet("avisos");avJuntar(arr)}catch(e){}}
 // já enviado para este formador (ok) nesta ocorrência?
 const enviado=k=>AVL.some(x=>x.k===k&&x.ok);
@@ -5295,8 +5297,8 @@ const ES_URL="https://eduspruce.github.io/eduschedule.html";
 let ESD={t:0,porAno:{},copias:{},mapaT:{},mapaC:{},ligT:{},ligC:{},mapaA:{},ligA:{}};
 const esdPronto=DB.get("kv","esched").then(v=>{if(v&&typeof v==="object")ESD=Object.assign(ESD,v)}).catch(()=>{});
 let esdH=null;
-function esdGuardar(){if(RO||LIMPAR)return;guidePubAgendar();ESD.t=Date.now();DB.put("kv","esched",ESD);clearTimeout(esdH);esdH=setTimeout(()=>{if(NUVOK()&&NUV.ativo!==false)nuvemPut("ES",ESD,ESD.t)},8000)}
-async function esTrazerNuvem(){try{await esdPronto;if(!NUVOK()||NUV.ativo===false)return;
+function esdGuardar(){if(RO||LIMPAR)return;guidePubAgendar();ESD.t=Date.now();DB.put("kv","esched",ESD);clearTimeout(esdH);esdH=setTimeout(()=>{if(NUVOK()&&!nuvDesl())nuvemPut("ES",ESD,ESD.t)},8000)}
+async function esTrazerNuvem(){try{await esdPronto;if(!NUVOK()||nuvDesl())return;
   const idx=(await (await nuvem("GET","")).json()).itens||{};
   if(idx.ES&&(idx.ES.t||0)>(ESD.t||0)){const j=await nuvemGet("ES");if(j&&typeof j==="object"){ESD=Object.assign({t:0,porAno:{},copias:{},mapaT:{},mapaC:{},ligT:{},ligC:{},mapaA:{},ligA:{}},j);DB.put("kv","esched",ESD);esRecarregar(true)}}
   else if((ESD.t||0)>((idx.ES||{}).t||0))await nuvemPut("ES",ESD,ESD.t)}catch(e){if(e.kind!=="nokv")console.warn("Horário360/nuvem",e)}}
@@ -5460,7 +5462,7 @@ if(curMod!=="boxcheck"){const M=MODULOS.find(x=>x.id===curMod);if(M)show(M.inici
    b.innerHTML=ic("M12 16V4m0 0-4.5 4.5M12 4l4.5 4.5M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3")+"<span>Enviar para o Office 365</span>";document.getElementById("subSt").after(b);b.onclick=()=>guardarAgora()}
  const est=()=>{const el=document.getElementById("subSt");if(!el)return;const hm=t=>new Date(t).toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"});let t="Guardado só neste navegador",tit="";
    try{const ms=nuvMS(),od=+(localStorage.getItem("g360_od_t")||0);
-     if(NUV.ativo===false&&ms&&!nuvSB()){t="Guardado só neste navegador";tit="A nuvem com o Office 365 só funciona depois de atualizar o serviço de avisos na Cloudflare (ficheiro servidor/boxcheck-avisos.js)."}
+     if(nuvDesl()&&ms&&!nuvSB()){t="Guardado só neste navegador";tit="A nuvem com o Office 365 só funciona depois de atualizar o serviço de avisos na Cloudflare (ficheiro servidor/boxcheck-avisos.js)."}
      else if(NUV.erro)t="Guardado neste navegador (a nuvem volta a tentar)";
      else if(NUV.ultimo)t="☁ Guardado "+(NUV.via==="sb"?"na base de dados (Supabase)":"na nuvem"+(ms?" (Office 365)":""))+" às "+hm(NUV.ultimo);
      else if(NUV.ativo)t="☁ Guardado "+(NUV.via==="sb"?"na base de dados (Supabase)":"na nuvem"+(ms?" (Office 365)":""));
@@ -5505,7 +5507,7 @@ function rcJuntar(a,b){if((a.ger||0)!==(b.ger||0))return (a.ger||0)>(b.ger||0)?a
   if((b.et||0)>(o.et||0)){o.esp=b.esp;o.cfg=Object.assign({abre:480,fecha:1140,sab:false},b.cfg||{});o.et=b.et}
   for(const k in (b.res||{})){const r=b.res[k];if(!r)continue;const l=o.res[k];if(!l||(r.u||0)>(l.u||0))o.res[k]=r}return o}
 function rcNuvemAgendar(){clearTimeout(rcNuvH);rcNuvH=setTimeout(()=>rcTrazer(true),1500)}
-async function rcTrazer(enviar){try{if(!NUVOK()||NUV.ativo===false){rcNuvUI();return}
+async function rcTrazer(enviar){try{if(!NUVOK()||nuvDesl()){rcNuvUI();return}
     let rem=null;const idx=(await (await nuvem("GET","")).json()).itens||{};if(idx.rc)rem=await nuvemGet("rc");
     const antes=JSON.stringify(RC);if(rem)RC=rcJuntar(RC,rem);
     const mudouAqui=JSON.stringify(RC)!==antes;if(mudouAqui)rcGravar(false);
@@ -5513,7 +5515,7 @@ async function rcTrazer(enviar){try{if(!NUVOK()||NUV.ativo===false){rcNuvUI();re
     rcNuvOk=Date.now();rcNuvErr="";if(mudouAqui&&curTab.startsWith("rc"))rcRender(curTab)}
   catch(e){if(e.kind!=="nokv")rcNuvErr=e.message||String(e)}rcNuvUI()}
 function rcNuvUI(){const el=$("#rcNuv");if(!el)return;
-  el.innerHTML=!NUVOK()?"":NUV.ativo===false?`<div class="msg info">Sem armazenamento na nuvem: as reservas ficam só neste navegador.</div>`:rcNuvErr?`<div class="msg bad">Não foi possível guardar na nuvem (${esc(rcNuvErr)}). Volta a tentar sozinho.</div>`:rcNuvOk?`<div class="msg ok">☁ Reservas guardadas na nuvem às ${new Date(rcNuvOk).toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"})}.</div>`:""}
+  el.innerHTML=!NUVOK()?"":nuvDesl()?`<div class="msg info">Sem armazenamento na nuvem: as reservas ficam só neste navegador.</div>`:rcNuvErr?`<div class="msg bad">Não foi possível guardar na nuvem (${esc(rcNuvErr)}). Volta a tentar sozinho.</div>`:rcNuvOk?`<div class="msg ok">☁ Reservas guardadas na nuvem às ${new Date(rcNuvOk).toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"})}.</div>`:""}
 /* atualiza com a vista aberta e à vista (para ver as reservas feitas noutro computador) */
 setInterval(()=>{if(curTab&&curTab.startsWith("rc")&&document.visibilityState==="visible"&&$("#rcDw").hidden)rcTrazer(false)},60000);
 
@@ -5790,10 +5792,15 @@ const PERFIL_CURTO={dexec:"Direção Executiva",dped:"Direção Pedagógica",pro
 const perfilAtual=()=>PREV||(EU&&EU.perfil)||"";
 const soLeitura=()=>!!EU&&!EU.admin&&(EU.perfil==="prof"||EU.perfil==="form");
 const podePublicar=()=>!!EU&&!EU.provisorio&&(EU.admin||EU.perfil==="dexec"||EU.perfil==="dped");
-async function guideTok(force){const p=await msInit();if(!MSACC)throw new Error("Sem sessão Microsoft — volte a entrar.");
+async function guideTok(force){const p=await msInit();if(!MSACC&&sbAtivo()&&EU)await msSilencioso(EU.email);if(!MSACC)throw new Error("Sem sessão Microsoft — volte a entrar.");
   try{return (await p.acquireTokenSilent({scopes:LOGIN_SCOPES,account:MSACC,forceRefresh:!!force})).accessToken}
   catch(e){return (await p.acquireTokenPopup({scopes:LOGIN_SCOPES,account:MSACC,redirectUri:MS_REDIR})).accessToken}}
-async function guideApi(path,opts,again){opts=opts||{};const tok=await guideTok(again);let r;
+async function guideApi(path,opts,again){opts=opts||{};
+  if(sbAtivo()){const m=(opts.method||"GET").toUpperCase(),b=opts.body?JSON.parse(opts.body):null;
+    if(path==="/guide/eu")return sbRpc("g360_eu");
+    if(path==="/guide/perfis")return m==="GET"?sbRpc("g360_perfis_ler"):sbRpc("g360_perfis_gravar",{p_loja:b});
+    if(path==="/guide/publico")return m==="GET"?sbRpc("g360_publico_ler"):sbRpc("g360_publico_gravar",{p:b})}
+  const tok=await guideTok(again);let r;
   try{r=await fetch(srvUrl()+path,{method:opts.method||"GET",body:opts.body,cache:"no-store",headers:Object.assign({Authorization:"Bearer "+tok},opts.body?{"Content-Type":"application/json"}:{})})}
   catch(e){throw new Error("Não foi possível contactar o serviço da EPISJ 360.")}
   if(r.status===401&&!again)return guideApi(path,opts,true);
@@ -5801,6 +5808,9 @@ async function guideApi(path,opts,again){opts=opts||{};const tok=await guideTok(
 
 async function guideArranque(){
   gateState("wait","");prog(4,"A ligar ao serviço da EPISJ 360…");
+  if(sbCfg()){prog(10,"A confirmar a sessão…");try{await gpAte(SB_PRONTO,12000)}catch(e){}
+    if(SBSES)return guideEntrarSB();
+    $("#msSetup").style.display="none";$("#msGo").disabled=false;gateState("login",SBERR?esc(SBERR):"");return}
   try{const r=await fetch(srvUrl()+"/guide/config",{cache:"no-store"});if(r.ok){const j=await r.json();if(j.clientId&&j.tenant){GMS={clientId:j.clientId,tenant:j.tenant};try{localStorage.setItem("guide_ms",JSON.stringify(GMS))}catch(e){}}}}catch(e){}
   const {id,ten}=msIds();
   if(!id||!ten){$("#msSetup").style.display="";$("#msSetup").open=true;$("#msGo").disabled=true;gateState("login","");return}
@@ -5809,12 +5819,38 @@ async function guideArranque(){
     if(MSACC){try{const t=(await p.acquireTokenSilent({scopes:LOGIN_SCOPES,account:MSACC})).accessToken;return guideEntrar(t)}catch(e){}}}
   catch(e){gateState("login",msErro(e));return}
   gateState("login","")}
-$("#msGo").onclick=async()=>{try{const p=await msInit();gateState("wait","");prog(22,"À espera do Office 365…");
+$("#msGo").onclick=async()=>{if(sbCfg()){gateState("wait","");prog(18,"A abrir o login do Office 365…");try{await sbEntrar()}catch(e){gateState("login",esc(e.message||String(e)))}return}
+  try{const p=await msInit();gateState("wait","");prog(22,"À espera do Office 365…");
     const r=await p.loginPopup({scopes:LOGIN_SCOPES,prompt:"select_account",redirectUri:MS_REDIR});MSACC=r.account;p.setActiveAccount(r.account);await guideEntrar(r.accessToken)}
   catch(e){gateState("login",msErro(e))}};
 $("#gMsSave").onclick=()=>{const id=$("#gMsClient").value.trim(),ten=$("#gMsTenant").value.trim();if(!id||!ten){toast("Preencha os dois campos");return}
   GMS={clientId:id,tenant:ten};try{localStorage.setItem("guide_ms",JSON.stringify(GMS))}catch(e){}MSAL=null;guideArranque()};
 
+async function guideEntrarSB(){
+  gateState("wait","");prog(30,"A confirmar o perfil…");
+  let j=SBEU;if(!j||!j.perfil){try{j=await sbRpc("g360_eu");SBEU=j}catch(e){gateState("login",esc(e.message||String(e)));return}}
+  if(!j||!j.perfil){const em=SBSES&&SBSES.user&&SBSES.user.email||"";gateState("login",`A conta <b>${esc(em)}</b> ainda não tem perfil na EPISJ 360. Peça à Direção que lho atribua. <a href="#" id="gSairSB">Entrar com outra conta</a>`);
+    const a=$("#gSairSB");if(a)a.onclick=e=>{e.preventDefault();sbSair().then(()=>location.reload())};return}
+  SBMEMBRO=j;EU=j;MODS_OFF=Array.isArray(j.modsOff)?j.modsOff:[];window.__guideLogin=EU.email;
+  msSilencioso(EU.email); // o Office 365 (email e OneDrive) liga-se em segundo plano, sem pedir nada
+  prog(40,"Perfil: "+(EU.admin?"Administrador":(EU.perfilNome||PERFIL_CURTO[EU.perfil]||"")));
+  whoUI();aplicarPerfil();
+  if(EU.admin)perfisMigrar();
+  await guideCarregarModulos();
+  try{await lgMigrar();aplicarLogos()}catch(e){}
+  if(curTab&&curTab.startsWith("rc"))try{rcRender(curTab)}catch(e){}
+  prog(100,"Pronto!");await gpEspera(GP.v<99?650:350);
+  gateState("off");try{sbUI();window.__subEst&&window.__subEst()}catch(e){}
+  if(window.__goBox&&podeVer("box"))show("box")}
+// liga o MSAL sem janelas (para enviar email e copiar para o OneDrive), aproveitando a sessão do Office 365 que já existe no navegador
+async function msSilencioso(email){try{const p=await msInit();if(MSACC)return;const acc=p.getAllAccounts().find(a=>String(a.username).toLowerCase()===String(email).toLowerCase());
+  if(acc){MSACC=acc;p.setActiveAccount(acc);return}
+  const r=await p.ssoSilent({scopes:LOGIN_SCOPES,loginHint:email,redirectUri:MS_REDIR});if(r&&r.account){MSACC=r.account;p.setActiveAccount(r.account)}}catch(e){}}
+// os perfis que estavam no serviço da Cloudflare passam para o Supabase (uma vez, sem apagar os de lá)
+async function perfisMigrar(){try{const L=await sbRpc("g360_perfis_ler");const lj=L&&L.loja||{};
+  if((lj.admins&&lj.admins.length>0)||Object.keys(lj.utilizadores||{}).length||(lj.formandos&&(lj.formandos.padrao||(lj.formandos.dominios||[]).length)))return;
+  await msSilencioso(EU.email);if(!MSACC)return;const tok=await guideTok();const r=await fetch(srvUrl()+"/guide/perfis",{headers:{Authorization:"Bearer "+tok},cache:"no-store"});
+  if(!r.ok)return;const j=await r.json();if(j&&j.loja){await sbRpc("g360_perfis_gravar",{p_loja:j.loja});toast("Perfis trazidos do serviço antigo para a base de dados")}}catch(e){}}
 async function guideEntrar(tok){
   gateState("wait","");prog(30,"A confirmar o perfil…");
   let r=null,j={};
@@ -5864,7 +5900,7 @@ async function guideCarregarModulos(){
 function whoUI(){const n=EU.nome||EU.email,ini=n.split(/\s+/).filter(Boolean).map(w=>w[0]).slice(0,2).join("").toUpperCase();
   $("#who").innerHTML=`<span class="av">${esc(ini)}</span><span title="${esc(EU.email)}">${esc(n)}</span><span class="pf${EU.admin?" adm":""}" title="${esc(EU.admin?"Administrador da EPISJ 360 — perfil: "+(EU.perfilNome||PERFIL_CURTO[EU.perfil]||""):"Perfil da conta")}">${esc(EU.admin?"Administrador":(EU.perfilNome||PERFIL_CURTO[EU.perfil]||""))}</span><a href="#" id="whoOut">Terminar sessão</a>`;
   $("#who").style.display="flex";$("#whoOut").onclick=e=>{e.preventDefault();guideSair()}}
-async function guideSair(){if(SES)logout(true);try{const p=await msInit();await p.clearCache({account:MSACC})}catch(e){}MSACC=null;EU=null;location.reload()}
+async function guideSair(){if(SES)logout(true);try{await sbSair()}catch(e){}try{const p=await msInit();await p.clearCache({account:MSACC})}catch(e){}MSACC=null;EU=null;location.reload()}
 
 // esconde os módulos e separadores que o perfil não pode abrir
 function aplicarPerfil(){
