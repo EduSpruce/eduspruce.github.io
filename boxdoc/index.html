@@ -1595,7 +1595,7 @@ body.ro #pcOut input,body.ro #pcOut select{pointer-events:none}body.ro #pcOut bu
     <p class="hint">Apaga <b>toda</b> a informação da EPISJ 360 — neste computador, na nuvem e nos outros computadores: anos letivos, cursos, turmas, formandos, formadores, perfis, módulos e atribuições, prazos e avisos, análises da Box, horários e reservas das salas. <b>Ficam só as ligações à Box e ao Office 365.</b> Os documentos na Box não são tocados. Antes de apagar, é descarregada automaticamente uma cópia de segurança.</p>
     <div class="row"><label style="width:260px">Para confirmar, escreva <b>APAGAR</b><input type="text" id="recTxt" autocomplete="off"></label><button class="b" id="recBtn" style="background:var(--bad);border-color:var(--bad)" disabled>Apagar tudo e começar de novo</button></div>
   </div>
-  <div class="card" id="odCard" hidden>
+  <div class="card" id="odCard">
     <h2>Cópia de segurança no OneDrive</h2>
     <p class="hint">Uma vez por dia, ao entrar, a EPISJ 360 guarda uma cópia de tudo (escola, planos curriculares, formadores, reservas, horários, logótipos) no seu OneDrive, na pasta <b>Aplicações › EPISJ 360</b> — uma por dia e a última. A app só tem acesso a essa pasta, não ao resto do OneDrive. <b>Repor do OneDrive</b> junta a última cópia ao que está neste computador, sem apagar nada.</p>
     <div class="row"><button class="b" id="odAgora">Fazer cópia agora</button><button class="b s" id="odRepor">Repor do OneDrive</button></div>
@@ -1764,7 +1764,7 @@ body.ro #pcOut input,body.ro #pcOut select{pointer-events:none}body.ro #pcOut bu
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.39"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.40"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -1889,7 +1889,7 @@ async function guardarAgora(){const b=$("#subUp");if(b)b.disabled=true;const out
     if(NUVOK()){try{NUV.erro="";await nuvemPut("estado",estadoAtual(),cfgT()||Date.now());try{await rcTrazer(true)}catch(e){}try{if(ESD&&ESD.t)await nuvemPut("ES",ESD,ESD.t)}catch(e){}
       out.push(NUV.ativo===false?"nuvem: falta atualizar o serviço de avisos na Cloudflare":NUV.erro?"nuvem: "+NUV.erro:"nuvem ✓")}catch(e){out.push("nuvem: "+(e.message||e))}}
     else out.push("nuvem: entre com a conta do Office 365 da Direção");
-    if(odPode()){try{await odCopia(true);try{localStorage.removeItem("g360_od_falta")}catch(e){}out.push("OneDrive ✓")}catch(e){out.push("OneDrive: "+(e.message||e))}}
+    if(odPode()){try{await odCopia(true);try{localStorage.removeItem("g360_od_falta")}catch(e){}out.push("OneDrive ✓")}catch(e){out.push("OneDrive: "+(e.message||e))}}else out.push("OneDrive: só para a Direção, com a conta do Office 365")
   }finally{if(b)b.disabled=false;try{window.__subEst&&window.__subEst()}catch(e){}}
   toast("Enviar para o Office 365 — "+out.join(" · "))}
 /* ===================== 0.9.37: cópia de segurança no OneDrive de quem é da Direção (pasta Aplicações › EPISJ 360) =====================
@@ -1917,7 +1917,7 @@ async function odRepor(){const tok=await odTok(true);const r=await fetch("https:
   try{if(o.horarios&&(o.horarios.t||0)>(ESD.t||0)){ESD=Object.assign(ESD,o.horarios);esdGuardar()}}catch(e){}
   try{if(o.logos&&typeof o.logos==="object"&&!Object.keys(LOGOS).length){LOGOS=o.logos;guardarLogos()}}catch(e){}
   try{refreshAll()}catch(e){}return true}
-function odUI(){const el=$("#odEstado");if(!el)return;const card=$("#odCard");if(card)card.hidden=!odPode();
+function odUI(){const el=$("#odEstado");if(!el)return;const card=$("#odCard");if(card)card.hidden=false;
   const t=+(localStorage.getItem("g360_od_t")||0),falta=localStorage.getItem("g360_od_falta")==="1"&&!t;
   el.innerHTML=t?`<div class="msg ok" style="margin:10px 0 0">☁ Última cópia no OneDrive: ${new Date(t).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"})} (Aplicações › EPISJ 360). Faz-se sozinha uma vez por dia, ao entrar.</div>`
     :falta?`<div class="msg info" style="margin:10px 0 0">Para a cópia diária funcionar, carregue em <b>Fazer cópia agora</b> e aceite o acesso à pasta da app no seu OneDrive (só uma vez). Se aparecer que precisa de aprovação do administrador, siga os passos abaixo.</div>`
@@ -5390,7 +5390,7 @@ if(curMod!=="boxcheck"){const M=MODULOS.find(x=>x.id===curMod);if(M)show(M.inici
      else if(NUV.ultimo)t="☁ Guardado na nuvem"+(ms?" (Office 365)":"")+" às "+hm(NUV.ultimo);
      else if(NUV.ativo)t="☁ Guardado na nuvem"+(ms?" (Office 365)":"");
      if(od)tit=(tit?tit+"\n":"")+"Última cópia no OneDrive: "+new Date(od).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"});
-     const b=document.getElementById("subUp");if(b)b.hidden=!(ms||odPode());const c=document.getElementById("odCard");if(c&&c.hidden===odPode())odUI()}catch(e){}el.textContent=t;el.title=tit};
+     const b=document.getElementById("subUp");if(b)b.hidden=!!RO}catch(e){}el.textContent=t;el.title=tit};
  window.__subEst=est;
  est();setInterval(est,4000)}
 loginUI();
