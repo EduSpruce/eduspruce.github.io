@@ -1848,7 +1848,7 @@ main>section{max-width:none}
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.55"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.56"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -3688,10 +3688,10 @@ function nuvSB(){try{return !!(SBSES&&sbCfg()&&!RO&&SBMEMBRO&&(SBMEMBRO.admin||S
 
 /* 0.9.49: tempo real — quando outro computador (ou o iPad) da Direção grava, este vai buscar logo a alteração */
 // 0.9.52: não interrompe quem está a escrever — espera que pare (ou saia da caixa) antes de trazer a alteração do outro computador
-var ULT_ESCRITA=0;["input","keydown","compositionstart"].forEach(ev=>document.addEventListener(ev,e=>{const t=e.target;if(t&&/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))ULT_ESCRITA=Date.now()},true));
+var ULT_ESCRITA=0,ULT_ES=0; // ULT_ES: último toque dentro do Horário360 (não se recarrega o horário enquanto se mexe nele)["input","keydown","compositionstart"].forEach(ev=>document.addEventListener(ev,e=>{const t=e.target;if(t&&/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))ULT_ESCRITA=Date.now()},true));
 const aEscrever=()=>{const a=document.activeElement,dt=Date.now()-ULT_ESCRITA;return dt<4000||(dt<30000&&!!(a&&/^(INPUT|TEXTAREA)$/.test(a.tagName)&&!/^(checkbox|radio|button|submit|file|range|color)$/i.test(a.type||"")&&a.closest&&a.closest("main")))};
 function sbTempoReal(){if(SBRT||!nuvSB())return;let h=null;
-  const trazer=()=>{clearTimeout(h);h=setTimeout(()=>{if(NUV.ocupado||aEscrever()||document.querySelector(".impov.on")){trazer();return}nuvemSincMS().catch(()=>{})},1500)};
+  const trazer=()=>{clearTimeout(h);h=setTimeout(()=>{if(NUV.ocupado||aEscrever()||document.querySelector(".impov.on")||(curTab==="esch"&&Date.now()-(ULT_ES||0)<20000)){trazer();return}nuvemSincMS().catch(()=>{})},1500)};
   sbCliente().then(sb=>{SBRT=sb.channel("g360-estado").on("postgres_changes",{event:"*",schema:"public",table:"g360_estado"},p=>{const r=p.new||{};if(String(r.por||"").endsWith("#"+SBSID))return;trazer()}).subscribe()}).catch(()=>{})}
 function sbAtivo(){try{return !!(SBSES&&sbCfg())}catch(e){return false}}
 async function sbRpc(f,a){const sb=await sbCliente();const {data,error}=await sb.rpc(f,a||{});if(error){const x=new Error(error.code==="42501"?(error.message||"Sem permissão."):sbErroMsg(error));x.code=error.code;throw x}return data}
@@ -5730,6 +5730,7 @@ function esFontes(w,d){try{if(!w.FontFace||!d.fonts)return;
 function esAjustar(fr){try{const w=fr.contentWindow,d=fr.contentDocument;if(!d||!d.documentElement)return;const R=d.documentElement;
   if(!d.getElementById("guide-tema")){
     esFontes(w,d); // 0.9.50: a Poppins entra pelos bytes (o CSP do EduSchedule não deixa carregar letras de outros sites)
+    ["pointerdown","keydown","input","wheel"].forEach(ev=>d.addEventListener(ev,()=>{ULT_ES=Date.now()},{capture:true,passive:true})); // 0.9.56
     const st=d.createElement("style");st.id="guide-tema";st.textContent=ES_TEMA;d.head.appendChild(st);
     // fica sempre com o tema da EPISJ 360 (sem mexer na preferência de tema guardada pela EduSpruce)
     R.setAttribute("data-theme","guide");new w.MutationObserver(()=>{if(R.getAttribute("data-theme")!=="guide")R.setAttribute("data-theme","guide")}).observe(R,{attributes:true,attributeFilter:["data-theme"]});
