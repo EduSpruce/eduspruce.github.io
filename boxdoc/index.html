@@ -879,6 +879,19 @@ body.ro #pcOut input,body.ro #pcOut select{pointer-events:none}body.ro #pcOut bu
 .gfundos{width:100%;max-width:440px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 18px;display:flex;justify-content:center;box-shadow:0 1px 2px rgba(15,23,42,.04),0 12px 30px -14px rgba(15,23,42,.12);animation:pop .45s cubic-bezier(.2,.8,.2,1.15)}
 .gfundos[hidden]{display:none}
 .gfundos img{display:block;max-width:100%;max-height:48px;width:auto;height:auto}
+
+/* 0.9.38: barra de progresso da importação, ao centro, com o resto esbatido */
+.impov{position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(246,248,252,0);backdrop-filter:blur(0);-webkit-backdrop-filter:blur(0);transition:background .25s,backdrop-filter .25s,-webkit-backdrop-filter .25s}
+.impov[hidden]{display:none}
+.impov.on{background:rgba(246,248,252,.72);backdrop-filter:blur(5px) saturate(.8);-webkit-backdrop-filter:blur(5px) saturate(.8)}
+.impov .impbox{width:min(460px,100%);background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px 24px 18px;box-shadow:0 24px 60px -16px rgba(15,23,42,.28);opacity:0;transform:translateY(8px) scale(.98);transition:opacity .22s,transform .22s}
+.impov.on .impbox{opacity:1;transform:none}
+.impov .imptit{font-weight:700;color:var(--brand);font-size:16px;margin-bottom:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.impov .impbar{height:10px;border-radius:999px;background:#e9eef6;overflow:hidden}
+.impov .impbar i{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,var(--brand),#4f7fd0 55%,var(--accent));transition:width .25s ease}
+.impov .impinf{display:flex;justify-content:space-between;gap:12px;margin-top:10px;font-size:13px;color:var(--muted)}
+.impov .impinf b{color:var(--brand);font-variant-numeric:tabular-nums}
+.impov .imptxt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -1745,7 +1758,7 @@ body.ro #pcOut input,body.ro #pcOut select{pointer-events:none}body.ro #pcOut bu
 <script>
 (function(){
 "use strict";
-const VERSAO="0.9.37"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.38"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.17"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -4946,11 +4959,23 @@ function pcFormador(txt,novos){txt=String(txt||"").trim();if(!txt)return "";cons
   let p=cfg.profs.find(x=>cod&&x.cod&&semZ(x.cod)===semZ(cod))||cfg.profs.find(x=>norm(x.nome)===norm(nome));
   if(!p){p={id:uid(),cod,nome,email:"",abrev:""};cfg.profs.push(p);novos.push(nome)}else if(cod&&!p.cod)p.cod=cod;
   return p.id}
+/* 0.9.38: barra de progresso ao centro do ecrã (o resto esbate-se) enquanto se lê e importa o Excel */
+const IMPOV={el:null};
+function ovAbrir(titulo){let o=IMPOV.el;if(!o){o=document.createElement("div");o.className="impov";o.setAttribute("role","dialog");o.setAttribute("aria-modal","true");
+    o.innerHTML=`<div class="impbox"><div class="imptit"></div><div class="impbar" role="progressbar" aria-valuemin="0" aria-valuemax="100"><i></i></div><div class="impinf"><span class="imptxt"></span><b class="imppct">0%</b></div></div>`;document.body.appendChild(o);IMPOV.el=o}
+  o.querySelector(".imptit").textContent=titulo;o.classList.remove("sai");o.hidden=false;void o.offsetWidth;o.classList.add("on");ovPassoSync(0,"A começar…")}
+function ovPassoSync(pct,txt){const o=IMPOV.el;if(!o)return;pct=Math.max(0,Math.min(100,Math.round(pct)));o.querySelector(".impbar i").style.width=pct+"%";o.querySelector(".impbar").setAttribute("aria-valuenow",pct);o.querySelector(".imppct").textContent=pct+"%";if(txt)o.querySelector(".imptxt").textContent=txt}
+async function ovPasso(pct,txt){ovPassoSync(pct,txt);await new Promise(r=>requestAnimationFrame(()=>setTimeout(r,30)))}
+async function ovFechar(atraso){const o=IMPOV.el;if(!o)return;if(atraso)await new Promise(r=>setTimeout(r,atraso));o.classList.add("sai");o.classList.remove("on");setTimeout(()=>{if(o.classList.contains("sai"))o.hidden=true},260)}
 /* 0.9.34: importar do Excel em dois passos — primeiro lê e mostra o que vai entrar (e para que ano letivo), só grava ao carregar em "Importar dados".
    Já não muda o ano letivo ativo sozinho; no fim confirma que os planos ficaram guardados neste navegador e cria um ponto de restauro. */
 let PC_IMP=null;
 async function pcImportar(file){const msg=t=>escLinhaMsg("#pcMsg",t,"info");msg("A ler "+esc(file.name)+"…");
-  let R;try{const X=await loadXLSX();R=pcLerLivro(X,X.read(await file.arrayBuffer(),{type:"array"}))}catch(err){escLinhaMsg("#pcMsg","Não foi possível ler o ficheiro: "+esc(err.message),"bad");return}
+  ovAbrir("A ler "+file.name);
+  let R;try{await ovPasso(8,"A abrir o ficheiro…");const buf=await file.arrayBuffer();await ovPasso(25,"A preparar o leitor de Excel…");const X=await loadXLSX();
+    await ovPasso(45,"A ler o livro do Excel…");const wb=X.read(buf,{type:"array"});await ovPasso(75,"A ler as folhas Turma 1, Turma 2…");R=pcLerLivro(X,wb);await ovPasso(100,`Encontrei ${R.turmas.length} plano(s) curricular(es)`)}
+  catch(err){ovFechar();escLinhaMsg("#pcMsg","Não foi possível ler o ficheiro: "+esc(err.message),"bad");return}
+  ovFechar(350);
   if(!R.turmas.length){escLinhaMsg("#pcMsg","Não encontrei folhas <b>Turma 1</b>, <b>Turma 2</b>… com um plano curricular neste ficheiro.","bad");return}
   const E=escData();let y=R.ano;if(!y){const m=file.name.match(/(20\d\d)[.\/_-](20\d\d)/);y=m?+m[1]:null}
   PC_IMP={R,file:file.name,yFicheiro:y};
@@ -4972,8 +4997,9 @@ async function pcImportarAplicar(anoSel,subst){if(!PC_IMP)return;const {R,file}=
   ponto("Antes de importar os planos curriculares de "+file);
   if(String(anoSel).startsWith("novo:")){const y=+anoSel.slice(5);ano=E.anos.find(x=>x.ini===y);if(!ano){ano=novoAno(y);E.anos.push(ano);anoNovo=true}}
   else ano=E.anos.find(x=>x.id===anoSel)||anoAtivo();
-  const novosF=[],novasT=[],novosC=[];let feitos=0,salt=0;
-  for(const T of R.turmas){const t=pcTurmaDe(T,false,novasT,novosC);if(!t)continue;
+  ovAbrir("A importar os planos curriculares");await ovPasso(4,"A criar um ponto de restauro…");
+  const novosF=[],novasT=[],novosC=[];let feitos=0,salt=0,ni=0;
+  for(const T of R.turmas){ni++;await ovPasso(5+80*(ni-1)/R.turmas.length,`Turma ${ni} de ${R.turmas.length}: ${T.turma}`);const t=pcTurmaDe(T,false,novasT,novosC);if(!t)continue;
     let p=pcDe(t.id,ano.id);if(p&&!subst){salt++;continue}
     if(!p)p=pcNovo(t,ano.id);
     p.semanas=T.semanas;p.fct={horas:T.fct.horas,semanas:T.fct.semanas,dias:T.fct.dias!=null?Math.round(T.fct.dias*100)/100:null};
@@ -4981,15 +5007,16 @@ async function pcImportarAplicar(anoSel,subst){if(!PC_IMP)return;const {R,file}=
     p.cargos=T.cargos.map(c=>({id:uid(),nome:c.nome,h:c.h,f:pcFormador(c.f,novosF)}));
     if(!t.fse&&T.projeto&&!/X{2,}/i.test(T.projeto))t.fse=fseNorm(T.projeto);
     feitos++}
-  R.disciplinas.forEach(pcDiscNova);
+  await ovPasso(87,"A acrescentar disciplinas e formadores…");R.disciplinas.forEach(pcDiscNova);
   cfg.profs.sort((a,b)=>String(a.nome).localeCompare(String(b.nome),"pt"));
-  save();
+  await ovPasso(92,"A guardar…");save();await ovPasso(96,"A confirmar a gravação…");
   // confirma que ficou mesmo gravado neste navegador
   let gravados=0;try{const st=JSON.parse(localStorage.getItem(KEY)||"{}");gravados=((st.escola||{}).planos||[]).filter(x=>x.anoId===ano.id).length}catch(e){}
   if(!gravados){const sj=JSON.stringify(cfg);if(await DB.put("kv","cfgCopia",{t:Date.now(),s:sj}))try{const c=await DB.get("kv","cfgCopia");gravados=((JSON.parse(c.s).escola||{}).planos||[]).filter(x=>x.anoId===ano.id).length}catch(e){}}
   ponto("Depois de importar os planos curriculares de "+file);try{nuvemAgendar()}catch(e){}
   PC_IMP=null;
   try{renderAll()}catch(x){}escRender();try{esRecarregar()}catch(x){}renderPC();
+  await ovPasso(100,gravados?"Guardado ✓":"Terminado");ovFechar(500);
   const outro=ano.id!==escData().ativo;
   escLinhaMsg("#pcMsg",`${gravados?"✓ Guardado. ":"<b>Não consegui confirmar a gravação</b> — veja se o navegador tem espaço e tente de novo. "}Importado(s) ${feitos} plano(s) curricular(es) para <b>${esc(ano.nome)}</b>${anoNovo?" (ano letivo criado)":""}${salt?` · ${salt} turma(s) que já tinham plano ficaram como estavam`:""} · ${gravados} plano(s) de ${esc(ano.nome)} guardados neste navegador.`+
     (outro?`<br>Os planos ficaram em ${esc(ano.nome)}, que não é o ano letivo ativo. <button class="b s" id="pcIrAno" style="margin-left:6px">Mudar para ${esc(ano.nome)}</button>`:"")+
