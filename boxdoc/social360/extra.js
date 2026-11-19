@@ -28,21 +28,41 @@ function readImage(file, max) {
     fr.readAsDataURL(file);
   });
 }
+function imgDims(file) { return new Promise(res => { const u = URL.createObjectURL(file); const i = new Image(); i.onload = () => { res({ w: i.naturalWidth, h: i.naturalHeight }); URL.revokeObjectURL(u); }; i.onerror = () => { res(null); URL.revokeObjectURL(u); }; i.src = u; }); }
+/* primeira página de um PDF como imagem (pdf.js da EPISJ 360) */
+async function pdfThumb(file) {
+  try {
+    const pdfjs = await import(new URL('../lib/pdf.min.mjs', location.href).href);
+    pdfjs.GlobalWorkerOptions.workerSrc = new URL('../lib/pdf.worker.min.mjs', location.href).href;
+    const doc = await pdfjs.getDocument({ data: new Uint8Array(await file.arrayBuffer()) }).promise;
+    const pg = await doc.getPage(1); const v0 = pg.getViewport({ scale: 1 }); const sc = 600 / Math.max(v0.width, v0.height);
+    const v = pg.getViewport({ scale: sc }); const c = document.createElement('canvas'); c.width = Math.round(v.width); c.height = Math.round(v.height);
+    await pg.render({ canvasContext: c.getContext('2d'), viewport: v }).promise;
+    return { thumb: c.toDataURL('image/jpeg', 0.8), pages: doc.numPages, w: c.width, h: c.height };
+  } catch (e) { console.warn(e); return { thumb: '', pages: 0 }; }
+}
 const Media = {
   async upload(files, ws) {
     const out = [];
     for (const f of files) {
-      const kind = f.type.startsWith('video') ? 'video' : f.type.startsWith('image') ? 'image' : null;
-      if (!kind) { toast(`${f.name}: só imagens ou vídeos.`, 'err'); continue; }
+      const kind = f.type.startsWith('video') ? 'video' : f.type.startsWith('image') ? 'image' : f.type === 'application/pdf' || /\.pdf$/i.test(f.name) ? 'pdf' : null;
+      if (!kind) { toast(`${f.name}: só imagens, vídeos ou PDF.`, 'err'); continue; }
       const m = { id: uid('m'), ws: ws.id, name: f.name, kind, createdAt: nowISO(), createdBy: Store.me, size: f.size };
       try {
-        if (Store.mode === 'sb' && kind === 'video') {
-          if (f.size > 50 * 1024 * 1024) { toast(`${f.name}: máximo 50 MB por vídeo.`, 'err'); continue; }
+        if (kind === 'pdf') Object.assign(m, await pdfThumb(f));
+        if (Store.mode === 'sb') {
+          // 0.1: tudo no armazenamento privado; na base de dados fica só uma miniatura leve (abre depressa mesmo com centenas de ficheiros)
+          if (f.size > 50 * 1024 * 1024) { toast(`${f.name}: máximo 50 MB por ficheiro.`, 'err'); continue; }
+          if (kind === 'image') { const t = await readImage(f, 360); m.thumb = t.url; const d = await imgDims(f); if (d) { m.w = d.w; m.h = d.h; } }
           toast(`A carregar ${f.name}…`);
           const path = ws.id + '/' + m.id + '-' + f.name.normalize('NFD').replace(/[^\w.-]+/g, '_').slice(-80);
           const { error } = await Store.sb.storage.from('s360').upload(path, f, { contentType: f.type, upsert: false });
           if (error) throw error;
           m.storage = path;
+        } else if (kind === 'pdf') {
+          if (Store.assets) { const r = await Store.assets.upload(f); m.assetId = r.id; m.url = r.url; }
+          else if (f.size < 3 * 1024 * 1024) m.url = await new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.onerror = rej; fr.readAsDataURL(f); });
+          else { m.url = URL.createObjectURL(f); m.temp = true; toast('PDF grande: fica disponível só nesta sessão (modo local).'); }
         } else if (Store.assets) {
           if (f.size > 20 * 1024 * 1024) { toast(`${f.name}: máximo 20 MB.`, 'err'); continue; }
           toast(`A carregar ${f.name}…`);
@@ -67,10 +87,10 @@ const Media = {
     const ms = Store.all('media').filter(m => m.ws === ws.id && (!UI.mediaK || m.kind === UI.mediaK) && (!q || (m.name || '').toLowerCase().includes(q))).sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
     const sel = S.media[UI.mediaSel];
     return `<div class="mwrap"><div>
-      ${canEdit(ws) ? `<div class="dz" id="dz">Arraste imagens ou vídeos para aqui, ou <button class="btn sm imp" data-act="mupload">Carregar ficheiros</button><input type="file" id="mfile" multiple accept="image/*,video/*" class="hidden"></div>` : ''}
+      ${canEdit(ws) ? `<div class="dz" id="dz">Arraste imagens, vídeos ou PDF para aqui, ou <button class="btn sm imp" data-act="mupload">Carregar ficheiros</button><input type="file" id="mfile" multiple accept="image/*,video/*,application/pdf" class="hidden"></div>` : ''}
       <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center"><label class="search" style="width:260px">${I.search}<input id="mq" placeholder="Pesquisar media" value="${esc(UI.mediaQ || '')}" data-in="mq"></label>
-        <div class="seg">${[['', 'Tudo'], ['image', 'Imagens'], ['video', 'Vídeos']].map(([k, n]) => `<button class="${(UI.mediaK || '') === k ? 'on' : ''}" data-act="mkind" data-v="${k}">${n}</button>`).join('')}</div><span class="muted" style="margin-left:auto">${ms.length} ficheiros</span></div>
-      <div class="mgrid">${ms.map(m => `<div class="mcard ${UI.mediaSel === m.id ? 'on' : ''}" data-act="msel" data-id="${m.id}"><div class="im">${mTag(m)}<span class="k">${m.kind === 'video' ? 'VÍDEO' : 'IMG'}</span></div><div class="nm">${esc(m.name)}<small>${Media.used(m.id).length} publicações · ${ago(m.createdAt)}</small></div></div>`).join('') || '<div class="empty" style="grid-column:1/-1">A biblioteca está vazia.</div>'}</div></div>
+        <div class="seg">${[['', 'Tudo'], ['image', 'Imagens'], ['video', 'Vídeos'], ['pdf', 'PDF']].map(([k, n]) => `<button class="${(UI.mediaK || '') === k ? 'on' : ''}" data-act="mkind" data-v="${k}">${n}</button>`).join('')}</div><span class="muted" style="margin-left:auto">${ms.length} ficheiros</span></div>
+      <div class="mgrid">${ms.slice(0, UI.mediaN || 120).map(m => `<div class="mcard ${UI.mediaSel === m.id ? 'on' : ''}" data-act="msel" data-id="${m.id}"><div class="im">${mTag(m)}<span class="k">${m.kind === 'video' ? 'VÍDEO' : m.kind === 'pdf' ? 'PDF' + (m.pages ? ' · ' + m.pages + ' p.' : '') : 'IMG'}</span></div><div class="nm">${esc(m.name)}<small>${Media.used(m.id).length} publicações · ${ago(m.createdAt)}</small></div></div>`).join('') || '<div class="empty" style="grid-column:1/-1">A biblioteca está vazia.</div>'}</div>${ms.length > (UI.mediaN || 120) ? `<div style="text-align:center;margin:12px 0"><button class="btn sm" data-act="more" data-k="mediaN" data-n="120">Mostrar mais (${ms.length - (UI.mediaN || 120)})</button></div>` : ''}</div>
       ${sel ? `<div class="mdet">${mTag(sel, '', sel.kind === 'video' ? 'controls' : '')}<input class="inp" data-mren="${sel.id}" value="${esc(sel.name)}" ${canEdit(ws) ? '' : 'readonly'}>
         <div class="muted">${sel.w ? sel.w + '×' + sel.h + ' px · ' : ''}${sel.size ? (sel.size / 1048576).toFixed(1) + ' MB · ' : ''}carregado por ${esc(Store.name(sel.createdBy))}</div>
         ${Media.used(sel.id).length ? `<div><b style="font-size:12.5px">Usado em</b>${Media.used(sel.id).slice(0, 6).map(p => `<div class="item" data-act="open" data-pid="${p.id}" style="padding:4px 0">${stPill(p.status)}<span style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis">${esc(p.text || '(sem texto)')}</span></div>`).join('')}</div>` : ''}
@@ -218,6 +238,7 @@ const Settings = {
     return `<h3>Geral</h3><div class="fld"><label>Nome do espaço de trabalho</label><input class="inp" data-wsf="name" value="${esc(ws.name)}" ${a ? '' : 'readonly'}></div>
       <div class="fld"><label>Cor</label><div style="display:flex;gap:6px">${COLORS.map(c => `<button data-act="wscolor" data-v="${c}" ${a ? '' : 'disabled'} style="width:28px;height:28px;border-radius:8px;border:2px solid ${ws.color === c ? '#111' : 'transparent'};background:${c}"></button>`).join('')}</div></div>
       <div class="fld"><label>Fuso horário</label><select class="inp" data-wsf="tz" ${a ? '' : 'disabled'}>${TZS.map(z => `<option ${ws.tz === z ? 'selected' : ''}>${z}</option>`).join('')}</select></div>
+      <span class="tgl ${ws.autoCrop !== false ? 'on' : ''}" ${a ? 'data-act="autocrop"' : ''}><i></i>Recortar as imagens nas pré-visualizações ao formato de cada rede (desligado: mostra a imagem inteira)</span>
       <div class="muted">A sua função neste espaço: <b>${{ admin: 'Administrador', editor: 'Editor', aprovador: 'Aprovador / cliente' }[role(ws)]}</b></div>
       ${a && canNewWS() ? `<hr style="border:0;border-top:1px solid var(--line)"><div><button class="btn bad" data-act="delws">Eliminar espaço de trabalho</button></div>` : ''}`;
   },
@@ -256,7 +277,7 @@ const Settings = {
   etiquetas(ws) {
     return `<h3>Etiquetas</h3><p class="muted" style="margin:0">Organiza por campanha, pilar de conteúdo ou cliente, e filtra em qualquer vista.</p>
       <div>${(ws.labels || []).map(l => `<div class="rowl"><span class="dot" style="background:${l.color};width:14px;height:14px"></span><div class="g">${esc(l.name)} <span class="muted">· ${wsPosts(ws).filter(p => (p.labels || []).includes(l.id)).length} publicações</span></div>${canEdit(ws) ? `<button class="btn sm" data-act="editlabel" data-id="${l.id}">Editar</button><button class="btn sm bad" data-act="rmlabel" data-id="${l.id}">Eliminar</button>` : ''}</div>`).join('') || '<div class="muted">Sem etiquetas.</div>'}</div>
-      ${canEdit(ws) ? `<div><button class="btn pri" data-act="addlabel">${I.plus} Nova etiqueta</button></div>` : ''}`;
+      ${canEdit(ws) ? `<div style="display:flex;gap:8px"><button class="btn pri" data-act="addlabel">${I.plus} Nova etiqueta</button>${wsList().length > 1 ? '<button class="btn" data-act="copylabels">Copiar etiquetas de outro espaço</button>' : ''}</div>` : ''}`;
   },
   modelos(ws) {
     const ts = Store.all('templates').filter(t => t.ws === ws.id);
@@ -519,6 +540,14 @@ const A = {
       wsPosts(ws).filter(p => p.pageIds.includes(pg.id)).forEach(p => { const n = clone(p); n.pageIds = n.pageIds.filter(x => x !== pg.id); delete (n.custom || {})[pg.id]; Store.put('posts', n); });
       UI.f.pages = UI.f.pages.filter(x => x !== pg.id);
     } });
+  },
+  autocrop() { const w = clone(curWS()); w.autoCrop = w.autoCrop === false; Store.put('workspaces', w); },
+  copylabels(el) {
+    pickWS(el, id => {
+      const src = S.workspaces[id]; const w = clone(curWS()); w.labels = w.labels || []; let n = 0;
+      (src.labels || []).forEach(l => { if (!w.labels.some(x => x.name.trim().toLowerCase() === l.name.trim().toLowerCase())) { w.labels.push({ id: uid('l'), name: l.name, color: l.color }); n++; } });
+      if (n) Store.put('workspaces', w); toast(n ? `${n} etiqueta(s) copiada(s) de ${src.name}.` : 'Este espaço já tem essas etiquetas.');
+    });
   },
   rmmember(el) { const w = clone(curWS()); w.members = w.members.filter(m => m.id !== el.dataset.id); Store.put('workspaces', w); },
   addmember(el) {

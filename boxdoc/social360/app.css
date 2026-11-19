@@ -421,6 +421,18 @@ textarea.inp{height:auto;padding:9px 10px;resize:vertical;line-height:1.45}
 .ni.un{background:#f7f7ff}
 .ni .tm{color:var(--ink3);font-size:11.5px}
 
+.poll{margin:4px 12px 12px;border:1px solid var(--line);border-radius:10px;padding:10px}
+.poll .po{border:1.5px solid #0a66c2;color:#0a66c2;border-radius:18px;padding:6px 12px;margin-bottom:6px;font-weight:600;text-align:center;font-size:13px}
+.docpv{margin:0 12px 12px;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#f3f2ef}
+.docpv img{width:100%;display:block;max-height:420px;object-fit:contain;background:#fff}
+.docpv .ph{aspect-ratio:4/3;display:grid;place-items:center;color:var(--ink3)}
+.docpv .dt{padding:8px 10px;font-size:13px;background:#fff;border-top:1px solid var(--line)}
+.trialb{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.65);color:#fff;font-size:11px;font-weight:600;border-radius:10px;padding:3px 8px;z-index:2}
+.vov .mus{margin-top:6px;font-size:12px;opacity:.9}
+.newc{font-size:11px;font-weight:700;color:#fff;background:#dc2626;border-radius:9px;padding:1px 7px}
+.newdot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#dc2626;vertical-align:middle}
+.nocrop .md img,.nocrop .md video{object-fit:contain!important;background:#111}
+
 /* toast */
 #toasts{position:fixed;bottom:20px;right:20px;display:flex;flex-direction:column;gap:8px;z-index:100}
 .toast{background:#111827;color:#fff;border-radius:10px;padding:10px 14px;box-shadow:var(--sh2);display:flex;align-items:center;gap:12px;font-size:13.5px;max-width:420px;animation:tin .18s ease}

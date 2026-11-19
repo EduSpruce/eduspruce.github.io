@@ -31,7 +31,7 @@ const labelOf = (ws, id) => (ws?.labels || []).find(l => l.id === id);
 const mediaOf = id => S.media[id];
 const mUrl = m => m ? (m.storage && Store.mode === 'sb' ? Store.signed(m.storage) : m.assetId ? '/_blob/' + m.assetId : m.url) : '';
 const canNewWS = () => !Store.readOnly && (Store.mode !== 'sb' || !!(Store.meInfo && Store.meInfo.direcao));
-const mTag = (m, cls = '', extra = '') => !m ? '' : m.kind === 'video' ? `<video class="${cls}" src="${esc(mUrl(m))}" muted playsinline preload="metadata" ${extra}></video>` : `<img class="${cls}" src="${esc(mUrl(m))}" alt="${esc(m.name || '')}" loading="lazy" draggable="false" ${extra}>`;
+const mTag = (m, cls = '', extra = '') => !m ? '' : m.kind === 'pdf' ? `<img class="${cls}" src="${esc(m.thumb || '')}" alt="${esc(m.name || '')}" loading="lazy" draggable="false" ${extra}>` : m.kind === 'image' && m.storage && !mUrl(m) ? `<img class="${cls}" src="${esc(m.thumb || '')}" alt="${esc(m.name || '')}" loading="lazy" draggable="false" ${extra}>` : m.kind === 'video' ? `<video class="${cls}" src="${esc(mUrl(m))}" muted playsinline preload="metadata" ${extra}></video>` : `<img class="${cls}" src="${esc(mUrl(m))}" alt="${esc(m.name || '')}" loading="lazy" draggable="false" ${extra}>`;
 const lblChip = l => l ? `<span class="lbl" style="background:${l.color}1a;color:${l.color}"><span class="dot" style="background:${l.color};width:7px;height:7px"></span>${esc(l.name)}</span>` : '';
 const avatar = (id, cls = '') => `<span class="avatar ${cls}" style="background:${colorFor(id || 'x')}" title="${esc(Store.name(id))}">${esc(initials(Store.name(id)))}</span>`;
 
@@ -60,6 +60,14 @@ function hist(p, what) { p.history = [...(p.history || []), { at: nowISO(), by: 
 function notify(ws, text, postId, to = '*') {
   Store.put('notifs', { id: uid('n'), ws: ws.id, text, postId, by: Store.me, to, at: nowISO(), readBy: [] });
 }
+/* comentários novos (por conta, guardado neste aparelho) */
+const SEENK = () => 's360:seen:' + Store.me;
+let SEEN = null;
+function seenMap() { if (!SEEN) { try { SEEN = JSON.parse(lsGet(SEENK()) || '{}'); } catch (e) { SEEN = {}; } } return SEEN; }
+function markSeen(p) { const m = seenMap(); m[p.id] = (p.comments || []).reduce((t, c) => (c.at || '') > t ? c.at : t, nowISO()); // relógios de outros computadores podem estar adiantados
+  const keys = Object.keys(m); if (keys.length > 3000) keys.sort((a, b) => m[a].localeCompare(m[b])).slice(0, 1000).forEach(k => delete m[k]); lsSet(SEENK(), JSON.stringify(m)); }
+function unreadC(p) { const t = seenMap()[p.id] || ''; return (p.comments || []).filter(c => c.by !== Store.me && !c.resolved && c.at > t && !(c.internal && role(S.workspaces[p.ws]) === 'aprovador')).length; }
+const unreadTag = p => { const n = unreadC(p); return n ? `<span class="newc" title="${n} comentário${n > 1 ? 's' : ''} novo${n > 1 ? 's' : ''}">${n} novo${n > 1 ? 's' : ''}</span>` : ''; };
 function textFor(p, pageId) { const c = p.custom?.[pageId]; return c && c.on !== false && typeof c.text === 'string' ? c.text : p.text; }
 
 const Act = {
@@ -121,6 +129,16 @@ const Act = {
       if (pl.needsMedia && !p.mediaIds?.length) out.push(`${pl.n} precisa de uma imagem ou vídeo.`);
     });
     if (!(p.text || '').trim() && !p.mediaIds?.length) out.push('A publicação está vazia.');
+    const li = p.pageIds.some(id => pageOf(ws, id)?.platform === 'linkedin');
+    if (li && p.format === 'poll') {
+      const o = (p.poll && p.poll.opts || []).filter(x => x.trim());
+      if (o.length < 2) out.push('Sondagem do LinkedIn: precisa de 2 a 4 opções.');
+      if (o.some(x => x.length > 30)) out.push('Sondagem do LinkedIn: cada opção tem no máximo 30 caracteres.');
+      if (!(p.text || '').trim()) out.push('Sondagem do LinkedIn: escreva a pergunta no texto.');
+      if (p.mediaIds?.length) out.push('Sondagem do LinkedIn: não leva imagens nem vídeos.');
+    }
+    if (li && p.format === 'document' && !(p.mediaIds || []).some(id => mediaOf(id)?.kind === 'pdf')) out.push('Documento do LinkedIn: carregue um PDF.');
+    (p.mediaIds || []).forEach(id => { const m = mediaOf(id); if (m && m.kind === 'pdf' && !(li && p.format === 'document')) out.push(`“${m.name}” é um PDF: só pode ir como Documento do LinkedIn.`); });
     return out;
   },
   schedule(p) {
@@ -187,7 +205,7 @@ function tick() {
       const ws = S.workspaces[p.ws]; if (!ws || !canEdit(ws)) return;
       const n = clone(p); n.status = 'published'; n.publishedAt = nowISO(); hist(n, 'publicou automaticamente (simulado)');
       Store.put('posts', n);
-      notify(ws, `Publicada: "${(p.text || '').slice(0, 60)}"`, p.id, '*');
+      Store.put('notifs', { id: 'pub-' + p.id, ws: ws.id, text: `Publicada: "${(p.text || '').slice(0, 60)}"`, postId: p.id, by: Store.me, to: '*', at: nowISO(), readBy: [] }); // id fixo: vários computadores abertos não repetem o aviso
     }
   });
 }
@@ -224,6 +242,23 @@ function pvMedia(p, cls, pageId, opts) {
   return `<div class="md ${cls}" data-annot="${m.id}">${mTag(m)}${pinHTML(m)}${ms.length > 1 ? `<span class="mcnt">1/${ms.length}</span>` : ''}</div>`;
 }
 function preview(p, pageId, opts = {}) {
+  const ws = S.workspaces[p.ws];
+  const h = preview0(p, pageId, opts);
+  return ws && ws.autoCrop === false ? h.replace('<div class="pv', '<div class="nocrop pv') : h;
+}
+function linkedinExtra(p) {
+  if (p.format === 'poll') {
+    const o = (p.poll && p.poll.opts || []).filter(x => x.trim());
+    const d = (p.poll && p.poll.dur) || 7;
+    return `<div class="poll">${o.map(x => `<div class="po">${esc(x)}</div>`).join('') || '<div class="muted">Acrescente 2 a 4 opções</div>'}<div class="muted" style="margin-top:6px">0 votos · ${d === 1 ? '1 dia' : d === 14 ? '2 semanas' : d + ' dias'} restantes</div></div>`;
+  }
+  if (p.format === 'document') {
+    const m = mediaOf(p.mediaIds?.[0]);
+    return `<div class="docpv">${m && m.kind === 'pdf' ? `<img src="${esc(m.thumb || '')}" alt="">` : '<div class="ph">Escolha um PDF</div>'}<div class="dt"><b>${esc(p.docTitle || (m ? m.name.replace(/\.pdf$/i, '') : 'Documento'))}</b>${m && m.pages ? ` · ${m.pages} páginas` : ''}</div></div>`;
+  }
+  return null;
+}
+function preview0(p, pageId, opts = {}) {
   const ws = S.workspaces[p.ws]; const pg = pageOf(ws, pageId);
   if (!pg) return `<div class="pv"><div class="tx" style="padding:14px">${richText(p.text) || '<span class="muted">Escreva algo…</span>'}</div>${pvMedia(p, 'wide', pageId, opts)}</div>`;
   const t = textFor(p, pageId); const tx = richText(t) || '<span class="muted">Escreva algo…</span>';
@@ -256,7 +291,7 @@ function preview(p, pageId, opts = {}) {
       const handle = '@' + (pg.handle || '').replace(/^@/, '');
       return `<div class="pv" style="padding:12px;display:flex;gap:10px">${av}<div style="flex:1;min-width:0"><div style="font-size:13.5px"><b>${esc(pg.name)}</b> <span class="muted">${esc(handle)} · ${esc(when)}</span></div><div class="tx" style="padding:3px 0 8px">${tx}</div><div style="border-radius:14px;overflow:hidden">${pvMedia(p, 'wide', pageId, Object.assign({ grid: true }, opts))}</div><div style="display:flex;justify-content:space-between;color:var(--ink3);font-size:13px;margin-top:8px;max-width:320px"><span>💬</span><span>🔁</span><span>♡</span><span>📊</span></div></div></div>`;
     }
-    case 'linkedin': return `<div class="pv"><div class="hd">${av}<div><div class="nm">${esc(pg.name)}</div><div class="sb">${nf(1200 + hash(pg.id) % 9000)} seguidores<br>${esc(when)} · 🌐</div></div></div><div class="tx">${tx}</div>${pvMedia(p, 'wide', pageId, Object.assign({ grid: true }, opts))}<div class="acts"><span>👍 Gosto</span><span>💬 Comentar</span><span>🔁 Republicar</span><span>➤ Enviar</span></div></div>`;
+    case 'linkedin': return `<div class="pv"><div class="hd">${av}<div><div class="nm">${esc(pg.name)}</div><div class="sb">${nf(1200 + hash(pg.id) % 9000)} seguidores<br>${esc(when)} · 🌐</div></div></div><div class="tx">${tx}</div>${linkedinExtra(p) ?? pvMedia(p, 'wide', pageId, Object.assign({ grid: true }, opts))}<div class="acts"><span>👍 Gosto</span><span>💬 Comentar</span><span>🔁 Republicar</span><span>➤ Enviar</span></div></div>`;
     case 'universal': {
       const [title, ...rest] = t.split('\n');
       return `<div class="pv" style="padding:18px"><div class="muted" style="text-transform:uppercase;font-size:11px;letter-spacing:.06em">${esc(FMT[p.format] || 'Conteúdo')} · ${esc(pg.name)}</div><h2 style="margin:6px 0 10px;font-family:Georgia,serif">${esc(title) || 'Sem título'}</h2>${pvMedia(p, 'wide', pageId, opts)}<div class="tx" style="padding:10px 0 0">${richText(rest.join('\n').trim())}</div></div>`;
@@ -270,7 +305,8 @@ function preview(p, pageId, opts = {}) {
 }
 function vertical(p, pg, t, pageId, opts, ic) {
   const [a, b, c] = ic.split(' ');
-  return `<div class="pv vert">${pvMedia(p, '', pageId, Object.assign({ placeholder: true, carousel: true }, opts))}<div class="vside"><div>${a}<small>${nf(hash(p.id) % 900 + 40)}</small></div><div>${b}<small>${hash(p.id) % 90}</small></div><div>${c}</div></div><div class="vov"><div class="nm">@${esc(pg.handle || pg.name)}</div>${richText(t)}</div></div>`;
+  const trial = pg.platform === 'instagram' && p.format === 'reel' && p.trial && p.trial.on;
+  return `<div class="pv vert">${pvMedia(p, '', pageId, Object.assign({ placeholder: true, carousel: true }, opts))}${trial ? '<span class="trialb">Reel de teste · só para não seguidores</span>' : ''}<div class="vside"><div>${a}<small>${nf(hash(p.id) % 900 + 40)}</small></div><div>${b}<small>${hash(p.id) % 90}</small></div><div>${c}</div></div><div class="vov"><div class="nm">@${esc(pg.handle || pg.name)}</div>${richText(t)}${p.music && ['instagram', 'tiktok'].includes(pg.platform) ? `<div class="mus">♪ ${esc(p.music)}</div>` : ''}</div></div>`;
 }
 
 /* ---------- casca da app ---------- */
@@ -431,7 +467,7 @@ function feedRow(p, ws) {
       <div class="fprev" data-act="open" data-pid="${p.id}">${preview(p, sel, { pins: true })}</div>
     </div>
     <div class="fside">
-      <div class="row">${stPill(p.status)}${p.autoSchedule ? '<span class="muted">· agenda ao aprovar</span>' : ''}<span style="flex:1"></span><button class="icbtn" data-act="pmenu" data-pid="${p.id}" style="width:28px;height:28px">${I.dots}</button></div>
+      <div class="row">${stPill(p.status)}${p.autoSchedule ? '<span class="muted">· agenda ao aprovar</span>' : ''}${unreadTag(p)}<span style="flex:1"></span><button class="icbtn" data-act="pmenu" data-pid="${p.id}" style="width:28px;height:28px">${I.dots}</button></div>
       <div class="muted">${I.clock.replace('<svg', '<svg width="13" height="13" style="vertical-align:-2px"')} ${fmtDT(p.date)}</div>
       ${(p.labels || []).length ? `<div class="row">${p.labels.map(id => lblChip(labelOf(ws, id))).join('')}</div>` : ''}
       ${st.total ? `<div><div class="muted" style="margin-bottom:4px">Aprovação ${st.done}/${st.total}${st.next ? ' · próximo: ' + esc(st.next.name) : ''}</div><div class="apbar">${st.ss.map(s => `<span class="s ${st.isDone(s) ? 'done' : ''}" title="${esc(s.name)}"></span>`).join('')}</div></div>` : ''}
@@ -495,7 +531,7 @@ function evHTML(p, ws, big) {
   const col = { draft: '#8a909c', review: '#c98500', changes: '#d03b3b', approved: '#0ca30c', scheduled: '#2a78d6', published: '#6d4fc2' }[p.status];
   const m = mediaOf(p.mediaIds?.[0]);
   return `<div class="ev ${lock ? 'locked' : ''}" style="border-left-color:${col}" ${lock ? '' : 'draggable="true"'} data-pid="${p.id}" data-act="open">
-    <div class="t">${p.pageIds.slice(0, 4).map(id => { const g = pageOf(ws, id); return g ? pfBadge(g.platform, 'sm') : ''; }).join('')}${p.pageIds.length > 4 ? `<span class="muted">+${p.pageIds.length - 4}</span>` : ''}<span>${fmtTime(p.date)}</span>${(p.comments || []).filter(c => !c.resolved).length ? `<span class="muted" style="margin-left:auto">💬${p.comments.filter(c => !c.resolved).length}</span>` : ''}</div>
+    <div class="t">${p.pageIds.slice(0, 4).map(id => { const g = pageOf(ws, id); return g ? pfBadge(g.platform, 'sm') : ''; }).join('')}${p.pageIds.length > 4 ? `<span class="muted">+${p.pageIds.length - 4}</span>` : ''}<span>${fmtTime(p.date)}</span>${unreadC(p) ? '<i class="newdot" title="Comentários novos"></i>' : ''}${(p.comments || []).filter(c => !c.resolved).length ? `<span class="muted" style="margin-left:auto">💬${p.comments.filter(c => !c.resolved).length}</span>` : ''}</div>
     ${big && m ? mTag(m, 'th') : ''}
     <div class="x">${esc((pg ? textFor(p, pg.id) : p.text) || '(sem texto)')}</div>
     <div style="display:flex;gap:4px;align-items:center">${stPill(p.status).replace('class="st', 'style="font-size:10.5px;padding:0 6px" class="st')}${(p.labels || []).slice(0, 2).map(id => { const l = labelOf(ws, id); return l ? `<span class="dot" style="background:${l.color};width:8px;height:8px" title="${esc(l.name)}"></span>` : ''; }).join('')}</div>
@@ -527,7 +563,7 @@ function listHTML(ws) {
   const th = (k, n) => `<th class="s" data-act="sort" data-k="${k}">${n}${s.k === k ? (s.d > 0 ? ' ↑' : ' ↓') : ''}</th>`;
   if (!posts.length) return emptyPosts(ws);
   return `<div class="lwrap"><table class="tb"><thead><tr><th style="width:34px"><input type="checkbox" data-act="selall" ${all ? 'checked' : ''}></th><th style="width:50px"></th>${th('text', 'Publicação')}<th>Páginas</th>${th('date', 'Data')}${th('status', 'Estado')}<th>Etiquetas</th>${th('comments', '💬')}${th('updated', 'Alterada')}</tr></thead><tbody>
-    ${posts.slice(0, UI.listN || 150).map(p => { const m = mediaOf(p.mediaIds?.[0]); return `<tr class="r ${selected.has(p.id) ? 'sel' : ''}" data-act="open" data-pid="${p.id}"><td data-stop><input type="checkbox" data-act="selone" data-pid="${p.id}" ${selected.has(p.id) ? 'checked' : ''}></td><td>${m ? mTag(m, 'th') : '<div class="th"></div>'}</td><td><div class="tx">${esc(p.text || '(sem texto)')}</div></td><td>${p.pageIds.map(id => { const g = pageOf(ws, id); return g ? pfBadge(g.platform, 'sm') : ''; }).join(' ')}</td><td style="white-space:nowrap">${fmtDT(p.date)}</td><td>${stPill(p.status)}</td><td>${(p.labels || []).map(id => lblChip(labelOf(ws, id))).join(' ')}</td><td>${(p.comments || []).length || ''}</td><td class="muted" style="white-space:nowrap">${p.updatedAt ? ago(p.updatedAt) : ''}</td></tr>`; }).join('')}
+    ${posts.slice(0, UI.listN || 150).map(p => { const m = mediaOf(p.mediaIds?.[0]); return `<tr class="r ${selected.has(p.id) ? 'sel' : ''}" data-act="open" data-pid="${p.id}"><td data-stop><input type="checkbox" data-act="selone" data-pid="${p.id}" ${selected.has(p.id) ? 'checked' : ''}></td><td>${m ? mTag(m, 'th') : '<div class="th"></div>'}</td><td><div class="tx">${esc(p.text || '(sem texto)')}</div></td><td>${p.pageIds.map(id => { const g = pageOf(ws, id); return g ? pfBadge(g.platform, 'sm') : ''; }).join(' ')}</td><td style="white-space:nowrap">${fmtDT(p.date)}</td><td>${stPill(p.status)}</td><td>${(p.labels || []).map(id => lblChip(labelOf(ws, id))).join(' ')}</td><td>${(p.comments || []).length || ''}${unreadC(p) ? ' <i class="newdot"></i>' : ''}</td><td class="muted" style="white-space:nowrap">${p.updatedAt ? ago(p.updatedAt) : ''}</td></tr>`; }).join('')}
   </tbody></table>${posts.length > (UI.listN || 150) ? `<div style="text-align:center;margin:12px 0"><button class="btn sm" data-act="more" data-k="listN" data-n="150">Mostrar mais (${posts.length - (UI.listN || 150)})</button> <span class="muted">“Selecionar tudo” inclui as ${posts.length} publicações filtradas.</span></div>` : ''}</div>`;
 }
 function bulkHTML(ws) {
@@ -551,7 +587,7 @@ function kcard(p, ws) {
     <div class="m">${p.pageIds.slice(0, 5).map(id => { const g = pageOf(ws, id); return g ? pfBadge(g.platform, 'sm') : ''; }).join('')}<span style="margin-left:auto">${p.date ? fmtDT(p.date) : 'Sem data'}</span></div>
     <div class="x">${esc(p.text || '(sem texto)')}</div>
     ${st.total && p.status !== 'published' ? `<div class="apbar">${st.ss.map(s => `<span class="s ${st.isDone(s) ? 'done' : ''}" title="${esc(s.name)}"></span>`).join('')}</div>` : ''}
-    <div class="m">${(p.labels || []).map(id => { const l = labelOf(ws, id); return l ? `<span class="dot" style="background:${l.color};width:8px;height:8px"></span>` : ''; }).join('')}${(p.comments || []).length ? `<span>💬 ${p.comments.length}</span>` : ''}${p.status === 'review' && canApprove(p, ws) ? `<button class="btn ok sm" style="margin-left:auto;height:24px" data-act="approve" data-pid="${p.id}">Aprovar</button>` : ''}</div></div>`;
+    <div class="m">${(p.labels || []).map(id => { const l = labelOf(ws, id); return l ? `<span class="dot" style="background:${l.color};width:8px;height:8px"></span>` : ''; }).join('')}${(p.comments || []).length ? `<span>💬 ${p.comments.length}</span>` : ''}${unreadC(p) ? '<i class="newdot"></i>' : ''}${p.status === 'review' && canApprove(p, ws) ? `<button class="btn ok sm" style="margin-left:auto;height:24px" data-act="approve" data-pid="${p.id}">Aprovar</button>` : ''}</div></div>`;
 }
 function kanbanDrop(p, to) {
   const ws = S.workspaces[p.ws];

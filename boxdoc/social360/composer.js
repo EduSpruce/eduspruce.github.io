@@ -16,10 +16,10 @@ const Comp = {
     this.side = preset.side || 'comments';
     this.open = true;
     this.renderAll();
-    if (!this.isNew) { try { history.replaceState(null, '', '#post-' + this.post.id); } catch (e) {} }
+    if (!this.isNew) { markSeen(this.post); try { history.replaceState(null, '', '#post-' + this.post.id); } catch (e) {} }
     setTimeout(() => { const t = $('#ctext'); if (t && this.isNew) t.focus(); }, 40);
   },
-  sig() { const p = this.post; return JSON.stringify([p.pageIds, p.text, p.custom, p.mediaIds, p.firstComment, p.date, p.labels, p.format]); },
+  sig() { const p = this.post; return JSON.stringify([p.pageIds, p.text, p.custom, p.mediaIds, p.firstComment, p.date, p.labels, p.format, p.poll || null, p.docTitle || '', p.trial || null, p.music || '']); },
   dirty() { return this.sig() !== this.orig; },
   ws() { return S.workspaces[this.post.ws]; },
   close(force) {
@@ -29,6 +29,7 @@ const Comp = {
       return;
     }
     if (this.ai.ctrl) try { this.ai.ctrl.abort(); } catch (e) {}
+    if (!this.isNew && this.post) markSeen(this.post);
     this.open = false; const r = $('#comp-root'); if (r) r.innerHTML = '';
     try { history.replaceState(null, '', '#' + UI.view); } catch (e) {}
     render();
@@ -41,13 +42,14 @@ const Comp = {
     this.isNew = false;
     const keepDirty = this.dirty();
     ['comments', 'approvals', 'status', 'history', 'rejected', 'autoSchedule', 'publishedAt', 'updatedAt'].forEach(k => this.post[k] = clone(s[k] ?? null));
-    if (!keepDirty) { ['pageIds', 'text', 'custom', 'mediaIds', 'firstComment', 'date', 'labels', 'format'].forEach(k => this.post[k] = clone(s[k] ?? (k === 'custom' ? {} : k === 'pageIds' || k === 'mediaIds' || k === 'labels' ? [] : ''))); this.orig = this.sig(); }
+    if (!keepDirty) { ['pageIds', 'text', 'custom', 'mediaIds', 'firstComment', 'date', 'labels', 'format', 'poll', 'docTitle', 'trial', 'music'].forEach(k => this.post[k] = clone(s[k] ?? (k === 'custom' ? {} : k === 'pageIds' || k === 'mediaIds' || k === 'labels' ? [] : ['poll', 'trial'].includes(k) ? null : ''))); this.orig = this.sig(); }
+    markSeen(this.post);
     this.renderHead(); this.renderSide(); this.renderFoot(); this.renderPreview();
   },
   commit(silent) {
     const ws = this.ws(); if (!canEdit(ws)) return S.posts[this.post.id] || this.post;
     const p = clone(this.post); const stored = S.posts[p.id];
-    const contentChanged = stored && JSON.stringify([stored.text, stored.custom, stored.mediaIds, stored.pageIds, stored.firstComment]) !== JSON.stringify([p.text, p.custom, p.mediaIds, p.pageIds, p.firstComment]);
+    const contentChanged = stored && JSON.stringify([stored.text, stored.custom, stored.mediaIds, stored.pageIds, stored.firstComment, stored.poll || null, stored.docTitle || '']) !== JSON.stringify([p.text, p.custom, p.mediaIds, p.pageIds, p.firstComment, p.poll || null, p.docTitle || '']);
     if (!stored) hist(p, 'criou a publicação');
     else if (this.dirty()) hist(p, contentChanged ? 'editou o conteúdo' : 'alterou detalhes');
     if (stored && contentChanged && needsApproval(ws) && ws.approval.resetOnEdit !== false && (p.approvals || []).length && ['approved', 'scheduled', 'review'].includes(p.status)) {
@@ -93,7 +95,8 @@ const Comp = {
     const fcPlat = plats.some(x => ['instagram', 'linkedin', 'facebook', 'youtube'].includes(x));
     el.innerHTML = `
       <div class="fld"><label>Publicar em</label><div class="pgsel">${ws.pages.map(pg => `<button class="pgo ${p.pageIds.includes(pg.id) ? 'on' : ''}" data-cact="tpage" data-id="${pg.id}" ${ed ? '' : 'disabled'}>${pfBadge(pg.platform, 'sm')}${esc(pg.name)}</button>`).join('')}${!ws.pages.length ? '<span class="muted">Sem páginas — adicione nas definições.</span>' : ''}</div></div>
-      ${fmts.length > 1 ? `<div class="fld"><label>Formato</label><select class="inp" data-cch="format" ${ed ? '' : 'disabled'}>${fmts.map(f => `<option value="${f}" ${p.format === f ? 'selected' : ''}>${FMT[f] || f}</option>`).join('')}</select></div>` : ''}
+      ${fmts.length > 1 ? `<div class="fld"><label>Formato <span class="muted" style="font-weight:400">· mudar o formato mantém comentários e aprovações</span></label><select class="inp" data-cch="format" ${ed ? '' : 'disabled'}>${fmts.map(f => `<option value="${f}" ${p.format === f ? 'selected' : ''}>${FMT[f] || f}</option>`).join('')}</select></div>` : ''}
+      ${this.fmtExtra(p, plats, ed)}
       <div>
         <div class="etabs"><button class="etab ${this.tab === 'all' ? 'on' : ''}" data-cact="etab" data-id="all">✦ Todas as páginas</button>${sel.map(pg => `<button class="etab ${this.tab === pg.id ? 'on' : ''}" data-cact="etab" data-id="${pg.id}">${pfBadge(pg.platform, 'sm')}${esc(PLAT[pg.platform].n)}${p.custom?.[pg.id]?.on ? '<span class="cu" title="Personalizado"></span>' : ''}</button>`).join('')}</div>
         ${tabPage ? `<div style="display:flex;align-items:center;gap:8px;padding:8px 0"><span class="tgl ${cust ? 'on' : ''}" data-cact="custom"><i></i>Personalizar para ${esc(tabPage.name)}</span><span class="muted">${cust ? 'Este texto só vai para esta página.' : 'Use o texto comum.'}</span></div>` : '<div style="height:8px"></div>'}
@@ -102,7 +105,7 @@ const Comp = {
       </div>
       <div class="fld"><label>Media <span class="muted" style="font-weight:400">· arraste para reordenar</span></label><div class="mthumbs" id="c-thumbs">${p.mediaIds.map((id, i) => { const m = mediaOf(id); return m ? `<div class="mth" draggable="${ed}" data-mi="${i}">${mTag(m)}<span class="ix">${i + 1}</span>${ed ? `<button class="rm" data-cact="mrm" data-i="${i}">×</button>` : ''}</div>` : ''; }).join('')}
         ${ed ? `<button class="madd imp" data-cact="upload"><b>+</b>Carregar</button><button class="madd" data-cact="library"><b>▦</b>Biblioteca</button>` : ''}</div>
-        <input type="file" id="c-file" accept="image/*,video/*" multiple class="hidden"></div>
+        <input type="file" id="c-file" accept="image/*,video/*,application/pdf" multiple class="hidden"></div>
       ${fcPlat ? `<div class="fld"><label>Primeiro comentário <span class="muted" style="font-weight:400">(Instagram, LinkedIn, Facebook, YouTube)</span></label><input class="inp" data-cin="firstComment" value="${esc(p.firstComment || '')}" placeholder="Ex.: hashtags ou ligação" ${ed ? '' : 'readonly'}></div>` : ''}
       <div class="fld"><label>Data e hora <span class="muted" style="font-weight:400">· ${esc(ws.tz || Intl.DateTimeFormat().resolvedOptions().timeZone)}</span></label><div style="display:flex;gap:8px"><input type="date" class="inp" data-cch="day" value="${dv}" ${ed ? '' : 'disabled'}><input type="time" class="inp" data-cch="time" value="${tv}" style="width:130px" ${ed ? '' : 'disabled'}>${ed ? `<button class="btn sm" data-cact="besttime" title="Sugerir melhor hora" style="height:36px">⏱ Melhor hora</button>` : ''}</div>
         ${ed && p.date ? `<button class="morel" data-cact="nodate">Remover data</button>` : ''}</div>
@@ -124,6 +127,25 @@ const Comp = {
     th.addEventListener('dragover', e => { if (from !== null) e.preventDefault(); });
     th.addEventListener('drop', e => { const t = e.target.closest('.mth'); if (from === null || !t) return; e.preventDefault(); e.stopPropagation(); const to = +t.dataset.mi; const a = this.post.mediaIds; const [x] = a.splice(from, 1); a.splice(to, 0, x); from = null; this.renderEditor(); this.renderPreview(); this.renderFoot(); });
     th.addEventListener('dragend', () => from = null);
+  },
+  fmtExtra(p, plats, ed) {
+    const dis = ed ? '' : 'disabled';
+    if (plats.includes('linkedin') && p.format === 'poll') {
+      const o = (p.poll && p.poll.opts) || ['', ''];
+      return `<div class="fld"><label>Sondagem do LinkedIn <span class="muted" style="font-weight:400">· a pergunta é o texto da publicação</span></label>
+        ${o.map((x, i) => `<div style="display:flex;gap:6px"><input class="inp" data-poll="${i}" maxlength="30" value="${esc(x)}" placeholder="Opção ${i + 1}" ${dis}>${o.length > 2 && ed ? `<button class="btn sm" data-cact="pollrm" data-i="${i}" style="height:36px">✕</button>` : ''}</div>`).join('')}
+        <div style="display:flex;gap:8px;align-items:center">${o.length < 4 && ed ? '<button class="btn sm" data-cact="polladd">+ Opção</button>' : ''}<span class="muted">Duração</span><select class="inp" data-cch="polldur" style="width:auto" ${dis}>${[[1, '1 dia'], [3, '3 dias'], [7, '1 semana'], [14, '2 semanas']].map(([v, n]) => `<option value="${v}" ${((p.poll && p.poll.dur) || 7) === v ? 'selected' : ''}>${n}</option>`).join('')}</select></div>
+        <div class="muted">Os resultados das sondagens só aparecem nas páginas da empresa.</div></div>`;
+    }
+    if (plats.includes('linkedin') && p.format === 'document') return `<div class="fld"><label>Título do documento (LinkedIn)</label><input class="inp" data-cin="docTitle" value="${esc(p.docTitle || '')}" placeholder="Por omissão, o nome do PDF" ${ed ? '' : 'readonly'}><div class="muted">Carregue o PDF em “Media”; a pré-visualização mostra a primeira página.</div></div>`;
+    let h = '';
+    if (plats.includes('instagram') && p.format === 'reel') {
+      const t = p.trial || {};
+      h += `<div class="fld"><label>Reel de teste (Instagram)</label><span class="tgl ${t.on ? 'on' : ''}" ${ed ? 'data-cact="trial" data-k="on"' : ''}><i></i>Mostrar primeiro só a quem não segue a página</span>
+        ${t.on ? `<span class="tgl ${t.auto ? 'on' : ''}" ${ed ? 'data-cact="trial" data-k="auto"' : ''}><i></i>Partilhar com os seguidores ao fim de 72 h se correr bem</span><span class="tgl ${t.grid !== false ? 'on' : ''}" ${ed ? 'data-cact="trial" data-k="grid"' : ''}><i></i>Mostrar na grelha do perfil</span>` : ''}</div>`;
+    }
+    if ((plats.includes('instagram') && p.format === 'reel') || plats.includes('tiktok')) h += `<div class="fld"><label>Música <span class="muted" style="font-weight:400">· nome da faixa a escolher na app da rede ao publicar</span></label><input class="inp" data-cin="music" value="${esc(p.music || '')}" placeholder="Ex.: som original — EPISJ" ${ed ? '' : 'readonly'}></div>`;
+    return h;
   },
   updateLimits() {
     const ws = this.ws(), p = this.post, el = $('#c-lim'); if (!el) return;
@@ -161,7 +183,7 @@ const Comp = {
     let body = '';
     if (this.side === 'comments') {
       body = `<div class="clist" id="c-clist">${cs.map(c => `<div class="cm ${c.internal ? 'int' : ''} ${c.resolved ? 'res' : ''}" id="cm-${c.id}">${avatar(c.by, 'sm')}<div class="bd"><div class="bx"><div class="who">${esc(Store.name(c.by))}<span class="tm">${ago(c.at)}</span>${c.internal ? '<span class="tm">· 🔒 interno</span>' : ''}</div><div class="txt">${c.mediaId ? `<span class="pn">${annIdx(c)}</span>` : ''}${esc(c.text).replace(/@([\p{L}][\p{L}\s]{0,30}?)(?=[\s.,!?]|$)/gu, '<span class="mn">@$1</span>')}</div></div>
-        <div class="ca">${!Store.readOnly ? `<button data-cact="resolve" data-id="${c.id}">${c.resolved ? 'Reabrir' : 'Resolver'}</button>${c.by === Store.me || canAdmin(ws) ? `<button data-cact="delc" data-id="${c.id}">Eliminar</button>` : ''}` : ''}</div></div></div>`).join('') || `<div class="empty" style="padding:30px 10px">Sem comentários.<br>Deixe feedback, faz perguntas ou anote a imagem.</div>`}</div>
+        <div class="ca">${!Store.readOnly ? `<button data-cact="resolve" data-id="${c.id}">${c.resolved ? 'Reabrir' : 'Resolver'}</button>${c.by === Store.me || canAdmin(ws) ? `<button data-cact="delc" data-id="${c.id}">Eliminar</button>` : ''}` : ''}</div></div></div>`).join('') || `<div class="empty" style="padding:30px 10px">Sem comentários.<br>Deixe feedback, faça perguntas ou anote a imagem.</div>`}</div>
         ${!Store.readOnly ? `<div class="cin">${this.pendingAnnot ? `<div class="muted">📍 Comentário na imagem (${this.pendingAnnot.x}%, ${this.pendingAnnot.y}%) <button class="morel" data-cact="cancelannot">cancelar</button></div>` : ''}<textarea id="c-cin" placeholder="Comentar… use @ para mencionar"></textarea><div class="r">${!hideInternal ? `<span class="tgl ${this.internal ? 'on' : ''}" data-cact="internal"><i></i>Interno</span>` : ''}<button class="btn sm ghost" data-cact="mention">@</button><div style="flex:1"></div><button class="btn pri sm" data-cact="send">Comentar</button></div></div>` : ''}`;
     } else if (this.side === 'activity') {
       const st = apState(p, ws);
@@ -303,6 +325,9 @@ const CA = {
   },
   mrm(el) { Comp.post.mediaIds.splice(+el.dataset.i, 1); Comp.renderEditor(); Comp.renderPreview(); Comp.renderFoot(); },
   tlabel(el) { const a = Comp.post.labels, id = el.dataset.id; const i = a.indexOf(id); if (i >= 0) a.splice(i, 1); else a.push(id); Comp.renderEditor(); Comp.renderFoot(); },
+  polladd() { const p = Comp.post; p.poll = p.poll || { opts: ['', ''], dur: 7 }; if (p.poll.opts.length < 4) p.poll.opts.push(''); Comp.renderEditor(); Comp.renderPreview(); Comp.renderFoot(); },
+  pollrm(el) { const p = Comp.post; p.poll.opts.splice(+el.dataset.i, 1); Comp.renderEditor(); Comp.renderPreview(); Comp.renderFoot(); },
+  trial(el) { const p = Comp.post; p.trial = Object.assign({ on: false, auto: false, grid: true }, p.trial || {}); const k = el.dataset.k; p.trial[k] = k === 'grid' ? p.trial.grid === false : !p.trial[k]; Comp.renderEditor(); Comp.renderPreview(); Comp.renderFoot(); },
   newlabel() { labelDialog(Comp.ws(), null, l => { Comp.post.labels.push(l.id); Comp.renderEditor(); Comp.renderFoot(); }); },
   besttime(el) {
     const best = Analytics.bestTimes(Comp.ws());
@@ -352,7 +377,8 @@ document.addEventListener('change', e => {
   const t = e.target; if (!Comp.open || !t.closest('#comp')) return;
   const k = t.dataset.cch; if (!k) return;
   const p = Comp.post;
-  if (k === 'format') { p.format = t.value; }
+  if (k === 'format') { p.format = t.value; if (t.value === 'poll' && !p.poll) p.poll = { opts: ['', ''], dur: 7 }; }
+  if (k === 'polldur') { p.poll = p.poll || { opts: ['', ''] }; p.poll.dur = +t.value; }
   if (k === 'day' || k === 'time') {
     const day = $('[data-cch="day"]').value, tm = $('[data-cch="time"]').value || '10:00';
     if (day) { const [y, m, d] = day.split('-').map(Number); const [h, mi] = tm.split(':').map(Number); p.date = new Date(y, m - 1, d, h, mi).toISOString(); } else p.date = null;
@@ -360,6 +386,8 @@ document.addEventListener('change', e => {
   Comp.renderEditor(); Comp.renderPreview(); Comp.renderFoot();
 });
 document.addEventListener('input', e => {
-  const t = e.target; if (!Comp.open || !t.dataset.cin) return;
+  const t = e.target; if (!Comp.open) return;
+  if (t.dataset.poll !== undefined) { const p = Comp.post; p.poll = p.poll || { opts: ['', ''], dur: 7 }; p.poll.opts[+t.dataset.poll] = t.value; Comp.renderPreview(); Comp.renderFoot(); return; }
+  if (!t.dataset.cin) return;
   Comp.post[t.dataset.cin] = t.value; Comp.renderPreview(); Comp.renderFoot();
 });

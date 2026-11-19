@@ -1,6 +1,6 @@
 /* Social360 (EPISJ 360) — núcleo: utilitários, plataformas, armazenamento, dados de exemplo */
 'use strict';
-const S360_VER = '0.1';
+const S360_VER = '0.2';
 const EMBED = window.parent !== window;
 /* ponte com a EPISJ 360 (mesma origem): sessão do Office 365, pessoas, vista ativa */
 const Bridge = {
@@ -77,7 +77,7 @@ const I = {
 const PLAT = {
   facebook: { n: 'Facebook', g: 'f', c: '#1f6feb', lim: 63206, fmts: ['post', 'reel', 'story'] },
   instagram: { n: 'Instagram', g: 'IG', c: '#c13584', lim: 2200, fmts: ['post', 'carousel', 'reel', 'story'], needsMedia: true },
-  linkedin: { n: 'LinkedIn', g: 'in', c: '#0a66c2', lim: 3000, fmts: ['post', 'document', 'video'] },
+  linkedin: { n: 'LinkedIn', g: 'in', c: '#0a66c2', lim: 3000, fmts: ['post', 'document', 'poll', 'video'] },
   x: { n: 'X', g: 'X', c: '#111111', lim: 280, fmts: ['post', 'thread'] },
   tiktok: { n: 'TikTok', g: 'TT', c: '#202020', lim: 2200, fmts: ['video', 'carousel'], needsMedia: true },
   youtube: { n: 'YouTube', g: '▶', c: '#d92c20', lim: 5000, fmts: ['video', 'short'], needsMedia: true },
@@ -86,7 +86,7 @@ const PLAT = {
   threads: { n: 'Threads', g: '@', c: '#333333', lim: 500, fmts: ['post'] },
   universal: { n: 'Conteúdo universal', g: '✦', c: '#64748b', lim: 100000, fmts: ['blog', 'newsletter', 'email', 'imprensa', 'outro'] }
 };
-const FMT = { post: 'Publicação', reel: 'Reel', story: 'Story', carousel: 'Carrossel', document: 'Documento', video: 'Vídeo', thread: 'Fio', short: 'Short', pin: 'Pin', update: 'Novidade', offer: 'Oferta', event: 'Evento', blog: 'Artigo de blogue', newsletter: 'Newsletter', email: 'Email', imprensa: 'Comunicado', outro: 'Outro' };
+const FMT = { poll: 'Sondagem', post: 'Publicação', reel: 'Reel', story: 'Story', carousel: 'Carrossel', document: 'Documento (PDF)', video: 'Vídeo', thread: 'Fio', short: 'Short', pin: 'Pin', update: 'Novidade', offer: 'Oferta', event: 'Evento', blog: 'Artigo de blogue', newsletter: 'Newsletter', email: 'Email', imprensa: 'Comunicado', outro: 'Outro' };
 const pfBadge = (plat, cls = '') => { const p = PLAT[plat] || PLAT.universal; const bg = plat === 'instagram' ? 'linear-gradient(135deg,#f59e0b,#c13584 55%,#6d28d9)' : p.c; return `<span class="pf ${cls}" style="background:${bg}" title="${esc(p.n)}">${p.g}</span>`; };
 
 const STATUS = {
@@ -156,8 +156,15 @@ const Store = {
     await this.loadAll();
     this.ready = true; this.emit();
     this.subscribe();
+    setTimeout(() => this.prune(), 8000);
     setInterval(() => this.resync(), 120000);
     document.addEventListener('visibilitychange', () => { if (!document.hidden) this.resync(); });
+  },
+  // as notificações com mais de 60 dias saem da base de dados (não são dados da escola, só avisos)
+  prune() {
+    if (this.readOnly) return;
+    const lim = new Date(Date.now() - 60 * 864e5).toISOString();
+    Object.values(S.notifs).filter(n => (n.at || '') < lim).slice(0, 200).forEach(n => this.del('notifs', n.id));
   },
   setPessoas(l) {
     this.pessoas = (l || []).filter(p => p && p.email).map(p => ({ email: String(p.email).toLowerCase(), nome: p.nome || '' }));
