@@ -482,7 +482,7 @@ body.est-sge #login.pinmode .pdk button{border:1px solid #d5dbe0!important;font-
 body.est-sge #login.pinmode .pdots i{border-radius:2px!important}
 body.est-sge #login.pinmode .pinside{color:#fff;align-self:start;margin-top:8vh}
 @media (min-width:900px){body.est-sge #login.pinmode{--pin-bg:linear-gradient(90deg,#1b93c6 0 50%,#e9eef2 50% 100%)}}
-/* iOS 27: vidro */
+/* Vidro */
 body.est-ios27 #login.pinmode{--pin-bg:radial-gradient(100% 80% at 30% 0%,#7aa7ff 0%,#4a6fd8 40%,#1f2f6b 100%);--pin-card:rgba(255,255,255,.62);--pin-key:rgba(255,255,255,.55);--pin-keyh:rgba(255,255,255,.75);--pin-acc:#0a84ff;--pin-r:34px}
 body.est-ios27 #login.pinmode .lgb.pinc{backdrop-filter:blur(30px) saturate(1.6)!important;box-shadow:0 20px 60px -20px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.6)!important}
 /* Institucional: azul-marinho e dourado */
@@ -555,7 +555,7 @@ input[type=date].dp-on{outline:2px solid var(--acc);outline-offset:1px}
 .dpkl{font-size:11.5px;color:var(--mut);display:inline-flex;align-items:center;gap:5px}.dpkl i{width:6px;height:6px;border-radius:50%;background:var(--acc);display:inline-block}
 @media (max-width:420px){.esdp{width:calc(100vw - 16px)}}
 
-/* v0.918 · SpruceNote / JornalNote: novos elementos */
+/* v0.918 · Spruce Notes / JornalNote: novos elementos */
 .mq-bar{width:76px!important;align-items:stretch}
 .mq-bar .mq-tool span{font-size:10.5px;line-height:1.15;text-align:center}
 .mq-more{border:0;background:color-mix(in srgb,var(--ink) 8%,transparent);color:var(--ink);border-radius:9px;height:26px;margin:4px 10px;cursor:pointer;display:grid;place-items:center}
@@ -730,7 +730,7 @@ body.est-sge .ond{border-radius:4px}
 .ondm{margin:auto 0 0;font-size:12.5px;color:var(--mut);border-top:1px dashed var(--line);padding-top:8px}
 .ondx{margin-top:12px}.ondx summary{cursor:pointer;font-weight:600;color:var(--acc);margin-bottom:10px}
 .pab.proj .ond{font-size:1.05em}
-/* v0.921 · Minhas Tarefas (To Do) */
+/* v0.921 · Minhas Tarefas */
 .xtw{display:grid;grid-template-columns:250px minmax(0,1fr);padding:0!important;overflow:hidden;min-height:calc(100vh - 190px);align-items:stretch}
 .xtw.comdet{grid-template-columns:250px minmax(0,1fr) 340px}
 .xtside{background:color-mix(in srgb,var(--ink) 3%,var(--panel));border-right:1px solid var(--line);padding:12px 8px;display:flex;flex-direction:column;gap:2px;overflow:auto}

@@ -2,12 +2,12 @@
 <html lang="pt-PT">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-oqt32oFTf4L2xWclK3wqyf6KVBTzqL5NFp3tyW1c+7s='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-qIgBB6kqKaMOiSVXgnoCWayAc54KvS9AFaPzqA5xhMc='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#1f7a5a">
-<title>Provas · EduSpruce</title>
+<title>Spruce Exam · EduSpruce</title>
 <link rel="icon" href="favicon.png">
 <style>
 
@@ -57,7 +57,7 @@ button{font:inherit}
 
 :root{--fc:#15803d;--acc:#15803d;--acc2:#dcfce7}
 @media (prefers-color-scheme:dark){:root{--fc:#22c55e;--acc:#4ade80;--acc2:#12301f}}
-/* aparência do Provas (igual à apresentação): faixa azul-noite e verde */
+/* aparência do Spruce Exam (igual à apresentação): faixa azul-noite e verde */
 header.top{background:#0f172a;color:#fff;padding:12px 16px;border-radius:var(--r,16px);box-shadow:0 6px 18px -10px rgba(15,23,42,.6)}
 header.top b{color:#fff}header.top .logo{background:#22c55e!important;color:#fff}header.top b em{color:#4ade80!important}
 header.top .logo{background:var(--fc)}header.top b em{color:var(--fc)}
@@ -104,7 +104,7 @@ select{width:100%;font:inherit;font-size:17px;min-height:48px;border:1.5px solid
 .rq .ra{margin:6px 0;font-size:15px}.rq .rk{color:var(--ok);font-weight:600;font-size:14px}.rq .fb{background:var(--bg);border-radius:10px;padding:8px 10px;font-size:14px;margin-top:6px}
 .prevb{background:#fef3c7;color:#713f12;border-radius:12px;padding:8px 12px;font-size:14px;margin-bottom:12px;text-align:center}
 .tag{background:color-mix(in srgb,var(--fc) 12%,var(--panel));color:var(--fc)}
-/* Provas (avaliações digitais): enunciado com formatação, texto extra, justificação, tabela, legendar, banco de palavras */
+/* Spruce Exam (avaliações digitais): enunciado com formatação, texto extra, justificação, tabela, legendar, banco de palavras */
 body.pv main{max-width:900px}.enun{font-size:16.5px;line-height:1.55;margin:0 0 12px;overflow-wrap:anywhere}.enun img{max-width:100%;height:auto;border-radius:8px;display:block;margin:8px 0}.enun h3{font-size:18px;margin:10px 0 4px}.enun table{border-collapse:collapse;max-width:100%;overflow:auto;display:block}.enun td,.enun th{border:1px solid var(--line);padding:4px 8px}
 .ext{margin:0 0 12px;border:1px solid var(--line);border-radius:12px;padding:8px 12px;background:color-mix(in srgb,var(--fc) 5%,var(--panel))}.ext summary{cursor:pointer;font-weight:700;color:var(--fc);min-height:32px;display:flex;align-items:center}.ext p{margin:6px 0}
 .jl{margin-top:12px}.wc{font-size:13px;color:var(--mut);margin:4px 0 0}.mat{display:flex;flex-wrap:wrap;gap:4px;margin:0 0 6px}.mat button{min-width:40px;min-height:38px;border:1.5px solid var(--line);border-radius:9px;background:var(--panel);color:var(--ink);font:600 16px/1 inherit;cursor:pointer}
@@ -121,7 +121,7 @@ body.quad *:not(.leg i):not(.legl b):not(.op i):not(.ico){border-radius:0!import
 </head>
 <body class="pv">
 <main>
-  <header class="top"><span class="logo" aria-hidden="true">S</span><b>Edu<em>Spruce</em> · <span id="modn">Provas</span></b></header>
+  <header class="top"><span class="logo" aria-hidden="true">S</span><b>Edu<em>Spruce</em> · <span id="modn">Spruce Exam</span></b></header>
   <div id="app" aria-live="polite"></div>
   <p class="rod">Só o teu professor vê as tuas respostas. Esta página não guarda nada neste aparelho. <a href="privacidade.html#alunos" target="_blank" rel="noopener" style="color:inherit">Privacidade</a></p>
 </main>
@@ -157,8 +157,8 @@ const PERG=q=>!['secao','info'].includes(q.tipo);
 let S={code:'',id:'',k:null,D:null,aluno:null,chave:'',nome:'',prev:false};
 let R={resp:{},t0:0,pag:0,hist:[],fim:0,tm:null,ordem:{},ops:{}};
 
-function cor(){if(S.D&&S.D.quad)document.body.classList.add('quad');if(S.D&&S.D.mod==='provas'){document.body.classList.add('pv');const n=document.getElementById('modn');if(n)n.textContent='Provas';document.title='Provas · EduSpruce'}document.documentElement.style.setProperty('--fc',(S.D&&S.D.f.cor)||'#1f7a5a');const m=document.querySelector('meta[name=theme-color]');if(m&&S.D)m.content=S.D.f.cor||'#1f7a5a'}
-function ecraCodigo(msg,valor){app.innerHTML=`<section class="card"><h1>Provas</h1><p class="mut">Escreve o código que o professor mostrou (8 letras e números).</p>
+function cor(){if(S.D&&S.D.quad)document.body.classList.add('quad');if(S.D&&S.D.mod==='provas'){document.body.classList.add('pv');const n=document.getElementById('modn');if(n)n.textContent='Spruce Exam';document.title='Spruce Exam · EduSpruce'}document.documentElement.style.setProperty('--fc',(S.D&&S.D.f.cor)||'#1f7a5a');const m=document.querySelector('meta[name=theme-color]');if(m&&S.D)m.content=S.D.f.cor||'#1f7a5a'}
+function ecraCodigo(msg,valor){app.innerHTML=`<section class="card"><h1>Spruce Exam</h1><p class="mut">Escreve o código que o professor mostrou (8 letras e números).</p>
   <form id="f" autocomplete="off" novalidate><label for="cod">Código</label><input id="cod" inputmode="text" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="11" placeholder="XXXX-XXXX" value="${esc(valor||'')}" aria-describedby="e">
   <p class="err" id="e" role="alert">${esc(msg||'')}</p><button class="btn" id="b">Continuar</button></form></section>`;
   const i=$('#cod'),f=$('#f'),b=$('#b');
@@ -219,7 +219,7 @@ function exameBarra(){const b=document.getElementById('exb');const n=(R.sai||0)+
 function tique(){const el=$('#tempo');const r=Math.max(0,R.fim-Date.now());if(el){const m=Math.floor(r/60000),s=Math.floor(r%60000/1000);el.querySelector('span').textContent='⏱ '+m+':'+String(s).padStart(2,'0');el.classList.toggle('fim',r<60000)}
   if(r<=0){clearInterval(R.tm);guardarPag();enviar(true)}}
 function num(q){if(S.D.f.defs.numerar===false)return '';let n=0;for(const p of R.P)for(const x of p.itens){if(PERG(x))n++;if(x===q)return n+'.'}return ''}
-/* enunciados com formatação (Provas): só etiquetas simples e imagens embutidas */
+/* enunciados com formatação (Spruce Exam): só etiquetas simples e imagens embutidas */
 function limpa(h){const d=new DOMParser().parseFromString('<div>'+String(h||'')+'</div>','text/html');const OK=['B','STRONG','I','EM','U','SUB','SUP','BR','P','DIV','UL','OL','LI','H3','SPAN','IMG','TABLE','TBODY','TR','TD','TH','S','AUDIO','A'];
   const vai=n=>{[...n.childNodes].forEach(c=>{if(c.nodeType===3)return;if(c.nodeType!==1||!OK.includes(c.tagName)){if(c.nodeType===1&&!['SCRIPT','STYLE','IFRAME','OBJECT'].includes(c.tagName)){vai(c);c.replaceWith(...c.childNodes)}else c.remove();return}
     [...c.attributes].forEach(a=>{const ok=(c.tagName==='IMG'&&a.name==='src'&&/^data:image\/(png|jpe?g|gif|webp);base64,/i.test(a.value))||(c.tagName==='AUDIO'&&((a.name==='src'&&/^data:audio\/[a-z0-9.+-]+(;codecs=[a-z0-9.,]+)?;base64,/i.test(a.value))||a.name==='controls'))||(c.tagName==='A'&&a.name==='href'&&/^https?:\/\//i.test(a.value))||(c.tagName==='SPAN'&&a.name==='class'&&/^(fr|fn|fd|rd)$/.test(a.value));if(!ok)c.removeAttribute(a.name)});

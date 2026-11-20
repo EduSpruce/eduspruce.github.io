@@ -2,11 +2,11 @@
 <html lang="pt-PT">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-SCnTV443XH+1c8juFqDCuNLMnUIWunmPeFAXhacAN60=' 'sha256-RDNLiNTBK+REu044tQWEsMMzK0E0l2maFlqOJ9dSVfI=' 'sha256-J7wIZTa0tLGcW4FTSbAtLoDHHKOXJDimd4pJ3xYcq8E='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-SCnTV443XH+1c8juFqDCuNLMnUIWunmPeFAXhacAN60=' 'sha256-vszqH3f9a2Kwh7J5dEfJfMQXZX079gk1oF9tjudnpm8=' 'sha256-3L7WoF1UKd0Dg1gcTSNITKjrUJeePBOK7xhTq0tJGrs='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5efe2">
 <meta name="robots" content="noindex">
-<title>Spruce It</title>
+<title>Spruce It!</title>
 <link rel="icon" href="favicon.png">
 <link rel="stylesheet" href="fontes/fontes.css">
 <style>
@@ -129,7 +129,7 @@ input:focus{border-color:var(--primary)}
 <script>/* nunca dentro de uma página de outro sítio (proteção contra cliques enganados) */try{if(top!==self){let m=false;try{m=top.location.origin===location.origin}catch(_){}if(!m)document.documentElement.style.display='none'}}catch(_){}
 window.__ES_SB={"ativo":true,"url":"https://ssuescpqyhuqkphauwde.supabase.co","anonKey":"sb_publishable_oNNwLRRXJmqDzBqQPlf9jw_N0L29FjV"};</script>
 <script>
-/* ===================== Arena · código comum (app do professor e página do aluno) =====================
+/* ===================== Spruce It! · código comum (app do professor e página do aluno) =====================
    Pinhas (personagens originais em SVG), modos de jogo, sons sintetizados, filtro de alcunhas e cifra da lista da turma.
    Tudo original: nomes, desenhos, textos e sons. */
 (function(){
@@ -276,7 +276,7 @@ AR.pinhaFechada=(sz,cor)=>`<svg viewBox="0 0 100 100" width="${sz}" height="${sz
 /* ---------- pontuação por extenso ---------- */
 AR.nf=n=>Math.round(+n||0).toLocaleString('pt-PT');
 /*ARENA-EXTRA-INI*/
-/* ===================== v0.990 · Arena: 8 modos novos (6 «especiais») e 24 Bichos novos — tudo original ===================== */
+/* ===================== v0.990 · Spruce It!: 8 modos novos (6 «especiais») e 24 Bichos novos — tudo original ===================== */
 Object.assign(AR.MODOS,{
   pesca:{nome:'Pesca no Lago',ic:'🎣',cor:'#0284c7',ritmo:'livre',dur:true,obj:'kg',desc:'Cada resposta certa lança a cana: sardinhas, robalos, polvos… e, com sorte, o Atum Gigante ou a Baleia Dourada. Ganha quem pescar mais quilos.'},
   corrida:{nome:'Corrida',ic:'🏁',cor:'#dc2626',ritmo:'livre',dur:true,obj:'casas',desc:'Cada resposta certa avança uma casa; três certas seguidas dão turbo (+2). Quem chegar primeiro à meta ganha.'},
@@ -416,8 +416,8 @@ AR.temaEscuro=k=>k==='arena'||k==='neon';
   duelo:()=>{tom(880,0,.06,'sawtooth',.07);tom(660,.07,.06,'sawtooth',.07);tom(990,.14,.15,'sawtooth',.07)},
   testemunho:()=>{[523,784].forEach((f,i)=>tom(f,i*.08,.12,'triangle',.1))}
 }[n];if(x)return x();return _t(n)}}
-/* ---------- 1.145 · aparência «Recreio» (roxo e amarelo, igual à apresentação do Spruce It) e Cubos ---------- */
-AR.TEMAS.recreio={nome:'Recreio',v:{'--bg':'#ede9fe','--surface':'#ffffff','--ink':'#1e1b4b','--muted':'#5b5794','--line':'#d9d0fb','--primary':'#6d28d9','--on-primary':'#fff','--accent':'#facc15','--on-accent':'#3b0764','--hero':'#5b21b6','--hero-ink':'#ffffff','--hero-line':'#facc15','--radius':'18px','--bw':'2px','--display':"'Baloo 2'",'--dw':'800','--case':'none','--track':'-.01em','--shadow':'0 5px 0 #3b0f7a','--shadow-a':'0 4px 0 #a16207','--a1':'#eab308','--a2':'#3b82f6','--a3':'#22c55e','--a4':'#ef4444','--on-a':'#fff'}};
+/* ---------- 1.145 · aparência «Recreio» (roxo e amarelo, igual à apresentação do Spruce It!) e Cubos ---------- */
+AR.TEMAS.recreio={nome:'Recreio',v:{'--bg':'#ede9fe','--surface':'#ffffff','--ink':'#1e1b4b','--muted':'#5b5794','--line':'#d9d0fb','--primary':'#6d28d9','--on-primary':'#fff','--accent':'#facc15','--on-accent':'#3b0764','--hero':'#5b21b6','--hero-ink':'#ffffff','--hero-line':'#facc15','--radius':'18px','--bw':'2px','--display':"'Baloo 2'",'--dw':'800','--case':'none','--track':'-.01em','--shadow':'0 5px 0 #3b0f7a','--shadow-a':'0 4px 0 #a16207','--a1':'#f59e0b','--a2':'#0ea5e9','--a3':'#ec4899','--a4':'#14b8a6','--on-a':'#fff'}};
 {const _ok=AR.temaOk;AR.temaOk=k=>AR.TEMAS[k]?k:'recreio'}
 /* Cubos: personagens originais em forma de cubo arredondado com olhos (as mesmas das apresentações) */
 AR.CUBOS_DEF=[['p52','Brasa','#f97316','#c2410c','o'],['p53','Rela','#4ade80','#16a34a',''],['p54','Bip','#60a5fa','#1d4ed8','a'],['p55','Algodão','#f472b6','#be185d','o'],['p56','Sol','#facc15','#a16207',''],['p57','Lilás','#c084fc','#7e22ce','a'],['p58','Maré','#2dd4bf','#0f766e','o'],['p59','Coral','#fb7185','#be123c','']];
@@ -434,14 +434,14 @@ window.ARENA=AR;
 <script>
 (()=>{const AR=window.ARENA;const $=s=>document.querySelector(s);const app=$('#app');
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const CORES=['var(--a1)','var(--a2)','var(--a3)','var(--a4)'],FORMAS=['▲','◆','●','■'];
+const CORES=['var(--a1)','var(--a2)','var(--a3)','var(--a4)'],FORMAS=['A','B','C','D'];
 let CFG=null;const st={};
 function tema(k){k=AR.temaOk(k||'');if(st.tema===k)return;st.tema=k;document.documentElement.style.cssText=AR.temaCss(k);const m=document.querySelector('meta[name=theme-color]');if(m)m.content=AR.TEMAS[k].v['--bg'];try{localStorage.setItem('arena.tema',k)}catch(_){}}
 {let k0='';try{k0=new URLSearchParams(location.search).get('tema')||localStorage.getItem('arena.tema')||''}catch(_){}tema(k0)}
 let tPoll=null,tRel=null,canal=null,ocupado=false,ecraAtual='';
-async function cfg(){if(CFG)return CFG;let c=window.__ES_SB;if(!c||typeof c!=='object'){try{c=await (await fetch('supabase-config.json',{cache:'no-store'})).json()}catch(_){c=null}}if(!c||!c.url)throw new Error('O Spruce It não está configurado.');CFG=c;return c}
+async function cfg(){if(CFG)return CFG;let c=window.__ES_SB;if(!c||typeof c!=='object'){try{c=await (await fetch('supabase-config.json',{cache:'no-store'})).json()}catch(_){c=null}}if(!c||!c.url)throw new Error('O Spruce It! não está configurado.');CFG=c;return c}
 async function rpc(fn,args){const c=await cfg();let r;try{r=await fetch(c.url+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'Content-Type':'application/json',apikey:c.anonKey,Authorization:'Bearer '+c.anonKey},body:JSON.stringify(args)})}catch(e){const x=new Error('Sem ligação. A tentar de novo…');x.rede=true;throw x}
-  if(!r.ok){const t=await r.text();const x=new Error(r.status===404?'O Spruce It ainda não está disponível nesta escola.':'Erro do servidor ('+r.status+').');x.http=r.status;x.det=t;throw x}return r.json()}
+  if(!r.ok){const t=await r.text();const x=new Error(r.status===404?'O Spruce It! ainda não está disponível nesta escola.':'Erro do servidor ('+r.status+').');x.http=r.status;x.det=t;throw x}return r.json()}
 const MSG={espere:'Demasiadas tentativas falhadas a partir desta rede. Espera uns minutos e tenta de novo.',sala:'Não encontrei essa sala, ou o jogo já terminou. Confirma o código.',limite:'O prazo deste trabalho de casa já passou.',alcunha:'A alcunha precisa de 2 a 24 carateres.',impropria:'Essa alcunha não pode ser usada. Escolhe outra.',
   emuso:'Esse nome já está a ser usado por outro aparelho. Se és tu, espera uns segundos e tenta de novo.',tardia:'O jogo já começou e o professor não deixa entrar depois do início.',cheia:'A sala está cheia.',expulso:'O professor tirou-te deste jogo.',lista:'Escolhe o teu nome na lista.',pedido:'Pedido inválido.'};
 const guardar=()=>{try{localStorage.setItem('arena.'+st.id,JSON.stringify({j:st.j,tok:st.tok,alcunha:st.alcunha,ref:st.ref||null,code:st.code}))}catch(_){}};

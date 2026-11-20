@@ -245,7 +245,7 @@ body.est-sge.est-sge.est-sge :is(#view,#ampv) table.grid thead th.niv{background
 body.est-sge.est-sge.est-sge :is(#view,#ampv) table.grid thead th.niv.folha{background:#1690b6!important;color:#fff!important;font-weight:700}
 body.est-sge.est-sge.est-sge :is(#view,#ampv) table.grid thead th.niv.vz{background:#0a7ea6!important}
 body.est-sge.est-sge.est-sge #ampv :is(table.grid,.grid) thead th :is(.dh,small,button){color:rgba(255,255,255,.9)!important}
-/* v0.989 · Contactos ao estilo macOS (três colunas), adaptados ao tema */
+/* v0.989 · Contactos (três colunas), adaptados ao tema */
 html body .cmw{display:grid;grid-template-columns:220px minmax(230px,300px) minmax(0,1fr);height:var(--cmh,70vh);border:1px solid var(--line);border-radius:14px;background:var(--panel);overflow:hidden;color:var(--ink)}
 html body .cmw>*{min-width:0;min-height:0}
 html body .cmsb{background:color-mix(in srgb,var(--bg) 70%,var(--panel));border-right:1px solid var(--line);padding:10px 8px;overflow:auto;display:flex;flex-direction:column;gap:1px}
@@ -1335,7 +1335,7 @@ html body #mqdemo.bv-spruceit .mqd-mold{border-color:#facc15}
 .bv-pexp{margin-top:10px;display:inline-flex;align-items:center;gap:6px;font-weight:700;color:#15803d;font-size:12.5px}
 @media (prefers-reduced-motion:reduce){.bv-si *,.bv-fm *,.bv-pv *{animation:none!important}}
 
-/* ---------- Formulários: início novo (ao estilo do Microsoft Forms) ---------- */
+/* ---------- Formulários: início novo ---------- */
 html body .fmc{margin:-4px -4px 0}
 html body .fmc-w{max-width:1180px;margin:0 auto;padding:0 18px}
 html body .fmc-topo{background:color-mix(in srgb,var(--ink) 4%,var(--bg));padding:22px 0 26px;border-bottom:1px solid var(--line)}
@@ -1406,7 +1406,7 @@ html body.est-sge :is(.fmc-b,.fmc-m,.fmc-c,.fmc-ls,.fmc-vz,.fmc-filt,.fmc-g span
 .bv-pod .bv-bi{width:44px;height:44px}
 .bv-pod b{display:grid;place-items:center;width:100%;border-radius:8px 8px 0 0;color:#fff;font-size:20px;font-weight:900;transform-origin:bottom;animation:bvAlto .8s calc(var(--d) + .1s) cubic-bezier(.2,.8,.3,1.3) both}
 .bv-pod>div:nth-child(1) b{height:70px;background:#94a3b8}.bv-pod>div:nth-child(2) b{height:100px;background:#facc15;color:#713f12}.bv-pod>div:nth-child(3) b{height:50px;background:#fb923c}
-/* Pulso (1.152): grelha em direto ao estilo do Socrative */
+/* Pulso (1.152): grelha em direto */
 html body #mqdemo.bv-pulso .mqd-pn{background:linear-gradient(172deg,#7c2d12 0,#ea580c 58%,var(--panel) 58.2%)}
 html body #mqdemo.bv-pulso .mqd-go{background:#fff;color:#c2410c}html body #mqdemo.bv-pulso .mqd-mold{border-color:#e7dccf}
 .bv-pu2{width:1100px;height:640px;position:relative;overflow:hidden;background:#f7f2ee;padding:22px 26px;font-family:inherit;font-size:13px;text-align:left;color:#1f2a37}
@@ -1649,3 +1649,24 @@ html body:not(.est-sge) #ars-esq .arse{border-radius:16px}
 html body .spv .ars-k{display:flex!important;align-items:flex-start;gap:10px}
 html body .spv .ars-ki{display:flex!important;align-items:center!important;justify-content:center!important;width:34px!important;height:34px!important;padding:0!important}
 html body .spv .ars-ki svg{width:18px!important;height:18px!important;margin:0!important}
+/* ===================== dia20 ===================== */
+html body .d20n{display:flex;align-items:center;gap:12px;width:100%;margin:12px 0 0;padding:12px 14px;border:0;border-radius:14px;cursor:pointer;text-align:left;font:inherit;color:#3a2a00;
+  background:linear-gradient(110deg,#fff4d6,#ffe6a8 45%,#fff4d6 70%);background-size:220% 100%;animation:d20brilho 4s ease-in-out infinite;box-shadow:0 0 0 1px rgba(243,146,0,.35)}
+html body .d20n:hover{box-shadow:0 0 0 2px #f39200}
+html body .d20n .d20i{font-size:26px;line-height:1;animation:d20salta 2.4s ease-in-out infinite}
+html body .d20n b{display:block;font-size:14.5px}html body .d20n small{display:block;font-size:12.5px;opacity:.85;margin-top:1px}
+html body.escurox .d20n{color:#fff1cc;background:linear-gradient(110deg,#3a2a05,#5a3f08 45%,#3a2a05 70%);background-size:220% 100%}
+html body.est-sge .d20n{border-radius:0}
+@keyframes d20brilho{0%,100%{background-position:100% 0}50%{background-position:0 0}}
+@keyframes d20salta{0%,70%,100%{transform:translateY(0) rotate(0)}80%{transform:translateY(-5px) rotate(-8deg)}90%{transform:translateY(0) rotate(6deg)}}
+html body #d20f{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;background:rgba(8,20,30,.55);animation:d20in .35s ease-out}
+html body #d20f.sai{opacity:0;transition:opacity .4s}
+html body #d20f canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+html body #d20f .d20m{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;background:var(--panel,#fff);color:var(--ink,#0c2f42);padding:28px 36px 24px;border-radius:22px;box-shadow:0 30px 80px -20px rgba(0,0,0,.5);animation:d20pop .6s cubic-bezier(.2,1.6,.4,1)}
+html body.est-sge #d20f .d20m{border-radius:0}
+html body #d20f .d20e{font-size:56px;line-height:1;animation:d20salta 1.6s ease-in-out infinite}
+html body #d20f b{font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:-.02em;font-family:var(--sp-disp,inherit)}
+html body #d20f span{font-size:clamp(17px,2.2vw,22px);font-weight:600}
+html body #d20f small{color:var(--mut,#3d5a69);font-size:13.5px;margin-bottom:8px}
+@keyframes d20in{from{opacity:0}}@keyframes d20pop{from{transform:scale(.6);opacity:0}}
+@media (prefers-reduced-motion:reduce){html body .d20n,html body .d20n .d20i,html body #d20f .d20e,html body #d20f .d20m{animation:none}}
