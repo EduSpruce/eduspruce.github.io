@@ -555,7 +555,7 @@ input[type=date].dp-on{outline:2px solid var(--acc);outline-offset:1px}
 .dpkl{font-size:11.5px;color:var(--mut);display:inline-flex;align-items:center;gap:5px}.dpkl i{width:6px;height:6px;border-radius:50%;background:var(--acc);display:inline-block}
 @media (max-width:420px){.esdp{width:calc(100vw - 16px)}}
 
-/* v0.918 · SpruceNote / JornalNote: novos elementos */
+/* v0.918 · Spruce Notes / Jornal Notes: novos elementos */
 .mq-bar{width:76px!important;align-items:stretch}
 .mq-bar .mq-tool span{font-size:10.5px;line-height:1.15;text-align:center}
 .mq-more{border:0;background:color-mix(in srgb,var(--ink) 8%,transparent);color:var(--ink);border-radius:9px;height:26px;margin:4px 10px;cursor:pointer;display:grid;place-items:center}

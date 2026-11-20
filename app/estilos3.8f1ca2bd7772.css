@@ -1024,7 +1024,7 @@ html body .cpcr-ced .btn{margin-left:6px}
 html body .cdet h3{margin:14px 0 6px;font-size:14px}
 html body .cdet-l{margin:0;padding-left:18px;font-size:13px}
 @media print{html body .cpcr-f,html body .cpcr-b,html body .cpcr-hj,html body .cpcr-leg b{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
-/* ===================== 1.138 · SpruceNote/JornalNote: quadro de demonstração ===================== */
+/* ===================== 1.138 · Spruce Notes/Jornal Notes: quadro de demonstração ===================== */
 html body .mq-cv .mq-demob{position:absolute;right:12px;bottom:12px;z-index:6;display:inline-flex;align-items:center;gap:6px;padding:7px 12px;font-family:inherit;font-weight:600;font-size:13px;line-height:1;color:#fff;background:var(--acc);border:0;border-radius:10px;cursor:pointer;box-shadow:0 4px 14px -4px color-mix(in srgb,var(--acc) 70%,transparent);transition:transform .15s,box-shadow .15s}
 html body .mq-cv .mq-demob:hover{transform:translateY(-1px);box-shadow:0 8px 20px -6px color-mix(in srgb,var(--acc) 80%,transparent)}
 html body .mq-cv .mq-demob:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
@@ -1186,7 +1186,7 @@ html body #login.pinmode .lgnota:empty{display:none}
 @media (prefers-reduced-motion:reduce){html body #login.pinmode *,html body #login.pinmode .lgb.pinc{animation:none!important}}
 html body.est-sge #login.pinmode .pdk button{border-radius:0!important}
 html body.est-sge #login.pinmode .pdk button:not(.pdc):not(.pdb){border:1px solid #d5dbe0!important}
-/* ===================== 1.141 · SpruceNote e JornalNote: melhorias ===================== */
+/* ===================== 1.141 · Spruce Notes e Jornal Notes: melhorias ===================== */
 html body .mq-seta .pt{stroke:none}
 html body .mq-seta .mqm-et rect{fill:var(--card,#fff);stroke:var(--line,#d5dbe0);stroke-width:1}
 html body .mq-seta .mqm-et text{font:12px/1 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:var(--ink,#333);pointer-events:none}
@@ -1209,7 +1209,7 @@ html body .mqm-mod svg{color:var(--acc,#1b93c6)}
 html body .mqm-mod small{color:var(--mut,#5f6b76);line-height:1.35}
 html body .mqm-md{width:100%;min-height:320px;font:12px/1.45 ui-monospace,Menlo,Consolas,monospace;padding:10px;border:1px solid var(--line,#d5dbe0);background:var(--bg,#fff);color:inherit}
 @media (max-width:900px){html body .mq-top .mqm-l{display:none}}
-/* ===================== 1.142 · boas-vindas do Spruce It, Formulários e Provas + início novo dos Formulários ===================== */
+/* ===================== 1.142 · boas-vindas do Spruce It!, Spruce Forms e Spruce Exam + início novo do Spruce Forms ===================== */
 html body .bv-verb{position:fixed;right:84px;bottom:22px;z-index:60;display:inline-flex;align-items:center;gap:6px;padding:9px 14px;font-family:inherit;font-weight:600;font-size:13px;color:#fff;background:var(--acc);border:0;border-radius:10px;cursor:pointer;box-shadow:0 6px 18px -6px color-mix(in srgb,var(--acc) 70%,transparent);animation:bvBt .5s .4s both}
 html body .bv-verb:hover{transform:translateY(-1px)}@keyframes bvBt{from{opacity:0;transform:translateY(10px)}}
 html body.est-sge .bv-verb{border-radius:0}
@@ -1231,7 +1231,7 @@ html body #mqdemo.bv-spruceit .mqd-mold{border-color:#facc15}
 @keyframes bvIn{from{opacity:0;transform:translateY(16px) scale(.94)}}
 .bv-si h5,.bv-fm h5,.bv-pv h5{margin:0 0 10px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:6px}
 .bv-si h5 em,.bv-fm h5 em,.bv-pv h5 em{margin-left:auto;font-style:normal;font-weight:600;font-size:12px;opacity:.7}
-/* Spruce It */
+/* Spruce It! */
 .bv-si{background:radial-gradient(circle at 20% 10%,#8b5cf6,#5b21b6 45%,#312e81);color:#fff;padding:18px 22px}
 .bv-si::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.08) 2px,transparent 2.5px);background-size:28px 28px}
 .bv-sitop{position:relative;display:flex;align-items:center;gap:10px;margin-bottom:16px}
@@ -1271,7 +1271,7 @@ html body #mqdemo.bv-spruceit .mqd-mold{border-color:#facc15}
 .bv-modos{position:relative;display:flex;gap:10px;margin-top:14px;justify-content:center}
 .bv-modos span{background:rgba(255,255,255,.14);border:2px solid rgba(255,255,255,.25);padding:7px 14px;border-radius:999px;font-weight:800;font-size:12.5px}
 .bv-modos span:first-child{background:#facc15;color:#3b0764;border-color:#facc15}
-/* Formulários */
+/* Spruce Forms */
 .bv-fm{background:#f3f2f1;color:#252423}
 .bv-fmtop{display:flex;align-items:center;gap:14px;background:#0e7490;color:#fff;padding:12px 20px}
 .bv-fmtop b{display:flex;align-items:center;gap:6px;font-size:15px}
@@ -1305,7 +1305,7 @@ html body #mqdemo.bv-spruceit .mqd-mold{border-color:#facc15}
 .bv-qrc{display:grid;grid-template-columns:repeat(7,10px);gap:1px;padding:6px;border:1px solid #e1dfdd;border-radius:4px}.bv-qrc i{width:10px;height:10px}.bv-qrc i.p{background:#252423}
 .bv-novo{position:absolute;right:12px;top:10px;background:#22c55e;color:#fff;font-weight:700;font-size:11px;padding:3px 8px;border-radius:9px;opacity:0;animation:bvNovo 3s 2.6s infinite}
 @keyframes bvNovo{0%{opacity:0;transform:translateY(6px)}15%,60%{opacity:1;transform:none}80%,100%{opacity:0;transform:translateY(-8px)}}
-/* Provas */
+/* Spruce Exam */
 .bv-pv{display:flex;background:#f6f8fb;color:#0f172a}
 .bv-pvlado{width:58px;background:#0f172a;display:flex;flex-direction:column;align-items:center;gap:16px;padding:18px 0;color:#94a3b8}.bv-pvlado i{width:36px;height:36px;display:grid;place-items:center;border-radius:10px}.bv-pvlado i.on{background:#22c55e;color:#fff}
 .bv-pvm{flex:1;padding:18px 22px}
@@ -1335,7 +1335,7 @@ html body #mqdemo.bv-spruceit .mqd-mold{border-color:#facc15}
 .bv-pexp{margin-top:10px;display:inline-flex;align-items:center;gap:6px;font-weight:700;color:#15803d;font-size:12.5px}
 @media (prefers-reduced-motion:reduce){.bv-si *,.bv-fm *,.bv-pv *{animation:none!important}}
 
-/* ---------- Formulários: início novo ---------- */
+/* ---------- Spruce Forms: início novo ---------- */
 html body .fmc{margin:-4px -4px 0}
 html body .fmc-w{max-width:1180px;margin:0 auto;padding:0 18px}
 html body .fmc-topo{background:color-mix(in srgb,var(--ink) 4%,var(--bg));padding:22px 0 26px;border-bottom:1px solid var(--line)}
@@ -1406,13 +1406,13 @@ html body.est-sge :is(.fmc-b,.fmc-m,.fmc-c,.fmc-ls,.fmc-vz,.fmc-filt,.fmc-g span
 .bv-pod .bv-bi{width:44px;height:44px}
 .bv-pod b{display:grid;place-items:center;width:100%;border-radius:8px 8px 0 0;color:#fff;font-size:20px;font-weight:900;transform-origin:bottom;animation:bvAlto .8s calc(var(--d) + .1s) cubic-bezier(.2,.8,.3,1.3) both}
 .bv-pod>div:nth-child(1) b{height:70px;background:#94a3b8}.bv-pod>div:nth-child(2) b{height:100px;background:#facc15;color:#713f12}.bv-pod>div:nth-child(3) b{height:50px;background:#fb923c}
-/* Pulso (1.152): grelha em direto */
-html body #mqdemo.bv-pulso .mqd-pn{background:linear-gradient(172deg,#7c2d12 0,#ea580c 58%,var(--panel) 58.2%)}
-html body #mqdemo.bv-pulso .mqd-go{background:#fff;color:#c2410c}html body #mqdemo.bv-pulso .mqd-mold{border-color:#e7dccf}
+/* Spruce Live (1.152): grelha em direto */
+html body #mqdemo.bv-pulso .mqd-pn{background:linear-gradient(172deg,#7f1d1d 0,#dc2626 58%,var(--panel) 58.2%)}
+html body #mqdemo.bv-pulso .mqd-go{background:#fff;color:#b91c1c}html body #mqdemo.bv-pulso .mqd-mold{border-color:#f1d4d4}
 .bv-pu2{width:1100px;height:640px;position:relative;overflow:hidden;background:#f7f2ee;padding:22px 26px;font-family:inherit;font-size:13px;text-align:left;color:#1f2a37}
 .bv-pu2 *{box-sizing:border-box}
 .bv-pu2 [style*="--d"]{animation:bvIn .5s var(--d) cubic-bezier(.2,.9,.3,1.2) both}
-.bv-puc{background:#fff;border:3px solid #e7dccf;border-radius:18px;padding:20px 26px;height:100%}
+.bv-puc{background:#fff;border:3px solid #f1d4d4;border-radius:18px;padding:20px 26px;height:100%}
 .bv-puh{display:flex;align-items:center;gap:8px;padding-bottom:14px;border-bottom:1px solid #eee}
 .bv-puh b{font-size:24px;font-weight:800;color:#1f2a37;display:flex;align-items:center;gap:8px}.bv-puh b i{font-style:normal;font-size:12px;width:22px;height:22px;border:1.5px solid #9ca3af;border-radius:50%;display:grid;place-items:center;color:#6b7280}
 .bv-pub{display:inline-flex;align-items:center;gap:6px;padding:8px 13px;border-radius:6px;background:#06aee0;color:#fff;font-weight:700;font-size:13px}.bv-pub.l{background:#e0f6fd;color:#047fa6}.bv-pub em{font-style:normal;font-size:11px}
@@ -1440,14 +1440,14 @@ html body #mqdemo.bv-pulso .mqd-go{background:#fff;color:#c2410c}html body #mqde
 .bv-puexp small{display:block;font-weight:700;color:#1f2a37;margin-top:4px}.bv-puexp p{margin:2px 0;color:#4b5563;font-size:12.5px}
 @media (prefers-reduced-motion:reduce){.bv-pu2 *{animation:none!important}}
 
-/* botão ⋯ dos cartões (Pulso, Spruce It, Formulários): os três pontos tinham deixado de aparecer */
+/* botão ⋯ dos cartões (Spruce Live, Spruce It!, Spruce Forms): os três pontos tinham deixado de aparecer */
 html body .btn .icdots{display:block!important;flex:none!important;min-width:18px!important;max-width:none!important;width:18px!important;height:18px!important;opacity:1!important;visibility:visible!important;fill:currentColor!important;stroke:none!important}
 html body .btn .icdots circle{fill:currentColor!important;stroke:none!important}
 
-/* Pulso › Quizzes: as pastas e os cartões ficam dentro de um cartão, alinhados com o resto */
+/* Spruce Live › Quizzes: as pastas e os cartões ficam dentro de um cartão, alinhados com o resto */
 html body .card.puqlista{min-height:320px}
 html body .card.puqlista>.arpasta:first-child{margin-top:0}
-/* ===================== 1.145 · Provas: aparência igual à apresentação (azul-noite e verde) ===================== */
+/* ===================== 1.145 · Spruce Exam: aparência igual à apresentação (azul-noite e verde) ===================== */
 html body .pv{--acc:#16a34a}
 html body .pv .pvnav,html body.est-sge.est-sge.est-sge .pv .pvnav{background:#0f172a!important;border-color:#0f172a!important}
 html body .pv .pvnav button,html body.est-sge.est-sge.est-sge .pv .pvnav button{color:#cbd5e1!important}
@@ -1645,7 +1645,7 @@ html body #ars-esq li b{display:block;font-size:13.5px}html body #ars-esq li sma
 html body #ars-esq .arse-pe{margin:12px 0 0;font-size:12px;font-weight:700;color:#6d28d9}
 html body.est-sge #ars-esq .arse-ic{border-radius:0}
 html body:not(.est-sge) #ars-esq .arse{border-radius:16px}
-/* indicadores do Spruce It: ícone ao centro da caixa */
+/* indicadores do Spruce It!: ícone ao centro da caixa */
 html body .spv .ars-k{display:flex!important;align-items:flex-start;gap:10px}
 html body .spv .ars-ki{display:flex!important;align-items:center!important;justify-content:center!important;width:34px!important;height:34px!important;padding:0!important}
 html body .spv .ars-ki svg{width:18px!important;height:18px!important;margin:0!important}
