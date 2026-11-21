@@ -135,6 +135,10 @@ nav.side button:hover svg{transform:translateX(2px)}
 #subfolders .chip:hover{padding-left:20px}
 .sk{height:42px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,#f3f5f8 25%,#e9edf2 37%,#f3f5f8 63%);background-size:400% 100%;animation:shim 1.2s ease infinite}
 @keyframes shim{0%{background-position:100% 50%}100%{background-position:0 50%}}
+.bu-num{font-size:15px;margin:2px 0 8px}.bu-num b{font-size:22px;font-variant-numeric:tabular-nums}
+.bu-bar{position:relative;height:8px;border-radius:6px;background:#e8edf5;overflow:visible}.bu-bar i{display:block;height:100%;border-radius:6px;background:var(--brand)}.bu-bar i.bad{background:var(--bad)}
+.bu-bar b{position:absolute;top:-3px;bottom:-3px;width:2px;background:#8a96a8;border-radius:1px}
+.bu-tab{margin-top:10px;max-width:420px}.bu-tab td.num{text-align:right;font-variant-numeric:tabular-nums}
 .prog{height:6px;border-radius:6px;background:#e8edf5;overflow:hidden;margin-top:12px;display:none}
 .prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--brand),#4f8ef0);border-radius:6px;transition:width .3s ease;position:relative}
 .prog i::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);animation:shim2 1.1s linear infinite}
@@ -1088,12 +1092,10 @@ nav.side button.sub.on{border-left-color:var(--mc,var(--accent))}
 /* 0.9.104: Box360 › Modelos oficiais */
 .motipo .mohd{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}.motipo .mohd h2{margin:0}
 .momod{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:10px 0;background:#fff}
-.motab input[type=text],#moTur input[type=text]{width:100%;box-sizing:border-box}.motab td{vertical-align:top}
 .mopre{white-space:pre-wrap;font:12px/1.5 ui-monospace,Menlo,Consolas,monospace;background:#f6f8fb;border:1px solid var(--line);border-radius:8px;padding:10px;max-height:240px;overflow:auto;margin:6px 0}
 .mopk{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:10px 4px;font:inherit;font-size:14px;color:var(--ink);cursor:pointer}
 .mopk:hover{background:var(--brandbg)}.mopk span{flex:1;min-width:0;overflow-wrap:anywhere}.mopk small{color:var(--brand);font-weight:600}
 .mopk svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;color:var(--muted)}
-#moPickPath a{color:var(--brand);text-decoration:none}#moPickPath a:hover{text-decoration:underline}
 .moonde{margin-top:10px;border-top:1px solid var(--line);padding-top:10px}
 .nov{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 24px 60px rgba(15,23,42,.22);width:min(560px,100%);max-height:min(78vh,720px);display:flex;flex-direction:column;overflow:hidden;animation:novPop .32s cubic-bezier(.2,.8,.2,1.1) both}
 .nov-h{padding:22px 24px 14px;background:linear-gradient(180deg,var(--brandbg),transparent);border-bottom:1px solid var(--line)}
@@ -1791,7 +1793,6 @@ table.fd-t td{vertical-align:middle;cursor:pointer;font-size:13px}table.fd-t td.
     <button data-t="pas"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>Pastas</button>
     <button data-t="config"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Atribuições</button>
     <button data-t="rel"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 15l2 2 4-4"/></svg>Relatório</button>
-    <button data-t="mof" title="O modelo oficial de cada teste, exame e grelha de avaliação, e o que o cabeçalho tem de ter"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 8.5h16M8 13h8M8 17h5"/></svg>Modelos oficiais</button>
     <button data-t="est"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 6-6"/></svg>Estatísticas</button>
     <button data-t="env"><svg viewBox="0 0 24 24"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>Enviar</button>
     <button data-t="pra"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M9 16l2 2 4-4"/></svg>Prazos</button>
@@ -2478,7 +2479,6 @@ table.fd-t td{vertical-align:middle;cursor:pointer;font-size:13px}table.fd-t td.
         <button class="b" id="scanBtn">Analisar esta pasta e subpastas</button>
         <button class="b s" id="scanUpd" title="Volta a ler todas as pastas, uma a uma">Leitura completa</button>
         <button class="b s" id="scanStop" style="display:none;color:var(--bad)" title="Para a análise; o que já foi lido fica guardado">■ Parar análise</button>
-        <button class="b s" id="tplGo" title="Lê os ficheiros desta pasta e passa a usá-los como modelos oficiais da escola">Usar esta pasta como modelos oficiais</button>
         <span id="scanMsg" class="hint" style="margin:0"></span>
       </div>
       <div class="prog" id="scanProg"><i></i></div>
@@ -2489,6 +2489,11 @@ table.fd-t td{vertical-align:middle;cursor:pointer;font-size:13px}table.fd-t td.
       <button class="b s" id="dlList" style="display:none">Descarregar listagem (CSV)</button>
       <span id="lastInfo" class="hint" style="margin:0"></span>
     </div>
+  </div>
+  <div class="card" id="buCard">
+    <h2>Pedidos à Box este mês</h2>
+    <p class="hint">O plano da Box da escola permite 10 000 pedidos por mês. A app conta aqui os que faz, em todos os computadores. Aos 80% as leituras automáticas param sozinhas até ao dia 1.</p>
+    <div id="buBody"></div>
   </div>
   <div class="card" id="anaCard" style="display:none">
     <h2>Análises guardadas</h2>
@@ -2580,7 +2585,6 @@ table.fd-t td{vertical-align:middle;cursor:pointer;font-size:13px}table.fd-t td.
     <h2>Documentos vazios, falsos ou copiados</h2>
     <p class="hint">O texto de cada documento entregue é lido pela Box (só leitura) e guardado neste navegador; só os ficheiros novos ou alterados voltam a ser lidos. Um documento <b>vazio</b>, com <b>texto de enchimento</b> ou igual a um <b>modelo por preencher</b> não conta como entregue. Os outros sinais ficam como «a confirmar»: a decisão é sua.</p>
     <div class="chips" id="qChecks" style="margin-bottom:12px">
-      <label class="chip"><input type="checkbox" data-q="modelo">1 · modelo por preencher</label>
       <label class="chip"><input type="checkbox" data-q="enchimento">2 · texto de enchimento</label>
       <label class="chip"><input type="checkbox" data-q="tipo">3 · conteúdo não corresponde ao documento</label>
       <label class="chip"><input type="checkbox" data-q="modulo">4 · documento de outro módulo</label>
@@ -2596,44 +2600,11 @@ table.fd-t td{vertical-align:middle;cursor:pointer;font-size:13px}table.fd-t td.
       <button class="b" id="qGo" style="align-self:flex-end">Ler os documentos agora</button>
     </div>
     <p class="hint" id="qMsg" style="margin:8px 0 0"></p>
-    <p class="hint" id="qTpl" style="margin:8px 0 0"></p>
     <div class="prog" id="qProg"><i></i></div>
   </div>
   <div id="report" data-col="b"></div>
 </section>
 
-<section id="mof">
-  <div class="card">
-    <h2>Modelos oficiais <span class="tag ok" style="vertical-align:middle">só leitura</span></h2>
-    <p class="hint">Indique o modelo oficial de cada documento (teste, exame e grelha de avaliação) e o que o cabeçalho tem de ter: a turma escrita da forma certa, o n.º de projeto, o módulo, o formador… A app compara cada documento entregue com o modelo e mostra o que não o segue. Pode haver variações: só os campos <b>obrigatórios</b> contam, e para cada um pode juntar outras formas aceites. Os modelos e os documentos são só lidos — nada na Box é alterado.</p>
-    <div class="row">
-      <label class="chip" style="align-self:center"><input type="checkbox" id="moOn"> <b>Verificar os documentos com os modelos oficiais</b></label>
-      <label class="grow">Um documento que não segue o modelo<select id="moFalta"><option value="">fica «a confirmar» (conta como entregue)</option><option value="modelo">fica «não segue o modelo oficial» (conta como entregue)</option><option value="1">não conta como entregue</option></select></label>
-    </div>
-    <p class="hint" id="moMsg" style="margin:8px 0 0"></p>
-  </div>
-  <div class="tiles" id="moTiles"></div>
-  <div id="moTipos"></div>
-  <div class="card">
-    <h2>Como cada turma se escreve no cabeçalho</h2>
-    <p class="hint">A forma oficial do nome de cada turma nos cabeçalhos (ano letivo ativo). Em branco, aceita o código da turma ou o nome na Box. O n.º de projeto vem de Escola360 › Turmas.</p>
-    <div style="overflow-x:auto"><table class="rt"><thead><tr><th style="width:80px">Turma</th><th class="hm">Nome na Box</th><th>Como se escreve no cabeçalho</th><th>Outras formas aceites</th><th>N.º de projeto</th></tr></thead><tbody id="moTur"></tbody></table></div>
-  </div>
-  <div class="card">
-    <h2>Documentos verificados</h2>
-    <p class="hint">Os testes, exames e grelhas das pastas dos módulos, comparados com o modelo do seu tipo. Primeiro usa o texto que a Box já deu; se faltar alguma coisa, a app lê o próprio ficheiro (o cabeçalho do Word, a 1.ª página do PDF, as primeiras linhas do Excel) — só leitura, ao ritmo calmo de sempre.</p>
-    <div class="row">
-      <label class="grow">Estado<select id="moFEst"><option value="">Todos</option><option value="nao">Não seguem o modelo</option><option value="dif">Com diferenças em campos opcionais</option><option value="ok">Seguem o modelo</option><option value="pend">Por ler</option><option value="nv">Não verificáveis</option></select></label>
-      <label class="grow">Documento<select id="moFTipo"></select></label>
-      <label class="grow">Formador<select id="moFProf"></select></label>
-      <label class="grow">Procurar<input type="text" id="moFTxt" placeholder="turma, módulo ou ficheiro"></label>
-    </div>
-    <div class="row" style="margin:10px 0"><button class="b" id="moLerGo">Ler os cabeçalhos agora</button><button class="b s" id="moCsv">Copiar a lista (CSV)</button></div>
-    <div class="prog" id="moProg"><i></i></div>
-    <div id="moDocs"></div>
-  </div>
-  <input type="file" id="moFile" accept=".docx,.pdf,.xlsx,.xlsm,.xls,.ods" hidden>
-</section>
 
 <!-- 4. ENVIAR -->
 <section id="est">
@@ -3054,7 +3025,6 @@ table.fd-t td{vertical-align:middle;cursor:pointer;font-size:13px}table.fd-t td.
     <div id="rcNuv" style="margin-top:14px"></div>
   </div>
 </section>
-<div class="nov-bg" id="moPick" hidden><div class="nov" role="dialog" aria-modal="true" aria-labelledby="moPickT" style="width:min(640px,100%)"><div class="nov-h"><span class="nov-k">Box · só leitura</span><h2 id="moPickT">Escolher o modelo oficial</h2><p id="moPickPath"></p></div><div class="nov-l" id="moPickL"></div><div class="nov-f"><button class="b s" id="moPickX" type="button">Cancelar</button></div></div></div>
 <div class="nov-bg" id="novBg" hidden><div class="nov" role="dialog" aria-modal="true" aria-labelledby="novT"><div class="nov-h"><span class="nov-k">Novidades</span><h2 id="novT">O que mudou na EPISJ 360</h2><p id="novSub"></p></div><div class="nov-l" id="novL"></div><div class="nov-f"><button class="b" id="novOk">Percebi</button></div></div></div>
 <div class="rc-dw" id="rcDw" hidden><div class="rc-dwb" role="dialog" aria-modal="true" aria-labelledby="rcDwT"><div class="rc-dwh"><b id="rcDwT"></b><button class="b s" id="rcDwX">Fechar</button></div><div id="rcDwC"></div></div></div>
 </main>
@@ -3074,7 +3044,7 @@ table.fd-t td{vertical-align:middle;cursor:pointer;font-size:13px}table.fd-t td.
 "use strict";
 const COLL_PT=new Intl.Collator("pt"),COLL_PTN=new Intl.Collator("pt",{numeric:true}); // 0.9.86: ordenar com um só comparador (muito mais rápido do que localeCompare a cada comparação)
 const ICO={"cloud": "<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M17.5 19H8a5 5 0 1 1 1.1-9.9A6 6 0 0 1 20.5 11a4 4 0 0 1-3 8z\"/></svg>", "alert": "<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z\"/><path d=\"M12 9v4M12 17h.01\"/></svg>", "cal": "<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"3\" y=\"5\" width=\"18\" height=\"16\" rx=\"2\"/><path d=\"M3 10h18M8 3v4M16 3v4\"/></svg>", "eye": "<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/></svg>", "pencil": "<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 20h9\"/><path d=\"M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z\"/></svg>"};const ico=k=>ICO[k]||""; // 0.9.82: ícones de linha em vez de emojis
-const VERSAO="0.9.112"; // versão da EPISJ 360 — sobe a cada alteração publicada
+const VERSAO="0.9.113"; // versão da EPISJ 360 — sobe a cada alteração publicada
 const BC_VER="1.24"; // versão do módulo Box360
 document.querySelectorAll("[data-ver]").forEach(el=>el.textContent="v"+VERSAO);
 document.querySelectorAll("[data-bcver]").forEach(el=>el.textContent="v"+BC_VER);
@@ -3473,7 +3443,7 @@ function tabNovo(t,v){const R={cal:()=>true,crPs:()=>v.has("esc")||v.has("anos")
   if(/^pw/.test(t))return pwPode(); // 0.9.98: Pass360 — só a Direção (Direção Executiva, Direção Pedagógica, administradores)
   if(/^fo[A-Z]/.test(t))return v.has("esc")||v.has("anos")||podePublicar(); // 0.9.107: Folder360 — só a Direção
   if(/^pap/.test(t))return v.has("esc")||v.has("anos")||podePublicar();
-  if(t==="mof")return v.has("rel")||v.has("config")||podePublicar(); // 0.9.101: Box360 › Modelos oficiais — quem vê o Relatório (a Direção) // 0.9.92: PAP360 — só a Direção // 0.9.73: Social360 — Direção, ou quem está num espaço de trabalho do Social360
+  if(t==="mof")return false; // 0.9.101: Box360 › Modelos oficiais — quem vê o Relatório (a Direção) // 0.9.92: PAP360 — só a Direção // 0.9.73: Social360 — Direção, ou quem está num espaço de trabalho do Social360
   if(!R[t])return null;let srv=null;try{srv=PREV&&UTI?UTI.separadores:(EU&&EU.separadores)}catch(e){}if(Array.isArray(srv)&&srv.includes(t))return null;return R[t]()}
 $("#mods").addEventListener("click",e=>{const b=e.target.closest("button[data-m]");if(b)mostrarModulo(b.dataset.m,true)});
 mostrarModulo(curMod,false);
@@ -3484,7 +3454,7 @@ $("#nav").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)
 function show(t){if(!podeVer(t)){const f=primeiroPermitido(modDeTab(t)||curMod);if(!f||f===t)return;t=f}
   curTab=t;document.body.classList.toggle("esch",t==="esch");document.body.classList.toggle("s360",/^s3/.test(t));try{if(!(LOGOS.anos&&LOGOS.anos.__ok))lgMigrar();aplicarLogos()}catch(e){}{const m=modDeTab(t);if(m&&m!==curMod)mostrarModulo(m,false)}document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
   document.querySelectorAll("main>section").forEach(s=>s.classList.toggle("on",s.id===t));
-  if(t==="prof"&&typeof GRID_SUJO!=="undefined"&&GRID_SUJO.profs){GRID_SUJO.profs=0;try{renderProfs()}catch(e){}} if(t==="rel")renderReport(); if(t==="est")renderEst(); if(t==="pas")renderTree(); if(t==="alt"){renderAlt();if(SES&&lastListing&&!scanBusy&&Date.now()-(lastListing.t||0)>120000)altAtualizar(true)} if(t==="rel"||t==="alt")verificarFundo(); if(t==="env")renderSend(); if(t==="def")renderDef(); if(t==="cop")renderRP(); if(t==="pra")renderPrazos(); if(t==="mof"){renderMof();verificarFundo()} if(t==="esc")renderEscPainel(); if(t==="anos")renderAnos(); if(t==="cur")renderCursos(); if(t==="tur")renderTurmas(); if(t==="for")renderFormandos(); if(t==="pc")renderPC(); if(t==="cal")renderCal(); if(t.startsWith("cr"))crRender(t); if(t.startsWith("pap"))papRender(t); if(/^pw/.test(t))pwRender(t); if(/^fo[A-Z]/.test(t))foRender(t); if(t==="dsd")renderDSD(); if(t==="esch")esMostrar(); if(t==="meu")renderMeu(); if(t==="mh")renderMh(); if(t==="uti")renderUti(); if(t.startsWith("rc"))try{rcRender(t)}catch(e){console.warn(e)} if(/^s3/.test(t))s3Mostrar(t)}
+  if(t==="prof"&&typeof GRID_SUJO!=="undefined"&&GRID_SUJO.profs){GRID_SUJO.profs=0;try{renderProfs()}catch(e){}} if(t==="rel")renderReport(); if(t==="box")try{buUI()}catch(e){} if(t==="est")renderEst(); if(t==="pas")renderTree(); if(t==="alt"){renderAlt();if(SES&&lastListing&&!scanBusy&&Date.now()-(lastListing.t||0)>120000)altAtualizar(true)} if(t==="rel"||t==="alt")verificarFundo(); if(t==="env")renderSend(); if(t==="def")renderDef(); if(t==="cop")renderRP(); if(t==="pra")renderPrazos(); if(t==="mof"){verificarFundo()} if(t==="esc")renderEscPainel(); if(t==="anos")renderAnos(); if(t==="cur")renderCursos(); if(t==="tur")renderTurmas(); if(t==="for")renderFormandos(); if(t==="pc")renderPC(); if(t==="cal")renderCal(); if(t.startsWith("cr"))crRender(t); if(t.startsWith("pap"))papRender(t); if(/^pw/.test(t))pwRender(t); if(/^fo[A-Z]/.test(t))foRender(t); if(t==="dsd")renderDSD(); if(t==="esch")esMostrar(); if(t==="meu")renderMeu(); if(t==="mh")renderMh(); if(t==="uti")renderUti(); if(t.startsWith("rc"))try{rcRender(t)}catch(e){console.warn(e)} if(/^s3/.test(t))s3Mostrar(t)}
 function refreshAll(){renderAll();if(curTab&&curTab.startsWith("rc"))try{rcRender(curTab)}catch(_){}try{escRender();esRecarregar()}catch(_){}if(curTab==="pra")renderPrazos();if(curTab==="rel")renderReport();if(curTab==="est")renderEst();if(curTab==="env")renderSend();if(curTab==="pas")renderTree();if(curTab==="alt")renderAlt();if(curTab==="cop")renderRP()}
 const debounce=(fn,ms)=>{let h;return()=>{clearTimeout(h);h=setTimeout(fn,ms)}};
 
@@ -3997,8 +3967,8 @@ function qualCtx(idx,slotOf,mods){
   const sib=new Map(); // disciplina -> Map(módulo -> {cod, re, des})
   for(const m of mods){const dc=discCode(m.disc),mk=modKey(m.cod);let s=sib.get(dc);if(!s)sib.set(dc,s=new Map());if(!s.has(mk))s.set(mk,{cod:m.cod,re:modRegex(m.cod),des:norm(desigOf(m))})}
   const tpls=[],tplSha=new Map();
-  if(qOn("modelo"))for(const i of TPL.itens||[]){tplSha.set(i.sha1,i.nome);const t=TX.get(i.sha1);if(t&&t.w>=30)tpls.push({nome:i.nome,t})}
-  if(qOn("modelo"))for(const md of moModelos()){const sh=md.fonte&&md.fonte.sha1;if(!sh||tplSha.has(sh))continue;tplSha.set(sh,md.nome);const t=TX.get(sh);if(t&&t.w>=30)tpls.push({nome:md.nome,t})} // 0.9.101
+  // 0.9.113: a comparação com os modelos oficiais foi retirada (tpls fica vazio)
+  if(false)for(const i of TPL.itens||[]){tplSha.set(i.sha1,i.nome);const t=TX.get(i.sha1);if(t&&t.w>=30)tpls.push({nome:i.nome,t})}
   let inicio="";if(qOn("antigo")){inicio=QC().inicio||"";if(!/^\d{4}-\d\d-\d\d$/.test(inicio)){inicio="";if(idx.anos.size===1)inicio=[...idx.anos.keys()][0].slice(0,4)+"-07-01"}}
   return{bySha,lsh,sib,tpls,tplSha,ref,inicio};
 }
@@ -4037,8 +4007,6 @@ function qualOf(f,slot,X){
       if(bo&&best>=0.85)W.push(`texto ${Math.round(best*100)}% igual ao de ${bo.slot?`${modLabel(bo.slot.m)} › ${bo.slot.T.d.nome} (${bo.f.name})`:bo.label}`)}}
   if(f.sha1&&X.ref&&qOn("anterior")&&X.ref.shas.has(f.sha1))W.push(`mesmo ficheiro já entregue em “${X.ref.pasta.split("/").pop()}”`);
   if(X.inicio&&f.cmod&&f.cmod.slice(0,10)<X.inicio)W.push(`última edição em ${f.cmod.slice(5,7)}/${f.cmod.slice(0,4)}, antes do ano letivo`);
-  if(slot){const mo=moAvaliar(f,slot.m);if(mo&&mo.estado==="nao"){const tx=`não segue o modelo oficial de ${moTipoNome(mo.tipo)}: ${mo.falhas.slice(0,3).join("; ")}${mo.falhas.length>3?"…":""}`; // 0.9.101
-    if(cfg.mo&&cfg.mo.falta===true)return{lvl:"bad",txt:tx,mo:true};W.unshift(tx);return{lvl:"warn",txt:W.slice(0,3).join("; "),mo:true}}}
   return W.length?{lvl:"warn",txt:W.slice(0,3).join("; ")}:null;
 }
 // 0.9.94: caminho real de uma pasta, a partir da pasta da turma (ex.: «008 - Avaliação > 008.1 - Formandos > 012.1.1 - Enunciados de Avaliação > 1400 - TIC > Módulo 001»)
@@ -4091,7 +4059,7 @@ function evalCore(idx,mods){
       const key=m.id+"|p:"+relTurma(x.rec.r),loc=locReal(x.rec.r.slice(0,-1));let state,reasons=[],q=[],pastaObs="";
       if(x.vazia){state="missing";pastaObs=FAR.length&&cobre(FAR,esp)?"a Box não deixou abrir esta pasta (sem acesso) — não foi possível confirmar":"pasta vazia"}
       else{q=x.own.map(f=>{const r=qualOf(f,x.slot,X);if(r&&FP[fpKey(f)])return{f,q:null,fp:r.txt};return{f,q:r}});
-        const good=q.filter(y=>!y.q||y.q.lvl!=="bad"),clean=q.filter(y=>!y.q),moF=q.filter(y=>y.q&&y.q.mo),rz=L=>L.map(y=>`${y.f.name}: ${y.q.txt}`);
+        const good=q.filter(y=>!y.q||y.q.lvl!=="bad"),clean=q.filter(y=>!y.q),moF=[],rz=L=>L.map(y=>`${y.f.name}: ${y.q.txt}`);
         // 0.9.104: um teste/exame/grelha que não segue o modelo oficial aparece mesmo que a pasta tenha outros ficheiros bons
         if(moF.length&&cfg.mo&&cfg.mo.falta===true){state="blank";reasons=rz(moF)}
         else if(moF.length&&cfg.mo&&cfg.mo.falta==="modelo"){state="modelo";reasons=rz(moF)} // 0.9.106: estado próprio «não segue o modelo oficial» (conta como entregue)
@@ -4114,10 +4082,7 @@ function evalCore(idx,mods){
 }
 // o resultado fica guardado enquanto nada mudar (ficheiros, textos lidos, módulos, documentos exigidos, opções)
 let EV=null,EVK=null,_ekRev=-1,_ek="",QF=null;
-function cfgEvalKey(){if(_ekRev!==cfgRev){_ek=JSON.stringify([cfg.docTypes,cfg.mods,cfg.desig,cfg.qual,(cfg.envios||[]).map(v=>v.id),cfg.fp||{},moEvalKey()]);_ekRev=cfgRev}return _ek}
-// 0.9.101: o que os modelos oficiais usam (modelos, turmas, cursos, nomes dos formadores)
-function moEvalKey(){const c=cfg.mo;if(!c||!Array.isArray(c.modelos)||!c.modelos.length)return"";try{const E=escData();
-  return JSON.stringify([c,(E.turmas||[]).map(t=>[t.id,t.cod,t.nome,t.cab,t.cabVar,t.fse,t.cursoId,t.anoIni,t.anoFim]),(E.cursos||[]).map(x=>[x.id,x.nome]),cfg.profs.map(p=>p.id+p.nome)])}catch(e){return""}}
+function cfgEvalKey(){if(_ekRev!==cfgRev){_ek=JSON.stringify([cfg.docTypes,cfg.mods,cfg.desig,cfg.qual,(cfg.envios||[]).map(v=>v.id),cfg.fp||{}]);_ekRev=cfgRev}return _ek}
 function evaluate(){const idx=getIdx(),ck=cfgEvalKey(),k=filesRev+"|"+txRev+"|"+refRev+"|"+tplRev;
   if(EV&&EVK&&EVK.k===k&&EVK.ck===ck)return EV;
   EV=evalCore(idx,ativos());EVK={k,ck};QF=null;return EV}
@@ -4220,10 +4185,6 @@ function qualInit(){
   const cur=lastListing&&lastListing.rootId,r=resumos();
   $("#qRef").innerHTML=`<option value="">— nenhum —</option>`+Object.keys(r).filter(id=>id!==cur).map(id=>`<option value="${esc(id)}" ${cfg.qual.refRoot===id?"selected":""}>${esc(r[id].pasta)} (analisada a ${esc(r[id].quando)})</option>`).join("");
   const idx=getIdx();$("#qInicio").placeholder=idx.anos.size===1?[...idx.anos.keys()][0].slice(0,4)+"-07-01":"AAAA-MM-DD";
-  const n=(TPL.itens||[]).length;
-  $("#qTpl").innerHTML=n?`<b>Modelos oficiais:</b> ${n} ficheiro(s) de “${esc(TPL.pasta||"")}” (lidos a ${esc(TPL.quando||"")}). Para mudar, abra a pasta dos modelos em <b>Análise</b> e clique em “Usar esta pasta como modelos oficiais”.`
-    :`<b>Modelos oficiais:</b> ainda não definidos. Em <b>Análise</b>, abra a pasta onde estão os modelos da escola (ex.: <i>Formadores › Modelos de Documentos</i>) e clique em “Usar esta pasta como modelos oficiais”.`;
-  $("#qTpl").innerHTML+=` O modelo de cada teste, exame e grelha, com o que o cabeçalho tem de ter, define-se em <b>Box360 › Modelos oficiais</b>.`; // 0.9.101
 }
 $("#qMin").addEventListener("change",e=>{cfg.qual.min=Math.max(1,+e.target.value||40);save();renderReport()});
 $("#qInicio").addEventListener("change",e=>{const v=e.target.value.trim();if(v&&!/^\d{4}-\d\d-\d\d$/.test(v)){toast("Escreva a data como AAAA-MM-DD");return}cfg.qual.inicio=v;save();renderReport()});
@@ -4236,38 +4197,52 @@ async function boxRaw(url,hints,asText){
   const h=new URL(url).hostname;if(!/(^|\.)box\.com$|(^|\.)boxcloud\.com$/.test(h))throw new Error("endereço inesperado");
   const api=/(^|\.)api\.box\.com$/.test(h);
   for(let t=0;t<6;t++){if(api)await vez();else await vezConteudo();const tok=await accessToken();const H={Authorization:"Bearer "+tok};if(hints)H["x-rep-hints"]=hints;
-    let r;try{r=await fetch(url,{method:"GET",headers:H})}catch(e){if(api)travar(1500*(t+1));else await sleep(1500*(t+1));if(t<3)continue;throw new Error("rede")}
+    let r;buConta(api?"tx":"dl");try{r=await fetch(url,{method:"GET",headers:H})}catch(e){if(api)travar(1500*(t+1));else await sleep(1500*(t+1));if(t<3)continue;throw new Error("rede")}
     if(r.status===202){await sleep(1500);continue}
     if(r.status===429){travar(esperaBox(r));continue}
     if(r.status>=500){await sleep(800*2**t);continue}
     if(r.status===401&&SES&&SES.mode==="oauth"&&t===0){await accessToken(true);continue}
-    if(!r.ok)throw new Error("Box "+r.status);
+    if(!r.ok){const er=new Error("Box "+r.status);er.status=r.status;throw er}
     if(api)RATE.ok++;
     return asText===2?r.arrayBuffer():asText?r.text():r.json()} // 0.9.105: 2 = ficheiro (PDF de pré-visualização)
   throw new Error("Box ocupada");
 }
 // texto de um ficheiro, extraído pela própria Box: devolve {txt} ou {err}
-async function textoDe(fid){
+// 0.9.113: no máximo 1 pedido à API por documento (0 se a listagem das pastas já trouxe o endereço do texto). Se a Box ainda não
+// tiver o texto pronto, não se volta a perguntar logo (antes eram até 11 perguntas seguidas): fica para uma próxima passagem.
+async function textoDe(fid,sha1){
+  const r0=REP.get(String(fid));
+  if(r0&&r0.ok&&(!sha1||!r0.sha1||r0.sha1===sha1)){try{return{txt:await boxRaw(r0.url,null,true)}}catch(e){if(e.kind==="auth")throw e;REP.delete(String(fid))}}
   const info=await boxRaw(`https://api.box.com/2.0/files/${fid}?fields=representations`,"[extracted_text]");
-  let rep=((info.representations||{}).entries||[]).find(x=>x.representation==="extracted_text");
-  if(!rep)return{err:"sem texto disponível para este tipo"};
-  for(let i=0;i<12&&rep.status&&rep.status.state!=="success"&&rep.status.state!=="viewable";i++){
-    if(rep.status.state==="error")return{err:"a Box não conseguiu ler o texto"};
-    if(i)await sleep(1500);
-    const st=await boxRaw(rep.info.url);rep={...rep,...st};}
-  if(rep.status&&rep.status.state!=="success"&&rep.status.state!=="viewable")return{err:"texto ainda não disponível"};
+  const rep=((info.representations||{}).entries||[]).find(x=>x.representation==="extracted_text");
+  if(!rep)return{err:"sem texto disponível para este tipo",fim:true};
+  const st=rep.status&&rep.status.state;
+  if(st==="error")return{err:"a Box não conseguiu ler o texto",fim:true};
+  if(st&&st!=="success"&&st!=="viewable"){
+    if(st==="none"&&rep.info&&rep.info.url){try{await boxRaw(rep.info.url)}catch(e){if(e.kind==="auth")throw e}} // pede à Box que prepare o texto (1 pedido, só uma vez)
+    return{err:"texto ainda não disponível",pend:true}}
   return{txt:await boxRaw(rep.content.url_template.replace("{+asset_path}",""),null,true)};
 }
+/* 0.9.113: documentos cujo texto ainda não se conseguiu ler — esperam cada vez mais antes de nova tentativa
+   (15 min → 2 h → 1 dia → 7 dias; à 5.ª fica «sem texto»). Antes eram tentados outra vez sempre que a app abria. */
+var TXF=(function(){try{return JSON.parse(localStorage.getItem("g360_txf")||"{}")||{}}catch(e){return{}}})();
+var TXF_ESP=[15*60e3,2*3600e3,864e5,7*864e5];
+function txfEspera(sha1){const f=TXF[sha1];return!!(f&&Date.now()<f.prox)}
+function txfGuardar(){try{const k=Object.keys(TXF);if(k.length>6000)for(const x of k.sort((a,b)=>TXF[a].prox-TXF[b].prox).slice(0,k.length-6000))delete TXF[x];localStorage.setItem("g360_txf",JSON.stringify(TXF))}catch(e){}}
+async function txfFalhou(sha1){const f=TXF[sha1]||{n:0};f.n++;if(f.n>TXF_ESP.length){delete TXF[sha1];txfGuardar();await guardarSemTexto(sha1);return}
+  f.prox=Date.now()+TXF_ESP[f.n-1];TXF[sha1]=f;txfGuardar()}
 const TEXT_EXT=/\.(pdf|docx?|odt|rtf|pptx?|odp|xlsx?|ods|txt)$/i;
-const precisaLer=f=>!!(f&&f.fid&&f.sha1&&TEXT_EXT.test(f.name||f.n||"")&&f.size!==0&&!TX.has(f.sha1));
+const precisaLer=f=>!!(f&&f.fid&&f.sha1&&TEXT_EXT.test(f.name||f.n||"")&&f.size!==0&&!TX.has(f.sha1)&&!txfEspera(f.sha1));
 // lê o texto de uma lista de ficheiros {fid, sha1, name, size} e guarda-o (por impressão digital) neste navegador
 async function checkFiles(list,onProg,cancel,conc){
   let done=0,err=0,idx=0;
   const worker=async()=>{while(idx<list.length&&SES&&!(cancel&&cancel())){
     if(cancel&&document.visibilityState==="hidden"){await sleep(3000);continue} // 0.9.70: leitura de fundo pára com a janela escondida
     const f=list[idx++];
-    try{if(!TX.has(f.sha1)){const r=await textoDe(f.fid);if(r.txt!=null)await guardarTexto(f.sha1,r.txt);else{err++;if(r.err!=="texto ainda não disponível")await guardarSemTexto(f.sha1)}}}
-    catch(e){if(e.kind==="auth")throw e;err++}
+    try{if(!TX.has(f.sha1)){const r=await textoDe(f.fid,f.sha1);if(r.txt!=null){await guardarTexto(f.sha1,r.txt);if(TXF[f.sha1]){delete TXF[f.sha1];txfGuardar()}}
+        else{err++;if(r.fim)await guardarSemTexto(f.sha1);else await txfFalhou(f.sha1)}}}
+    catch(e){if(e.kind==="auth")throw e;err++;
+      if(e.status===403||e.status===404)await guardarSemTexto(f.sha1);else await txfFalhou(f.sha1)}
     done++;onProg&&onProg(done,list.length)}};
   await Promise.all(Array.from({length:Math.min(conc||3,list.length)},worker));
   return{done,err};
@@ -4275,13 +4250,15 @@ async function checkFiles(list,onProg,cancel,conc){
 function porLer(){const todo=new Map();for(const e of evaluate())for(const i of e.items)for(const f of i.hits)if(precisaLer(f))todo.set(f.sha1,f);return[...todo.values()]}
 // verificação em segundo plano: a app continua utilizável e o relatório atualiza-se no fim
 let bgRun=0,bgOn=false;
-function verificarFundo(){if(!SES||bgOn)return;return boxLer("texto",verificarFundo0,false)} // 0.9.86: a leitura de fundo corre só numa janela
+function verificarFundo(){if(!SES||bgOn||buTravado())return;return boxLer("texto",verificarFundo0,false)} // 0.9.113: parada com 80% dos pedidos do mês gastos // 0.9.86: a leitura de fundo corre só numa janela
 async function verificarFundo0(){
-  if(!SES||bgOn)return;const list=porLer(),el=$("#bg")||$("#bgp")||document.createElement("span");if(!list.length&&!(moAtivo()&&moPorLer().length)){el.style.display="none";return} // 0.9.101: também os cabeçalhos dos modelos oficiais // 0.9.50: o indicador chama-se #bgp
+  if(!SES||bgOn)return;const list=porLer(),el=$("#bg")||$("#bgp")||document.createElement("span");if(!list.length){el.style.display="none";return}
+  if(!(await trincoNuvem("box-texto",900)))return; // 0.9.113: outro computador já está a ler o texto (chega pela nuvem) // 0.9.101: também os cabeçalhos dos modelos oficiais // 0.9.50: o indicador chama-se #bgp
   const my=++bgRun;bgOn=true;el.style.display="";let last=0;
+  let trinco=Date.now();
   try{const r=await checkFiles(list,(d,n)=>{el.textContent=`a ler documentos ${d}/${n}`;
-      if(Date.now()-last>15000){last=Date.now();if(curTab==="rel")renderReport();if(curTab==="alt")renderAlt()}},()=>my!==bgRun,2);
-    if(my===bgRun)await moFundo(()=>my!==bgRun,el); // 0.9.101
+      if(Date.now()-trinco>5*60e3){trinco=Date.now();trincoNuvem("box-texto",900)}
+      if(Date.now()-last>15000){last=Date.now();if(curTab==="rel")renderReport();if(curTab==="alt")renderAlt()}},()=>my!==bgRun||buTravado(),2);
     el.textContent=`${r.done-r.err} documentos lidos`;setTimeout(()=>{if(!bgOn)el.style.display="none"},6000)}
   catch(e){el.textContent="leitura interrompida"}
   bgOn=false;nuvemTextos();if(curTab==="rel")renderReport();if(curTab==="alt")renderAlt();
@@ -4291,6 +4268,7 @@ $("#qGo").onclick=async()=>{
   if(!files.some(f=>f.fid)){$("#qMsg").textContent="Faça primeiro uma análise no separador Análise.";return}
   bgRun++;const list=porLer();
   if(!list.length){$("#qMsg").textContent="Todos os documentos já foram lidos.";renderReport();return}
+  if(buTravado()&&!confirm(`Já se gastaram ${buN(buTotal())} dos ${buN(BU_ORC)} pedidos à Box deste mês. Ler ${buN(list.length)} documento(s) gasta até ${buN(list.length)} pedidos. Continuar?`))return;
   const b=$("#qGo");b.disabled=true;$("#qProg").style.display="block";$("#qProg i").style.width="2%";const t0=Date.now();
   try{const r=await checkFiles(list,(d,n)=>{$("#qMsg").textContent=`A ler o texto… ${d}/${n}`;$("#qProg i").style.width=Math.max(2,Math.round(d/n*100))+"%"});
     $("#qMsg").textContent=`Concluído em ${Math.round((Date.now()-t0)/1000)} s: ${r.done-r.err} documento(s) lidos${r.err?`, ${r.err} sem texto disponível (não foram avaliados)`:""}.`}
@@ -4298,361 +4276,10 @@ $("#qGo").onclick=async()=>{
   b.disabled=false;setTimeout(()=>{$("#qProg").style.display="none"},800);
   renderReport();
 };
-// modelos oficiais: lê os ficheiros da pasta escolhida em Análise
-$("#tplGo").onclick=async()=>{
-  if(!SES){toast("Entre primeiro na Box");return}
-  if(scanBusy){toast("Espere que a análise termine");return}
-  if(curFolder.id==="0"){toast("Abra primeiro a pasta onde estão os modelos");return}
-  const nome=curFolder.path.slice(1).map(p=>p.name).join("/"),b=$("#tplGo");b.disabled=true;scanBusy=true;
-  const run=++scanRun,st={nP:0,nF:0,opened:0,retries:0,failed:[],t0:Date.now(),modo:"a ler a pasta dos modelos"};
-  try{const itens=[];await crawl(run,[{id:curFolder.id,path:nome}],itens,st);scanRun++;
-    const fl=itens.filter(x=>x.type==="file"&&x.sha1&&x.size!==0&&TEXT_EXT.test(x.name));
-    if(fl.length>300){$("#scanMsg").textContent=`Esta pasta tem ${fl.length} documentos — escolha a pasta que só tem os modelos.`}
-    else{await checkFiles(fl.map(x=>({fid:x.id,sha1:x.sha1,name:x.name,size:x.size})),(d,n)=>{$("#scanMsg").textContent=`A ler os modelos… ${d}/${n}`});
-      TPL={id:curFolder.id,pasta:nome,quando:new Date().toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"}),itens:fl.map(x=>({nome:x.name,sha1:x.sha1}))};
-      try{localStorage.setItem("boxcheck_modelos",JSON.stringify(TPL))}catch(e){}marcarCfg();
-      tplRev++;qualInit();$("#scanMsg").textContent=`${TPL.itens.length} modelo(s) lidos de “${nome}”. Os documentos iguais ou quase iguais a um modelo passam a aparecer como “modelo por preencher”.`}
-  }catch(e){scanRun++;$("#scanMsg").textContent="Erro: "+e.message}
-  scanBusy=false;b.disabled=false;
-};
 
-/* ===================== EPISJ 360 0.9.104: Box360 › Modelos oficiais =====================
-   O modelo oficial de cada documento (teste, exame, grelha de avaliação) e o que o cabeçalho tem de ter.
-   cfg.mo = {on, falta, tipos:{<tipo>:{pastas,ficheiro,excluir,est}}, modelos:[{id,tipo,ano,nome,fonte:{origem,fid,sha1,pasta,quando,por},linhas,cab,campos:[{id,nome,regra,valor,var,obrig}],em}]}
-   Turmas (Escola360): t.cab = como a turma se escreve no cabeçalho; t.cabVar = outras formas aceites (separadas por «;»).
-   A BOX É SAGRADA: o modelo e os documentos só são LIDOS (GET files/{id}/content) e o texto é tirado aqui, no navegador.
-   Cada documento é visto primeiro com o texto que a Box já deu; só se faltar alguma coisa é descarregado e lido no próprio
-   ficheiro (cabeçalho do Word, 1.ª página do PDF, primeiras linhas do Excel). O resultado fica em TX (campo «c») e viaja na nuvem.
-   Tudo com function/var (sem const/let no topo): o arranque pode desenhar o separador antes de este código correr. */
-function moTiposBase(){return[
-  {id:"teste",nome:"Teste",pastas:"testes e fichas; testes; teste; teste prático",ficheiro:"teste; ficha de avaliação",excluir:"proposta de correção; correção; soluções; critérios; matriz; grelha"},
-  {id:"exame",nome:"Exame",pastas:"exames; exame",ficheiro:"exame",excluir:"proposta de correção; correção; soluções; critérios; matriz"},
-  {id:"grelha",nome:"Grelha de avaliação",pastas:"grelhas; grelha",ficheiro:"grelha",excluir:"proposta de correção; matriz"}]}
-// ordem da classificação: exame e grelha antes de teste (a pasta das grelhas também tem «Teste Prático»)
-function moOrdem(){return["exame","grelha","teste"]}
-function moRegras(){return[["fixo","Texto fixo"],["rotulo","Rótulo do campo"],["turma","Turma"],["fse","N.º de projeto da turma"],["curso","Curso da turma"],["ano","Ano letivo"],["disc","Disciplina"],["mod","Módulo / UFCD / UC"],["formador","Formador do módulo"]]}
-function moRegraAjuda(r){return({turma:"como a turma se escreve no cabeçalho (lista mais abaixo)",fse:"o n.º de projeto da turma (Escola360 › Turmas)",curso:"o nome do curso da turma (Escola360)",ano:"o ano letivo da pasta, ex.: 2026/2027",disc:"o nome da disciplina da pasta",mod:"o módulo da pasta, ex.: Módulo 1, M01, UFCD 0349",formador:"o nome do formador atribuído ao módulo"})[r]||""}
-function moCfg(){if(!cfg.mo||typeof cfg.mo!=="object")cfg.mo={on:true,falta:false,tipos:{},modelos:[]};const c=cfg.mo;
-  if(!c.tipos||typeof c.tipos!=="object")c.tipos={};if(!Array.isArray(c.modelos))c.modelos=[];if(c.on===undefined)c.on=true;return c}
-function moModelos(){const c=cfg.mo;return c&&Array.isArray(c.modelos)?c.modelos.filter(x=>x&&x.id):[]}
-function moAtivo(){const c=cfg.mo;return!!(c&&c.on!==false&&moModelos().length)}
-var MO_TT=null,MO_TTK=-1;
-function moTipo(id){if(MO_TTK!==cfgRev||!MO_TT){MO_TT={};MO_TTK=cfgRev;const o=(cfg.mo&&cfg.mo.tipos)||{};
-    for(const b of moTiposBase()){const s=o[b.id]||{},t={...b};for(const k of["pastas","ficheiro","excluir"])if(typeof s[k]==="string")t[k]=s[k];t.est=s.est!=null&&s.est!==""?Math.max(0,Math.min(100,+s.est||0)):50;MO_TT[b.id]=t}}
-  return MO_TT[id]||null}
-function moTipoNome(id){const t=moTipo(id);return t?t.nome.toLowerCase():"documento"}
-function moModeloPara(tipo,ano){const L=moModelos().filter(x=>x.tipo===tipo),rec=(a,b)=>(b.em||0)-(a.em||0);
-  return(ano&&L.filter(x=>x.ano===ano).sort(rec)[0])||L.filter(x=>!x.ano).sort(rec)[0]||null}
-
-/* --- texto: sem maiúsculas, acentos nem pontuação, e só palavras inteiras --- */
-function moK(s){return" "+norm0(s).replace(/[^a-z0-9]+/g," ").trim()+" "}
-function moC(s){return norm0(s).replace(/[^a-z0-9]/g,"")}
-function moLista(s){return String(s||"").split(/[;\n]/).map(x=>x.trim()).filter(Boolean)}
-function moTem(K,frase){const f=moK(frase);return f.length>3&&K.includes(f)}
-function moTemRot(K,r){const k=moK(r);if(/^ n( o)? $/.test(k))return/ (n|n o|numero|num) /.test(K);return k.length>3&&K.includes(k)} // «N.º», «Nº», «N.o», «Número»
-function moTokens(s){const S=new Set();for(const w of moK(s).trim().split(" "))if(w.length>=3&&!/^\d+$/.test(w))S.add(w);return S}
-var MO_TM=new Map();
-function moTokMod(md){const k=md.id+":"+String(md.cab||"").length;let s=MO_TM.get(k);if(!s){s=moTokens(String(md.cab||"").slice(0,1500));MO_TM.set(k,s)}return s}
-
-/* --- de que tipo é um ficheiro (pela pasta, senão pelo nome) --- */
-var MO_EXT=/\.(pdf|docx?|odt|rtf|xlsx?|xlsm|ods)$/i,MO_LEG=/\.(docx|pdf|xlsx|xlsm|xls|ods)$/i;
-var MO_TD=new WeakMap(),MO_TDK=-1;
-function moLegivel(f){return!!(f&&f.fid&&f.sha1&&MO_LEG.test(f.name||"")&&f.size!==0&&(f.size||0)<=25e6)}
-function moTipoDe(f){if(!f||!MO_EXT.test(f.name||"")||f.size===0)return null;
-  if(MO_TDK!==cfgRev){MO_TD=new WeakMap();MO_TDK=cfgRev}if(MO_TD.has(f))return MO_TD.get(f);
-  const P=moK((f.comps||[]).join(" ")),N=moK(f.name),T=moOrdem().map(moTipo),ex=t=>moLista(t.excluir).some(x=>moTem(P,x)||moTem(N,x));
-  let r=null;for(const t of T)if(!ex(t)&&moLista(t.pastas).some(x=>moTem(P,x))){r=t.id;break}
-  if(!r)for(const t of T)if(!ex(t)&&moLista(t.ficheiro).some(x=>moTem(N,x))){r=t.id;break}
-  MO_TD.set(f,r);return r}
-
-/* --- turma da Escola360 a partir do nome da pasta (como o n.º de projeto nos PDF) --- */
-function moTurmaDe(nome){try{const T=escData().turmas||[];let t=T.find(x=>norm(x.nome||"")===norm(nome))||T.find(x=>norm(turmaNome(x))===norm(nome));
-  if(!t){const c=turmaCod(nome),an=turmaAnos(nome),yy=n=>String(n||"").slice(-2);if(c){const L=T.filter(x=>norm(x.cod)===norm(c));
-    t=(an&&L.find(x=>x.anoIni&&yy(x.anoIni)+"-"+yy(x.anoFim)===an))||(L.length===1?L[0]:null)||turmaPorCod(c)}}
-  return t||null}catch(e){return null}}
-
-/* --- verificação de um campo: null (está bem), {m} (falha) ou {nv} (não é possível verificar) --- */
-function moCampoVer(c,K,C,ctx){const vs=moLista(c.var),alt=L=>L.filter(Boolean).some(x=>moTem(K,x)),t=ctx.t;
-  switch(c.regra){
-    case"fixo":{const v=String(c.valor||c.nome||"").trim();if(!v)return null;return alt([v,...vs])?null:{m:`falta «${v}»`}}
-    case"rotulo":{const v=String(c.valor||c.nome||"").trim();if(!v)return null;return[v,...vs].some(x=>moTemRot(K,x))?null:{m:`falta o campo «${c.nome||v}»`}}
-    case"turma":{if(!t)return{nv:"a turma não está na Escola360"};const cab=String(t.cab||"").trim(),L=cab?[cab,...moLista(t.cabVar)]:[t.cod,turmaNome(t),...moLista(t.cabVar)];
-      if(alt([...L,...vs]))return null;return{m:cab&&moTem(K,t.cod)?`turma escrita de outra forma (deve ser «${cab}»)`:`falta a turma («${cab||t.cod}»)`}}
-    case"fse":{if(!t||!t.fse)return{nv:"a turma não tem n.º de projeto na Escola360"};
-      if([t.fse,...vs].some(x=>moC(x).length>=6&&C.includes(moC(x))))return null;
-      const o=(escData().turmas||[]).find(x=>x!==t&&x.fse&&moC(x.fse)!==moC(t.fse)&&moC(x.fse).length>=6&&C.includes(moC(x.fse)));
-      return{m:o?`n.º de projeto de outra turma (${o.cod}: ${o.fse})`:`falta o n.º de projeto («${t.fse}»)`}}
-    case"curso":{const cu=t&&cursoById(t.cursoId);if(!cu||!cu.nome)return{nv:"a turma não tem curso na Escola360"};const n=cu.nome,curto=n.replace(/^t[ée]cnic[oa](\/a)?\s+(de|em|da|do|dos|das)\s+/i,"");
-      return alt([n,curto,...vs])?null:{m:`falta o curso («${n}»)`}}
-    case"ano":{const m=String(ctx.ano||"").match(/(20\d\d)\D+(20\d\d)/);if(!m)return{nv:"ano letivo desconhecido"};
-      return alt([m[1]+" "+m[2],m[1]+" "+m[2].slice(-2),...vs])?null:{m:`falta o ano letivo («${m[1]}/${m[2]}»)`}}
-    case"disc":{const d=ctx.m.disc||"",n=discShort(d);return alt([n,d,...vs])?null:{m:`falta a disciplina («${n}»)`}}
-    case"mod":{const re=modRegex(ctx.m.cod),de=desigOf(ctx.m);if(re&&(re.test(ctx.N)||re.test(K)))return null;if(de&&de.length>=8&&moTem(K,de))return null;if(alt(vs))return null;
-      return{m:`falta o módulo («${codCurto(ctx.m.cod)}${de?" — "+de:""}»)`}}
-    case"formador":{const p=ctx.p;if(!p||!p.nome)return{nv:"módulo sem formador atribuído"};const tk=moK(p.nome).trim().split(" ").filter(x=>x.length>2&&!/^(dos|das|de|da|do)$/.test(x));
-      if(alt([p.nome,...vs])||(tk.length>=2&&moTem(K,tk[0])&&moTem(K,tk[tk.length-1])))return null;return{m:`falta o nome do formador («${p.nome}»)`}}}
-  return null}
-
-/* --- resultado de um documento: {estado:"ok"|"dif"|"nao"|"pend"|"nv", tipo, md, falhas, difs, nv, motivo} --- */
-var MO_CACHE=new Map(),MO_CK="",MO_FAIL=new Map();
-function moAvaliar(f,m){if(!f||!m||!moAtivo())return null;const ck=txRev+"|"+cfgRev+"|"+MO_FAIL.size;if(MO_CK!==ck){MO_CACHE=new Map();MO_CK=ck}
-  const key=(f.fid||f.path)+"|"+(f.sha1||"")+"|"+m.id;if(MO_CACHE.has(key))return MO_CACHE.get(key);
-  let r=null;try{r=moAvaliar0(f,m)}catch(e){console.warn(e)}MO_CACHE.set(key,r);return r}
-function moAvaliar0(f,m){const tipo=moTipoDe(f);if(!tipo)return null;const ano=m.ano||anoDe(f.rawDir),md=moModeloPara(tipo,ano);if(!md)return null;
-  const base={tipo,md,ano,falhas:[],difs:[],nv:[]},rec=f.sha1?TX.get(f.sha1):null,leg=moLegivel(f),falhou=!!((rec&&rec.cx)||MO_FAIL.has(f.fid+"|"+f.sha1));
-  const src=rec&&rec.c!=null?"c":(rec&&rec.n?"n":"");
-  if(!src){if(leg&&!falhou)return{...base,estado:"pend",motivo:"falta ler o documento"};
-    return{...base,estado:rec?"nv":"pend",motivo:rec?"sem texto (documento digitalizado ou formato que não se lê)":"falta ler o texto (Relatório › Ler os documentos agora)"}}
-  const reg=src==="c"?String(rec.c):String(rec.n).slice(0,3000);
-  if(reg.replace(/\s/g,"").length<20)return{...base,estado:"nv",motivo:"sem texto no início do documento (digitalizado?)"};
-  const K=moK(reg),C=moC(reg),pid=profOf(m),ctx={m,t:moTurmaDe(m.turma),p:pid?cfg.profs.find(x=>x.id===pid):null,ano,N:norm0(reg)},falhas=[],difs=[],nv=[];
-  for(const c of md.campos||[]){if(!c||!c.regra)continue;const r=moCampoVer(c,K,C,ctx);if(!r)continue;if(r.nv){nv.push(r.nv);continue}(c.obrig!==false?falhas:difs).push(r.m)}
-  const est=(moTipo(tipo)||{}).est;
-  if(est>0){const MT=moTokMod(md);if(MT.size>=8){const DT=moTokens(reg);let n=0;for(const w of MT)if(DT.has(w))n++;const pc=Math.round(n/MT.size*100);if(pc<est)falhas.push(`o cabeçalho não segue o modelo «${md.nome}» (só ${pc}% igual)`)}}
-  if(falhas.length&&src==="n"&&leg&&!falhou)return{...base,estado:"pend",motivo:"a confirmar no próprio ficheiro",prov:falhas};
-  return{...base,estado:falhas.length?"nao":difs.length?"dif":"ok",falhas,difs,nv:[...new Set(nv)],src}}
-
-/* --- ler um ficheiro da Box (só GET) e tirar o texto do início --- */
-async function moDescarregar(fid){
-  for(let t=0;t<6;t++){await vez();await vezConteudo();const tok=await accessToken();let r;
-    try{r=await fetch(`https://api.box.com/2.0/files/${encodeURIComponent(fid)}/content`,{method:"GET",headers:{Authorization:"Bearer "+tok}})}
-    catch(e){travar(1500*(t+1));if(t<3)continue;throw new Error("o navegador não conseguiu descarregar o ficheiro da Box")}
-    if(r.status===202){await sleep(Math.min(10,+r.headers.get("Retry-After")||2)*1000);continue}
-    if(r.status===429){travar(esperaBox(r));continue}
-    if(r.status>=500){await sleep(800*2**t);continue}
-    if(r.status===401){if(t===0&&SES&&SES.mode==="oauth"){await accessToken(true);continue}const er=new Error("O acesso à Box expirou. Volte a entrar.");er.kind="auth";throw er}
-    if(!r.ok){const er=new Error("a Box respondeu "+r.status+(r.status===403?" (sem permissão para descarregar)":""));er.status=r.status;throw er}
-    RATE.ok++;if((+r.headers.get("content-length")||0)>25e6)throw new Error("ficheiro grande demais");return await r.arrayBuffer()}
-  throw new Error("a Box está ocupada")}
-// {full: texto todo, reg: texto do início (cabeçalho), regL: as linhas do início com maiúsculas e acentos}
-async function moExtrair(buf,nome){const n=String(nome||"").toLowerCase();let L=[],R=null;
-  if(/\.docx$/.test(n))L=await calTextoDocx(buf); // o cabeçalho do Word vem primeiro
-  else if(/\.pdf$/.test(n)){const pj=await calPdfJs(),doc=await pj.getDocument({data:new Uint8Array(buf),isEvalSupported:false,disableFontFace:true}).promise;
-    try{for(let k=1;k<=Math.min(30,doc.numPages);k++){const pg=await doc.getPage(k),tc=await pg.getTextContent();let cur="",y=null;const P=[];
-        for(const it of tc.items){if(!it||typeof it.str!=="string")continue;const yy=it.transform?it.transform[5]:0;
-          if(y!==null&&Math.abs(yy-y)>2&&cur.trim()){P.push(cur);cur=""}
-          if(it.str)cur+=(cur&&!/\s$/.test(cur)&&!/^\s/.test(it.str)?" ":"")+it.str;y=yy;if(it.hasEOL){if(cur.trim())P.push(cur);cur="";y=null}}
-        if(cur.trim())P.push(cur);L.push(...P);if(k===1||(R&&R.join(" ").length<300))R=(R||[]).concat(P)}}
-    finally{try{doc.destroy()}catch(e){}}}
-  else if(/\.(xlsx|xlsm|xls|ods)$/.test(n)){const X=await loadXLSX(),wb=X.read(new Uint8Array(buf),{type:"array"});
-    wb.SheetNames.forEach((s,i)=>{const ws=wb.Sheets[s];if(!ws)return;const rows=X.utils.sheet_to_csv(ws,{FS:" | ",blankrows:false}).split("\n").map(l=>l.replace(/^(\s*\|\s*)+|(\s*\|\s*)+$/g,"").replace(/(\s*\|\s*){2,}/g," | ")).filter(l=>l.trim());
-      if(i===0)R=rows.slice(0,40);L.push(...rows)})}
-  else throw new Error("formato que não se consegue ler");
-  if(!R){R=[];let s=0;for(const l of L){R.push(l);s+=l.length;if(s>=2500)break}}
-  return{full:L.join("\n").slice(0,60000),reg:R.join("\n").slice(0,4000),regL:R}}
-/* 0.9.105: se a Box não deixar descarregar (403 — ex.: papel «Previewer» nas pastas ou aplicação sem permissão de descarga),
-   lê-se a versão PDF de pré-visualização que a própria Box gera para Word/Excel (inclui o cabeçalho, tal como aparece na página)
-   e, se não houver, o texto extraído pela Box. Tudo só GET. Depois do 1.º 403 já não se tenta descarregar nesta sessão. */
-var MO_SEM_DL=false;
-async function moRep(fid,hint,nome){
-  const info=await boxRaw(`https://api.box.com/2.0/files/${encodeURIComponent(fid)}?fields=representations`,hint);
-  let rep=((info.representations||{}).entries||[]).find(x=>x.representation===nome);if(!rep)return null;
-  for(let i=0;i<14&&rep.status&&rep.status.state!=="success"&&rep.status.state!=="viewable";i++){
-    if(rep.status.state==="error"||rep.status.state==="none")return null;if(i)await sleep(1500);
-    const st=await boxRaw(rep.info.url);rep={...rep,...st}}
-  if(rep.status&&rep.status.state!=="success"&&rep.status.state!=="viewable")return null;
-  return rep.content.url_template.replace("{+asset_path}","")}
-async function moLerBox(fid,nome){const pdf=/\.pdf$/i.test(nome||"");
-  if(!MO_SEM_DL){try{return{...(await moExtrair(await moDescarregar(fid),nome)),via:"ficheiro"}}
-    catch(e){if(e.kind==="auth")throw e;if(e.status!==403&&e.status!==404)throw e;if(e.status===403)MO_SEM_DL=true}}
-  if(!pdf){try{const u=await moRep(fid,"[pdf]","pdf");if(u){const buf=await boxRaw(u,null,2);return{...(await moExtrair(buf,"x.pdf")),via:"pré-visualização"}}}catch(e){if(e.kind==="auth")throw e}}
-  const r=await textoDe(fid);if(r.txt==null)throw new Error(r.err||"a Box não deu o texto deste ficheiro");
-  const L=String(r.txt).split(/\r?\n/).map(x=>x.trim()).filter(Boolean),R=[];let n=0;for(const l of L){R.push(l);n+=l.length;if(n>=2500)break}
-  return{full:L.join("\n").slice(0,60000),reg:R.join("\n").slice(0,4000),regL:R,via:"texto da Box"}}
-async function moLerFicheiro(f){let x;
-  try{x=await moLerBox(f.fid,f.name)}catch(e){if(e.kind==="auth")throw e;moFalha(f,e.message);return false}
-  try{let rec=TX.get(f.sha1);
-    if((!rec||rec.w==null)&&x.full.trim()){await guardarTexto(f.sha1,x.full);rec=TX.get(f.sha1)}
-    if(!rec){rec={sha1:f.sha1,w:null,t:Date.now()};TX.set(f.sha1,rec)}
-    rec.c=norm0(x.reg).slice(0,3000);delete rec.cx;delete rec.cxm;await DB.put("textos",f.sha1,rec);txRev++;return true}
-  catch(e){moFalha(f,e.message);return false}}
-function moFalha(f,msg){MO_FAIL.set(f.fid+"|"+f.sha1,String(msg||"erro").slice(0,140));const rec=TX.get(f.sha1);
-  if(rec&&rec.w!=null){rec.cx=Date.now();rec.cxm=String(msg||"").slice(0,140);try{DB.put("textos",f.sha1,rec)}catch(e){}}txRev++}
-function moPorLer(){if(!moAtivo()||!files.length)return[];const out=new Map();
-  for(const e of evaluate())for(const i of e.items)for(const f of i.hits){if(out.has(f.sha1)||!moLegivel(f))continue;const r=moAvaliar(f,e.mod);if(r&&r.estado==="pend")out.set(f.sha1,f)}
-  return[...out.values()]}
-async function moLer(list,onProg,cancel,conc){let done=0,ok=0,i=0;
-  const w=async()=>{while(i<list.length&&SES&&!(cancel&&cancel())){if(cancel&&document.visibilityState==="hidden"){await sleep(3000);continue}
-    const f=list[i++];try{if(await moLerFicheiro(f))ok++}catch(e){if(e.kind==="auth")throw e}done++;onProg&&onProg(done,list.length)}};
-  await Promise.all(Array.from({length:Math.min(conc||2,list.length)},w));return{done,ok}}
-async function moFundo(cancel,el){if(!SES||!moAtivo())return;const L=moPorLer();if(!L.length)return;let last=0;
-  if(el){el.style.display="";el.textContent=`a ler cabeçalhos 0/${L.length}`}
-  await moLer(L,(d,n)=>{if(el)el.textContent=`a ler cabeçalhos ${d}/${n}`;if(Date.now()-last>15000){last=Date.now();if(curTab==="mof")moRenderDocs();if(curTab==="rel")renderReport()}},cancel,2);
-  try{await nuvemTextos(true)}catch(e){}if(curTab==="mof")renderMof()}
-
-/* --- modelo novo: ler, propor os campos e guardar --- */
-function moDetetar(L){const out=[],tem=new Set(),add=(nome,regra,valor,obrig)=>{const k=regra+"|"+norm0(valor||"");if(tem.has(k))return;tem.add(k);out.push({id:uid(),nome,regra,valor:valor||"",var:"",obrig:obrig!==false})};
-  const N=L.map(l=>norm0(l)),T=N.join("\n");
-  const linha=re=>{for(let i=0;i<L.length;i++)if(re.test(N[i])){let s=(String(L[i]).split(/\s*\|\s*/).find(c=>re.test(norm0(c)))||L[i]).trim().replace(/\s+/g," ");
-      if(s.length>90)s=s.slice(0,90).replace(/\s+\S*$/,"");return s.replace(/[\s:;,.–-]+$/,"")}return""};
-  const e1=linha(/escola profissional|escola basica|escola secundaria/);if(e1)add("Escola","fixo",e1);
-  if(/\bcurso\b/.test(T))add("Curso","curso");
-  if(/\bturma\b/.test(T))add("Turma","turma");
-  if(/ano\s+le(c)?tivo/.test(T))add("Ano letivo","ano");
-  if(/disciplina/.test(T))add("Disciplina","disc");
-  if(/modulo|\bufcd\b|\buc\b|unidade de competencia/.test(T))add("Módulo / UFCD","mod");
-  if(/projeto|projecto|operacao|\bfse\b|candidatura/.test(T))add("N.º de projeto","fse");
-  if(/formador|professor|docente/.test(T))add("Formador","formador");
-  if(/\bnome\b/.test(T))add("Nome","rotulo","Nome");
-  if(/\bn\s*\.?\s*[º°]|\bn\.\s*o\b|\bnumero\b/.test(T))add("N.º","rotulo","N.º");
-  if(/\bdata\b/.test(T))add("Data","rotulo","Data");
-  if(/classificacao|\bnota\b|\bvalores\b/.test(T))add("Classificação","rotulo",/classificacao/.test(T)?"Classificação":/\bnota\b/.test(T)?"Nota":"Valores");
-  if(/duracao/.test(T))add("Duração","rotulo","Duração",false);
-  const fin=linha(/cofinanciad|co-financiad|uniao europeia|fundo social europeu|acores 2030|pessoas 2030|\bprr\b/);if(fin)add("Financiamento","fixo",fin,false);
-  if(!out.length){add("Turma","turma");add("N.º de projeto","fse");add("Módulo / UFCD","mod");add("Ano letivo","ano")}
-  return out}
-function moLinhasCurtas(L){const o=[];let s=0;for(const l of L){const x=String(l).replace(/\s+/g," ").trim();if(!x)continue;o.push(x);s+=x.length;if(o.length>=60||s>=3000)break}return o}
-async function moSha1(buf){const h=await crypto.subtle.digest("SHA-1",buf);return[...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,"0")).join("")}
-async function moNovoModelo(tipo,o){const x=o.x||await moExtrair(o.buf,o.nome);
-  if(x.reg.replace(/\s/g,"").length<20)throw new Error("não foi possível ler texto neste ficheiro (é um documento digitalizado?)");
-  const c=moCfg();ponto("Antes de acrescentar o modelo oficial «"+o.nome+"»");
-  const md={id:uid(),tipo,ano:"",nome:o.nome,fonte:{origem:o.origem,fid:o.fid||"",sha1:o.sha1||"",pasta:o.pasta||"",quando:Date.now(),por:(EU&&EU.email)||""},
-    linhas:moLinhasCurtas(x.regL),cab:norm0(x.reg).slice(0,3000),campos:moDetetar(x.regL),em:Date.now()};
-  c.modelos.push(md);save();
-  if(o.sha1&&x.full.trim()&&!TX.has(o.sha1)){try{await guardarTexto(o.sha1,x.full)}catch(e){}} // também serve para apanhar o modelo entregue por preencher
-  return md}
-function moMsg(t,k){const el=$("#moMsg");if(el)el.innerHTML=t?`<span${k==="bad"?' style="color:var(--bad)"':""}>${t}</span>`:""}
-async function moDoPC(tipo,file){try{moMsg("A ler o modelo «"+esc(file.name)+"»…");const buf=await file.arrayBuffer();
-    const md=await moNovoModelo(tipo,{nome:file.name,buf,sha1:await moSha1(buf),origem:"pc"});moMsg(`Modelo «${esc(md.nome)}» lido: ${md.campos.length} campo(s) propostos. Confirme-os em baixo.`);renderMof()}
-  catch(e){moMsg("Não foi possível usar este ficheiro: "+esc(e.message),"bad")}}
-async function moDaBox(tipo,x,pasta){try{moMsg("A ler o modelo «"+esc(x.name)+"» da Box (só leitura)…");const lido=await moLerBox(x.id,x.name);
-    const md=await moNovoModelo(tipo,{nome:x.name,x:lido,sha1:x.sha1||"",origem:"box",fid:x.id,pasta:pasta+(lido.via!=="ficheiro"?" (lido pela "+lido.via+")":"")});moMsg(`Modelo «${esc(md.nome)}» lido: ${md.campos.length} campo(s) propostos. Confirme-os em baixo.`);renderMof()}
-  catch(e){moMsg("Não foi possível ler o modelo: "+esc(e.message),"bad")}}
-
-/* --- escolher o modelo na Box (só se lê a lista das pastas) --- */
-var MO_PICK={tipo:"",id:"0",path:[{id:"0",name:"Todos os ficheiros"}],itens:new Map()};
-function moPickAbrir(tipo){if(!SES){toast("Entre primeiro na Box (Box360 › Análise)");return}MO_PICK.tipo=tipo;
-  let s=null;try{s=JSON.parse(localStorage.getItem("mo_pick")||"null")}catch(e){}
-  if(s&&s.id&&Array.isArray(s.path))moPickIr(s.id,s.path);else if(typeof curFolder!=="undefined"&&curFolder&&curFolder.id)moPickIr(curFolder.id,curFolder.path.slice());else moPickIr("0",[{id:"0",name:"Todos os ficheiros"}]);
-  $("#moPick").hidden=false}
-async function moPickIr(id,path){MO_PICK.id=id;MO_PICK.path=path;try{localStorage.setItem("mo_pick",JSON.stringify({id,path}))}catch(e){}
-  $("#moPickPath").innerHTML=path.map((p,i)=>`<a href="#" data-pk-i="${i}">${esc(p.name)}</a>`).join(" › ");$("#moPickL").innerHTML=`<p class="hint">A abrir a pasta…</p>`;
-  try{const it=await listFolder(id);if(MO_PICK.id!==id)return;MO_PICK.itens=new Map(it.map(x=>[String(x.id),x]));
-    const fo=it.filter(x=>x.type==="folder").sort((a,b)=>COLL_PTN.compare(a.name,b.name)),fi=it.filter(x=>x.type==="file"&&MO_LEG.test(x.name)).sort((a,b)=>COLL_PTN.compare(a.name,b.name));
-    const IF=`<svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>`,ID=`<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>`;
-    $("#moPickL").innerHTML=(fo.map(x=>`<button type="button" class="mopk" data-pk-f="${esc(x.id)}">${IF}<span>${esc(x.name)}</span></button>`).join("")
-      +fi.map(x=>`<button type="button" class="mopk fi" data-pk-file="${esc(x.id)}">${ID}<span>${esc(x.name)}</span><small>escolher</small></button>`).join(""))
-      ||`<p class="hint">Pasta sem subpastas nem documentos Word, PDF ou Excel.</p>`}
-  catch(e){$("#moPickL").innerHTML=`<div class="msg bad">${esc(e.message)}</div>`}}
-$("#moPickL").addEventListener("click",e=>{const b=e.target.closest("[data-pk-f],[data-pk-file]");if(!b)return;
-  if(b.dataset.pkF){const x=MO_PICK.itens.get(b.dataset.pkF);moPickIr(b.dataset.pkF,[...MO_PICK.path,{id:b.dataset.pkF,name:x?x.name:"pasta"}]);return}
-  const x=MO_PICK.itens.get(b.dataset.pkFile);if(!x)return;$("#moPick").hidden=true;moDaBox(MO_PICK.tipo,x,MO_PICK.path.slice(1).map(p=>p.name).join(" › "))});
-$("#moPickPath").addEventListener("click",e=>{const a=e.target.closest("[data-pk-i]");if(!a)return;e.preventDefault();const i=+a.dataset.pkI;moPickIr(MO_PICK.path[i].id,MO_PICK.path.slice(0,i+1))});
-$("#moPickX").onclick=()=>{$("#moPick").hidden=true};
-$("#moPick").addEventListener("click",e=>{if(e.target.id==="moPick")$("#moPick").hidden=true});
-
-/* --- separador Box360 › Modelos oficiais --- */
-var MO_N=100,MO_FILE_TIPO="";
-function renderMof(){if(!$("#mof"))return;const c=moCfg();$("#moOn").checked=c.on!==false;$("#moFalta").value=c.falta===true?"1":c.falta==="modelo"?"modelo":"";
-  try{moRenderTipos()}catch(e){console.warn(e)}try{moRenderTurmas()}catch(e){console.warn(e)}try{moRenderDocs()}catch(e){console.warn(e)}}
-function moAnoOpts(sel){const A=anosOrd().map(a=>a.nome);if(sel&&!A.includes(sel))A.push(sel);return`<option value="">Todos os anos letivos</option>`+A.map(a=>`<option value="${esc(a)}" ${a===sel?"selected":""}>${esc(a)}</option>`).join("")}
-function moModeloHTML(md){const f=md.fonte||{},emUso=moModelos().filter(x=>x.tipo===md.tipo).some(x=>x!==md&&(x.ano||"")===(md.ano||"")&&(x.em||0)>(md.em||0));
-  const rg=moRegras().map(([k,n])=>`<option value="${k}">${n}</option>`).join("");
-  const linhas=(md.campos||[]).map(c=>{const livre=c.regra==="fixo"||c.regra==="rotulo";return`<tr data-cid="${esc(c.id)}">
-    <td><input type="text" data-c="nome" value="${esc(c.nome||"")}" placeholder="nome do campo"></td>
-    <td><select data-c="regra">${rg.replace(`value="${c.regra}"`,`value="${c.regra}" selected`)}</select></td>
-    <td>${livre?`<input type="text" data-c="valor" value="${esc(c.valor||"")}" placeholder="${c.regra==="fixo"?"texto que tem de aparecer":"rótulo, ex.: Nome"}">`:`<span class="hint" style="margin:0">${esc(moRegraAjuda(c.regra))}</span>`}
-      <input type="text" data-c="var" value="${esc(c.var||"")}" placeholder="outras formas aceites (separadas por ;)" style="margin-top:4px"></td>
-    <td style="text-align:center"><input type="checkbox" data-c="obrig" ${c.obrig!==false?"checked":""} title="Se faltar, o documento não segue o modelo"></td>
-    <td><button class="x" data-c-del title="Tirar este campo">×</button></td></tr>`}).join("");
-  return`<div class="momod" data-id="${esc(md.id)}">
-    <div class="row" style="align-items:flex-end">
-      <div class="grow"><b>${esc(md.nome)}</b> ${emUso?`<span class="tag warn">substituído por um mais recente</span>`:`<span class="tag ok">em uso</span>`}
-        <div class="hint" style="margin:2px 0 0">${f.origem==="box"?"Na Box"+(f.pasta?": "+esc(f.pasta):""):"Carregado do computador"} · lido a ${esc(new Date(f.quando||md.em||Date.now()).toLocaleString("pt-PT",{dateStyle:"short",timeStyle:"short"}))}${f.por?" por "+esc(f.por):""}</div></div>
-      <label style="width:200px">Vale para<select data-mo-k="ano">${moAnoOpts(md.ano||"")}</select></label>
-      <button class="b s" data-mo-act="detetar" title="Volta a ler o cabeçalho do modelo e acrescenta os campos que ainda não estão na lista (não tira nenhum)">Detetar campos</button>
-      <button class="x" data-mo-act="del" title="Remover este modelo">×</button>
-    </div>
-    <details style="margin:8px 0"><summary class="hint" style="cursor:pointer;margin:0">Ver o início do modelo, como a app o leu</summary><pre class="mopre">${esc((md.linhas||[]).join("\n"))}</pre></details>
-    <div style="overflow-x:auto"><table class="rt motab"><thead><tr><th style="width:170px">Campo</th><th style="width:230px">O que se verifica</th><th>O que tem de aparecer</th><th style="width:96px">Obrigatório</th><th style="width:36px"></th></tr></thead><tbody>${linhas||`<tr><td colspan="5" class="hint">Sem campos — acrescente pelo menos um.</td></tr>`}</tbody></table></div>
-    <div class="row" style="margin-top:8px"><button class="b s" data-mo-act="addc">+ Acrescentar campo</button></div></div>`}
-function moRenderTipos(){const c=moCfg();
-  $("#moTipos").innerHTML=moTiposBase().map(b=>{const t=moTipo(b.id),L=moModelos().filter(x=>x.tipo===b.id).sort((x,y)=>(y.em||0)-(x.em||0));
-    return`<div class="card motipo" data-tipo="${b.id}">
-      <div class="mohd"><h2>${esc(b.nome)}</h2><span class="tag ${L.length?"ok":""}">${L.length?L.length+" modelo"+(L.length>1?"s":""):"sem modelo"}</span><span class="grow"></span>
-        <button class="b s" data-mo-add="box" title="Escolher o ficheiro do modelo numa pasta da Box (só leitura)">Escolher na Box</button><button class="b s" data-mo-add="pc">Carregar do computador</button></div>
-      ${L.length?L.map(moModeloHTML).join(""):`<p class="hint">Ainda sem modelo de ${esc(b.nome.toLowerCase())}. Escolha o ficheiro do modelo oficial (Word, PDF ou Excel): a app lê o cabeçalho e propõe o que tem de ser verificado. Pode ter um modelo para todos os anos letivos ou um para cada ano.</p>`}
-      <details class="moonde"><summary class="hint" style="cursor:pointer;margin:0">Onde estão estes documentos na Box</summary>
-        <div class="row" style="margin-top:8px">
-          <label class="grow">Pastas com estes nomes<input type="text" data-t-k="pastas" value="${esc(t.pastas)}"></label>
-          <label class="grow">Ou ficheiros com estas palavras<input type="text" data-t-k="ficheiro" value="${esc(t.ficheiro)}"></label></div>
-        <div class="row" style="margin-top:8px">
-          <label class="grow">Não verificar (pasta ou ficheiro com)<input type="text" data-t-k="excluir" value="${esc(t.excluir)}"></label>
-          <label style="width:220px" title="Quantas das palavras do cabeçalho do modelo têm de estar no documento (0 = não verificar)">Cabeçalho igual ao modelo (%)<input type="number" min="0" max="100" data-t-k="est" value="${t.est}"></label></div>
-        <p class="hint" style="margin:6px 0 0">Separe as palavras com «;». Sem maiúsculas, acentos nem pontuação a contar.</p></details></div>`}).join("")}
-function moRenderTurmas(){const L=turmasDoAno();
-  $("#moTur").innerHTML=L.map(t=>`<tr data-id="${esc(t.id)}"><td><b>${esc(t.cod)}</b></td><td class="hm"><span class="hint" style="margin:0">${esc(turmaNome(t))}</span></td>
-    <td><input type="text" data-k="cab" value="${esc(t.cab||"")}" placeholder="${esc(t.cod)} (em branco: o código ou o nome na Box)"></td>
-    <td><input type="text" data-k="cabVar" value="${esc(t.cabVar||"")}" placeholder="separadas por ;"></td>
-    <td>${t.fse?`<span style="font-variant-numeric:tabular-nums">${esc(t.fse)}</span>`:`<span class="hint" style="margin:0">sem código — Escola360 › Turmas</span>`}</td></tr>`).join("")
-    ||`<tr><td colspan="5" class="hint">Sem turmas no ano letivo ativo (Escola360 › Turmas).</td></tr>`}
-function moResultados(){const out=[];if(!moAtivo())return out;const vistos=new Set();
-  for(const e of evaluate())for(const i of e.items)for(const f of i.hits){if(vistos.has(f))continue;vistos.add(f);const r=moAvaliar(f,e.mod);if(r)out.push({f,m:e.mod,r})}
-  return out}
-function moEstTag(r){return({ok:`<span class="tag ok">segue o modelo</span>`,dif:`<span class="tag warn">diferenças</span>`,nao:`<span class="tag bad">não segue</span>`,pend:`<span class="tag">por ler</span>`,nv:`<span class="tag">não verificável</span>`})[r.estado]||""}
-function moObs(r){if(r.estado==="pend")return r.motivo||"";if(r.estado==="nv")return r.motivo||"";const a=[];if(r.falhas.length)a.push(r.falhas.join("; "));if(r.difs.length)a.push("opcional: "+r.difs.join("; "));if(r.nv&&r.nv.length)a.push("não verificado: "+r.nv.join("; "));return a.join(" · ")}
-function moRenderDocs(){const R=moResultados(),P=new Map();for(const x of R){const pid=profOf(x.m)||"_";if(!P.has(pid))P.set(pid,(cfg.profs.find(p=>p.id===pid)||{nome:"(sem formador atribuído)"}).nome)}
-  const n=k=>R.filter(x=>x.r.estado===k).length;
-  $("#moTiles").innerHTML=moAtivo()?`<div class="tile"><div class="v">${R.length}</div><div class="l">documentos com modelo</div></div>
-    <div class="tile"><div class="v" style="color:var(--ok)">${n("ok")}</div><div class="l">seguem o modelo</div></div>
-    <div class="tile"><div class="v" style="color:var(--bad)">${n("nao")}</div><div class="l">não seguem o modelo</div></div>
-    <div class="tile"><div class="v" style="color:#b26a00">${n("dif")}</div><div class="l">com diferenças em campos opcionais</div></div>
-    <div class="tile"><div class="v">${n("pend")+n("nv")}</div><div class="l">por ler (${n("pend")}) ou não verificáveis (${n("nv")})</div></div>`:"";
-  try{countUp($("#moTiles"))}catch(e){}
-  const fp=$("#moFProf").value;$("#moFProf").innerHTML=`<option value="">Todos</option>`+[...P.entries()].sort((a,b)=>COLL_PT.compare(a[1],b[1])).map(([id,nm])=>`<option value="${esc(id)}" ${id===fp?"selected":""}>${esc(nm)}</option>`).join("");
-  $("#moFTipo").innerHTML=`<option value="">Todos</option>`+moTiposBase().map(t=>`<option value="${t.id}" ${t.id===MO_FT?"selected":""}>${esc(t.nome)}</option>`).join("");
-  const est=$("#moFEst").value,tp=$("#moFTipo").value,q=norm($("#moFTxt").value||"");
-  const pend=n("pend");$("#moLerGo").textContent=pend?`Ler os cabeçalhos agora (${pend})`:"Ler os cabeçalhos agora";
-  if(!moModelos().length){$("#moDocs").innerHTML=`<p class="hint">Escolha primeiro os modelos oficiais (em cima). Depois aparecem aqui os testes, exames e grelhas entregues, com o que não segue o modelo.</p>`;return}
-  if(!moAtivo()){$("#moDocs").innerHTML=`<p class="hint">A verificação está desligada (em cima).</p>`;return}
-  if(!files.length){$("#moDocs").innerHTML=`<p class="hint">Ainda não há análise da Box carregada (Box360 › Análise).</p>`;return}
-  const ordem={nao:0,dif:1,pend:2,nv:3,ok:4};
-  const L=R.filter(x=>(!est||x.r.estado===est)&&(!tp||x.r.tipo===tp)&&(!fp||(profOf(x.m)||"_")===fp)&&(!q||norm(x.m.turma+" "+x.m.disc+" "+modTitle(x.m)+" "+x.f.name).includes(q)))
-    .sort((a,b)=>(ordem[a.r.estado]-ordem[b.r.estado])||COLL_PT.compare(P.get(profOf(a.m)||"_")||"",P.get(profOf(b.m)||"_")||"")||COLL_PTN.compare(a.m.turma+a.m.disc+a.m.cod,b.m.turma+b.m.disc+b.m.cod));
-  MO_LISTA=L;const mostra=L.slice(0,MO_N);
-  $("#moDocs").innerHTML=L.length?`<p class="hint" style="margin:0 0 8px">${L.length} documento(s)${L.length>MO_N?` — a mostrar os primeiros ${MO_N}`:""}.</p><div style="overflow-x:auto"><table class="rtab rt"><thead><tr><th>Formador</th><th>Turma</th><th>Módulo/UFCD</th><th>Documento</th><th>Ficheiro</th><th>Estado</th><th>O que não segue o modelo</th></tr></thead><tbody>
-    ${mostra.map(x=>`<tr><td>${esc(P.get(profOf(x.m)||"_")||"")}</td><td>${esc(x.m.turma)}</td><td>${esc(discShort(x.m.disc))} · ${esc(modTitle(x.m))}</td><td>${esc((moTipo(x.r.tipo)||{}).nome||"")}</td>
-      <td>${x.f.fid?`<a href="https://app.box.com/file/${esc(x.f.fid)}" target="_blank" rel="noopener" title="Abrir na Box">${esc(x.f.name)}</a>`:esc(x.f.name)}</td><td>${moEstTag(x.r)}</td><td class="o">${esc(moObs(x.r))}</td></tr>`).join("")}
-    </tbody></table></div>${L.length>MO_N?`<div style="text-align:center;margin:8px 0 2px"><button class="b s" id="moMais" type="button">Mostrar mais ${Math.min(200,L.length-MO_N)} (faltam ${L.length-MO_N})</button></div>`:""}`
-    :`<p class="hint">${R.length?"Nenhum documento com estes filtros.":"Nenhum teste, exame ou grelha encontrado nas pastas dos módulos (veja «Onde estão estes documentos na Box» em cada tipo)."}</p>`;
-  const bm=$("#moMais");if(bm)bm.onclick=()=>{MO_N+=200;moRenderDocs()}}
-var MO_LISTA=[],MO_FT="";
-function moCsv(){const q=v=>`"${String(v??"").replace(/"/g,'""')}"`;const rows=[["Formador","Turma","Disciplina","Módulo/UFCD","Documento","Ficheiro","Estado","O que não segue o modelo"]];
-  const EST={ok:"Segue o modelo",dif:"Diferenças em campos opcionais",nao:"Não segue o modelo",pend:"Por ler",nv:"Não verificável"};
-  for(const x of MO_LISTA){const p=cfg.profs.find(y=>y.id===profOf(x.m));rows.push([p?p.nome:"",x.m.turma,x.m.disc,modTitle(x.m),(moTipo(x.r.tipo)||{}).nome||"",x.f.name,EST[x.r.estado]||"",moObs(x.r)])}
-  return rows.map(r=>r.map(q).join(";")).join("\n")}
-function moMexer(fn,render){fn();save();if(render!==false)renderMof();else moRenderDocs();if(curTab==="rel")renderReport()}
-$("#moOn").addEventListener("change",e=>moMexer(()=>{moCfg().on=e.target.checked}));
-$("#moFalta").addEventListener("change",e=>moMexer(()=>{moCfg().falta=e.target.value==="1"?true:e.target.value==="modelo"?"modelo":false},false));
-$("#moTipos").addEventListener("click",e=>{const card=e.target.closest(".motipo");if(!card)return;const tipo=card.dataset.tipo;
-  const ad=e.target.closest("[data-mo-add]");if(ad){if(ad.dataset.moAdd==="box")moPickAbrir(tipo);else{MO_FILE_TIPO=tipo;$("#moFile").value="";$("#moFile").click()}return}
-  const box=e.target.closest(".momod");if(!box)return;const md=moModelos().find(x=>x.id===box.dataset.id);if(!md)return;
-  const act=e.target.closest("[data-mo-act]");
-  if(act&&act.dataset.moAct==="del"){if(!confirm(`Remover o modelo «${md.nome}»? Os documentos deste tipo deixam de ser comparados com ele. (Nada é apagado na Box.)`))return;
-    ponto("Antes de remover o modelo oficial «"+md.nome+"»");moMexer(()=>{const c=moCfg();c.modelos=c.modelos.filter(x=>x!==md)});toast("Modelo removido (pode anular)");return}
-  if(act&&act.dataset.moAct==="addc"){moMexer(()=>{(md.campos=md.campos||[]).push({id:uid(),nome:"Novo campo",regra:"fixo",valor:"",var:"",obrig:true})});return}
-  if(act&&act.dataset.moAct==="detetar"){const novos=moDetetar(md.linhas||[]),k=c=>c.regra+"|"+norm0(c.valor||"");const ja=new Set((md.campos||[]).map(k));const add=novos.filter(c=>!ja.has(k(c)));
-    if(!add.length){toast("Não há campos novos: todos os detetados já estão na lista");return}moMexer(()=>{(md.campos=md.campos||[]).push(...add)});toast(add.length+" campo(s) acrescentado(s)");return}
-  const del=e.target.closest("[data-c-del]");if(del){const id=del.closest("tr").dataset.cid;moMexer(()=>{md.campos=(md.campos||[]).filter(c=>c.id!==id)});return}});
-$("#moTipos").addEventListener("change",e=>{const card=e.target.closest(".motipo");if(!card)return;const tipo=card.dataset.tipo;
-  if(e.target.dataset.tK){const k=e.target.dataset.tK;moMexer(()=>{const c=moCfg(),o=c.tipos[tipo]||(c.tipos[tipo]={});o[k]=k==="est"?Math.max(0,Math.min(100,+e.target.value||0)):e.target.value},false);return}
-  const box=e.target.closest(".momod");if(!box)return;const md=moModelos().find(x=>x.id===box.dataset.id);if(!md)return;
-  if(e.target.dataset.moK==="ano"){moMexer(()=>{md.ano=e.target.value});return}
-  const ck=e.target.dataset.c;if(!ck)return;const c=(md.campos||[]).find(x=>x.id===e.target.closest("tr").dataset.cid);if(!c)return;
-  moMexer(()=>{if(ck==="obrig")c.obrig=e.target.checked;else c[ck]=e.target.value.trim()},ck==="regra")});
-$("#moFile").addEventListener("change",e=>{const f=e.target.files&&e.target.files[0];if(f&&MO_FILE_TIPO)moDoPC(MO_FILE_TIPO,f)});
-$("#moTur").addEventListener("change",e=>{const tr=e.target.closest("tr");const t=escData().turmas.find(x=>x.id===tr.dataset.id);if(!t||!e.target.dataset.k)return;
-  t[e.target.dataset.k]=e.target.value.trim();save();moRenderDocs();if(curTab==="rel")renderReport()});
-{const h=debounce(()=>{MO_N=100;moRenderDocs()},150);["#moFEst","#moFProf","#moFTxt"].forEach(s=>$(s).addEventListener("input",h));$("#moFTipo").addEventListener("input",()=>{MO_FT=$("#moFTipo").value;h()})}
-$("#moCsv").onclick=()=>copy(moCsv());
-$("#moLerGo").onclick=async()=>{if(!SES){toast("Entre primeiro na Box (Box360 › Análise)");return}if(!files.length){moMsg("Faça primeiro uma análise em Box360 › Análise.");return}
-  const L=moPorLer();if(!L.length){moMsg("Não há documentos por ler.");moRenderDocs();return}
-  bgRun++;const b=$("#moLerGo");b.disabled=true;$("#moProg").style.display="block";$("#moProg i").style.width="2%";const t0=Date.now();
-  try{const r=await boxLer("texto",()=>moLer(L,(d,n)=>{moMsg(`A ler os cabeçalhos… ${d}/${n} (só leitura)`);$("#moProg i").style.width=Math.max(2,Math.round(d/n*100))+"%"}),true);
-    if(r===BOX_OCUPADA)moMsg("Outra janela da EPISJ 360 está a ler a Box — tente daqui a pouco.");
-    else moMsg(`Concluído em ${Math.round((Date.now()-t0)/1000)} s: ${r.ok} documento(s) lidos${r.done-r.ok?`, ${r.done-r.ok} que não foi possível ler (ficam como estavam)`:""}.`)}
-  catch(e){moMsg("Erro: "+esc(e.message),"bad")}
-  b.disabled=false;setTimeout(()=>{$("#moProg").style.display="none"},800);try{await nuvemTextos(true)}catch(e){}renderMof();if(curTab==="rel")renderReport()};
+/* 0.9.113: a zona «Modelos oficiais» do Box360 foi retirada (gastava muitos pedidos à Box). Os dados guardados (cfg.mo) ficam. */
+function moAtivo(){return false}
+function moModelos(){return[]}
 
 /* ---------- send ---------- */
 const anoLetivo=()=>cfg.mail.ano||(()=>{try{return anoAtivo().nome}catch(e){return""}})()||(()=>{const a=[...getIdx().anos.keys()];return a.length===1?a[0]:"[ano letivo]"})();
@@ -5055,7 +4682,7 @@ async function boxRenovar(force,volta){
     await new Promise(r=>setTimeout(r,Math.min(4000,Math.max(800,+k.espera||1500))));
     c=await boxCofreLer();if(c&&!c.morta&&c.r!==SES.r&&(+c.t||0)>=(SES.t||0)){boxAdotar(c,SES);if(Date.now()<SES.exp)return SES.a}}
   // 4) renovar
-  let r;try{r=await fetch(w+"/refresh",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({refresh_token:SES.r})})}
+  let r;buConta("me");try{r=await fetch(w+"/refresh",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({refresh_token:SES.r})})}
   catch(e){const x=new Error("Não foi possível contactar o serviço de login da Box — a ligação mantém-se e volto a tentar sozinho.");x.kind="net";throw x}
   const j=await r.json().catch(()=>({}));
   if(r.ok&&j.access_token){SES=sesNova(j,SES);saveSes();boxCofreGuardar(SES);try{localStorage.removeItem("boxdoc_morta")}catch(e){}return SES.a}
@@ -5081,6 +4708,37 @@ function boxSessaoMorta(msg){const old=SES;
 // dois computadores e o iPad ao mesmo tempo com a mesma conta. Só uma janela de cada vez lê as pastas (trinco entre
 // separadores, «episj360-box-leitura»). Quando a Box pede para abrandar (HTTP 429) espera o tempo que ela indica
 // (Retry-After) e baixa o ritmo antes de voltar.
+/* 0.9.113: CONTADOR DOS PEDIDOS À BOX (api.box.com), por mês e por tipo, somado em todos os computadores (peça «BU» na nuvem).
+   A Box conta os pedidos de cada mês e o plano da escola tem 10 000. Com 80% gastos, as leituras automáticas param sozinhas
+   (análises e leituras pedidas à mão continuam, com aviso). As descargas dos servidores de conteúdo (boxcloud.com) contam-se à parte. */
+var BU_ORC=10000,BU_TRAVAO=0.8;
+var BU_TIPOS={lst:"Abrir pastas",ev:"Registo de alterações",tx:"Texto dos documentos",me:"Ligação e sessão",av:"Serviço de avisos",ou:"Outros"};
+function buMes(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")}
+var BU_DEV=(function(){try{var v=localStorage.getItem("g360_dev");if(!v){v=Math.random().toString(36).slice(2,10);localStorage.setItem("g360_dev",v)}return v}catch(e){return"x"}})();
+var BU=(function(){try{var b=JSON.parse(localStorage.getItem("g360_bu")||"null");if(b&&b.mes===buMes()&&b.dev)return b}catch(e){}return{mes:buMes(),dev:{}}})();
+var BU_H=0,BU_NH=0,BU_NT=0;
+function buMeu(){if(BU.mes!==buMes())BU={mes:buMes(),dev:{}};var d=BU.dev[BU_DEV];if(!d)d=BU.dev[BU_DEV]={t:0,c:{}};return d}
+function buConta(tipo,n){var d=buMeu();d.c[tipo]=(d.c[tipo]||0)+(n||1);d.t=Date.now();clearTimeout(BU_H);BU_H=setTimeout(buGuardar,2000)}
+function buGuardar(){try{localStorage.setItem("g360_bu",JSON.stringify(BU))}catch(e){}buUI();
+  var falta=10*60e3-(Date.now()-BU_NT);if(falta<=0){BU_NT=Date.now();buNuvem()}else if(!BU_NH)BU_NH=setTimeout(function(){BU_NH=0;BU_NT=Date.now();buNuvem()},falta)}
+function buNuvem(){try{if(NUVOK()&&!nuvDesl())nuvemPut("BU",BU)}catch(e){}}
+function buSoma(x){var s=0,c=(x&&x.c)||{};for(var t in c)if(t!=="dl")s+=c[t];return s}
+function buJuntar(b){if(!b||!b.dev||b.mes!==buMes())return false;if(BU.mes!==b.mes)BU={mes:b.mes,dev:{}};var m=false;
+  for(var k in b.dev)if(buSoma(b.dev[k])>buSoma(BU.dev[k])){BU.dev[k]=b.dev[k];m=true}
+  if(m){try{localStorage.setItem("g360_bu",JSON.stringify(BU))}catch(e){}buUI()}return m}
+function buTotal(){if(BU.mes!==buMes())return 0;var s=0;for(var k in BU.dev)s+=buSoma(BU.dev[k]);return s}
+function buPorTipo(){var o={};if(BU.mes!==buMes())return o;for(var k in BU.dev){var c=BU.dev[k].c||{};for(var t in c)o[t]=(o[t]||0)+c[t]}return o}
+function buTravado(){return buTotal()>=BU_ORC*BU_TRAVAO}
+function buN(n){return Number(n||0).toLocaleString("pt-PT")}
+function buUI(){var el=document.getElementById("buBody");if(!el||!BU||!BU_TIPOS)return;var tot=buTotal(),pc=Math.round(tot/BU_ORC*100),T=buPorTipo(),trav=buTravado();
+  var mes=new Date().toLocaleDateString("pt-PT",{month:"long"});
+  var linhas=Object.keys(BU_TIPOS).filter(function(k){return T[k]}).map(function(k){return"<tr><td>"+BU_TIPOS[k]+"</td><td class=\"num\">"+buN(T[k])+"</td></tr>"}).join("");
+  el.innerHTML='<div class="bu-num"><b>'+buN(tot)+'</b> de '+buN(BU_ORC)+' pedidos em '+mes+(pc?' <span class="hint" style="margin:0">('+pc+'%)</span>':'')+'</div>'
+    +'<div class="bu-bar"><i style="width:'+Math.min(100,Math.max(tot?1:0,pc))+'%"'+(trav?' class="bad"':'')+'></i><b style="left:'+(BU_TRAVAO*100)+'%" title="Aos '+(BU_TRAVAO*100)+'% as leituras automáticas param"></b></div>'
+    +(trav?'<div class="msg bad" style="margin-top:10px">Já se gastaram '+Math.round(BU_TRAVAO*100)+'% dos pedidos do mês: as leituras automáticas (alterações ao entrar e texto dos documentos) estão paradas até ao dia 1. As análises que pedir continuam a funcionar.</div>':'')
+    +(linhas?'<table class="rt bu-tab"><tbody>'+linhas+'</tbody></table>':'')
+    +(T.dl?'<p class="hint" style="margin:8px 0 0">Mais '+buN(T.dl)+' descargas de texto dos servidores de conteúdo da Box (contadas à parte).</p>':'')}
+setTimeout(function(){try{buUI()}catch(e){}},0);
 const RPS_TETO=8;
 const RPS0=Math.min(RPS_TETO,+lsJ("boxcheck_rps",0)||6);
 const RATE={rps:RPS0,max:RPS0,min:2,ok:0,hits:0,pauseUntil:0,next:0,cut:0};
@@ -5094,14 +4752,16 @@ const sleep=ms=>new Promise(s=>setTimeout(s,ms));
 async function vez(){for(;;){const now=Date.now(),t=Math.max(RATE.next,now,RATE.pauseUntil);RATE.next=t+1000/RATE.rps;
   if(t>now)await sleep(t-now);if(Date.now()>=RATE.pauseUntil)return}}
 function travar(ms){RATE.hits++;RATE.ok=0;const now=Date.now();if(now-RATE.cut>2500){RATE.rps=Math.max(RATE.min,RATE.rps*0.75);RATE.cut=now}RATE.pauseUntil=Math.max(RATE.pauseUntil,now+ms)}
-async function boxGet(path,params){
+function boxHdr(tok,hdr){const H={Authorization:"Bearer "+tok};if(hdr)for(const k in hdr)if(!k.startsWith("__"))H[k]=hdr[k];return H}
+async function boxGet(path,params,hdr){
   const url="https://api.box.com/2.0/"+path+(params?"?"+new URLSearchParams(params):"");
+  const tipo=path.startsWith("folders/")?"lst":path.startsWith("events")?"ev":path.startsWith("users/me")?"me":"ou";
   let renewed=false;
   for(let t=0;t<12;t++){
     await vez();
     const tok=await accessToken();
-    let r;
-    try{r=await fetch(url,{method:"GET",headers:{Authorization:"Bearer "+tok}})}
+    let r;buConta(tipo);
+    try{r=await fetch(url,{method:"GET",headers:boxHdr(tok,hdr)})}
     catch(e){ // a Box, quando recusa pedidos a mais, às vezes responde sem as autorizações do navegador: parece uma falha de rede
       travar(1200*(t+1));
       if(t<5)continue;
@@ -5111,14 +4771,25 @@ async function boxGet(path,params){
     if(r.status===401){if(!renewed&&SES&&SES.mode==="oauth"){renewed=true;await accessToken(true);continue}
       if(SES&&SES.mode==="oauth")boxSessaoMorta("a Box recusou o acesso (401)");else logout(false,"O acesso à Box expirou. Volte a entrar.");const er=new Error("O acesso à Box expirou. Volte a entrar.");er.kind="auth";throw er}
     if(r.status>=500){await sleep(Math.min(20,0.5*2**t)*1000);continue}
+    if(r.status===400&&hdr&&hdr.__rep){const er=new Error("rep");er.kind="rep";throw er} // 0.9.113: a Box não aceitou as representações na listagem
     const er=new Error("A Box respondeu "+r.status+(r.status===403?" (sem permissão para esta pasta)":"")+".");er.kind="http";er.status=r.status;throw er;
   }
   const er=new Error("A Box está a limitar os pedidos. Tente daqui a pouco.");er.kind="net";throw er;
 }
+/* 0.9.113: a listagem das pastas pede também a representação «extracted_text» de cada ficheiro (o endereço do texto que a Box
+   já extraiu). Assim, ler o texto de um documento novo deixa de precisar de um pedido à API. Se a Box não aceitar, desliga-se
+   sozinho (fica registado neste navegador) e tudo funciona como antes. Os endereços ficam só em memória (REP). */
+var REP=new Map(),REP_OFF=(function(){try{return localStorage.getItem("g360_rep_off")==="1"}catch(e){return false}})();
+function repGuardar(list){for(const x of list){if(x.type!=="file"||!x.representations)continue;
+  const r=(x.representations.entries||[]).find(e=>e.representation==="extracted_text");if(!r||!r.content||!r.content.url_template)continue;
+  const st=r.status&&r.status.state;REP.set(String(x.id),{url:r.content.url_template.replace("{+asset_path}",""),ok:st==="success"||st==="viewable",info:r.info&&r.info.url,st,sha1:x.sha1||""});
+  delete x.representations}}
 async function listFolder(id){
   let out=[],marker=null;
-  do{const p={fields:"id,type,name,created_at,modified_at,content_modified_at,size,sha1,created_by,modified_by",limit:1000,usemarker:"true"};if(marker)p.marker=marker;
-    const j=await boxGet(`folders/${id}/items`,p);out=out.concat(j.entries||[]);marker=j.next_marker||null}while(marker);
+  for(;;){const comRep=!REP_OFF,p={fields:"id,type,name,created_at,modified_at,content_modified_at,size,sha1,created_by,modified_by"+(comRep?",representations":""),limit:1000,usemarker:"true"};if(marker)p.marker=marker;
+    let j;try{j=await boxGet(`folders/${id}/items`,p,comRep?{"x-rep-hints":"[extracted_text]",__rep:1}:null)}
+    catch(e){if(e.kind!=="rep")throw e;REP_OFF=true;try{localStorage.setItem("g360_rep_off","1")}catch(x){}continue}
+    const L=j.entries||[];if(comRep)repGuardar(L);out=out.concat(L);marker=j.next_marker||null;if(!marker)break}
   return out;
 }
 let curFolder={id:"0",path:[{id:"0",name:"Todos os ficheiros"}]};
@@ -5139,7 +4810,9 @@ async function tokGo(){
 }
 function boxEstado(st,msg){$("#boxWait").style.display=st==="wait"?"block":"none";$("#loginBox").style.display=st==="off"?"none":"";
   ["#oaGo","#tokGo"].forEach(x=>$(x).disabled=st==="wait");if(msg)$("#boxAuth").innerHTML=`<div class="msg bad">${esc(msg)}</div>`}
+function boxEuGuardado(){try{return SES&&SES.mode==="oauth"&&SES.login&&SES.nome?{name:SES.nome,login:SES.login}:null}catch(e){return null}}
 function boxArrancar(){loginUI();
+  if(SES&&boxEuGuardado()){boxEstado("wait");Promise.resolve(boxEuGuardado()).then(connected).catch(e=>boxEstado("login",e.message));return}
   if(SES){boxEstado("wait");boxGet("users/me",{fields:"name,login"}).then(connected).catch(e=>boxEstado("login",e.message))}
   else boxEstado("login",window.__authErr||"")}
 /* EPISJ 360 0.9.13 — barra de progresso 0–100% enquanto os módulos carregam */
@@ -5177,7 +4850,8 @@ function connected(me){
     .then(()=>{gpPasso(85,"Box360: a trazer prazos e avisos…");return avTrazerNuvem()})
     .then(()=>{gpPasso(89,"Sala360: a trazer as reservas…");return rcTrazer(false)})
     .then(()=>{gpPasso(94,"A sincronizar a Escola e o Horário360…");return esTrazerNuvem()});
-  sinc.then(()=>{guidePubAgendar();return browse(curFolder.id,curFolder.path)}).then(()=>{if(lastListing&&lastListing.rootId===curFolder.id)runScan(false,true);else verificarFundo()});
+  // 0.9.113: a atualização automática ao entrar só corre se a análise (feita aqui ou noutro computador) tiver mais de 30 minutos
+  sinc.then(()=>{guidePubAgendar();return browse(curFolder.id,curFolder.path)}).then(()=>{if(lastListing&&lastListing.rootId===curFolder.id&&Date.now()-(lastListing.t||0)>30*60e3)runScan(false,true);else verificarFundo()});
   return sinc; // 0.9.13: o arranque espera por isto para chegar aos 100%
 }
 function logout(revoke,msg){
@@ -5189,9 +4863,16 @@ function logout(revoke,msg){
 }
 $("#tokGo").onclick=tokGo;$("#tok").addEventListener("keydown",e=>{if(e.key==="Enter")tokGo()});
 $("#tokOut").onclick=()=>{if(confirm("Desligar a Box?\n\nA EPISJ 360 deixa de ler a Box com esta conta em todos os computadores e no iPad, até voltar a carregar em «Entrar com a Box».\n(Para sair da EPISJ 360 use «Terminar sessão», em cima — a Box fica ligada.)"))logout(true)};
-async function browse(id,path){
+// 0.9.113: as subpastas vêm da análise guardada quando ela as conhece (pastas lidas e não excluídas); só se não, pergunta à Box.
+// O que já foi pedido à Box nesta sessão também fica guardado (voltar atrás nas pastas não gasta pedidos).
+var BROWSE_C=new Map();
+function pastasConhecidas(id){id=String(id);if(BROWSE_C.has(id))return BROWSE_C.get(id);const L=lastListing;if(!L||!Array.isArray(L.itens))return null;
+  const fo=new Map();for(const x of L.itens)if(x.type==="folder")fo.set(String(x.id),x);
+  if(id!==String(L.rootId)){let c=fo.get(id),X=EXC();if(!c)return null;for(let g=0;c&&g<80;g++){if(X.has(String(c.id)))return null;c=fo.get(String(c.pid))}}
+  return L.itens.filter(x=>x.type==="folder"&&String(x.pid)===id).map(x=>({type:"folder",id:String(x.id),name:x.path.split("/").pop()}))}
+async function browse(id,path,forcar){
   $("#subfolders").innerHTML='<div class="sk"></div><div class="sk"></div><div class="sk"></div>';
-  try{const it=await listFolder(id);
+  try{let it=forcar?null:pastasConhecidas(id);if(!it){it=await listFolder(id);BROWSE_C.set(String(id),it.filter(x=>x.type==="folder").map(x=>({type:"folder",id:String(x.id),name:x.name})))}
     curFolder={id,path};
     $("#crumbs").innerHTML=path.map((p,i)=>`${i?"<span>›</span>":""}<a href="#" data-ci="${i}">${esc(p.name)}</a>`).join("");
     const pastas=it.filter(x=>x.type==="folder").sort((a,b)=>COLL_PTN.compare(a.name,b.name));
@@ -5296,17 +4977,20 @@ async function updateScan(run,prev,st){
   st.modo="só o que mudou";
   let pos=prev.pos;const evs=[];
   for(let k=0;k<400;k++){const j=await boxGet("events",{stream_type:"changes",stream_position:pos,limit:500});
-    const e=j.entries||[];for(const x of e)evs.push(x);pos=j.next_stream_position||pos;if(!e.length||!j.chunk_size)break;if(evs.length>20000)return null}
+    const e=j.entries||[];for(const x of e)evs.push(x);pos=j.next_stream_position||pos;if(e.length<500||!j.chunk_size)break;if(evs.length>20000)return null} // 0.9.113: página incompleta = fim (o que faltar vem na próxima atualização, a posição guardada é a devolvida)
   // estado anterior, indexado
   const fo=new Map([[prev.rootId,{id:prev.rootId,path:prev.pasta,pid:null,root:true}]]),kids=new Map(),filesBy=new Map(),fileById=new Map();
   const arr=(m,k)=>{let a=m.get(k);if(!a)m.set(k,a=[]);return a};
   for(const x of prev.itens){if(x.type==="folder"){fo.set(x.id,x);arr(kids,x.pid).push(x)}else{arr(filesBy,x.pid).push(x);fileById.set(x.id,x)}}
-  // pastas a reler
+  // pastas a reler — 0.9.113: nunca uma pasta excluída da análise nem o que está dentro dela (antes, um ficheiro posto numa
+  // pasta excluída fazia-a reabrir e as subpastas novas eram lidas uma a uma)
+  const X=EXC(),excl=new Map(),naExcluida=id=>{if(excl.has(id))return excl.get(id);let c=fo.get(id),r=false;for(let g=0;c&&g<80;g++){if(X.has(String(c.id))){r=true;break}c=c.pid?fo.get(c.pid):null}excl.set(id,r);return r};
   const relist=new Set();
   for(const ev of evs){const s=ev.source;if(!s||!s.id)continue;const pid=s.parent&&s.parent.id;
     if(pid&&fo.has(pid))relist.add(pid);
     if(s.type==="file"){const o=fileById.get(s.id);if(o&&fo.has(o.pid))relist.add(o.pid)}
     else if(s.type==="folder"&&fo.has(s.id)){const o=fo.get(s.id);if(o.pid&&fo.has(o.pid))relist.add(o.pid);relist.add(s.id)}}
+  for(const id of [...relist])if(naExcluida(id))relist.delete(id);
   st.mudancas=evs.length;
   st.deleted=evs.filter(ev=>/TRASH|DELETE/.test(ev.event_type||"")&&ev.source&&ev.source.type==="file").map(ev=>({id:ev.source.id,by:pes(ev.created_by)}));
   // relê essas pastas (em paralelo, ao ritmo que a Box permite)
@@ -5350,6 +5034,8 @@ function boxLer(nome,fn,esperar){if(!(navigator.locks&&navigator.locks.request))
   return navigator.locks.request("episj360-box-"+nome,esperar?{mode:"exclusive"}:{mode:"exclusive",ifAvailable:true},l=>l===null?BOX_OCUPADA:fn())}
 async function runScan(full,auto){
   if(scanBusy)return;
+  if(auto&&buTravado()){$("#scanMsg").textContent="As atualizações automáticas estão paradas: já se gastaram "+Math.round(BU_TRAVAO*100)+"% dos pedidos à Box deste mês. Carregue em «Analisar» para ver o que mudou.";return}
+  if(auto&&!(await trincoNuvem("box-leitura",600))){verificarFundo();return} // 0.9.113: outro computador está a atualizar agora (o resultado chega pela nuvem)
   if(!auto&&navigator.locks&&navigator.locks.query){try{const q=await navigator.locks.query();if((q.held||[]).some(x=>x.name==="episj360-box-leitura"))$("#scanMsg").textContent="Outra janela da EPISJ 360 está a ler a Box — começa logo que ela termine…"}catch(e){}}
   const r=await boxLer("leitura",()=>runScan0(full,auto),!auto);
   if(r===BOX_OCUPADA){if(!scanBusy)$("#scanMsg").textContent="Outra janela da EPISJ 360 está a ler a Box neste momento — esta mostra o resultado quando ela terminar.";
@@ -5364,12 +5050,14 @@ async function runScan0(full,auto){
   try{
     try{localStorage.setItem("box_last_folder",JSON.stringify(curFolder))}catch(e){}
     const prev=await lerListagem(rootId);
-    const fresco=prev&&prev.v===2&&prev.pos&&Date.now()-(prev.tFull||prev.t||0)<7*864e5;
-    let res=null;
-    if(!full&&fresco){try{res=await updateScan(run,prev,st)}catch(e){if(e.kind==="auth"||e.kind==="stop")throw e;console.warn(e);res=null}}
-    if(!res&&auto){scanRun++;$("#scanMsg").textContent=prev?"A última leitura completa desta pasta tem mais de 7 dias (ou não foi possível ver o que mudou). Carregue em “Analisar” para a ler outra vez.":"";return}
+    // 0.9.113: a análise fica sempre em dia pelo registo de alterações da Box (já não há leitura completa automática ao fim de 7 dias)
+    const fresco=prev&&prev.v===2&&prev.pos;
+    let res=null,falhou=false;
+    if(!full&&fresco){try{res=await updateScan(run,prev,st)}catch(e){if(e.kind==="auth"||e.kind==="stop")throw e;console.warn(e);res=null;falhou=true}}
+    if(!res&&auto){scanRun++;$("#scanMsg").textContent=prev?"Não foi possível ver o que mudou na Box desde a última análise. Carregue em “Analisar” quando quiser.":"";return}
     if(st.stop){const er=new Error("parada");er.kind="stop";throw er}
-    if(!res){st.opened=0;st.nF=0;st.nP=0;res=await fullScan(run,rootId,root,st,full)}
+    if(!res){const ok=await confirmarLeitura(rootId,root,prev,full,falhou);if(!ok){scanRun++;$("#scanMsg").textContent="Leitura completa cancelada. Nenhum pedido foi feito à Box.";return}
+      st.opened=0;st.nF=0;st.nP=0;res=await fullScan(run,rootId,root,st,full)}
     const nP=res.itens.reduce((a,x)=>a+(x.type==="folder"?1:0),0),nF=res.itens.length-nP,agora=Date.now();
     const delBy=Object.assign({},prev&&prev.delBy);for(const d of st.deleted||[])if(d.by)delBy[d.id]=d.by;
     const dk=Object.keys(delBy);if(dk.length>3000)for(const k of dk.slice(0,dk.length-3000))delete delBy[k];
@@ -5391,6 +5079,16 @@ async function runScan0(full,auto){
     $("#scanMsg").textContent="Erro: "+e.message+(e.kind==="auth"?"":" — o que já foi lido ficou guardado: carregue em “Analisar” para continuar de onde ficou.")}
   finally{scanBusy=false;curSt=null;$("#scanStop").style.display="none";b.disabled=false;$("#scanUpd").disabled=false;$("#scanProg i").style.width="100%";setTimeout(()=>{if(!scanBusy)$("#scanProg").style.display="none"},900)}
 }
+// 0.9.113: antes de uma leitura completa, diz quantos pedidos à Box vai gastar (1 por pasta) e pede confirmação
+function pastasNaAnalise(j){return j&&Array.isArray(j.itens)?j.itens.reduce((a,x)=>a+(x.type==="folder"?1:0),0)+1:0}
+async function confirmarLeitura(rootId,root,prev,full,falhou){
+  let part=null;if(!full)try{part=await DB.get("kv","scan|"+rootId);if(part&&(Date.now()-part.t>48*3600e3||!part.queue||!part.queue.length))part=null}catch(e){part=null}
+  const tot=buTotal(),usados=tot?` Este mês já foram feitos ${buN(tot)} pedidos (o plano tem ${buN(BU_ORC)}).`:` O plano da Box tem ${buN(BU_ORC)} pedidos por mês.`;
+  let msg;
+  if(part)msg=`Continuar a leitura de “${nomePasta(root)}” que ficou a meio? Faltam pelo menos ${buN(part.queue.length)} pastas (cerca de ${buN(part.queue.length)} pedidos à Box).`;
+  else if(prev)msg=`${falhou?"Não foi possível ver na Box o que mudou desde a última análise. ":""}A leitura completa abre outra vez todas as pastas de “${nomePasta(root)}”, uma a uma: cerca de ${buN(pastasNaAnalise(prev))} pedidos à Box.`;
+  else msg=`“${nomePasta(root)}” ainda não foi analisada. A primeira leitura abre todas as pastas e subpastas, uma a uma (1 pedido à Box por pasta): numa pasta grande, como um ano letivo inteiro, são milhares de pedidos. Depois disso, só se lê o que muda.`;
+  return confirm(msg+usados+"\n\nContinuar?")}
 let curSt=null;
 $("#scanStop").onclick=()=>{if(!curSt)return;curSt.stop=true;bgRun++;$("#scanStop").disabled=true;$("#scanMsg").textContent="A parar… (a terminar os pedidos que já estavam a meio)"};
 $("#scanBtn").onclick=()=>runScan(false);
@@ -5398,10 +5096,10 @@ $("#scanUpd").onclick=()=>runScan(true);
 function scanHint(){const p=resumos()[curFolder.id],el=$("#scanHint");
   DB.get("kv","scan|"+curFolder.id).then(part=>{
     if(part&&part.queue&&part.queue.length&&Date.now()-part.t<48*3600e3&&!scanBusy){el.textContent=`Há uma leitura desta pasta por acabar (${part.opened||0} pastas já lidas): “Analisar” continua de onde ficou.`;return}
-    const ok=p&&p.pos&&Date.now()-(p.tFull||p.t||0)<7*864e5;
-    el.textContent=ok?`Esta pasta foi lida a ${p.quando}: “Analisar” só volta a abrir as pastas que mudaram desde então (segundos). “Leitura completa” lê tudo outra vez.`
-      :p?"A última leitura completa desta pasta tem mais de 7 dias: “Analisar” vai ler tudo outra vez, por segurança."
-      :"A primeira análise de uma pasta lê tudo, com calma e dentro das regras da Box (cerca de 5 pastas por segundo, para a conta nunca ficar bloqueada). Depois disso, só lê o que mudou."});
+    const ok=p&&p.pos;
+    el.textContent=ok?`Esta pasta foi lida a ${p.quando}: “Analisar” só abre as pastas que mudaram desde então (poucos pedidos à Box). A “Leitura completa” abre todas as pastas outra vez${p.np!=null?` (cerca de ${buN(p.np+1)} pedidos)`:""} e só é precisa se algo parecer errado.`
+      :p?"“Analisar” procura o que mudou desde a última análise desta pasta."
+      :"A primeira análise de uma pasta abre todas as pastas e subpastas, uma a uma (1 pedido à Box por pasta). Depois disso, só lê o que muda."});
   const outro=p&&(!lastListing||lastListing.rootId!==curFolder.id);
   $("#lastScan").style.display=outro?"":"none";if(outro)$("#lastScan").textContent=`Usar a análise guardada desta pasta (${p.quando})`;}
 function showLast(){const j=lastListing;$("#lastInfo").textContent=j?`Análise carregada: ${j.pasta} · ${j.quando} · ${files.length} ficheiros`:"";renderAnalises()}
@@ -5425,7 +5123,7 @@ async function apagarAnalise(id){
   const a=resumos()[id];if(!a)return;
   if(scanBusy){toast("Espere que a análise termine");return}
   const emUso=lastListing&&lastListing.rootId===id;
-  if(!confirm(`Apagar a análise guardada de «${nomePasta(a.pasta)}» (${a.quando||""})?\n\nSai deste e dos outros computadores. Os documentos na Box não são tocados e pode voltar a analisar a pasta quando quiser.${emUso?"\n\nÉ a análise em uso: a página volta a abrir no fim.":""}`))return;
+  if(!confirm(`Apagar a análise guardada de «${nomePasta(a.pasta)}» (${a.quando||""})?\n\nSai deste e dos outros computadores. Os documentos na Box não são tocados.\n\nAtenção: voltar a analisar esta pasta obriga a lê-la toda outra vez${a.np!=null?` (cerca de ${buN(a.np+1)} pedidos à Box; o plano tem ${buN(BU_ORC)} por mês)`:" (1 pedido à Box por pasta)"}.${emUso?"\n\nÉ a análise em uso: a página volta a abrir no fim.":""}`))return;
   await apagarAnaliseLocal(id);
   if(NUVOK())try{await nuvemPut("L_"+id,{apagada:true,rootId:id,pasta:a.pasta,t:Date.now()},Date.now())}catch(e){}
   if(emUso){toast("Análise apagada");setTimeout(()=>location.reload(),700);return}
@@ -5485,6 +5183,8 @@ function sbTempoReal(){if(SBRT||!nuvSB())return;let h=null;
   const trazer=()=>{clearTimeout(h);h=setTimeout(()=>{if(NUV.ocupado||aEscrever()||document.querySelector(".impov.on")||(curTab==="esch"&&Date.now()-(ULT_ES||0)<20000)){trazer();return}nuvemSincMS().catch(()=>{})},1500)};
   sbCliente().then(sb=>{SBRT=sb.channel("g360-estado").on("postgres_changes",{event:"*",schema:"public",table:"g360_estado"},p=>{const r=p.new||{};if(String(r.por||"").endsWith("#"+SBSID))return;trazer()}).subscribe()}).catch(()=>{})}
 function sbAtivo(){try{return !!(SBSES&&sbCfg())}catch(e){return false}}
+// 0.9.113: trinco entre computadores (Supabase): só um computador de cada vez faz as leituras automáticas da Box. Se falhar, não impede.
+async function trincoNuvem(nome,seg){try{if(!nuvSB())return true;const r=await sbRpc("g360_trinco",{p_nome:nome,p_dono:BU_DEV,p_seg:seg});return r!==false}catch(e){return true}}
 async function sbRpc(f,a){const sb=await sbCliente();const {data,error}=await sb.rpc(f,a||{});if(error){const x=new Error(error.code==="42501"?(error.message||"Sem permissão."):sbErroMsg(error));x.code=error.code;throw x}return data}
 const b64DeBuf=buf=>{const u=new Uint8Array(buf);let s="";for(let i=0;i<u.length;i+=32768)s+=String.fromCharCode.apply(null,u.subarray(i,i+32768));return btoa(s)};
 const bufDeB64=b=>{const s=atob(b),u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u.buffer};
@@ -5634,6 +5334,8 @@ async function nuvemTrazer(){
         if(r.sig)r.sig=unb64(r.sig);TX.set(r.sha1,r);await DB.put("textos",r.sha1,r);n++}
       if(n){txRev++;mudou=true}nuvSetT("tx",idx.tx.t)}
     if(TX.size&&(!idx.tx||TX.size>(nuvT().txN||0)))await nuvemTextos(true);
+    // 0.9.113: contador dos pedidos à Box (somado entre computadores)
+    if(idx.BU&&(idx.BU.t||0)>(L.BU||0)){try{buJuntar(await nuvemGet("BU"))}catch(x){}nuvSetT("BU",idx.BU.t)}
     NUV.ultimo=NUV.ultimo||Date.now();
   }catch(e){if(e.kind!=="nokv"){NUV.erro=e.message;console.warn(e)}}
   finally{NUV.ocupado=false;nuvemUI()}
@@ -6321,7 +6023,7 @@ function renderProx(){const el=$("#avProx");if(!el)return;const agora=Date.now()
     const n=r.agora?dev.filter(x=>x.a&&x.a.id===r.a.id).length:destinatarios(r.p,r.a,prazoItens(r.p)).length;
     return `<tr><td>${r.agora?`<span class="tag warn">na hora</span>`:esc(new Date(r.t).toLocaleString("pt-PT",{weekday:"short",day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}))}</td><td>${esc(r.p.nome)}</td><td>${esc(r.a.nome)}</td><td>${r.agora?`${n} por enviar`:`${n} formador(es), se fosse hoje`}</td></tr>`}).join("")}</tbody></table>`}
 function renderPrazos(){
-  const A=avCfg();srvUI();if(A.servidor&&SES&&Date.now()-SRV.t>120e3){SRV.t=Date.now();srvEstado()}$("#avAuto").checked=!!A.auto;$("#avHora").value=A.hora||"09:00";$("#avPara").value=A.para||cfg.mail.relatorio_para||"";
+  const A=avCfg();srvUI();if(A.servidor&&SES&&Date.now()-SRV.t>10*60e3){SRV.t=Date.now();srvEstado()}$("#avAuto").checked=!!A.auto;$("#avHora").value=A.hora||"09:00";$("#avPara").value=A.para||cfg.mail.relatorio_para||"";
   const P=prazos(),el=$("#praItens");
   el.innerHTML=P.length?P.map(p=>{const L=prazoItens(p),c=contar(L),inc=prazoPorProf(L).filter(g=>g.p.id!=="_"&&(g.c.falta||g.c.atraso||g.c.pendente)).length,fim=fimPrazo(p),dd=diasEntre(Date.now(),fim);
     const quando=isNaN(fim)?"sem data":dd>0?`faltam ${dd} dia(s)`:dd===0?"termina hoje":`terminou há ${-dd} dia(s)`;
@@ -6485,12 +6187,17 @@ function planoAvisos(){
     from:(A.remetente||(MSACC&&MSACC.username)||"").trim(),cc:msCfg().cc||"",profs:cfg.profs.map(p=>({id:p.id,nome:p.nome,email:p.email||""})),itens,prazos:prz,
     log:AVL.filter(x=>x.ok&&!x.servidor).slice(-1500)}}
 async function srvPedido(caminho,corpo){const w=srvUrl();if(!SES)throw new Error("Entre com a Box primeiro.");
+  buConta("av"); // o serviço confirma a conta junto da Box (1 pedido)
   let r;try{r=await fetch(w+caminho,{method:corpo?"POST":"GET",headers:{Authorization:"Bearer "+await accessToken(),...(corpo?{"Content-Type":"application/json"}:{})},body:corpo?JSON.stringify(corpo):undefined})}
   catch(e){throw new Error("Não foi possível contactar o serviço de avisos ("+w+"). Já o criou na Cloudflare?")}
   const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.erro||("o serviço respondeu "+r.status));return j}
 function srvGuardarResposta(j){SRV.estado=j.estado||null;SRV.box=j.box||"";SRV.erro="";SRV.t=Date.now();if(j.log&&avJuntar(j.log)&&curTab==="pra")renderPrazos()}
-async function enviarPlano(){const A=avCfg();if(!A.servidor&&!srvJaLigado)return;if(!lastListing)return;
-  try{const j=await srvPedido("/plano",planoAvisos());srvGuardarResposta(j);SRV.enviado=Date.now();srvJaLigado=!!A.servidor}
+// 0.9.113: o plano só é enviado ao serviço de avisos quando muda (ou uma vez a cada 12 horas); antes ia de 20 em 20 minutos
+function planoHash(o){const x=Object.assign({},o);delete x.t;const t=JSON.stringify(x);let h=5381;for(let i=0;i<t.length;i++)h=(h*33+t.charCodeAt(i))|0;return t.length+":"+h}
+async function enviarPlano(forcar){const A=avCfg();if(!A.servidor&&!srvJaLigado)return;if(!lastListing)return;
+  const pl=planoAvisos(),h=planoHash(pl);let ant=null;try{ant=JSON.parse(localStorage.getItem("g360_plano_h")||"null")}catch(e){}
+  if(!forcar&&ant&&ant.h===h&&Date.now()-ant.t<12*3600e3)return;
+  try{const j=await srvPedido("/plano",pl);srvGuardarResposta(j);SRV.enviado=Date.now();srvJaLigado=!!A.servidor;try{localStorage.setItem("g360_plano_h",JSON.stringify({h,t:Date.now()}))}catch(e){}}
   catch(e){SRV.erro=e.message}finally{avEstadoUI()}}
 function agendarPlano(){const A=avCfg();if(!A.servidor&&!srvJaLigado)return;clearTimeout(srvH);srvH=setTimeout(enviarPlano,15000)}
 async function srvEstado(){try{srvGuardarResposta(await srvPedido("/estado"))}catch(e){SRV.erro=e.message}avEstadoUI()}
@@ -6509,7 +6216,7 @@ $("#srvOn").onchange=async e=>{const A=avCfg();
   A.servidor=e.target.checked;save();srvJaLigado=true;await enviarPlano();if(!A.servidor)srvJaLigado=false;renderPrazos()};
 $("#srvUrl").onchange=e=>{avCfg().url=e.target.value.trim();save();srvUI()};
 $("#srvFrom").onchange=e=>{avCfg().remetente=e.target.value.trim();save()};
-$("#srvTest").onclick=async e=>{e.currentTarget.disabled=true;srvJaLigado=true;try{await enviarPlano();if(!SRV.erro)await srvEstado();toast(SRV.erro?"Serviço de avisos: erro":"Plano enviado ao serviço de avisos")}finally{e.currentTarget.disabled=false;if(!avCfg().servidor)srvJaLigado=false}};
+$("#srvTest").onclick=async e=>{e.currentTarget.disabled=true;srvJaLigado=true;try{await enviarPlano(true);if(!SRV.erro)await srvEstado();toast(SRV.erro?"Serviço de avisos: erro":"Plano enviado ao serviço de avisos")}finally{e.currentTarget.disabled=false;if(!avCfg().servidor)srvJaLigado=false}};
 
 /* ---------- tamanho da letra (+/−), guardado neste navegador ---------- */
 const FSZ=[80,90,100,110,120,130,140,150,165,180];
@@ -6933,7 +6640,7 @@ function renderModOrd(){const ul=$("#modOrd");if(!ul)return;const L=modOrdLista(
   modOrdAplicar();renderModOrd()})();
 
 /* 0.9.83: novidades — na primeira entrada depois de uma atualização mostra tudo o que mudou desde a última visita desta conta */
-const NOVIDADES=[{"v": "0.9.112", "d": "21 nov 2026", "i": ["Os diretores de turma passam a chamar-se «orientadores educativos» em toda a app: Escola360 › Turmas, Painel, Crono360, PAP360 e Horário360"]}, {"v": "0.9.111", "d": "21 nov 2026", "i": ["Folder360: nas lombadas com código QR, o título do dossier fica por cima do QR, no espaço livre, em vez de se sobrepor a ele (títulos compridos ficam com letra um pouco mais pequena)","Folder360: nas lombadas estreitas, o n.º de projeto fica numa só linha"]}, {"v": "0.9.110", "d": "21 nov 2026", "i": ["Revisão de erros em todos os módulos","Horário360: já não fica em branco quando a EPISJ 360 é aberta noutro endereço (por exemplo, boxcheck.episj.pt)","Utilizadores e perfis: se a lista ainda não carregou (sem internet), os botões avisam em vez de não fazerem nada","PAP360 › Definições: os níveis passam para a linha seguinte no telemóvel, em vez de saírem do ecrã","A data de hoje nos nomes dos ficheiros passa a ser a dos Açores (entre as 23h e a meia-noite saía a do dia seguinte)"]}, {"v": "0.9.109", "d": "21 nov 2026", "i": ["Folder360 › Relatórios: importar uma cópia do Folder360 (.json) — por exemplo, os dossiers do FileMaker. Junta-se ao que já existe, nada é apagado"]}, {"v": "0.9.108", "d": "21 nov 2026", "i": ["Folder360: as lombadas dos dossiers ProEmprego e Açores 2020 levam no rodapé os logótipos de financiamento que estavam no FileMaker (pode trocá-los em Folder360 › Definições)"]}, {"v": "0.9.107", "d": "21 nov 2026", "i": ["Novo módulo Folder360: o arquivo físico dos dossiers (o antigo GUIDE do FileMaker) dentro da EPISJ 360, com os 222 dossiers e os 57 cursos que lá estavam, tal como estavam", "Cada dossier com arquivo, armário, prateleira e número, ano letivo, curso, título, volume, n.º de projeto, financiamento e ligação à pasta no SharePoint", "O código de localização (ex.: ARQ1-BIII05-1617-956) e o código de barras são sempre calculados a partir do sítio — acabaram as etiquetas com códigos errados", "Lombadas como as do FileMaker (também mais finas ou mais largas, e várias por folha), etiquetas com código de barras para folhas Avery, etiquetas de CD e relatório por arquivo com QR codes, com os logótipos das Definições", "Mapa do arquivo: os armários e as prateleiras de cada arquivo, com os dossiers que lá estão", "Requisições: quem levou cada dossier, quando saiu e quando volta, com aviso dos atrasos no Painel", "Conferência do arquivo com o leitor de códigos de barras ou a câmara do telemóvel/iPad: o que falta, o que está no sítio errado e o que não devia lá estar"]}, {"v": "0.9.106", "d": "21 nov 2026", "i": ["Box360 › Modelos oficiais: nova opção para o documento que não segue o modelo — fica com o estado próprio «Não segue o modelo oficial» (conta como entregue, mas aparece à parte no relatório, no resumo geral e nas estatísticas)", "Box360 › Modelos oficiais: quando a Box não deixa descarregar um ficheiro (erro 403), a app lê a versão de pré-visualização que a Box gera (com o cabeçalho) ou o texto que a Box extrai — continua só em leitura"]}, {"v": "0.9.105", "d": "21 nov 2026", "i": ["Box360 › Relatório: a coluna «Em falta» diz agora por extenso o que falta, lendo o caminho da pasta — ex.: «Pautas de avaliação do Módulo 003 de TIC»", "As pastas vazias dos formandos dentro de um teste juntam-se numa só linha: «Teste prático - A03 dos formandos Alecio, Diogo e Ines (Enunciados de avaliação do Módulo 002 de TIC)»", "No PDF cada coisa em falta tem a sua linha, com a localização certa (já não se misturam pastas diferentes do mesmo módulo); o mesmo texto aparece nos emails"]}, {"v": "0.9.104", "d": "21 nov 2026", "i": ["Box360 › Modelos oficiais: escolha o modelo oficial de teste, de exame e de grelha de avaliação (na Box ou no computador) — a app lê o cabeçalho e propõe o que tem de ser verificado", "Para cada campo diz o que se verifica (turma, n.º de projeto, curso, ano letivo, disciplina, módulo, formador, texto fixo ou só o rótulo), se é obrigatório e que outras formas são aceites", "Como cada turma se escreve no cabeçalho: a forma oficial e as variantes aceites, turma a turma", "Os testes, exames e grelhas entregues são comparados com o modelo: lista do que não o segue, por formador, turma e documento", "Por omissão, um documento que não segue o modelo fica «a confirmar»; se quiser, pode passar a não contar como entregue", "Tudo só em leitura: os modelos e os documentos da Box nunca são alterados"]}, {"v": "0.9.103", "d": "21 nov 2026", "i": ["Box360 › Atribuições: cada módulo tem agora o interruptor «Segue a grelha» — ligado, o formador vem da grelha; desligue-o para escolher outro formador só para esse módulo (exceção) e volte a ligar para desfazer"]}, {"v": "0.9.102", "d": "21 nov 2026", "i": ["Box360 › Relatório: novo interruptor «Falso positivo em todas as linhas» — mostra o botão em todas as linhas por entregar, também nas pastas vazias, para dar qualquer uma como entregue", "A linha dada como entregue sai do que falta (relatório, PDF e emails) e pode ser anulada em «Tudo»; o interruptor fica lembrado neste navegador"]}, {"v": "0.9.101", "d": "21 nov 2026", "i": ["Horário360 com o mesmo aspeto do resto da EPISJ 360: segue o tema escolhido nas Definições (360 ou Cobalto), com a mesma letra, as mesmas cores e o mesmo menu lateral dos outros módulos", "No tema Cobalto, o menu do Horário360 fica azul, com o logótipo da EPISJ 360 e a versão no topo, como nos outros módulos", "O título de cada página do Horário360 aparece num bloco de destaque, e os números do Painel e do Diagnóstico em cartões pequenos (rótulo em cima, número por baixo)", "O índice de qualidade do horário passa a ser um número grande, sem anel; as barras e os números que estavam a verde passam a azul (o verde fica só para os botões de importar)", "O menu do Horário360 vai até ao fundo da janela e a barra dos logótipos começa na parede do menu, como nos outros módulos"]}, {"v": "0.9.100", "d": "21 nov 2026", "i": ["Novo módulo Pass360: o cofre das palavras-passe da escola, só para a Direção, cifrado no próprio computador com uma palavra-passe mestra comum (nem a base de dados nem ninguém de fora o consegue ler)", "Chave de recuperação para abrir o cofre se a palavra-passe mestra for esquecida — imprima-a e guarde-a num sítio seguro", "Entradas com utilizador, palavra-passe, endereço, notas, categoria e favoritos; copiar com um toque (a área de transferência limpa-se ao fim de 30 s) e histórico das palavras-passe anteriores", "Códigos de dois fatores (como o Google Authenticator) dentro do cofre", "Gerador de palavras-passe, Saúde (fracas, repetidas, com mais de um ano) e importação do Chrome, Edge, Firefox, Bitwarden ou 1Password", "O cofre fecha-se sozinho quando não é usado e quando liga o modo de privacidade"]}, {"v": "0.9.99", "d": "21 nov 2026", "i": ["Tema Cobalto: o logótipo da EPISJ 360 substitui o da escola no topo do menu lateral, que agora começa logo no cimo da janela"]}, {"v": "0.9.98", "d": "21 nov 2026", "i": ["Tema Cobalto: o nome EPISJ360 e a versão passam para debaixo do logótipo da escola, no menu lateral; o pequeno ícone sai da barra de cima"]}, {"v": "0.9.97", "d": "21 nov 2026", "i": ["Box360 deixa de usar «documentos exigidos»: passa a ver, módulo a módulo, todas as pastas na Box e aponta as pastas vazias (por exemplo, uma pauta que não foi posta ou a pasta de um formando sem o trabalho)", "Box360: uma pasta que só tem ficheiros que não contam (vazios, modelos por preencher, em branco ou iguais aos de outro módulo) também aparece em falta, com o motivo", "Box360: a localização mostra o caminho completo da pasta e o que falta é o nome da pasta", "Box360: os módulos passam a ser procurados em todas as secções das turmas", "Prazos: deixam de ter a escolha de documentos — valem para todas as pastas dos módulos"]}, {"v": "0.9.96", "d": "21 nov 2026", "i": ["Box360: acabaram as falsas faltas de «Matrizes» — a app já não procura uma pasta «Matrizes» (nem caminhos como «012.1.2 - Grelhas… › Matrizes»): procura «matriz» no nome dos ficheiros", "Box360: se um documento exigido pedir uma subpasta que não existe em lado nenhum da Box, a app procura essa palavra no nome dos ficheiros em vez de dar falta a todos", "Box360: os documentos exigidos que estavam repetidos (criados em vários computadores) juntam-se num só — o relatório deixa de repetir linhas e os totais ficam certos", "Box360: quando falta um documento, a localização indicada é a pasta onde o formador pôs os outros documentos desse módulo", "Tema Cobalto: o logótipo da barra de cima e o do menu lateral ficam num só bloco, e os módulos começam alinhados com o menu"]}, {"v": "0.9.95", "d": "21 nov 2026", "i": ["Modo de privacidade: o botão com o cadeado, em cima, bloqueia o ecrã e desfoca tudo até escrever o seu código de desbloqueio", "Definições › Modo de privacidade: defina ou mude o código (4 a 8 algarismos) e, se quiser, deixe a app bloquear-se sozinha ao fim de alguns minutos sem uso", "Tema Cobalto: barra de cima também azul, com os ícones dos módulos brancos e as letras azuis", "Box360 › Análise: as pastas excluídas de outras pastas (ex.: DTP 2025.2026) já não aparecem misturadas quando abre outra pasta", "Box360 › Pastas: com «Tudo», a árvore abre mesmo todas as subpastas (aos poucos, sem prender a página)"]}, {"v": "0.9.94", "d": "21 nov 2026", "i": ["Box360: os enunciados, as propostas de correção e as matrizes que estão em «008 - Avaliação › 008.1 - Formandos › 012.1.1 - Enunciados de Avaliação» passam a contar como entregues (antes apareciam em falta)", "Box360: a matriz conta quando há um ficheiro ou uma pasta com «matriz» no nome (na Box não há pastas «Matrizes»)", "Box360: a Orientação Educativa deixou de contar, por engano, os ficheiros dos enunciados", "Box360: a localização no relatório mostra o caminho verdadeiro das pastas na Box", "Box360: o mesmo módulo já não aparece repetido no relatório (as cópias juntam-se numa só, sem perder o formador)", "Box360: «Gestão Documental» passa a chamar-se «Análise» e fica em primeiro lugar no menu", "Definições › Temas: escolha entre «360» (o original) e «Cobalto», com menu lateral azul e conteúdo branco"]}, {"v": "0.9.93", "d": "20 nov 2026", "i": ["Corrigido: quem tinha deixado o PAP360 aberto não conseguia entrar (o botão «Entrar com o Office 365» não fazia nada)", "Se algum módulo falhar ao abrir, a entrada continua e a app abre na Escola360"]}, {"v": "0.9.92", "d": "20 nov 2026", "i": ["Novo módulo PAP360: a Grelha de Avaliação da PAP do Excel dentro da app — provas por turma e fase, formandos, temas, júri externo, datas e horas", "Grelhas de avaliação com os 6 critérios e 5 níveis, classificação do projeto, avaliações intermédias e nota final por extenso, calculadas sozinhas", "Pauta de chamada, folha de presença, atas (uma por sessão) e pauta de avaliação em PDF, com os logótipos da escola", "Contactos do júri e envio a cada elemento do júri, pelo Office 365, dos formandos que vai avaliar", "Importar a grelha do Excel (.xlsm) com tudo o que lá está: junta-se ao que já existe, nada é apagado"]}, {"v": "0.9.91", "d": "20 nov 2026", "i": ["Os logótipos das Definições (também o do canto superior direito) passam a chegar a todos os computadores da Direção, e por isso aparecem nos PDF"]}, {"v": "0.9.90", "d": "20 nov 2026", "i": ["Box360: o PDF do que falta mostra nas Observações o n.º de projeto de cada turma (o código FSE de Escola360 › Turmas)"]}, {"v": "0.9.89", "d": "20 nov 2026", "i": ["Box360: o PDF do que falta a cada formador sai em página deitada, com letra mais pequena e uma linha por módulo (os documentos em falta do mesmo módulo ficam juntos), por isso tem muito menos páginas", "Os PDF levam sempre os logótipos: se este computador ainda não os tiver nas Definições, usa o da escola em cima e os de financiamento em baixo"]}, {"v": "0.9.88", "d": "20 nov 2026", "i": ["Box360: pode apagar análises guardadas (botão «Apagar» em Gestão Documental › Análises guardadas). Sai de todos os computadores; os documentos na Box não são tocados"]}, {"v": "0.9.87", "d": "20 nov 2026", "i": ["Ecrã de entrada mais largo, com todos os módulos (também o Crono360 e o Social360); os módulos novos passam a aparecer sozinhos"]}, {"v": "0.9.86", "d": "19 nov 2026", "i": ["Box360: deixou de dizer que faltam pastas quando só mudaram de nome (ex.: «Módulo 1» → «Módulo 01 - Nome», «UFCD 0349» → «UFCD 349 (…)»)", "Box360: o que está em pastas excluídas já não aparece como em falta, e as pastas que a Box não deixou abrir aparecem como «sem acesso»", "Catálogo: «com pasta na Box» conta as pastas que existem mesmo, mesmo antes de detetar os módulos", "Ligação à Box ainda mais calma: no máximo 6 pedidos por segundo e só uma janela de cada vez a ler as pastas, para a conta nunca ficar bloqueada", "Pastas, Atribuições, Relatório e Enviar muito mais rápidos com muitas pastas e formadores", "Estatísticas sem gráfico circular: número grande e barra, como nos Anos letivos", "Pequenos acertos visuais (meses, filtros cortados no Crono360, aviso do Sala360 no telemóvel)"]}, {"v": "0.9.85", "d": "19 nov 2026", "i": ["Box360: escolher o formador na grelha das atribuições passou a ser imediato", "Lista de módulos muito mais leve com muitos formadores"]}, {"v": "0.9.84", "d": "19 nov 2026", "i": ["Definições › Histórico de versões: todas as mudanças desde a primeira versão da app (BoxDoc, BoxCheck, GUIDE e EPISJ 360)"]}, {"v": "0.9.83", "d": "19 nov 2026", "i": ["Novidades: ao entrar depois de uma atualização, esta janela mostra tudo o que mudou desde a sua última visita", "Carregue no número da versão, no topo, para voltar a ver as novidades"]}, {"v": "0.9.82", "d": "19 nov 2026", "i": ["Sem emojis na app: ícones de linha iguais em todos os módulos, também no Social360", "Ecrãs vazios com ícone em pastilha clara, como no menu lateral"]}, {"v": "0.9.81", "d": "19 nov 2026", "i": ["Social360: publicação automática no Facebook e no Instagram (texto, fotos, vídeo, carrossel, Reels e Stories)", "Estados «A publicar» e «Falhou a publicação», com o motivo e «Tentar outra vez»"]}, {"v": "0.9.80", "d": "19 nov 2026", "i": ["Painel da escola como briefing do dia: saudação, ponto do ano com linha do tempo, dados completos e lista «Para resolver»", "Cartões de números e widgets com o mesmo estilo em toda a app"]}, {"v": "0.9.79", "d": "19 nov 2026", "i": ["Menu lateral: o item aberto fica com a barra da cor do módulo; os ícones ficam todos iguais", "Ícones das Apps com a mesma pastilha do menu lateral"]}, {"v": "0.9.78", "d": "19 nov 2026", "i": ["Anos letivos redesenhados: linha do tempo com períodos, interrupções, feriados e hoje; turmas por ano; preparação do ano seguinte"]}, {"v": "0.9.77", "d": "19 nov 2026", "i": ["Logótipo da EPISJ 360 em monograma, com o logótipo da escola e a barra verde da app", "Ícones da barra de cima 25% maiores"]}, {"v": "0.9.76", "d": "19 nov 2026", "i": ["Ícones dos módulos em monograma: fundo azul, letra branca e uma cor por módulo (Escola coral, Box azul-céu, Horário lilás, Sala âmbar, Crono turquesa, Social rosa)", "O Box360 passa a ter a letra B"]}, {"v": "0.9.75", "d": "19 nov 2026", "i": ["Definições › Ordem das apps: escolha a ordem dos módulos na barra de cima (fica guardada na sua conta)", "Números animados em todos os cartões"]}, {"v": "0.9.74", "d": "19 nov 2026", "i": ["Social360: sondagens e documentos PDF no LinkedIn, Reels de teste do Instagram, música nos Reels e no TikTok"]}, {"v": "0.9.73", "d": "19 nov 2026", "i": ["Novo módulo Social360: planear, aprovar e agendar as redes sociais da escola, com calendário, grelha, aprovações, caixa de entrada e análise"]}, {"v": "0.9.72", "d": "19 nov 2026", "i": ["Crono360 › Cronogramas: resumo da turma, fim previsto de cada disciplina e aviso quando não há aulas no horário", "Interrupções letivas e feriados: tipo, duração em dias úteis, avisos e feriados em falta com «Acrescentar»"]}, {"v": "0.9.71", "d": "19 nov 2026", "i": ["Números dos cartões alinhados em baixo, mesmo com legendas de duas linhas"]}, {"v": "0.9.70", "d": "19 nov 2026", "i": ["Box360 dentro das regras da Box: ritmo de leitura muito abaixo dos limites, para a conta nunca ficar bloqueada"]}, {"v": "0.9.69", "d": "19 nov 2026", "i": ["Logótipos da barra de baixo no mesmo sítio em todos os módulos"]}, {"v": "0.9.68", "d": "19 nov 2026", "i": ["Crono360 › Cumprir o plano com as cores da EPISJ 360 e de cada disciplina"]}, {"v": "0.9.67", "d": "19 nov 2026", "i": ["Crono360 › Cumprir o plano: ponto de situação numa data, o que falta para acabar e horário novo automático ou à mão, aplicado no Horário360"]}, {"v": "0.9.66", "d": "19 nov 2026", "i": ["Apps como no iPhone e no Launchpad do Mac: ícones, fundo desfocado e dock"]}, {"v": "0.9.65", "d": "19 nov 2026", "i": ["Janela das Apps à largura do ecrã no telemóvel"]}, {"v": "0.9.64", "d": "19 nov 2026", "i": ["Ícones dos módulos maiores no telemóvel e no iPad"]}, {"v": "0.9.63", "d": "19 nov 2026", "i": ["Ecrã de entrada só com o ícone da EPISJ 360"]}, {"v": "0.9.62", "d": "19 nov 2026", "i": ["Os logótipos dos documentos já não se perdem entre separadores e computadores"]}, {"v": "0.9.61", "d": "19 nov 2026", "i": ["Cabeçalho do menu do Horário360 igual ao dos outros módulos"]}, {"v": "0.9.60", "d": "19 nov 2026", "i": ["Verde só nos botões de importar", "Horário360: importar horários em PDF"]}, {"v": "0.9.59", "d": "19 nov 2026", "i": ["Novo módulo Crono360: cronogramas dos módulos e pontos de situação do cumprimento dos planos"]}, {"v": "0.9.58", "d": "19 nov 2026", "i": ["Calendário Escolar: importar o documento do calendário (Word ou PDF) com períodos, interrupções e datas da FCT"]}];
+const NOVIDADES=[{"v": "0.9.113", "d": "21 nov 2026", "i": ["Box360 gasta muito menos pedidos à Box: a leitura completa das pastas só acontece quando a pede, e antes diz quantos pedidos vai gastar","Novo cartão «Pedidos à Box este mês» em Box360 › Análise, somado em todos os computadores; aos 80% as leituras automáticas param sozinhas até ao dia 1","Abrir a app, voltar a carregar a página ou navegar nas pastas já analisadas deixa de fazer pedidos à Box","Ler o texto dos documentos passa a gastar no máximo 1 pedido por documento; os que falham esperam cada vez mais antes de nova tentativa","Só um computador de cada vez faz as leituras automáticas; os outros recebem o resultado pela nuvem","As pastas excluídas da análise nunca são abertas, nem quando alguém lá põe um ficheiro","O plano dos avisos só é enviado ao serviço de avisos quando muda","A zona «Modelos oficiais» foi retirada do Box360 (os dados guardados ficam)"]}, {"v": "0.9.112", "d": "21 nov 2026", "i": ["Os diretores de turma passam a chamar-se «orientadores educativos» em toda a app: Escola360 › Turmas, Painel, Crono360, PAP360 e Horário360"]}, {"v": "0.9.111", "d": "21 nov 2026", "i": ["Folder360: nas lombadas com código QR, o título do dossier fica por cima do QR, no espaço livre, em vez de se sobrepor a ele (títulos compridos ficam com letra um pouco mais pequena)","Folder360: nas lombadas estreitas, o n.º de projeto fica numa só linha"]}, {"v": "0.9.110", "d": "21 nov 2026", "i": ["Revisão de erros em todos os módulos","Horário360: já não fica em branco quando a EPISJ 360 é aberta noutro endereço (por exemplo, boxcheck.episj.pt)","Utilizadores e perfis: se a lista ainda não carregou (sem internet), os botões avisam em vez de não fazerem nada","PAP360 › Definições: os níveis passam para a linha seguinte no telemóvel, em vez de saírem do ecrã","A data de hoje nos nomes dos ficheiros passa a ser a dos Açores (entre as 23h e a meia-noite saía a do dia seguinte)"]}, {"v": "0.9.109", "d": "21 nov 2026", "i": ["Folder360 › Relatórios: importar uma cópia do Folder360 (.json) — por exemplo, os dossiers do FileMaker. Junta-se ao que já existe, nada é apagado"]}, {"v": "0.9.108", "d": "21 nov 2026", "i": ["Folder360: as lombadas dos dossiers ProEmprego e Açores 2020 levam no rodapé os logótipos de financiamento que estavam no FileMaker (pode trocá-los em Folder360 › Definições)"]}, {"v": "0.9.107", "d": "21 nov 2026", "i": ["Novo módulo Folder360: o arquivo físico dos dossiers (o antigo GUIDE do FileMaker) dentro da EPISJ 360, com os 222 dossiers e os 57 cursos que lá estavam, tal como estavam", "Cada dossier com arquivo, armário, prateleira e número, ano letivo, curso, título, volume, n.º de projeto, financiamento e ligação à pasta no SharePoint", "O código de localização (ex.: ARQ1-BIII05-1617-956) e o código de barras são sempre calculados a partir do sítio — acabaram as etiquetas com códigos errados", "Lombadas como as do FileMaker (também mais finas ou mais largas, e várias por folha), etiquetas com código de barras para folhas Avery, etiquetas de CD e relatório por arquivo com QR codes, com os logótipos das Definições", "Mapa do arquivo: os armários e as prateleiras de cada arquivo, com os dossiers que lá estão", "Requisições: quem levou cada dossier, quando saiu e quando volta, com aviso dos atrasos no Painel", "Conferência do arquivo com o leitor de códigos de barras ou a câmara do telemóvel/iPad: o que falta, o que está no sítio errado e o que não devia lá estar"]}, {"v": "0.9.106", "d": "21 nov 2026", "i": ["Box360 › Modelos oficiais: nova opção para o documento que não segue o modelo — fica com o estado próprio «Não segue o modelo oficial» (conta como entregue, mas aparece à parte no relatório, no resumo geral e nas estatísticas)", "Box360 › Modelos oficiais: quando a Box não deixa descarregar um ficheiro (erro 403), a app lê a versão de pré-visualização que a Box gera (com o cabeçalho) ou o texto que a Box extrai — continua só em leitura"]}, {"v": "0.9.105", "d": "21 nov 2026", "i": ["Box360 › Relatório: a coluna «Em falta» diz agora por extenso o que falta, lendo o caminho da pasta — ex.: «Pautas de avaliação do Módulo 003 de TIC»", "As pastas vazias dos formandos dentro de um teste juntam-se numa só linha: «Teste prático - A03 dos formandos Alecio, Diogo e Ines (Enunciados de avaliação do Módulo 002 de TIC)»", "No PDF cada coisa em falta tem a sua linha, com a localização certa (já não se misturam pastas diferentes do mesmo módulo); o mesmo texto aparece nos emails"]}, {"v": "0.9.104", "d": "21 nov 2026", "i": ["Box360 › Modelos oficiais: escolha o modelo oficial de teste, de exame e de grelha de avaliação (na Box ou no computador) — a app lê o cabeçalho e propõe o que tem de ser verificado", "Para cada campo diz o que se verifica (turma, n.º de projeto, curso, ano letivo, disciplina, módulo, formador, texto fixo ou só o rótulo), se é obrigatório e que outras formas são aceites", "Como cada turma se escreve no cabeçalho: a forma oficial e as variantes aceites, turma a turma", "Os testes, exames e grelhas entregues são comparados com o modelo: lista do que não o segue, por formador, turma e documento", "Por omissão, um documento que não segue o modelo fica «a confirmar»; se quiser, pode passar a não contar como entregue", "Tudo só em leitura: os modelos e os documentos da Box nunca são alterados"]}, {"v": "0.9.103", "d": "21 nov 2026", "i": ["Box360 › Atribuições: cada módulo tem agora o interruptor «Segue a grelha» — ligado, o formador vem da grelha; desligue-o para escolher outro formador só para esse módulo (exceção) e volte a ligar para desfazer"]}, {"v": "0.9.102", "d": "21 nov 2026", "i": ["Box360 › Relatório: novo interruptor «Falso positivo em todas as linhas» — mostra o botão em todas as linhas por entregar, também nas pastas vazias, para dar qualquer uma como entregue", "A linha dada como entregue sai do que falta (relatório, PDF e emails) e pode ser anulada em «Tudo»; o interruptor fica lembrado neste navegador"]}, {"v": "0.9.101", "d": "21 nov 2026", "i": ["Horário360 com o mesmo aspeto do resto da EPISJ 360: segue o tema escolhido nas Definições (360 ou Cobalto), com a mesma letra, as mesmas cores e o mesmo menu lateral dos outros módulos", "No tema Cobalto, o menu do Horário360 fica azul, com o logótipo da EPISJ 360 e a versão no topo, como nos outros módulos", "O título de cada página do Horário360 aparece num bloco de destaque, e os números do Painel e do Diagnóstico em cartões pequenos (rótulo em cima, número por baixo)", "O índice de qualidade do horário passa a ser um número grande, sem anel; as barras e os números que estavam a verde passam a azul (o verde fica só para os botões de importar)", "O menu do Horário360 vai até ao fundo da janela e a barra dos logótipos começa na parede do menu, como nos outros módulos"]}, {"v": "0.9.100", "d": "21 nov 2026", "i": ["Novo módulo Pass360: o cofre das palavras-passe da escola, só para a Direção, cifrado no próprio computador com uma palavra-passe mestra comum (nem a base de dados nem ninguém de fora o consegue ler)", "Chave de recuperação para abrir o cofre se a palavra-passe mestra for esquecida — imprima-a e guarde-a num sítio seguro", "Entradas com utilizador, palavra-passe, endereço, notas, categoria e favoritos; copiar com um toque (a área de transferência limpa-se ao fim de 30 s) e histórico das palavras-passe anteriores", "Códigos de dois fatores (como o Google Authenticator) dentro do cofre", "Gerador de palavras-passe, Saúde (fracas, repetidas, com mais de um ano) e importação do Chrome, Edge, Firefox, Bitwarden ou 1Password", "O cofre fecha-se sozinho quando não é usado e quando liga o modo de privacidade"]}, {"v": "0.9.99", "d": "21 nov 2026", "i": ["Tema Cobalto: o logótipo da EPISJ 360 substitui o da escola no topo do menu lateral, que agora começa logo no cimo da janela"]}, {"v": "0.9.98", "d": "21 nov 2026", "i": ["Tema Cobalto: o nome EPISJ360 e a versão passam para debaixo do logótipo da escola, no menu lateral; o pequeno ícone sai da barra de cima"]}, {"v": "0.9.97", "d": "21 nov 2026", "i": ["Box360 deixa de usar «documentos exigidos»: passa a ver, módulo a módulo, todas as pastas na Box e aponta as pastas vazias (por exemplo, uma pauta que não foi posta ou a pasta de um formando sem o trabalho)", "Box360: uma pasta que só tem ficheiros que não contam (vazios, modelos por preencher, em branco ou iguais aos de outro módulo) também aparece em falta, com o motivo", "Box360: a localização mostra o caminho completo da pasta e o que falta é o nome da pasta", "Box360: os módulos passam a ser procurados em todas as secções das turmas", "Prazos: deixam de ter a escolha de documentos — valem para todas as pastas dos módulos"]}, {"v": "0.9.96", "d": "21 nov 2026", "i": ["Box360: acabaram as falsas faltas de «Matrizes» — a app já não procura uma pasta «Matrizes» (nem caminhos como «012.1.2 - Grelhas… › Matrizes»): procura «matriz» no nome dos ficheiros", "Box360: se um documento exigido pedir uma subpasta que não existe em lado nenhum da Box, a app procura essa palavra no nome dos ficheiros em vez de dar falta a todos", "Box360: os documentos exigidos que estavam repetidos (criados em vários computadores) juntam-se num só — o relatório deixa de repetir linhas e os totais ficam certos", "Box360: quando falta um documento, a localização indicada é a pasta onde o formador pôs os outros documentos desse módulo", "Tema Cobalto: o logótipo da barra de cima e o do menu lateral ficam num só bloco, e os módulos começam alinhados com o menu"]}, {"v": "0.9.95", "d": "21 nov 2026", "i": ["Modo de privacidade: o botão com o cadeado, em cima, bloqueia o ecrã e desfoca tudo até escrever o seu código de desbloqueio", "Definições › Modo de privacidade: defina ou mude o código (4 a 8 algarismos) e, se quiser, deixe a app bloquear-se sozinha ao fim de alguns minutos sem uso", "Tema Cobalto: barra de cima também azul, com os ícones dos módulos brancos e as letras azuis", "Box360 › Análise: as pastas excluídas de outras pastas (ex.: DTP 2025.2026) já não aparecem misturadas quando abre outra pasta", "Box360 › Pastas: com «Tudo», a árvore abre mesmo todas as subpastas (aos poucos, sem prender a página)"]}, {"v": "0.9.94", "d": "21 nov 2026", "i": ["Box360: os enunciados, as propostas de correção e as matrizes que estão em «008 - Avaliação › 008.1 - Formandos › 012.1.1 - Enunciados de Avaliação» passam a contar como entregues (antes apareciam em falta)", "Box360: a matriz conta quando há um ficheiro ou uma pasta com «matriz» no nome (na Box não há pastas «Matrizes»)", "Box360: a Orientação Educativa deixou de contar, por engano, os ficheiros dos enunciados", "Box360: a localização no relatório mostra o caminho verdadeiro das pastas na Box", "Box360: o mesmo módulo já não aparece repetido no relatório (as cópias juntam-se numa só, sem perder o formador)", "Box360: «Gestão Documental» passa a chamar-se «Análise» e fica em primeiro lugar no menu", "Definições › Temas: escolha entre «360» (o original) e «Cobalto», com menu lateral azul e conteúdo branco"]}, {"v": "0.9.93", "d": "20 nov 2026", "i": ["Corrigido: quem tinha deixado o PAP360 aberto não conseguia entrar (o botão «Entrar com o Office 365» não fazia nada)", "Se algum módulo falhar ao abrir, a entrada continua e a app abre na Escola360"]}, {"v": "0.9.92", "d": "20 nov 2026", "i": ["Novo módulo PAP360: a Grelha de Avaliação da PAP do Excel dentro da app — provas por turma e fase, formandos, temas, júri externo, datas e horas", "Grelhas de avaliação com os 6 critérios e 5 níveis, classificação do projeto, avaliações intermédias e nota final por extenso, calculadas sozinhas", "Pauta de chamada, folha de presença, atas (uma por sessão) e pauta de avaliação em PDF, com os logótipos da escola", "Contactos do júri e envio a cada elemento do júri, pelo Office 365, dos formandos que vai avaliar", "Importar a grelha do Excel (.xlsm) com tudo o que lá está: junta-se ao que já existe, nada é apagado"]}, {"v": "0.9.91", "d": "20 nov 2026", "i": ["Os logótipos das Definições (também o do canto superior direito) passam a chegar a todos os computadores da Direção, e por isso aparecem nos PDF"]}, {"v": "0.9.90", "d": "20 nov 2026", "i": ["Box360: o PDF do que falta mostra nas Observações o n.º de projeto de cada turma (o código FSE de Escola360 › Turmas)"]}, {"v": "0.9.89", "d": "20 nov 2026", "i": ["Box360: o PDF do que falta a cada formador sai em página deitada, com letra mais pequena e uma linha por módulo (os documentos em falta do mesmo módulo ficam juntos), por isso tem muito menos páginas", "Os PDF levam sempre os logótipos: se este computador ainda não os tiver nas Definições, usa o da escola em cima e os de financiamento em baixo"]}, {"v": "0.9.88", "d": "20 nov 2026", "i": ["Box360: pode apagar análises guardadas (botão «Apagar» em Gestão Documental › Análises guardadas). Sai de todos os computadores; os documentos na Box não são tocados"]}, {"v": "0.9.87", "d": "20 nov 2026", "i": ["Ecrã de entrada mais largo, com todos os módulos (também o Crono360 e o Social360); os módulos novos passam a aparecer sozinhos"]}, {"v": "0.9.86", "d": "19 nov 2026", "i": ["Box360: deixou de dizer que faltam pastas quando só mudaram de nome (ex.: «Módulo 1» → «Módulo 01 - Nome», «UFCD 0349» → «UFCD 349 (…)»)", "Box360: o que está em pastas excluídas já não aparece como em falta, e as pastas que a Box não deixou abrir aparecem como «sem acesso»", "Catálogo: «com pasta na Box» conta as pastas que existem mesmo, mesmo antes de detetar os módulos", "Ligação à Box ainda mais calma: no máximo 6 pedidos por segundo e só uma janela de cada vez a ler as pastas, para a conta nunca ficar bloqueada", "Pastas, Atribuições, Relatório e Enviar muito mais rápidos com muitas pastas e formadores", "Estatísticas sem gráfico circular: número grande e barra, como nos Anos letivos", "Pequenos acertos visuais (meses, filtros cortados no Crono360, aviso do Sala360 no telemóvel)"]}, {"v": "0.9.85", "d": "19 nov 2026", "i": ["Box360: escolher o formador na grelha das atribuições passou a ser imediato", "Lista de módulos muito mais leve com muitos formadores"]}, {"v": "0.9.84", "d": "19 nov 2026", "i": ["Definições › Histórico de versões: todas as mudanças desde a primeira versão da app (BoxDoc, BoxCheck, GUIDE e EPISJ 360)"]}, {"v": "0.9.83", "d": "19 nov 2026", "i": ["Novidades: ao entrar depois de uma atualização, esta janela mostra tudo o que mudou desde a sua última visita", "Carregue no número da versão, no topo, para voltar a ver as novidades"]}, {"v": "0.9.82", "d": "19 nov 2026", "i": ["Sem emojis na app: ícones de linha iguais em todos os módulos, também no Social360", "Ecrãs vazios com ícone em pastilha clara, como no menu lateral"]}, {"v": "0.9.81", "d": "19 nov 2026", "i": ["Social360: publicação automática no Facebook e no Instagram (texto, fotos, vídeo, carrossel, Reels e Stories)", "Estados «A publicar» e «Falhou a publicação», com o motivo e «Tentar outra vez»"]}, {"v": "0.9.80", "d": "19 nov 2026", "i": ["Painel da escola como briefing do dia: saudação, ponto do ano com linha do tempo, dados completos e lista «Para resolver»", "Cartões de números e widgets com o mesmo estilo em toda a app"]}, {"v": "0.9.79", "d": "19 nov 2026", "i": ["Menu lateral: o item aberto fica com a barra da cor do módulo; os ícones ficam todos iguais", "Ícones das Apps com a mesma pastilha do menu lateral"]}, {"v": "0.9.78", "d": "19 nov 2026", "i": ["Anos letivos redesenhados: linha do tempo com períodos, interrupções, feriados e hoje; turmas por ano; preparação do ano seguinte"]}, {"v": "0.9.77", "d": "19 nov 2026", "i": ["Logótipo da EPISJ 360 em monograma, com o logótipo da escola e a barra verde da app", "Ícones da barra de cima 25% maiores"]}, {"v": "0.9.76", "d": "19 nov 2026", "i": ["Ícones dos módulos em monograma: fundo azul, letra branca e uma cor por módulo (Escola coral, Box azul-céu, Horário lilás, Sala âmbar, Crono turquesa, Social rosa)", "O Box360 passa a ter a letra B"]}, {"v": "0.9.75", "d": "19 nov 2026", "i": ["Definições › Ordem das apps: escolha a ordem dos módulos na barra de cima (fica guardada na sua conta)", "Números animados em todos os cartões"]}, {"v": "0.9.74", "d": "19 nov 2026", "i": ["Social360: sondagens e documentos PDF no LinkedIn, Reels de teste do Instagram, música nos Reels e no TikTok"]}, {"v": "0.9.73", "d": "19 nov 2026", "i": ["Novo módulo Social360: planear, aprovar e agendar as redes sociais da escola, com calendário, grelha, aprovações, caixa de entrada e análise"]}, {"v": "0.9.72", "d": "19 nov 2026", "i": ["Crono360 › Cronogramas: resumo da turma, fim previsto de cada disciplina e aviso quando não há aulas no horário", "Interrupções letivas e feriados: tipo, duração em dias úteis, avisos e feriados em falta com «Acrescentar»"]}, {"v": "0.9.71", "d": "19 nov 2026", "i": ["Números dos cartões alinhados em baixo, mesmo com legendas de duas linhas"]}, {"v": "0.9.70", "d": "19 nov 2026", "i": ["Box360 dentro das regras da Box: ritmo de leitura muito abaixo dos limites, para a conta nunca ficar bloqueada"]}, {"v": "0.9.69", "d": "19 nov 2026", "i": ["Logótipos da barra de baixo no mesmo sítio em todos os módulos"]}, {"v": "0.9.68", "d": "19 nov 2026", "i": ["Crono360 › Cumprir o plano com as cores da EPISJ 360 e de cada disciplina"]}, {"v": "0.9.67", "d": "19 nov 2026", "i": ["Crono360 › Cumprir o plano: ponto de situação numa data, o que falta para acabar e horário novo automático ou à mão, aplicado no Horário360"]}, {"v": "0.9.66", "d": "19 nov 2026", "i": ["Apps como no iPhone e no Launchpad do Mac: ícones, fundo desfocado e dock"]}, {"v": "0.9.65", "d": "19 nov 2026", "i": ["Janela das Apps à largura do ecrã no telemóvel"]}, {"v": "0.9.64", "d": "19 nov 2026", "i": ["Ícones dos módulos maiores no telemóvel e no iPad"]}, {"v": "0.9.63", "d": "19 nov 2026", "i": ["Ecrã de entrada só com o ícone da EPISJ 360"]}, {"v": "0.9.62", "d": "19 nov 2026", "i": ["Os logótipos dos documentos já não se perdem entre separadores e computadores"]}, {"v": "0.9.61", "d": "19 nov 2026", "i": ["Cabeçalho do menu do Horário360 igual ao dos outros módulos"]}, {"v": "0.9.60", "d": "19 nov 2026", "i": ["Verde só nos botões de importar", "Horário360: importar horários em PDF"]}, {"v": "0.9.59", "d": "19 nov 2026", "i": ["Novo módulo Crono360: cronogramas dos módulos e pontos de situação do cumprimento dos planos"]}, {"v": "0.9.58", "d": "19 nov 2026", "i": ["Calendário Escolar: importar o documento do calendário (Word ou PDF) com períodos, interrupções e datas da FCT"]}];
 const NOV_HIST=[{"v": "0.9.57", "d": "19 nov 2026", "i": ["Formador e Formando veem logo «Só leitura · publicado a…» (antes demorava até 4 s e mostrava o botão de guardar)"]}, {"v": "0.9.56", "d": "19 nov 2026", "i": ["O tempo real não recarrega o Horário360 enquanto se mexe nele (espera 20 s sem toques); as alterações do outro computador entram quando se para"]}, {"v": "0.9.55", "d": "19 nov 2026", "i": ["Formadores e formandos entram logo — o que a Direção publicou fica guardado no aparelho e só se descarrega de novo quando há outra publicação (g360_publico_versao); sem rede mostra a última publicação; publica-se só o horário do ano ativo e dos anos que ainda vão começar"]}, {"v": "0.9.54", "d": "19 nov 2026", "i": ["Versão única depois de juntar as duas 0.9.53 (ligação à Box/widgets/DSD não letiva + Escola para 1000 formadores); testes com 1000 formadores sem erros em PC, iPad e telemóvel"]}, {"v": "0.9.53", "d": "19 nov 2026", "i": ["A ligação à Box nunca se perde; widgets guardados na conta; componente não letiva manual na DSD", "Escola preparada para 1000 formadores também em telemóveis lentos — Formadores, Formandos e o resumo da DSD em páginas de 200 (com Mostrar mais e procura), ordenação mais rápida; o desfazer guarda menos cópias quando a configuração é grande (menos memória no telemóvel). Todos os separadores abaixo de 0,3 s com o processador 4× mais lento"]}, {"v": "0.9.52", "d": "19 nov 2026", "i": ["Box360 ligado ao Plano Curricular — quem dá cada disciplina a cada turma (o formador com mais horas no plano) passa a contar na grelha de atribuições, no relatório e nos emails enquanto a Direção não escolher outro (nada é gravado por cima); o tempo real espera que se pare de escrever antes de trazer as alterações do outro computador e o aviso aparece no máximo uma vez por minuto"]}, {"v": "0.9.51", "d": "19 nov 2026", "i": ["Box360 preparado para 1000 formadores — Relatório 30 formadores de cada vez e no máximo 150 linhas por formador (2 s → 0,2 s), mensagens de Envio 30 de cada vez, Cópias abre logo (a configuração só aparece quando se pede), relatório geral em PDF com barra de progresso (732 páginas em 4 s), envio a todos ao ritmo que o Office 365 aceita (≈30 por minuto) e com botão para parar"]}, {"v": "0.9.50", "d": "19 nov 2026", "i": ["Utilizadores e perfis rápido mesmo com 1300 contas; letra Poppins servida pelo próprio site"]}, {"v": "0.9.49", "d": "19 nov 2026", "i": ["Tempo real entre os computadores e o iPad da Direção; PDFs de todos os formadores e turmas com barra de progresso; formandos recebem só o necessário"]}, {"v": "0.9.48", "d": "19 nov 2026", "i": ["Preparada para 1000 formadores e para telemóvel/iPad — menus de formador/turma preguiçosos (Turmas 1,5 s → 0,06 s; Planos 1,7 s → 0,07 s; Formandos 1,1 s → 0,18 s com 1000 formadores, 60 turmas, 1300 formandos), lista de reservas em páginas de 200, no Supabase os pontos de restauro não viajam; menu lateral em gaveta no telemóvel/iPad, barra dos fundos no fim da página, tabelas largas deslizam na horizontal, campos sem zoom no iPhone"]}, {"v": "0.9.47", "d": "19 nov 2026", "i": ["Módulos ligados — as disciplinas e a distribuição de serviço dos Planos Curriculares passam a aulas do Horário360 (TL = horas ÷ semanas, formador com mais horas; o que se mudar à mão no Horário360 fica); os espaços do Sala360 passam a salas do Horário360; as aulas marcadas nessas salas aparecem no mapa do Sala360, contam como ocupado e entram nos widgets"]}, {"v": "0.9.46", "d": "19 nov 2026", "i": ["Os quadros esticam até à largura do ecrã (responsive); a segunda coluna só ocupa espaço quando tem quadros"]}, {"v": "0.9.45", "d": "19 nov 2026", "i": ["Envio pelo Office 365 já configurado com a aplicação da escola e ligado à sessão de quem entrou; cartão de configuração escondido"]}, {"v": "0.9.44", "d": "19 nov 2026", "i": ["A Direção nunca fica em modo só de leitura com o Supabase; se não houver dados aqui nem na base de dados, recupera-os sozinha das cópias deste computador (IndexedDB e pontos de restauro) e envia-os; cartão do Supabase escondido (funciona sozinho); botão Guardar agora"]}, {"v": "0.9.43", "d": "19 nov 2026", "i": ["Entrada única com o Office 365 através do Supabase (a sessão fica guardada); perfis, publicação da Direção e 'quem sou eu' passam para a base de dados (g360_eu, g360_perfis_*, g360_publico_*), com as mesmas regras; só contas do Office 365 da escola contam; a nuvem deixa de ficar bloqueada pelo serviço antigo; perfis antigos migrados automaticamente"]}, {"v": "0.9.42", "d": "19 nov 2026", "i": ["Base de dados da EPISJ 360 criada e preparada; o primeiro a entrar fica administrador"]}, {"v": "0.9.41", "d": "19 nov 2026", "i": ["Início da passagem dos dados para a base de dados da escola, com entrada pela conta Microsoft"]}, {"v": "0.9.40", "d": "19 nov 2026", "i": ["O botão Enviar para o Office 365 e o cartão do OneDrive aparecem sempre (explicam o que falta, em vez de ficarem escondidos)"]}, {"v": "0.9.39", "d": "19 nov 2026", "i": ["Botão Enviar para o Office 365 ao lado do estado da gravação (envia já para a nuvem e faz cópia no OneDrive); o estado diz onde está mesmo guardado"]}, {"v": "EPISJ 360", "d": "19 nov 2026", "i": ["Página de regresso do login com explicação, para não ser confundida com uma página falsa"]}, {"v": "0.9.38", "d": "19 nov 2026", "i": ["Barra de progresso ao centro do ecrã, com o resto esbatido, ao ler e ao importar o Excel dos planos curriculares (0 a 100%, turma a turma)"]}, {"v": "0.9.37", "d": "19 nov 2026", "i": ["Dados guardados na nuvem com a conta do Office 365 (já não depende da Box); cópia de segurança diária no OneDrive da Direção"]}, {"v": "0.9.36", "d": "18 nov 2026", "i": ["Ecrã de entrada com os logótipos de financiamento do ano letivo por baixo do cartão"]}, {"v": "0.9.35", "d": "18 nov 2026", "i": ["Corrigida a perda de dados ao atualizar a app; cópia de cada gravação no próprio navegador para recuperar"]}, {"v": "0.9.34", "d": "18 nov 2026", "i": ["Importar planos do Excel em dois passos — pré-visualização com o ano letivo de destino e botão Importar dados; deixa de mudar o ano letivo ativo sozinho; confirma a gravação e cria ponto de restauro antes e depois"]}, {"v": "0.9.33", "d": "18 nov 2026", "i": ["Sala360 — Reservado por e Turma escolhidos dos dados da escola (formadores e turmas do ano ativo, com opção Outro); motivo automático Tecnologias de Informação e Comunicação para formadores de TIC"]}, {"v": "0.9.32", "d": "18 nov 2026", "i": ["PDF do Plano Curricular Detalhado no formato da folha oficial (uma tabela por disciplina com total e horas semanais, áreas, cargos, quadro de FCT e totais, assinatura, data da impressão); novo botão PDF de todas as turmas"]}, {"v": "0.9.31", "d": "18 nov 2026", "i": ["PDF da Distribuição de Serviço Docente no formato da folha oficial da escola (cabeçalho centrado com os dois logótipos, grelha preta, totais, código DSD, projetos FSE, assinatura, data da impressão e paginação por formador)"]}, {"v": "0.9.30", "d": "18 nov 2026", "i": ["PDFs com os logótipos do cabeçalho mais pequenos e equilibrados (mesma área visual, centrados na mesma linha)"]}, {"v": "0.9.29", "d": "18 nov 2026", "i": ["Menu Apps no topo (ícone de quatro quadrados, como na EduSpruce) com os módulos, Utilizadores e perfis, Definições e as ligações da escola (Box, Outlook, Teams, site)"]}, {"v": "0.9.28", "d": "18 nov 2026", "i": ["Escola360 com Planos Curriculares (subnível de Turmas) e Distribuição de Serviço Docente (subnível de Formadores); importação do livro Excel Planos Curriculares e DSD; PDF do plano e da DSD; professores passam a formadores e alunos a formandos em toda a app (também no ecrã do Horário360)"]}, {"v": "0.9.27", "d": "18 nov 2026", "i": ["Menu do Horário360 igual ao das outras páginas (logótipo centrado e mais pequeno, nome do módulo em maiúsculas); logótipo do menu mais pequeno; o texto do fundo do menu passa para a barra de baixo, à direita, em duas linhas"]}, {"v": "0.9.26", "d": "18 nov 2026", "i": ["Sem o título e a descrição nas zonas de widgets (fica só o botão Escolher widgets)"]}, {"v": "0.9.25", "d": "18 nov 2026", "i": ["Widgets arrastáveis pelo título, na mesma zona ou de uma zona para a outra, encaixados sem buracos; no menu do Horário360 o nome passa a Horário360 com o logótipo da escola a metade do tamanho"]}, {"v": "0.9.24", "d": "18 nov 2026", "i": ["Segunda zona de widgets no Painel da escola (Mais widgets), com escolha própria; um widget só está numa zona de cada vez"]}, {"v": "0.9.23", "d": "18 nov 2026", "i": ["Logótipo sem seta e com a bolinha, nome EPISJ360 junto; Sala360 sem vista Todos (sem sala: calendário a cinzento com aviso); caixas de opção com a altura dos campos; a informação nunca se perde (junção em vez de substituição, entre computadores e entre separadores); Definições: Apagar tudo e começar de novo (ficam as ligações à Box e ao Office 365)"]}, {"v": "0.9.22", "d": "18 nov 2026", "i": ["20 widgets no Painel da escola (Escola360, Box360, Horário360, Sala360 e O meu dia), cada um só com o seu módulo ligado; cada pessoa escolhe os que vê em Escolher widgets ou esconde-os no ×"]}, {"v": "0.9.21", "d": "18 nov 2026", "i": ["A pega para mudar os quadros de lugar fica sempre à vista no canto de cada quadro (antes só aparecia ao passar o rato), em todas as páginas, incluindo Utilizadores e perfis"]}, {"v": "0.9.20", "d": "18 nov 2026", "i": ["O mapa do Sala360 desconta a barra dos logótipos fixa em baixo ao esticar até ao fundo do ecrã (e volta a ajustar-se quando a barra aparece ou desaparece)"]}, {"v": "0.9.19", "d": "18 nov 2026", "i": ["Módulos com nomes 360 (Escola360, Box360, Horário360, Sala360); o administrador pode desligar módulos (só os administradores os veem); barra dos logótipos sempre visível em todos os módulos; mapa da Sala360 aparece logo ao entrar"]}, {"v": "0.9.18 (RoomCheck 1.3)", "d": "18 nov 2026", "i": ["Mapa responsivo — a semana e o mês esticam até ao fundo do ecrã e redesenham-se ao mudar o tamanho da janela; no telemóvel os dias deslizam na horizontal a partir de hoje, os controlos ficam em linhas próprias, o mês fica compacto e o ano em duas colunas"]}, {"v": "0.9.16–0.9.17 (RoomCheck 1.1–1.2)", "d": "18 nov 2026", "i": ["Mapa com vistas de semana, mês e ano letivo (ocupação dos tempos por dia); reservas arrastáveis no mapa da semana para outra hora, dia ou espaço — nas que se repetem pergunta se é só este dia ou todas as semanas daí em diante"]}, {"v": "0.9.14–0.9.15", "d": "18 nov 2026", "i": ["O mapa do RoomCheck segue os tempos letivos da escola (08:30–16:30, com intervalos e almoço; clicar num tempo reserva-o; botões dos tempos na nova reserva; tempos editáveis em Espaços ou copiados do EduSchedule); campo Projeto FSE nas turmas (Escola › Turmas)"]}, {"v": "0.9.13", "d": "18 nov 2026", "i": ["Barra de progresso de 0 a 100% no ecrã de entrada enquanto os módulos carregam (Office 365, perfil, Escola, EduSchedule, BoxCheck com a nuvem, RoomCheck), com o estado de cada módulo; nenhum passo prende a entrada (limite de tempo em cada um)"]}, {"v": "0.9.12", "d": "18 nov 2026", "i": ["Escola › Cursos mostra o plano de formação por componente — sociocultural, científica (e outras) e depois a tecnológica, com as UFCD obrigatórias separadas das opcionais; a escola escolhe as opcionais (com contagem face às horas exigidas) e a oferta de escola (ex.: TIC ou Oferta de Escola); o BoxCheck só conta como em falta as opcionais escolhidas"]}, {"v": "0.9.11", "d": "18 nov 2026", "i": ["Logótipo do ícone mais pequeno e centrado no anel"]}, {"v": "0.9.10", "d": "18 nov 2026", "i": ["O distintivo junto ao nome mostra Administrador quando a conta é administradora (o perfil fica na dica)"]}, {"v": "0.9.9", "d": "18 nov 2026", "i": ["Ícone com o logótipo completo da escola (pássaro e letras) a branco dentro do anel"]}, {"v": "0.9.8", "d": "18 nov 2026", "i": ["Número de versão (a 0.9.7 já tinha sido usada noutra alteração)"]}, {"v": "0.9.7", "d": "18 nov 2026", "i": ["Painel com todos os quadros e números arrastáveis — pega ⋮⋮ para mudar de sítio (também com as setas), borda direita para mudar a largura (duplo clique repõe), botão Repor a disposição; disposição guardada no navegador. Na EPISJ 360 o EduSchedule ocupa a largura toda", "Ícone novo (proposta 7 com as cores da app); logótipo da escola no azul da app no topo do menu lateral; barra ao fundo com os logótipos de financiamento do ano letivo ativo (escolhidos em Definições › Centrado no Rodapé, por ano letivo; 2026/2027 já com Açores 2030 · Governo dos Açores · Portugal 2030 · UE)"]}, {"v": "0.9.6", "d": "18 nov 2026", "i": ["RoomCheck na largura toda e adaptável — mapa da semana, lista e espaços sem limite de largura; em ecrãs largos as próximas reservas ficam numa coluna à direita; no telemóvel o mapa desliza na horizontal com as horas fixas"]}, {"v": "0.9.5", "d": "18 nov 2026", "i": ["Ícone modernizado ao estilo iOS (forma squircle, vidro com luz e sombras suaves, anel verde com reflexo)"]}, {"v": "0.9.4", "d": "18 nov 2026", "i": ["Professores, turmas e formandos são dados gerais — no EduSchedule só se veem (sem acrescentar, mudar o nome ou apagar; aviso com ligação ao módulo Escola); novo Escola › Formandos (com lista colada) ligado aos alunos do EduSchedule; rótulos por cima dos campos de data em Criar ano letivo; EduSchedule outra vez na largura toda"]}, {"v": "0.9.3", "d": "18 nov 2026", "i": ["Todos os módulos como o EduSchedule — cabeçalho de cada grupo do menu com subtítulo, barra do módulo com estado da gravação, anular/refazer e tamanho da letra; adaptável a qualquer ecrã (menu com deslocamento, rodapé nunca cortado, topo que encolhe, telemóvel)"]}, {"v": "0.9.2", "d": "18 nov 2026", "i": ["\"360\" do ícone mais para baixo"]}, {"v": "0.9.1", "d": "18 nov 2026", "i": ["Pássaro centrado no anel e \"360\" no espaço entre o início e a ponta da seta"]}, {"v": "0.9", "d": "18 nov 2026", "i": ["Entrada com o Office 365 e perfis de utilizador (Direção Executiva, Direção Pedagógica, Professor, Formando); a Box liga-se só no módulo BoxCheck; As minhas entregas, O meu horário / Horário da turma, Utilizadores e perfis; serviço de avisos com rotas /guide"]}, {"v": "0.8", "d": "18 nov 2026", "i": ["EduSchedule sem o logótipo no topo do menu lateral"]}, {"v": "0.7", "d": "18 nov 2026", "i": ["A GUIDE passa a chamar-se EPISJ 360, com ícone novo (escola + anel 360°)"]}, {"v": "GUIDE 0.6", "d": "18 nov 2026", "i": ["Novo módulo RoomCheck — reservas do Auditório e dos Laboratórios de Informática 1 e 2 (mapa da semana, reservas semanais, conflitos, lista com PDF/CSV, espaços editáveis, confirmação por email; guardado na nuvem da GUIDE)", "EduSchedule com o aspeto da GUIDE (cores, letra Poppins, menu, cartões, botões, campos, tabelas, avisos) e animações (entrada das páginas quadro a quadro, mosaicos, números a contar, janelas e avisos); escola e ano letivo só no topo da GUIDE"]}, {"v": "GUIDE 0.5", "d": "18 nov 2026", "i": ["Módulos Escola (anos letivos, cursos com o Catálogo Nacional de Qualificações, turmas e professores comuns a todos os módulos) e EduSchedule (o EduSchedule da EduSpruce aberto dentro da GUIDE, com professores e turmas sincronizados); ano letivo ativo no topo"]}, {"v": "GUIDE 0.4", "d": "18 nov 2026", "i": ["Alterações passam a ler na Box o que mudou — atualização automática ao abrir o painel (se a leitura tiver mais de 2 min) e botão “Atualizar agora a partir da Box”; aviso quando a contagem e a leitura são do mesmo momento"]}, {"v": "GUIDE 0.3", "d": "18 nov 2026", "i": ["O separador BoxCheck volta a usar o ícone próprio da BoxCheck"]}, {"v": "GUIDE 0.2", "d": "18 nov 2026", "i": ["Logótipo com o símbolo da EPISJ e selo de letra por módulo (G = GUIDE, B = BoxCheck); separador do módulo alinhado com o menu lateral; escolha da análise passa para o menu da BoxCheck"]}, {"v": "GUIDE 0.1", "d": "18 nov 2026", "i": ["A BoxCheck passa a módulo da GUIDE — logótipo GUIDE, barra de módulos em cima, menu lateral por módulo, Definições da GUIDE e logótipo da escola no fundo do menu"]}, {"v": "BoxCheck 1.17", "d": "18 nov 2026", "i": ["Serviço de avisos na Cloudflare — os avisos dos prazos saem de hora a hora mesmo com o computador desligado (boxdoc/servidor/boxcheck-avisos.js)"]}, {"v": "BoxCheck 1.16", "d": "18 nov 2026", "i": ["Botões A− / A+ no topo para diminuir ou aumentar o tamanho da letra (guardado no navegador)"]}, {"v": "BoxCheck 1.15", "d": "18 nov 2026", "i": ["Prazos — prazos de entrega com filtros (documentos, módulos/UC/UFCD, turmas, formadores, disciplinas), cumprimento no prazo/fora do prazo/não entregue pela data de colocação na Box, até 3 avisos por email com periodicidade, envio automático pelo Office 365 e resumo dos incumprimentos à direção"]}, {"v": "BoxCheck 1.14", "d": "18 nov 2026", "i": ["Estatísticas por disciplina, módulos fechados por turma, qualidade por formador, entregas fora do prazo, efeito dos lembretes, formadores parados e mapa de calor"]}, {"v": "BoxCheck 1.13", "d": "18 nov 2026", "i": ["Gestão Documental, módulos por formador na grelha, UC e nomes de módulos, cruzamento com o Catálogo Nacional de Qualificações, PDF no Relatório, quadros arrastáveis em duas colunas, rankings e linha do tempo por ano letivo"]}, {"v": "BoxCheck 1.12", "d": "18 nov 2026", "i": ["Logótipos nos documentos, relatório PDF por formador, envio pelo Office 365 com PDF em anexo, filtro por formador nas atribuições"]}, {"v": "BoxCheck 1.11", "d": "18 nov 2026", "i": ["Separador Estatísticas com gráficos animados; importação CSV passa a botão"]}, {"v": "BoxCheck 1.10", "d": "18 nov 2026", "i": ["Lista de análises guardadas (pasta, data e hora) e escolha da análise no topo"]}, {"v": "BoxCheck 1.9", "d": "18 nov 2026", "i": ["Relatório de pastas abre por defeito até ao último nível"]}, {"v": "BoxCheck 1.8", "d": "18 nov 2026", "i": ["Cores, letra (Poppins) e logótipo da EPISJ"]}, {"v": "BoxCheck 1.7", "d": "18 nov 2026", "i": ["Espaçamento da lista de pastas excluídas e dos botões"]}, {"v": "BoxCheck 1.6", "d": "18 nov 2026", "i": ["Estilo shadcn/ui com o azul da BoxCheck e números com NumberFlow"]}, {"v": "BoxCheck 1.5", "d": "18 nov 2026", "i": ["Excluir pastas da análise com botão −"]}, {"v": "BoxCheck 1.3-1.4", "d": "18 nov 2026", "i": ["Novo logótipo e guardar tudo na nuvem para mudar de computador"]}, {"v": "BoxCheck 1.2", "d": "18 nov 2026", "i": ["Assinalar falsos positivos e botão Parar análise"]}, {"v": "BoxCheck 1.1", "d": "18 nov 2026", "i": ["Endereço do serviço de login fixo na app"]}, {"v": "BoxCheck 1.0", "d": "18 nov 2026", "i": ["Análise incremental, leitura retomável, verificações anti-fraude 1-6, anos letivos"]}, {"v": "BoxCheck 0.9", "d": "18 nov 2026", "i": ["Verificação automática de documentos em branco após cada análise e contagem por pessoa em Alterações"]}, {"v": "BoxCheck 0.8", "d": "18 nov 2026", "i": ["Painel Alterações — quem colocou/substituiu/apagou e efeito no relatório por formador"]}, {"v": "BoxCheck 0.7", "d": "18 nov 2026", "i": ["Análise que não bloqueia e atualização só do que mudou (registo de alterações da Box)"]}, {"v": "BoxCheck 0.6", "d": "18 nov 2026", "i": ["Progresso da análise mostra pastas abertas, velocidade real e pausas"]}, {"v": "BoxCheck 0.5", "d": "18 nov 2026", "i": ["Lê todas as pastas, ritmo adaptado ao limite da Box (sem saltar pastas)"]}, {"v": "BoxCheck 0.4", "d": "18 nov 2026", "i": ["Grelha turma×disciplina com exceções, UFCD, modelo DTP, relatório no formato da escola, Excel de emails, acompanhamento de envios, anular/refazer e pontos de restauro"]}, {"v": "BoxCheck 0.3", "d": "18 nov 2026", "i": ["Módulos em cartões e páginas adaptadas a ecrãs pequenos"]}, {"v": "BoxCheck 0.2", "d": "18 nov 2026", "i": ["Deteção de documentos em branco, vazios e repetidos"]}, {"v": "BoxCheck 0.1", "d": "18 nov 2026", "i": ["Número de versão visível"]}, {"v": "BoxCheck", "d": "18 nov 2026", "i": ["Escola Profissional da Ilha de São Jorge (novo nome)", "Professores com código interno e formulário para adicionar à mão"]}, {"v": "EPISJ Box", "d": "18 nov 2026", "i": ["Novo nome e ecrã de entrada com a Box antes da app"]}, {"v": "BoxDoc", "d": "18 nov 2026", "i": ["Primeira versão: controlo das entregas na Box", "Menu por ordem de utilização e abre em Dados da Box", "Análise mais rápida, saltar pastas e secção Professores", "Animações e efeitos (barra de progresso, transições, contadores)"]}]; // 0.9.84: histórico desde a primeira versão (BoxDoc, BoxCheck, GUIDE, EPISJ 360 até à 0.9.57)
 const novCmp=(a,b)=>{const x=String(a).split(".").map(Number),y=String(b).split(".").map(Number);for(let i=0;i<Math.max(x.length,y.length);i++){const d=(x[i]||0)-(y[i]||0);if(d)return d}return 0};
 const novKey=()=>"g360_visto_"+String(EU&&EU.email||"").toLowerCase();
@@ -8499,7 +8206,7 @@ async function guideCarregarModulos0(){
     if(nuvSB())try{await gpAte(recuperarLocal(),15000)}catch(e){}
     fim("roomcheck","ok");odCopiaDiaria();return} // sem sessão da Box: o que está neste computador, junto com a nuvem da EPISJ 360 (Office 365)
   loginUI();boxEstado("wait");prog(70,"Box360: a ligar à Box…");
-  const pMe=boxGet("users/me",{fields:"name,login"});pMe.catch(e=>boxEstado("login",e.message)); // como antes: se a Box falhar, pede para voltar a ligar
+  const pMe=boxEuGuardado()?Promise.resolve(boxEuGuardado()):boxGet("users/me",{fields:"name,login"});pMe.catch(e=>boxEstado("login",e.message)); // 0.9.113: sem pedido se a sessão já sabe de quem é // como antes: se a Box falhar, pede para voltar a ligar
   const pBox=pMe.then(me=>{gpPasso(76,"Box360: ligado à Box");return connected(me)}).then(async()=>{if(nuvSB())try{await recuperarLocal()}catch(e){}});pBox.catch(()=>{});
   try{await gpAte(pBox,45000);fim("boxcheck","ok");fim("roomcheck","ok");fim("escola","ok");fim("eduschedule","ok");odCopiaDiaria()}
   catch(e){fim("boxcheck",e.tempo?"bg":"erro");fim("roomcheck",e.tempo?"bg":"ok")}}

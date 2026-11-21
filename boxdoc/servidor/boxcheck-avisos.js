@@ -277,9 +277,15 @@ async function perfilDe(quem, loja, plano, env, profsPub) {
 async function quemE(req, env) {
   const a = req.headers.get("Authorization") || "";
   if (!a.startsWith("Bearer ")) return { ok: false, st: 401, erro: "Sem acesso." };
-  const r = await fetch("https://api.box.com/2.0/users/me?fields=id,name,login", { headers: { Authorization: a } });
-  if (!r.ok) return { ok: false, st: 401, erro: "O acesso à Box não foi aceite." };
-  const me = await r.json(), box = await env.KV.get(P + "box", "json");
+  // EPISJ 360 0.9.113: a resposta da Box fica guardada 50 minutos por acesso (só a impressão digital do acesso, nunca o acesso)
+  const hk = P + "quem:" + [...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(a)))].map(b => b.toString(16).padStart(2, "0")).join("");
+  let me = await env.KV.get(hk, "json");
+  if (!me) {
+    const r = await fetch("https://api.box.com/2.0/users/me?fields=id,name,login", { headers: { Authorization: a } });
+    if (!r.ok) return { ok: false, st: 401, erro: "O acesso à Box não foi aceite." };
+    me = await r.json(); try { await env.KV.put(hk, JSON.stringify({ id: me.id, name: me.name, login: me.login }), { expirationTtl: 3000 }) } catch (e) { }
+  }
+  const box = await env.KV.get(P + "box", "json");
   if (!box) return { ok: false, st: 409, erro: "O serviço de avisos ainda não está ligado à Box. Abra " + new URL(req.url).origin + "/ligar" };
   if (box.userId !== me.id) return { ok: false, st: 403, erro: `O serviço de avisos está ligado a outra conta da Box (${box.login}).` };
   return { ok: true, me };
@@ -306,6 +312,17 @@ async function correr(env, agora) {
   if (!plano.servidor) return { nada: "envio pelo servidor desligado na app" };
   const ctx = { n: 0, env };
   const pedido = async (u, o) => { ctx.n++; return fetch(u, o) };
+  // 0) EPISJ 360 0.9.113: se não há nenhum aviso na hora (nem com o que já se sabe), não se pergunta nada à Box nesta hora.
+  //    Os dados só ficam mais desatualizados no sentido de mostrar MAIS gente em falta, por isso nada se perde.
+  //    De 6 em 6 dias renova-se o acesso, para o código da Box não caducar (caduca ao fim de 60 dias sem uso).
+  {
+    const log0 = await lerLog(env), feitos0 = new Set(log0.filter(x => x.ok || x.err === "sem email").map(x => x.k));
+    const fich0 = (await env.KV.get(P + "ficheiros", "json")) || {};
+    if (!calcularDevidos(plano, fich0, agora, feitos0).length && agora - (box.tRen || box.t || 0) < 6 * DIA) {
+      await anotar(env, { pedidos: 0, enviados: 0, falhas: 0, porEnviar: 0, erro: "", semAvisos: agora });
+      return { nada: "sem avisos na hora", pedidos: 0 };
+    }
+  }
   // 1) acesso à Box (o código de renovação muda a cada uso: guarda-se logo o novo)
   ctx.n++; const tok = await boxToken(env, { grant_type: "refresh_token", refresh_token: box.refresh });
   box.refresh = tok.refresh_token; box.tRen = agora; await env.KV.put(P + "box", JSON.stringify(box));
