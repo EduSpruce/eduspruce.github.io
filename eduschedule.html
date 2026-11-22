@@ -2,7 +2,7 @@
 <html lang="pt">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-0r/YIY+6/NxVtNF8n1Dx35Q5MhzDQwJdIM51BmWRZE4=' 'sha256-4oETQkvYi9UL1QDGmDgyNlS4b2A2Lbnpc6WrBspPP+I=' 'sha256-FdHe30dO5XF/SH3U8EtIRkoRCs2JJW3cbc7OSN7ZIno=' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co data: blob:; worker-src 'self' blob:; child-src 'self' blob:; frame-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-0r/YIY+6/NxVtNF8n1Dx35Q5MhzDQwJdIM51BmWRZE4=' 'sha256-4oETQkvYi9UL1QDGmDgyNlS4b2A2Lbnpc6WrBspPP+I=' 'sha256-Dg9gwTsdParMMikna9FXAc0k29MkgAnSXyA2O23lBBs=' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co data: blob:; worker-src 'self' blob:; child-src 'self' blob:; frame-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>EduSchedule · EduSpruce</title>
 <script>/* nunca dentro de uma página de outro sítio (proteção contra cliques enganados) */try{if(top!==self){let m=false;try{m=top.location.origin===(self.origin||location.origin)}catch(_){}if(!m)document.documentElement.style.display='none'}}catch(_){}
@@ -1659,7 +1659,7 @@ function overview(m,arr){
 PAGES.horarios=function(m){
   const all=list(ui.kind),arr=all.filter(x=>matchQ('ent',[x.name,x.short]));if(!arr.some(x=>x.id===ui.id))ui.id=arr[0]?arr[0].id:null;
   const rep=REP(),mdl=M(),ix=IX(),idx=arr.findIndex(x=>x.id===ui.id),go=n=>{ui.id=arr[(idx+n+arr.length)%arr.length].id;ui.sel=null;render();};
-  m.append(pageHead('Horários',null,btn('Importar horários (PDF)',updfEscolher,'btn-sm btn-imp noprint',{disabled:busy,title:'Ler horários impressos pelo Untis (de professores, turmas ou salas) e colocar as aulas'}),h('a',{href:'#otimizacao',class:'btn btn-primary btn-sm noprint'},ic('bolt'),'Otimizar')));
+  m.append(pageHead('Horários',null,btn('Importar horários (PDF)',updfEscolher,'btn-sm btn-imp noprint',{disabled:busy,title:'Ler horários impressos pelo Untis (de professores, turmas ou salas; vários PDF ou um .zip) e colocar as aulas'}),h('a',{href:'#otimizacao',class:'btn btn-primary btn-sm noprint'},ic('bolt'),'Otimizar')));
   m.append(h('div',{class:'flex flex-wrap items-center gap-2 noprint'},
     tabsEl(['c','t','r'].map(k=>[k,KINDS[k][2]]),ui.kind,k=>{ui.kind=k;ui.id=null;ui.sel=null;ui.q.ent='';ui.pg.ov=0;render();},'Ver por'),
     tabsEl([['ind','Um horário'],['geral','Visão geral']],ui.visao,v=>{ui.visao=v;ui.sel=null;render();},'Modo'),
@@ -2460,7 +2460,7 @@ PAGES.ficheiro=function(m){
         try{const st=JSON.parse(await f.text());if(!st||!Array.isArray(st.lessons)||!Array.isArray(st.periods))throw 0;replaceAll(st,'Cópia aberta.');}
         catch(x){toast('Esse ficheiro não é uma cópia deste planeador. Escolha um .json descarregado aqui.',null,null,'bad');}}}),
       'showSaveFilePicker' in window?btn(fileHandle?'Ligado a '+fileName:'Guardar automaticamente num ficheiro…',async()=>{try{fileHandle=await window.showSaveFilePicker({suggestedName:'horarios-'+S.ano.replace(/\W+/g,'-')+'.json',types:[{description:'Planeador de horários',accept:{'application/json':['.json']}}]});fileName=fileHandle.name;save();render();toast('A partir de agora cada alteração é guardada em '+fileName+'.',null,null,'ok');}catch(x){}},'btn-sm'):null)));
-  m.append(panel('Importar de outro programa de horários',h('div',{class:'flex flex-wrap gap-2 items-center'},btn('Importar horários em PDF…',updfEscolher,'btn-sm btn-imp',{disabled:busy}),h('span',{class:'text-sm opacity-70'},'Horários impressos pelo Untis, em massa: escolha todos os PDF de uma vez (de professores, turmas e salas; um horário por página). Mostra o que vai entrar antes de importar; nada é apagado.')),h('p',{class:'text-sm opacity-70'},'No programa de origem, exporte os ficheiros de texto de intercâmbio (formato DIF) e escolha-os aqui todos de uma vez. O GPU001.TXT (horários) é obrigatório; GPU002 (aulas), GPU003 (turmas), GPU004 (professores), GPU005 (salas) e GPU006 (disciplinas) acrescentam os nomes completos e as aulas ainda sem horário. As aulas chegam já colocadas, tal como estavam. Por omissão juntam-se ao horário atual sem apagar nada (também pode substituir tudo; pode sempre anular).'),
+  m.append(panel('Importar de outro programa de horários',h('div',{class:'flex flex-wrap gap-2 items-center'},btn('Importar horários em PDF…',updfEscolher,'btn-sm btn-imp',{disabled:busy}),h('span',{class:'text-sm opacity-70'},'Horários impressos pelo Untis, em massa: escolha todos os PDF de uma vez, ou a pasta comprimida num .zip (de professores, turmas e salas; um horário por página). Os horários dos professores e das turmas juntam-se: cada aula entra uma só vez, com o professor, as turmas e a sala. Se o mesmo horário vier repetido (versões antigas), fica o mais recente. Mostra o que vai entrar antes de importar; nada é apagado.')),h('p',{class:'text-sm opacity-70'},'No programa de origem, exporte os ficheiros de texto de intercâmbio (formato DIF) e escolha-os aqui todos de uma vez. O GPU001.TXT (horários) é obrigatório; GPU002 (aulas), GPU003 (turmas), GPU004 (professores), GPU005 (salas) e GPU006 (disciplinas) acrescentam os nomes completos e as aulas ainda sem horário. As aulas chegam já colocadas, tal como estavam. Por omissão juntam-se ao horário atual sem apagar nada (também pode substituir tudo; pode sempre anular).'),
     h('div',{class:'flex flex-wrap gap-2 items-center'},h('label',{class:'btn btn-sm btn-imp',for:'im-dif'},'Importar ficheiros GPU…'),
       h('input',{type:'file',id:'im-dif',multiple:true,accept:'.txt,.TXT,text/plain',class:'sr-only',disabled:busy,onchange:async ev=>{const fs={};for(const f of ev.target.files){const buf=await f.arrayBuffer();let t;try{t=new TextDecoder('utf-8',{fatal:true}).decode(buf);}catch(x){t=new TextDecoder('windows-1252').decode(buf);}fs[f.name]=t;}
         try{importPreview(importDIF(fs,{name:S.name,ano:S.ano,periods:S.periods}),fs);ev.target.value='';}
@@ -3062,8 +3062,11 @@ async function updfPagina(lib,page){
   P.sort((a,b)=>a.y-b.y);
   /* só a coluna mais à esquerda (as horas também podem ter números) */
   if(P.length){const xmin=Math.min(...P.map(p=>p.x));for(let i=P.length-1;i>=0;i--)if(P[i].x>xmin+12)P.splice(i,1);}
-  if(!P.length)return null;
   const horas=T.filter(t=>t.x2<=xG+2&&t.y>yDias+4&&/^\d{1,2}[:h.]\d{2}$/.test(t.t));
+  /* sem os números dos tempos (ex.: folhas feitas no Excel): cada par de horas seguidas (início e fim) é um tempo */
+  if(!P.length){const hs=horas.slice().sort((a,b)=>a.y-b.y),gr=[];for(const t of hs){const g=gr[gr.length-1];if(g&&t.y-g[g.length-1].y<t.fs*1.9)g.push(t);else gr.push([t])}
+    gr.filter(g=>g.length>=2).forEach((g,i)=>P.push({n:i+1,y:(g[0].y+g[g.length-1].y)/2,x:g[0].x}))}
+  if(!P.length)return null;
   const hpasso=P.length>1?(P[P.length-1].y-P[0].y)/(P.length-1):30;
   P.forEach((p,i)=>{p.y1=i?(P[i-1].y+p.y)/2:p.y-hpasso/2;p.y2=i<P.length-1?(p.y+P[i+1].y)/2:p.y+hpasso/2;
     const hs=horas.filter(t=>t.y>=p.y1&&t.y<p.y2).sort((a,b)=>a.y-b.y).map(t=>t.t.replace(/[h.]/,':').padStart(5,'0'));p.ini=hs[0]||'';p.fim=hs[1]||''});
@@ -3098,10 +3101,25 @@ async function updfPagina(lib,page){
   /* cabeçalho do elemento: o texto entre o topo e a linha dos dias, mais abaixo (o que está por cima é a escola) */
   const cab=T.filter(t=>t.y<yDias-6).sort((a,b)=>a.y-b.y||a.x-b.x);const lc=[];for(const w of cab){const l=lc.find(l=>Math.abs(l.y-w.y)<3);if(l)l.ws.push(w);else lc.push({y:w.y,ws:[w]});}
   lc.forEach(l=>l.ws.sort((a,b)=>a.x-b.x));
-  const elL=lc.length?lc[lc.length-1]:null,el=elL?elL.ws.map(w=>w.t):[];
+  /* «Diretor de Turma: …» (ou «Orientador Educativo: …») na mesma linha do elemento; folhas com «Curso: …» / «Local: …» */
+  const RE_DT=/\s*\b(?:diretor(?:a)?\s+de\s+turma|orientador(?:a)?\s+educativ[oa])\s*:\s*/i,RE_ROT=/^(curso|turma|professor(?:a)?|formador(?:a)?|docente|sala|local)\s*:\s*(.+)$/i;
+  let iEl=lc.length-1,rot=null;
+  for(let i=lc.length-1;i>=0;i--){const m=RE_ROT.exec(lc[i].ws.map(w=>w.t).join(' ').trim());if(m){rot={k:m[1].toLowerCase(),v:m[2].trim()};iEl=i;break}}
+  let el=iEl>=0?lc[iEl].ws.map(w=>w.t):[],dt='';
+  if(rot)el=[rot.v];else{const s=el.join('  '),m=RE_DT.exec(s);if(m){dt=s.slice(m.index+m[0].length).trim();el=s.slice(0,m.index).split(/\s{2,}/).map(x=>x.trim()).filter(Boolean)}}
   let cod='',nome='';if(el.length>1){cod=el[0];nome=el.slice(1).join(' ')}else if(el.length){nome=el[0];const m=/^(\S+)\s+(.+)$/.exec(nome);if(m&&/\d/.test(m[1])){cod=m[1];nome=m[2]}}
-  const topo=lc.slice(0,-1).map(l=>l.ws.map(w=>w.t).join(' '));
-  return {cod,nome,topo,dias:Dd.map(c=>({d:c.d,nome:c.nome})),tempos:P.map(p=>({n:p.n,ini:p.ini,fim:p.fim})),aulas:out,vals,comCelulas:!!cel.length}
+  const topo=lc.filter((l,i)=>i!==iEl).map(l=>l.ws.map(w=>w.t).join(' '));
+  let data='';for(const s of topo){const m=/\b(\d{1,2})\/(\d{1,2})\/(20\d\d)\b/.exec(s);if(m){data=m[3]+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0');break}}
+  const tipoSug=rot?(/sala|local/.test(rot.k)?'r':/curso|turma/.test(rot.k)?'c':'t'):(dt&&/^[A-Z]{1,3}\d{1,3}[A-Z]?$/.test(cod)?'c':'');
+  /* tabela por baixo da grelha (horários das turmas): Disciplina · Horas · Formador — dá o nome das disciplinas e quem as dá */
+  const tab=[];{const B=T.filter(t=>t.y>yFim),hd=B.find(t=>/^disciplinas?$/i.test(t.t));
+    if(hd){const L1=B.filter(t=>Math.abs(t.y-hd.y)<4),hf=L1.find(t=>/^(formador|professor|docente)(es|as|a)?$/i.test(t.t)),hh=L1.find(t=>/^horas?$/i.test(t.t));
+      if(hf){const xF=hh?hh.x2+8:hf.x-(hf.x-hd.x2)*.6,xH=hh?hh.x-4:null,rows=[];
+        for(const w of B.filter(t=>t.y>hd.y+3).sort((a,b)=>a.y-b.y||a.x-b.x)){const r=rows.find(r=>Math.abs(r.y-w.y)<3);if(r)r.ws.push(w);else rows.push({y:w.y,ws:[w]})}
+        for(const r of rows){const d=[],f=[];let hr=null;for(const w of r.ws){if(w.x>=xF)f.push(w.t);else if(xH!=null&&w.x>=xH){if(/^\d+([.,]\d+)?$/.test(w.t))hr=+w.t.replace(',','.')}else d.push(w.t)}
+          const ds=d.join(' ').trim();if(!ds||(!f.length&&hr==null))continue;const m=/^\s*([\dA-Z]{2,8})\s*[\/–-]\s*(.+)$/.exec(ds);
+          tab.push({cod:m?m[1]:'',nome:(m?m[2]:ds).trim(),h:hr,f:f.join(' ').trim()})}}}}
+  return {cod,nome,dt,data,tipoSug,tab,topo,dias:Dd.map(c=>({d:c.d,nome:c.nome})),tempos:P.map(p=>({n:p.n,ini:p.ini,fim:p.fim})),aulas:out,vals,comCelulas:!!cel.length}
 }
 async function updfLer(lib,data){
   const doc=await lib.getDocument({data,isEvalSupported:false}).promise,pags=[];
@@ -3113,16 +3131,19 @@ async function updfLer(lib,data){
 const updfNorm=s=>String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
 const UPDF_PART=new Set(['da','de','do','das','dos','e']);
 function updfNomeIgual(a,b){const f=x=>updfNorm(x).split(' ').filter(w=>w&&!UPDF_PART.has(w)),A=f(a),B=f(b);if(!A.length||!B.length)return false;if(A.join(' ')===B.join(' '))return true;
-  if(A.length<2||B.length<2)return false;if(A[0]===B[0]&&A[A.length-1]===B[B.length-1])return true;const [p,q]=A.length<=B.length?[A,B]:[B,A];return p.every(w=>q.includes(w))}
+  if(A.length<2||B.length<2)return false;if(A[0]===B[0]&&A[A.length-1]===B[B.length-1])return true;const [p,q]=A.length<=B.length?[A,B]:[B,A];if(p.every(w=>q.includes(w)))return true;
+  /* nome cortado no fim (o Untis corta os textos que não cabem): as palavras iguais e a última é o começo da do outro */
+  const corte=(x,y)=>x.length>=3&&x.length<=y.length&&x.slice(0,-1).every((w,i)=>y[i]===w)&&y[x.length-1].startsWith(x[x.length-1]);return corte(A,B)||corte(B,A)}
 function updfAchar(st,k,txt,nome){const n=updfNorm(txt),nn=updfNorm(nome);
   {const al=st.updfAlias&&st.updfAlias[k],id=al&&n&&al[n];if(id){const x=(st[KINDS[k][0]]||[]).find(e=>e.id===id);if(x)return x}}
   if(k==='t')return (n&&st.teachers.find(t=>updfNorm(t.short)===n||updfNorm(t.proc)===n))||(nn&&st.teachers.find(t=>updfNomeIgual(t.name,nome)))||(n&&n.includes(' ')&&st.teachers.find(t=>updfNomeIgual(t.name,txt)))||null;
   if(k==='c')return (n&&st.classes.find(c=>updfNorm(c.name)===n))||(nn&&st.classes.find(c=>updfNorm(c.name)===nn||updfNorm(c.full)===nn))||null;
   if(k==='r')return (n&&st.rooms.find(r=>updfNorm(r.name)===n||updfNorm(r.alt)===n))||(nn&&st.rooms.find(r=>updfNorm(r.name)===nn))||null;
-  if(k==='s')return (n&&(st.subjects.find(s=>updfNorm(s.short)===n)||st.subjects.find(s=>updfNorm(s.name)===n)))||null;return null}
+  if(k==='s')return (n&&(st.subjects.find(s=>updfNorm(s.short)===n)||st.subjects.find(s=>updfNorm(s.name)===n)))||(nn&&(st.subjects.find(s=>updfNorm(s.name)===nn)||st.subjects.find(s=>updfNorm(updfSemCod(s.name))===updfNorm(updfSemCod(nome)))))||null;return null}
 /* que horário é cada página: de um professor, de uma turma ou de uma sala */
 function updfTipo(st,pg){
   if(updfAchar(st,'c',pg.cod,pg.nome))return 'c';if(updfAchar(st,'r',pg.cod,pg.nome))return 'r';if(updfAchar(st,'t',pg.cod,pg.nome))return 't';
+  if(pg.tipoSug)return pg.tipoSug;
   let nc=0,nt=0;for(const a of pg.aulas)for(const l of a.lin.slice(1))for(const w of l){if(updfAchar(st,'c',w.t))nc++;else if(updfAchar(st,'t',w.t))nt++;}
   if(nc>nt)return 't';if(nt>nc)return 'c';
   if(/t[ée]cnic|curso|turma|\bano\b/i.test(pg.nome)||/^[A-Z]{1,3}\d{1,3}[A-Z]?$/.test(pg.cod||pg.nome))return 'c';
@@ -3134,71 +3155,167 @@ function updfCelula(st,a,K){const mid=(a.x1+a.x2)/2,r={s:'',c:[],t:[],r:[]};
     if(K!=='r'&&l.length>1&&wi===l.length-1&&w.x>=mid){r.r.push(t);return}
     if(K==='t')r.c.push(t);else if(K==='c')r.t.push(t);else if(/^\d+$/.test(t))r.t.push(t);else r.c.push(t)}));
   return r}
+/* ---------- as palavras de cada célula ---------- */
+/* O Untis escreve as células de maneiras diferentes consoante a escola e o tipo de horário: «MAT S14» (disciplina e sala, nas turmas),
+   «A06 S01 GEO» ou «A07,A08, S05 ALE» (turmas, sala e disciplina, nos professores), ou uma palavra por linha. A forma de cada tipo de
+   horário descobre-se no conjunto dos PDF: a disciplina é a palavra que se conhece como disciplina (e não como turma ou sala), à esquerda ou à direita.
+   Uma célula com várias linhas da mesma forma («FRA S14» / «ING S14») são grupos ao mesmo tempo (desdobramento). */
+const updfToks=l=>l.flatMap(w=>String(w.t).split(/,+/).map(s=>s.trim()).filter(Boolean).map(t=>({t,x:w.x,x2:w.x2})));
+const updfForma=ts=>ts.map(w=>/\d/.test(w.t)?'D':'L').join('');
+function updfSemCod(s){return String(s||'').replace(/^\s*[\dA-Z]{2,8}\s*[\/–-]\s*/,'').replace(/\s*\(.*?\)\s*/g,' ').trim()}
+/* quanto uma sigla («MAT», «TP», «FRA») se parece com um nome de disciplina («1600/Matemática», «Tecnologia e Processos», «Língua Estrangeira II - Francês») */
+function updfAbrev(ab,nome){const A=updfNorm(ab).replace(/ /g,'');const s=updfSemCod(nome);if(!A||!s)return 0;
+  const partes=s.split(/\s+[-–]\s+/),pal=x=>updfNorm(x).split(' ').filter(w=>w&&!UPDF_PART.has(w)&&!/^(i|ii|iii|iv|v|a|o|em|na|no)$/.test(w));
+  const W=pal(s),U=pal(partes[partes.length-1]);if(!W.length)return 0;const ini=w=>w.map(x=>x[0]).join('');
+  if(W.join('')===A)return 4;if(W.length>1&&ini(W)===A||U.length>1&&ini(U)===A)return 3;
+  if(A.length>=2&&(U[0]&&U[0].startsWith(A)||W[0].startsWith(A)))return 2.5;
+  if(A.length>=3&&W.some(w=>w.startsWith(A)))return 1.5;
+  let i=0;for(const ch of W.join(''))if(ch===A[i]&&++i===A.length)break;return i===A.length&&A[0]===W[0][0]?1:0}
+/* o melhor par de uma sigla numa lista (empate entre nomes diferentes = nenhum) */
+function updfMelhor(ab,lista,f){let b=null,bs=0,emp=false;for(const x of lista){const v=updfAbrev(ab,f(x));if(v>bs){bs=v;b=x;emp=false}else if(v&&v===bs&&b&&updfNorm(f(b))!==updfNorm(f(x)))emp=true}return {x:emp?null:b,s:bs}}
+/* forma dos horários de cada tipo (disciplina à esquerda ou à direita) e o que já se sabe ser turma, sala ou disciplina */
+function updfContexto(st,pags,o){const ctx={C:new Set(),R:new Set(),T:new Set(),S:new Set(),lay:{},forma:{}},tp=i=>(o.pg[i]||{}).tipo||'t';
+  pags.forEach((pg,i)=>{const K=tp(i),n=updfNorm(pg.cod||pg.nome);if(!n)return;if(K==='c')ctx.C.add(updfNorm(pg.cod||pg.nome));else if(K==='r')ctx.R.add(n);else if(K==='t'&&pg.cod)ctx.T.add(updfNorm(pg.cod))});
+  ctx.isC=t=>ctx.C.has(updfNorm(t))||!!updfAchar(st,'c',t);ctx.isR=t=>ctx.R.has(updfNorm(t))||!!updfAchar(st,'r',t);ctx.isS=t=>ctx.S.has(updfNorm(t))||!!updfAchar(st,'s',t);
+  for(const K of ['c','r','t']){let vf=0,vl=0;const fm=new Map();
+    pags.forEach((pg,i)=>{if(tp(i)!==K)return;for(const a of pg.aulas){if(a.pre||a.lin.length!==1)continue;const ts=updfToks(a.lin[0]);if(ts.length<2)continue;
+      const f=updfForma(ts);fm.set(f,(fm.get(f)||0)+1);const p=ts[0].t,u=ts[ts.length-1].t;
+      vf+=(ctx.isS(p)?1:0)-(ctx.isC(p)||ctx.isR(p)?1:0);vl+=(ctx.isS(u)?1:0)-(ctx.isC(u)||ctx.isR(u)?1:0);
+      if(/\d/.test(p)&&!/\d/.test(u))vl+=.5;else if(!/\d/.test(p)&&/\d/.test(u))vf+=.5}});
+    ctx.lay[K]=vl>vf?'last':'first';ctx.forma[K]=new Set([...fm].filter(x=>x[1]>=2).map(x=>x[0]));
+    /* o que se aprende neste tipo de horário serve para os outros (ex.: as salas e as disciplinas das turmas ajudam a ler as células dos professores) */
+    pags.forEach((pg,i)=>{if(tp(i)!==K)return;for(const a of pg.aulas){if(a.pre)continue;for(const l of a.lin){const ts=updfToks(l);if(ts.length<2)continue;
+      const si=ctx.lay[K]==='last'?ts.length-1:0,ri=ctx.lay[K]==='last'?ts.length-2:ts.length-1;ctx.S.add(updfNorm(ts[si].t));
+      if(K!=='r'&&ri!==si&&ri>=0&&(K==='c'||ts.length>2))ctx.R.add(updfNorm(ts[ri].t))}}})}
+  return ctx}
+function updfLinha(st,ts,K,ctx){const r={s:'',c:[],t:[],r:[]};if(!ts.length)return r;const si=ctx.lay[K]==='last'?ts.length-1:0;r.s=ts[si].t;
+  const resto=ts.filter((w,i)=>i!==si);
+  resto.forEach((w,i)=>{const t=w.t,ult=i===resto.length-1;
+    if(K!=='c'&&ctx.isC(t)){r.c.push(t);return}if(K!=='r'&&ctx.isR(t)){r.r.push(t);return}
+    if(K!=='t'&&(ctx.T.has(updfNorm(t))||updfAchar(st,'t',t))){r.t.push(t);return}
+    if(K!=='r'&&ult&&(K==='c'||resto.length>1)){r.r.push(t);return}
+    if(K==='t')r.c.push(t);else if(K==='c')r.t.push(t);else if(/^\d+$/.test(t))r.t.push(t);else r.c.push(t)});
+  return r}
+/* uma célula → uma ou mais linhas {s,c,t,r} (várias = grupos ao mesmo tempo) */
+function updfCelulas(st,a,K,ctx){if(a.pre)return a.pre.g||[a.pre];
+  const L=a.lin.map(updfToks).filter(l=>l.length);if(!L.length)return [];
+  if(L.length===1)return [updfLinha(st,L[0],K,ctx)];
+  if(L.every(l=>l.length>=2)){const sTok=l=>ctx.lay[K]==='last'?l[l.length-1].t:l[0].t;
+    if(L.every(l=>{const s=sTok(l);return !ctx.isC(s)&&(ctx.isS(s)||ctx.forma[K].has(updfForma(l)))}))return L.map(l=>updfLinha(st,l,K,ctx))}
+  return [updfCelula(st,a,K)]}
 const UPDF_COR=['#2f6fd6','#c2410c','#7c3aed','#a16207','#0e7490','#be185d','#b91c1c','#9333ea','#475569','#0369a1','#0f766e','#db2777','#b45309','#4f46e5'];
 const UPDF_DN=['Seg','Ter','Qua','Qui','Sex','Sáb'];
-/* aplica a leitura a um estado (st). Com uma cópia serve para pré-visualizar; com S, dentro de mutate, importa. */
+/* aplica a leitura a um estado (st). Com uma cópia serve para pré-visualizar; com S, dentro de mutate, importa.
+   Junta os horários de professores, turmas e salas: a mesma aula vista em vários horários entra uma só vez, e as aulas
+   da mesma turma ao mesmo tempo (grupos) ficam numa só aula com várias linhas. */
 function updfAplicar(st,pags,o){
-  const R={novos:{t:[],c:[],r:[],s:[]},aulasNovas:0,novosTempos:0,colocados:0,ja:0,atrib:0,disp:0,sobre:0,fora:0,ign:0,dias:0,tempos:0,horas:0,lin:[]};
+  const R={novos:{t:[],c:[],r:[],s:[]},sug:{t:{},c:{},r:{},s:{}},aulasNovas:0,novosTempos:0,colocados:0,ja:0,atrib:0,disp:0,sobre:0,fora:0,ign:0,dias:0,tempos:0,horas:0,dt:0,grupos:0,juntas:0,lin:[]};
   const novo=(k,txt,nome)=>{let x;const id=uid();
-    if(k==='t'){const sig=String(txt||'').trim()||String(nome||'').split(/\s+/).filter(w=>w&&!UPDF_PART.has(w.toLowerCase())).map(w=>w[0]).join('').toUpperCase().slice(0,4)||'P';
+    if(k==='t'){const num=/^\d+$/.test(String(txt||'').trim()),sig=(!num&&String(txt||'').trim())||String(nome||txt||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').split(/\s+/).filter(w=>w&&!UPDF_PART.has(w.toLowerCase())).map(w=>w[0]).join('').toUpperCase().slice(0,4)||'P';
       x={id,short:sig,name:nome||txt||sig,proc:txt||'',prev:0,minDay:0,maxDay:0,maxSeg:0,maxSpan:0,umTurno:false,diasLivres:0,dep:''};st.teachers.push(x)}
     else if(k==='c'){x={id,name:txt||nome,full:txt&&nome&&nome!==txt?nome:'',roomId:'',dt:'',minDay:0,maxDay:0,tardesLivres:0,maxDisc:0,dep:''};st.classes.push(x)}
     else if(k==='r'){x={id,name:txt||nome,alt:'',ed:''};st.rooms.push(x)}
-    else{x={id,short:txt,name:nome||txt,color:UPDF_COR[st.subjects.length%UPDF_COR.length],roomId:'',fator:st.tlMin||50,seq:'',marg:false,cnl:false};st.subjects.push(x)}
+    else{x={id,short:txt||String(nome||'').slice(0,4).toUpperCase(),name:nome||txt,color:UPDF_COR[st.subjects.length%UPDF_COR.length],roomId:'',fator:st.tlMin||50,seq:'',marg:false,cnl:false};st.subjects.push(x)}
     R.novos[k].push(k==='t'?(x.name+(x.proc&&x.proc!==x.name?' ('+x.proc+')':'')):(x.short||x.name));return x};
   const alias=(k,txt,id)=>{const n=updfNorm(txt);if(!n)return;st.updfAlias=st.updfAlias||{};const a=st.updfAlias[k]=st.updfAlias[k]||{};if(a[n]!==id)a[n]=id};
   R.desc={t:new Map(),c:new Map(),r:new Map(),s:new Map()};
+  const escolha=(k,n)=>o.map&&o.map[k]&&o.map[k][n];
   const obter=(k,txt,nome)=>{const ac=updfAchar(st,k,txt,nome);if(ac)return ac;const n=updfNorm(txt||nome);
     if(n&&!R.desc[k].has(n))R.desc[k].set(n,{tok:txt||nome,nome:nome||''});
-    const esc=o.map&&o.map[k]&&o.map[k][n];if(esc&&esc!=='novo'){const x=(st[KINDS[k][0]]||[]).find(e=>e.id===esc);if(x){alias(k,txt||nome,x.id);return x}}
+    const esc=escolha(k,n);if(esc&&esc!=='novo'){const x=(st[KINDS[k][0]]||[]).find(e=>e.id===esc);if(x){alias(k,txt||nome,x.id);return x}}
     return novo(k,txt,nome)};
+  /* disciplina de uma sigla: a conhecida; senão a do nome na tabela do PDF; senão a das aulas destas turmas com a sigla parecida (ex.: as dos Planos Curriculares) */
+  const disc=(tok,pg,cls)=>{const ac=updfAchar(st,'s',tok);if(ac)return ac;const n=updfNorm(tok),esc=escolha('s',n);
+    let nome=(pg.nomes&&pg.nomes.s&&pg.nomes.s[tok])||'';
+    if(!nome&&pg.tab&&pg.tab.length){const m=updfMelhor(tok,pg.tab,r=>r.nome);if(m.x&&m.s>=1)nome=updfSemCod(m.x.nome)||m.x.nome}
+    if(esc)return obter('s',tok,nome);
+    let x=nome?updfAchar(st,'s','',nome):null;
+    if(!x&&cls.length){const ids=new Set(cls.map(c=>c.id)),sids=new Set();for(const l of st.lessons)if(l.classIds.some(i=>ids.has(i)))for(const ln of l.linhas)sids.add(ln.s);
+      const m=updfMelhor(tok,st.subjects.filter(z=>sids.has(z.id)),z=>z.name);if(m.x&&m.s>=2.5)x=m.x}
+    if(x){if(n&&!R.desc.s.has(n))R.desc.s.set(n,{tok,nome:nome||x.name});R.sug.s[n]=x.id;alias('s',tok,x.id);return x}
+    return obter('s',tok,nome)};
   /* dias e tempos que faltem à grelha (nunca se tiram) */
-  let mxD=-1,mxP=0;for(const pg of pags){for(const a of pg.aulas){mxD=Math.max(mxD,a.d);mxP=Math.max(mxP,a.p+a.len-1)}for(const v of pg.vals){mxD=Math.max(mxD,v.d);mxP=Math.max(mxP,v.p)}}
+  let mxD=-1,mxP=0;for(const [i,pg] of pags.entries()){if((o.pg[i]||{}).tipo==='x')continue;for(const a of pg.aulas){mxD=Math.max(mxD,a.d);mxP=Math.max(mxP,a.p+a.len-1)}for(const v of pg.vals){mxD=Math.max(mxD,v.d);mxP=Math.max(mxP,v.p)}}
   while(st.days.length<=Math.min(5,mxD)){st.days.push(UPDF_DN[st.days.length]);R.dias++}
   const tp=new Map();for(const pg of pags)for(const t of pg.tempos)if(t.n>0&&!tp.has(t.n)&&(t.ini||t.fim))tp.set(t.n,t);
   while(st.periods.length<Math.min(16,mxP)){const n=st.periods.length+1,t=tp.get(n);st.periods.push({label:String(n),start:t?t.ini:'',end:t?t.fim:'',breakAfter:false});R.tempos++}
   if(o.horas)for(const [n,t] of tp){const p=st.periods[n-1];if(p&&(t.ini&&p.start!==t.ini||t.fim&&p.end!==t.fim)){if(t.ini)p.start=t.ini;if(t.fim)p.end=t.fim;R.horas++}}
-  const Lby=()=>new Map(st.lessons.map(l=>[l.id,l]));
   /* 1.º os donos de cada página (assim o código de um professor já é conhecido nas páginas das turmas, seja qual for a ordem) */
   const donos=pags.map((pg,ip)=>{const op=o.pg[ip]||{};const K=op.tipo||'t';if(K==='x')return null;
     const lista=st[KINDS[K][0]];let el=op.el&&op.el!=='novo'?lista.find(x=>x.id===op.el):null;
     if(!el)el=op.el==='novo'?novo(K,pg.cod||pg.nome,pg.nome):(updfAchar(st,K,pg.cod||pg.nome,pg.nome)||novo(K,pg.cod||pg.nome,pg.nome));
     pg._el=el.id;if(pg.cod&&updfNorm(pg.cod)!==updfNorm(el.short||el.name))alias(K,pg.cod,el.id);return el});
-  pags.forEach((pg,ip)=>{const op=o.pg[ip]||{};const K=op.tipo||'t';if(K==='x')return;const el=donos[ip];
-    for(const a of pg.aulas){const x=a.pre||updfCelula(st,a,K),lin={pag:ip,d:a.d,p:a.p,len:a.len,s:x.s,c:K==='c'?[el.name]:x.c,t:K==='t'?[el.short||el.name]:x.t,r:K==='r'?[el.name]:x.r,e:''};R.lin.push(lin);
-      if(!x.s){lin.e='ign';R.ign++;continue}
-      const day=a.d,per=a.p-1,len=a.len;if(day<0||day>=st.days.length||per<0||per+len>st.periods.length){lin.e='fora';R.fora++;continue}
-      const NM=pg.nomes||{},nm=(k,t)=>NM[k]&&NM[k][t]||'';
-      const s=obter('s',x.s,nm('s',x.s)),cls=K==='c'?[el]:x.c.map(t=>obter('c',t,nm('c',t))),tch=K==='t'?[el]:x.t.map(t=>obter('t',t,nm('t',t))),rms=K==='r'?[el]:x.r.map(t=>obter('r',t,nm('r',t)));
-      if(!cls.length&&!tch.length){lin.e='ign';R.ign++;continue}
-      const cset=[...new Set(cls.map(c=>c.id))],tset=[...new Set(tch.map(t=>t.id))];
-      const cand=st.lessons.filter(l=>l.linhas.some(ln=>ln.s===s.id)&&(cset.length?l.classIds.length===cset.length&&cset.every(id=>l.classIds.includes(id)):!l.classIds.length));
-      let L=cand.find(l=>tset.every(t=>l.linhas.some(ln=>ln.s===s.id&&ln.t===t)));
-      if(!L&&tset.length){L=cand.find(l=>l.linhas.filter(ln=>ln.s===s.id).every(ln=>!ln.t));
-        if(L){const sem=L.linhas.filter(ln=>ln.s===s.id);tset.forEach((t,i)=>{if(sem[i])sem[i].t=t;else L.linhas.push({s:s.id,t,r:'',tip:''})});R.atrib++;
-          for(const c of st.cards)if(c.lessonId===L.id&&c.r&&c.r.length!==L.linhas.length)delete c.r}}
-      if(!L&&tset.length>1){const per0=a.p-1;const tem=t=>cand.some(l=>l.linhas.some(ln=>ln.s===s.id&&ln.t===t)&&st.cards.some(c=>c.lessonId===l.id&&c.day===a.d&&c.period!=null&&c.period<=per0&&c.period+c.len>per0));
-        if(tset.every(tem)){lin.e='ja';R.ja+=a.len;continue}}
-      if(!L){L={id:uid(),n:0,classIds:cset,linhas:(tset.length?tset:['']).map((t,i)=>({s:s.id,t,r:(rms[i]||rms[0]||{}).id||'',tip:''})),tl:0,duplos:0,blocos:'',per:''};st.lessons.push(L);R.aulasNovas++;lin.nova=1}
-      /* um bloco que atravessa um intervalo da grelha divide-se em partes (aqui um bloco não pode passar um intervalo) */
-      const partes=[];{let p0=per;for(let q=per;q<per+len;q++)if(q===per+len-1||(st.periods[q]&&st.periods[q].breakAfter)){partes.push([p0,q-p0+1]);p0=q+1}}
-      if(partes.length>1)lin.div=1;
-      const r=L.linhas.map((ln,i)=>{const rm=rms[i]||(rms.length?rms[rms.length-1]:null);return rm?rm.id:''});
-      const Lm=Lby(),tsL=new Set(L.linhas.map(ln=>ln.t).filter(Boolean)),csL=new Set(L.classIds);const est=new Set();
-      for(const [pp,ll] of partes){const meus=st.cards.filter(c=>c.lessonId===L.id);
-        if(meus.some(c=>c.day===day&&c.period===pp&&c.len===ll)){est.add('ja');R.ja+=ll;continue}
-        /* sobreposição: o mesmo professor ou turma já tem outra aula a essa hora (importa-se na mesma; aparece nos conflitos) */
-        if(st.cards.some(c=>{if(c.day!==day||c.lessonId===L.id||c.period==null||c.period+c.len<=pp||c.period>=pp+ll)return false;const l2=Lm.get(c.lessonId);return l2&&(l2.classIds.some(i=>csL.has(i))||l2.linhas.some(ln=>ln.t&&tsL.has(ln.t)))})){lin.sob=1;R.sobre+=ll}
-        const livre=meus.find(c=>c.day==null&&c.len===ll);
-        if(livre){livre.day=day;livre.period=pp;livre.locked=false;if(r.some(Boolean))livre.r=r;est.add('col');R.colocados+=ll}
-        else{const c={id:uid(),lessonId:L.id,len:ll,day,period:pp,locked:false};if(r.some(Boolean))c.r=r;st.cards.push(c);L.tl=(L.tl|0)+ll;if(ll===2)L.duplos=(L.duplos|0)+1;else if(ll>2)L.blocos=(L.blocos?L.blocos+',':'')+ll;est.add('novo');R.novosTempos+=ll}}
-      lin.e=est.has('novo')?'novo':est.has('col')?'col':'ja';
-    }
-    /* disponibilidades do Untis (-3 a 3) só onde ainda não há nenhuma */
-    if(o.disp&&pg.vals.length){const key=K+':'+el.id,oo=st.off[key]||{};let n=0;
-      for(const v of pg.vals){if(!(v.v<0||v.v>=2))continue;if(v.d>=st.days.length||v.p<1||v.p>st.periods.length)continue;const k=v.d+'-'+(v.p-1);if(oo[k]==null){oo[k]=v.v;n++}}
-      if(n){st.off[key]=oo;R.disp+=n}}
-  });
+  /* turmas: nome completo e diretor de turma (só onde ainda não há) */
+  pags.forEach((pg,ip)=>{const c=donos[ip];if((o.pg[ip]||{}).tipo!=='c'||!c)return;if(pg.nome&&!c.full&&updfNorm(pg.nome)!==updfNorm(c.name))c.full=pg.nome;
+    if(pg.dt&&!c.dt){const t=obter('t','',pg.dt);if(t){c.dt=t.id;R.dt++}}});
+  const ctx=updfContexto(st,pags,o);
+  /* 2.º cada linha de cada célula → um acontecimento {dia, tempo, duração, disciplina, turmas, professores, salas} */
+  const E=[],ord='crt',ordem=pags.map((pg,i)=>i).sort((a,b)=>ord.indexOf((o.pg[a]||{}).tipo||'t')-ord.indexOf((o.pg[b]||{}).tipo||'t')||a-b);
+  for(const ip of ordem){const pg=pags[ip],K=(o.pg[ip]||{}).tipo||'t';if(K==='x')continue;const el=donos[ip],NM=pg.nomes||{},nm=(k,t)=>NM[k]&&NM[k][t]||'';
+    for(const a of pg.aulas){const day=a.d,per=a.p-1,len=a.len,base={pag:ip,d:day,p:a.p,len,c:[],t:[],r:[]};
+      const xs=updfCelulas(st,a,K,ctx);
+      if(day<0||day>=st.days.length||per<0||per+len>st.periods.length){R.lin.push(Object.assign(base,{s:xs.map(x=>x.s).join('/'),e:'fora'}));R.fora++;continue}
+      for(const x of xs){if(!x.s){R.lin.push(Object.assign({},base,{s:'',e:'ign'}));R.ign++;continue}
+        const cls=K==='c'?[el]:x.c.map(t=>obter('c',t,nm('c',t)));
+        const s=disc(x.s,pg,cls);
+        const tch=K==='t'?[el]:x.t.map(t=>obter('t',t,nm('t',t)));
+        /* horário de turma sem professor na célula: o da tabela do PDF para esta disciplina (se for um só) */
+        if(K==='c'&&!tch.length&&pg.tab&&pg.tab.length){const m=updfMelhor(x.s,pg.tab,r=>r.nome);
+          if(m.x&&m.s>=1){const fs=[...new Set(pg.tab.filter(r=>r.f&&updfNorm(r.nome)===updfNorm(m.x.nome)).map(r=>r.f))];if(fs.length===1)tch.push(obter('t','',fs[0]))}}
+        const rms=K==='r'?[el]:x.r.map(t=>obter('r',t,nm('r',t)));
+        if(!cls.length&&!tch.length){R.lin.push(Object.assign({},base,{s:x.s,e:'ign'}));R.ign++;continue}
+        E.push({d:day,p:a.p,len,s:s.id,c:[...new Set(cls.map(c=>c.id))],t:[...new Set(tch.map(t=>t.id))],r:rms.map(r=>r.id),pags:[ip]})}}}
+  /* 3.º a mesma aula vista em vários horários (do professor, da turma, da sala) é uma só */
+  const inter=(a,b)=>a.some(x=>b.includes(x)),uni=(a,b)=>[...new Set(a.concat(b))],M=[];
+  /* (mesma disciplina ao mesmo tempo e: o mesmo professor; ou as mesmas turmas; ou a mesma sala, sem professores diferentes —
+     o Untis corta as listas compridas, ex.: «A07,A08,» quando são A07, A08 e A09) */
+  const igual=(m,e)=>{if(m.d!==e.d||m.p!==e.p||m.len!==e.len||m.s!==e.s)return false;const tI=m.t.length&&e.t.length&&inter(m.t,e.t),cI=m.c.length&&e.c.length&&inter(m.c,e.c),rI=inter(m.r.filter(Boolean),e.r);
+    const tOK=!m.t.length||!e.t.length||tI,cOK=!m.c.length||!e.c.length||cI;return tOK&&(tI||(cI&&cOK)||rI)};
+  for(const e of E){const m=M.find(m=>igual(m,e));
+    if(m){m.c=uni(m.c,e.c);m.t=uni(m.t,e.t);for(const r of e.r)if(r&&!m.r.includes(r))m.r.push(r);if(!m.pags.includes(e.pags[0])){m.pags.push(e.pags[0]);R.juntas++}}
+    else M.push(Object.assign({},e,{c:e.c.slice(),t:e.t.slice(),r:e.r.slice(),pags:e.pags.slice()}))}
+  /* 4.º aulas da mesma turma ao mesmo tempo = grupos de uma só aula (ex.: Francês e Inglês) */
+  const B=[];for(const m of M){const bs=m.c.length?B.filter(b=>b.d===m.d&&b.p===m.p&&b.len===m.len&&inter(b.c,m.c)):[];
+    if(!bs.length){B.push({d:m.d,p:m.p,len:m.len,c:m.c.slice(),ev:[m]});continue}
+    const b=bs[0];for(const b2 of bs.slice(1)){b.c=uni(b.c,b2.c);b.ev.push(...b2.ev);B.splice(B.indexOf(b2),1)}b.c=uni(b.c,m.c);b.ev.push(m)}
+  const by=(k,id)=>(st[KINDS[k][0]]||[]).find(x=>x.id===id),Lby=()=>new Map(st.lessons.map(l=>[l.id,l]));
+  /* 5.º cada bloco → aula (a que já existe, ou uma nova) e tempos no horário */
+  for(const b of B){const linhas=[];
+    for(const e of b.ev){(e.t.length?e.t:['']).forEach((t,i)=>{if(!linhas.some(x=>x.s===e.s&&x.t===t))linhas.push({s:e.s,t,r:e.r[i]||e.r[0]||'',cls:e.c})})}
+    if(linhas.length>1)R.grupos++;
+    const cset=b.c.slice(),lin={pag:b.ev[0].pags[0],d:b.d,p:b.p,len:b.len,s:[...new Set(linhas.map(x=>{const z=by('s',x.s);return z?z.short||z.name:'?'}))].join('/'),
+      c:cset.map(id=>(by('c',id)||{}).name).filter(Boolean),t:[...new Set(linhas.map(x=>{const z=x.t&&by('t',x.t);return z?z.short||z.name:''}).filter(Boolean))],r:[...new Set(linhas.map(x=>(x.r&&by('r',x.r)||{}).name).filter(Boolean))],e:''};
+    if(b.ev.some(e=>e.pags.length>1))lin.junta=1;R.lin.push(lin);
+    const subj=new Set(linhas.map(x=>x.s)),key=ls=>ls.map(x=>x.s+'|'+x.t).sort().join(',');
+    const cand=st.lessons.filter(l=>(cset.length?l.classIds.length===cset.length&&cset.every(id=>l.classIds.includes(id)):!l.classIds.length&&l.linhas.some(ln=>ln.t&&linhas.some(x=>x.t===ln.t)))
+      &&l.linhas.length===linhas.length&&l.linhas.every(ln=>subj.has(ln.s)));
+    const casa=(l,f)=>{const us=new Set();return linhas.every(x=>{const j=l.linhas.findIndex((ln,j)=>!us.has(j)&&ln.s===x.s&&(ln.t===x.t||!ln.t||!x.t));if(j<0)return false;us.add(j);if(f)f(l.linhas[j],x);return true})};
+    let L=cand.find(l=>key(l.linhas)===key(linhas));
+    if(!L){L=cand.find(l=>casa(l));if(L){let mud=0;casa(L,(ln,x)=>{if(!ln.t&&x.t){ln.t=x.t;mud++}});
+      if(mud){R.atrib++;for(const c of st.cards)if(c.lessonId===L.id&&c.r&&c.r.length!==L.linhas.length)delete c.r}}}
+    if(!L){L={id:uid(),n:0,classIds:cset,linhas:linhas.map(x=>{const q={s:x.s,t:x.t,r:x.r,tip:''};if(x.cls.length&&x.cls.length<cset.length)q.cls=x.cls.slice();return q}),tl:0,duplos:0,blocos:'',per:''};st.lessons.push(L);R.aulasNovas++;lin.nova=1}
+    const day=b.d,per=b.p-1,len=b.len;
+    /* um bloco que atravessa um intervalo da grelha divide-se em partes (aqui um bloco não pode passar um intervalo) */
+    const partes=[];{let p0=per;for(let q=per;q<per+len;q++)if(q===per+len-1||(st.periods[q]&&st.periods[q].breakAfter)){partes.push([p0,q-p0+1]);p0=q+1}}
+    if(partes.length>1)lin.div=1;
+    const r=L.linhas.map(ln=>{const x=linhas.find(x=>x.s===ln.s&&x.t===ln.t)||linhas.find(x=>x.s===ln.s&&(!x.t||!ln.t))||linhas.find(x=>x.s===ln.s);return x&&x.r||''});
+    const Lm=Lby(),tsL=new Set(L.linhas.map(ln=>ln.t).filter(Boolean)),csL=new Set(L.classIds),est=new Set();
+    for(const [pp,ll] of partes){const meus=st.cards.filter(c=>c.lessonId===L.id);
+      if(meus.some(c=>c.day===day&&c.period===pp&&c.len===ll)){est.add('ja');R.ja+=ll;continue}
+      /* sobreposição: o mesmo professor ou turma já tem outra aula a essa hora (importa-se na mesma; aparece nos conflitos) */
+      if(st.cards.some(c=>{if(c.day!==day||c.lessonId===L.id||c.period==null||c.period+c.len<=pp||c.period>=pp+ll)return false;const l2=Lm.get(c.lessonId);return l2&&(l2.classIds.some(i=>csL.has(i))||l2.linhas.some(ln=>ln.t&&tsL.has(ln.t)))})){lin.sob=1;R.sobre+=ll}
+      const livre=meus.find(c=>c.day==null&&c.len===ll),uns=ll>1?meus.filter(c=>c.day==null&&c.len===1):[];
+      if(livre){livre.day=day;livre.period=pp;livre.locked=false;if(r.some(Boolean))livre.r=r;est.add('col');R.colocados+=ll}
+      else if(uns.length>=ll){/* a aula tem tempos soltos por colocar (ex.: vinda dos Planos Curriculares): juntam-se num bloco, sem mudar as horas por semana */
+        const fora=new Set(uns.slice(0,ll).map(c=>c.id));st.cards=st.cards.filter(c=>!fora.has(c.id));const c={id:uid(),lessonId:L.id,len:ll,day,period:pp,locked:false};if(r.some(Boolean))c.r=r;st.cards.push(c);
+        if(ll===2)L.duplos=(L.duplos|0)+1;else L.blocos=(L.blocos?L.blocos+',':'')+ll;est.add('col');R.colocados+=ll}
+      else{const c={id:uid(),lessonId:L.id,len:ll,day,period:pp,locked:false};if(r.some(Boolean))c.r=r;st.cards.push(c);L.tl=(L.tl|0)+ll;if(ll===2)L.duplos=(L.duplos|0)+1;else if(ll>2)L.blocos=(L.blocos?L.blocos+',':'')+ll;est.add('novo');R.novosTempos+=ll}}
+    lin.e=est.has('novo')?'novo':est.has('col')?'col':'ja'}
+  /* disponibilidades do Untis (-3 a 3) só onde ainda não há nenhuma */
+  pags.forEach((pg,ip)=>{const K=(o.pg[ip]||{}).tipo||'t',el=donos[ip];if(K==='x'||!el||!o.disp||!pg.vals.length)return;const key=K+':'+el.id,oo=st.off[key]||{};let n=0;
+    for(const v of pg.vals){if(!(v.v<0||v.v>=2))continue;if(v.d>=st.days.length||v.p<1||v.p>st.periods.length)continue;const k=v.d+'-'+(v.p-1);if(oo[k]==null){oo[k]=v.v;n++}}
+    if(n){st.off[key]=oo;R.disp+=n}});
+  R.lin.sort((a,b)=>a.d-b.d||a.p-b.p);
   return R}
 /* pdf.js 3.11 servido pelo próprio sítio (esm/), como as outras bibliotecas: a política de conteúdo só deixa scripts do sítio ou blob:.
    Aberto dentro de outra página da mesma origem (ex.: a EPISJ 360 noutro endereço), o ficheiro vem pela página de fora e entra como blob:. */
@@ -3229,25 +3346,49 @@ function updfDeEstado(st){const by=(a,id)=>a.find(x=>x.id===id),L=new Map(st.les
   return [...pags.values()].filter(p=>p.aulas.length)}
 /* o que não se reconheceu: criar novo ou dizer a que elemento corresponde (fica lembrado para as próximas importações) */
 function updfMapaUI(R,o,desenhar){const ks=['t','c','r','s'].filter(k=>R.desc[k].size);if(!ks.length)return null;
-  return h('details',{class:'rounded-box border border-base-300 p-3 text-sm',open:true},h('summary',{class:'font-semibold cursor-pointer'},'Não reconhecidos — criar novos ou fazer corresponder ('+ks.reduce((n,k)=>n+R.desc[k].size,0)+')'),
-    h('p',{class:'text-xs opacity-60 mt-1'},'Códigos do Untis que não existem aqui. Escolha a que corresponde cada um, ou deixe «Criar novo». A correspondência fica guardada para as próximas importações.'),
+  return h('details',{class:'rounded-box border border-base-300 p-3 text-sm',open:true},h('summary',{class:'font-semibold cursor-pointer'},'Por confirmar — criar novos ou fazer corresponder ('+ks.reduce((n,k)=>n+R.desc[k].size,0)+')'),
+    h('p',{class:'text-xs opacity-60 mt-1'},'Códigos do Untis que não existem aqui com esse nome. Os que já aparecem escolhidos foram encontrados por semelhança (ex.: «MAT» = Matemática) — confirme ou mude. A correspondência fica guardada para as próximas importações.'),
     h('div',{class:'grid gap-x-6 gap-y-1 mt-2',style:'grid-template-columns:repeat(auto-fill,minmax(300px,1fr))'},ks.flatMap(k=>[h('div',{class:'font-semibold mt-2',style:'grid-column:1/-1'},KINDS[k][2])].concat([...R.desc[k]].map(([n,d])=>{const lista=(S[KINDS[k][0]]||[]).slice().sort((a,b)=>String(a.name).localeCompare(String(b.name),'pt'));
       return h('label',{class:'flex items-center gap-2'},h('span',{class:'w-28 shrink-0 truncate font-medium',title:d.tok+(d.nome?' · '+d.nome:'')},d.tok),
-        selEl('updf-m'+k+n.replace(/\W/g,'_'),(o.map[k]&&o.map[k][n])||'novo',[['novo','Criar novo'+(d.nome&&d.nome!==d.tok?': '+d.nome:'')]].concat(lista.map(x=>[x.id,x.name+(x.short&&x.short!==x.name?' ('+x.short+')':'')])),v=>{o.map[k][n]=v;desenhar()},'Corresponde a','grow min-w-0'))})))))}
+        selEl('updf-m'+k+n.replace(/\W/g,'_'),(o.map[k]&&o.map[k][n])||(R.sug&&R.sug[k]&&R.sug[k][n])||'novo',[['novo','Criar novo'+(d.nome&&d.nome!==d.tok?': '+d.nome:'')]].concat(lista.map(x=>[x.id,x.name+(x.short&&x.short!==x.name?' ('+x.short+')':'')])),v=>{o.map[k][n]=v;desenhar()},'Corresponde a','grow min-w-0'))})))))}
 /* escolher os PDF, ler e mostrar o que vai entrar */
+/* os PDF de dentro de um .zip (ex.: a pasta dos horários comprimida), sem bibliotecas: o navegador descomprime */
+async function updfZip(buf){const u=new Uint8Array(buf),dv=new DataView(u.buffer,u.byteOffset,u.byteLength),out=[];let e=-1;
+  for(let i=u.length-22;i>=Math.max(0,u.length-65558);i--)if(dv.getUint32(i,true)===0x06054b50){e=i;break}
+  if(e<0)throw new Error('O ficheiro .zip não é válido.');
+  const n=dv.getUint16(e+10,true);let p=dv.getUint32(e+16,true);
+  for(let k=0;k<n&&p+46<=u.length;k++){if(dv.getUint32(p,true)!==0x02014b50)break;
+    const met=dv.getUint16(p+10,true),csz=dv.getUint32(p+20,true),nl=dv.getUint16(p+28,true),xl=dv.getUint16(p+30,true),cl=dv.getUint16(p+32,true),off=dv.getUint32(p+42,true),nb=u.subarray(p+46,p+46+nl);p+=46+nl+xl+cl;
+    let name;try{name=new TextDecoder('utf-8',{fatal:true}).decode(nb)}catch(_){name=new TextDecoder('windows-1252').decode(nb)}name=name.normalize('NFC');
+    if(/\/$/.test(name)||/(^|\/)(__MACOSX\/|\._)/.test(name)||!/\.pdf$/i.test(name))continue;
+    const d0=off+30+dv.getUint16(off+26,true)+dv.getUint16(off+28,true),raw=u.subarray(d0,d0+csz);let data;
+    if(met===0)data=raw.slice();else if(met===8&&typeof DecompressionStream!=='undefined')data=new Uint8Array(await new Response(new Blob([raw]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer());else continue;
+    out.push({name,data})}
+  return out}
 function updfEscolher(){
   if(busy){toast('A otimização está a decorrer. Pare-a antes de importar.');return}
-  const inp=h('input',{type:'file',accept:'.pdf,application/pdf',multiple:true,class:'sr-only'});document.body.append(inp);
+  const inp=h('input',{type:'file',accept:'.pdf,.zip,application/pdf,application/zip',multiple:true,class:'sr-only'});document.body.append(inp);
   inp.addEventListener('change',async()=>{const fs=[...inp.files];inp.remove();if(!fs.length)return;
     toast('A ler '+(fs.length>1?fs.length+' ficheiros':fs[0].name)+'…');
-    try{const lib=await updfLib(),pags=[];
-      let nf=0;for(const f of fs){nf++;if(fs.length>3&&(nf%5===1))toast('A ler '+nf+' de '+fs.length+'…');let r;try{r=await updfLer(lib,new Uint8Array(await f.arrayBuffer()))}catch(e){toast(f.name+': não foi possível abrir o PDF.',null,null,'bad');continue}
-        r.forEach(p=>{p.fich=f.name});pags.push(...r);if(!r.length)toast(f.name+': não encontrei nenhum horário (grelha com os dias da semana e os tempos).',null,null,'bad')}
+    try{const lib=await updfLib(),pags=[],lista=[];
+      for(const f of fs){if(/\.zip$/i.test(f.name)||/zip/.test(f.type)){try{const z=await updfZip(await f.arrayBuffer());if(!z.length)toast(f.name+': não tem nenhum PDF.',null,null,'bad');z.forEach(x=>lista.push({name:x.name,data:x.data}))}catch(e){toast(f.name+': '+(e.message||'não foi possível abrir o .zip.'),null,null,'bad')}}
+        else lista.push({name:f.webkitRelativePath||f.name,f})}
+      let nf=0,vazios=0;for(const x of lista){nf++;if(lista.length>3&&(nf%5===1))toast('A ler '+nf+' de '+lista.length+'…');let r;
+        try{r=await updfLer(lib,x.data||new Uint8Array(await x.f.arrayBuffer()))}catch(e){toast(x.name+': não foi possível abrir o PDF.',null,null,'bad');continue}
+        r.forEach(p=>{p.fich=x.name});pags.push(...r);if(!r.length){vazios++;if(lista.length<=3)toast(x.name+': não encontrei nenhum horário (grelha com os dias da semana e os tempos).',null,null,'bad')}}
+      if(vazios&&lista.length>3)toast(vazios+' ficheiro'+(vazios>1?'s':'')+' sem nenhum horário que se consiga ler.',null,null,'bad');
       if(pags.length)updfPrever(pags)}
     catch(e){toast(e.message||'Não foi possível ler os PDF.',null,null,'bad')}});
   inp.click()}
 function updfPrever(pags){
   const op=pags.map(pg=>{const tipo=pg.tipo||updfTipo(S,pg),el=updfAchar(S,tipo,pg.cod||pg.nome,pg.nome);return {tipo,el:el?el.id:''}});
+  /* folhas sem nenhuma aula não se importam; o mesmo horário em vários PDF (ex.: versões antigas noutra pasta): fica o mais recente */
+  pags.forEach((pg,i)=>{if(!pg.aulas.length&&!pg.vals.length){op[i].tipo='x';op[i].vazio=true}});
+  {const G=new Map();pags.forEach((pg,i)=>{if(op[i].tipo==='x')return;const k=op[i].tipo+':'+(op[i].el||updfNorm(pg.cod||pg.nome));if(!G.has(k))G.set(k,[]);G.get(k).push(i)});
+    const velho=i=>/(^|\/)(old|antig|velh|arquivo)/i.test(pags[i].fich||'')?1:0;
+    for(const g of G.values()){if(g.length<2)continue;const b=g.slice().sort((a,c)=>String(pags[c].data||'').localeCompare(String(pags[a].data||''))||velho(a)-velho(c)||c-a)[0];
+      for(const i of g)if(i!==b){op[i].tipo='x';op[i].antigo=pags[b].data||'?'}}}
+  const dPT=d=>d&&/^\d{4}-\d\d-\d\d$/.test(d)?d.slice(8)+'/'+d.slice(5,7)+'/'+d.slice(0,4):'';
   const o={pg:op,disp:true,horas:false,map:{t:{},c:{},r:{},s:{}}};
   const difHoras=(()=>{for(const pg of pags)for(const t of pg.tempos){const p=S.periods[t.n-1];if(p&&(t.ini&&p.start!==t.ini||t.fim&&p.end!==t.fim))return true}return false})();
   const box=h('div',{class:'flex flex-col gap-3',id:'updf-box'});
@@ -3257,14 +3398,16 @@ function updfPrever(pags){
     const hv=S.horarios&&S.horarios.length?(S.horarios.find(v=>v.id===S.hAtivo)||{}).nome:'';
     const qq=updfNorm(o.q||''),vis=pags.map((pg,i)=>i).filter(i=>!qq||updfNorm((pags[i].cod||'')+' '+pags[i].nome+' '+(pags[i].fich||'')).includes(qq));
     const elems=h('div',{class:'flex flex-col gap-2 max-h-80 overflow-y-auto pr-1'},pags.length>8?h('div',{class:'flex flex-wrap items-center gap-2 text-sm sticky top-0 bg-base-100 z-10 pb-1'},h('b',{},pags.length+' horários'),h('span',{class:'opacity-70'},['t','c','r','x'].map(k=>[k,op.filter(x=>x.tipo===k).length]).filter(x=>x[1]).map(([k,n])=>n+' '+(k==='x'?'por importar':KINDS[k][n>1?2:1].toLowerCase())).join(' · ')),h('input',{type:'search',class:'input input-sm w-48',placeholder:'Procurar',value:o.q||'',oninput:e=>{o.q=e.target.value;clearTimeout(o.qt);o.qt=setTimeout(()=>{desenhar();const x=document.querySelector('#updf-box input[type=search]');if(x){x.focus();x.setSelectionRange(x.value.length,x.value.length)}},250)}})):null,vis.map(i=>{const pg=pags[i];const lista=S[KINDS[op[i].tipo]?KINDS[op[i].tipo][0]:'teachers']||[];
-      return h('div',{class:'flex flex-wrap items-end gap-2 text-sm'},h('div',{class:'min-w-48 grow'},h('div',{class:'font-semibold'},(pg.cod?pg.cod+' · ':'')+(pg.nome||'(sem nome)')),h('div',{class:'text-xs opacity-60'},(pg.fich||'')+(pags.length>1||pg.pag>1?' · página '+pg.pag:'')+' · '+pg.aulas.length+' aula'+(pg.aulas.length===1?'':'s'))),
+      return h('div',{class:'flex flex-wrap items-end gap-2 text-sm'},h('div',{class:'min-w-48 grow'},h('div',{class:'font-semibold'},(pg.cod?pg.cod+' · ':'')+(pg.nome||'(sem nome)')),h('div',{class:'text-xs opacity-60'},(pg.fich||'')+(pags.length>1||pg.pag>1?' · página '+pg.pag:'')+' · '+pg.aulas.length+' aula'+(pg.aulas.length===1?'':'s')+(pg.data?' · impresso a '+dPT(pg.data):'')+(pg.dt?' · '+KINDS.c[1]+': diretor de turma '+pg.dt:'')),
+          op[i].antigo&&op[i].tipo==='x'?h('div',{class:'text-xs',style:'color:var(--color-warning,#b45309)'},'Versão mais antiga — há outra deste horário'+(dPT(op[i].antigo)?' impressa a '+dPT(op[i].antigo):'')+'. Não se importa (mude em «Horário de» se quiser).'):null,
+          op[i].vazio&&op[i].tipo==='x'?h('div',{class:'text-xs opacity-60'},'Sem aulas — não se importa.'):null),
         field('Horário de',selEl('updf-t'+i,op[i].tipo,TIPOS,v=>{op[i].tipo=v;const e=v!=='x'&&updfAchar(S,v,pg.cod||pg.nome,pg.nome);op[i].el=e?e.id:'';desenhar()},'Horário de')),
         op[i].tipo==='x'?null:field('Corresponde a',selEl('updf-e'+i,op[i].el,[['','Automático'+(updfAchar(S,op[i].tipo,pg.cod||pg.nome,pg.nome)?' ('+(updfAchar(S,op[i].tipo,pg.cod||pg.nome,pg.nome).name)+')':' (criar novo)')],['novo','Criar novo: '+(pg.nome||pg.cod)]].concat(lista.slice().sort((a,b)=>String(a.name).localeCompare(String(b.name),'pt')).map(x=>[x.id,x.name+(x.short&&x.short!==x.name?' ('+x.short+')':'')])),v=>{op[i].el=v;desenhar()},'Corresponde a','max-w-72')))}));
     const est={novo:['novo','info'],col:['por colocar → colocada','info'],ja:['já estava','mute'],fora:['fora da grelha','warn'],ign:['ignorada','warn']};
     const linhas=R.lin.slice(0,250).map(l=>h('tr',{},h('td',{},S.days[l.d]||UPDF_DN[l.d]||('dia '+(l.d+1))),h('td',{class:'num'},l.p+(l.len>1?'–'+(l.p+l.len-1):'')),h('td',{class:'font-semibold'},l.s),h('td',{},l.c.join(', ')),h('td',{},l.t.join(', ')),h('td',{},l.r.join(', ')),
-      h('td',{},(est[l.e]?badge(est[l.e][0],est[l.e][1]):null),l.nova?badge('aula nova','mute'):null,l.div?badge('dividida no intervalo','mute'):null,l.sob?badge('sobreposição','warn'):null)));
+      h('td',{},(est[l.e]?badge(est[l.e][0],est[l.e][1]):null),l.nova?badge('aula nova','mute'):null,l.junta?badge('em vários horários','mute'):null,l.div?badge('dividida no intervalo','mute'):null,l.sob?badge('sobreposição','warn'):null)));
     box.replaceChildren(...[
-      h('p',{class:'text-sm opacity-70'},'Lido de '+[...new Set(pags.map(p=>p.fich))].join(', ')+' ('+pags.length+' horário'+(pags.length>1?'s':'')+'). Confirme de quem é cada horário. Nada é apagado: as aulas entram no horário'+(hv?' «'+hv+'»':'')+', e o que já está no mesmo tempo fica igual.'),
+      h('p',{class:'text-sm opacity-70'},'Lido de '+(()=>{const F=[...new Set(pags.map(p=>p.fich))];return F.length>3?F.length+' ficheiros':F.join(', ')})()+' ('+pags.length+' horário'+(pags.length>1?'s':'')+'). Confirme de quem é cada horário. Nada é apagado: as aulas entram no horário'+(hv?' «'+hv+'»':'')+', e o que já está no mesmo tempo fica igual.'),
       elems,
       h('div',{class:'stats stats-vertical sm:stats-horizontal border border-base-300 w-full'},
         h('div',{class:'stat py-2'},h('div',{class:'stat-title'},'Tempos a colocar'),h('div',{class:'stat-value text-2xl num'},String(ver)),h('div',{class:'stat-desc'},R.colocados?R.colocados+' de aulas que estavam por colocar':'')),
@@ -3275,6 +3418,8 @@ function updfPrever(pags){
       R.sobre?note('warn',R.sobre+' tempo'+(R.sobre>1?'s ficam':' fica')+' em cima de outra aula do mesmo '+KINDS.t[1].toLowerCase()+' ou da mesma turma. Importa-se na mesma; resolva depois em Conflitos.'):null,
       R.fora?note('warn',R.fora+' aula'+(R.fora>1?'s estão':' está')+' fora da grelha (dia ou tempo que não existe) e não entra'+(R.fora>1?'m':'')+'.'):null,
       R.atrib?h('span',{class:'text-sm opacity-70'},R.atrib+' aula'+(R.atrib>1?'s':'')+' sem '+KINDS.t[1].toLowerCase()+' passa'+(R.atrib>1?'m':'')+' a ter o do PDF.'):null,
+      R.grupos?h('span',{class:'text-sm opacity-70'},R.grupos+' vez'+(R.grupos>1?'es':'')+' com grupos da mesma turma ao mesmo tempo (ex.: duas línguas) — ficam como uma só aula com '+(R.grupos>1?'várias linhas':'duas linhas')+'.'):null,
+      R.dt?h('span',{class:'text-sm opacity-70'},R.dt+' '+(R.dt>1?KINDS.c[2].toLowerCase():KINDS.c[1].toLowerCase())+' fica'+(R.dt>1?'m':'')+' com o diretor de turma do PDF.'):null,
       (R.dias||R.tempos)?h('span',{class:'text-sm opacity-70'},'A grelha ganha '+[R.dias?R.dias+' dia(s)':'',R.tempos?R.tempos+' tempo(s)':''].filter(Boolean).join(' e ')+'.'):null,
       h('div',{class:'flex flex-wrap gap-4'},
         !pags.some(p=>p.vals.length)?null:h('label',{class:'flex items-center gap-2 text-sm'},h('input',{type:'checkbox',class:'checkbox checkbox-sm',checked:o.disp,onchange:e=>{o.disp=e.target.checked;desenhar()}}),'Disponibilidades (−3 a 3) de cada horário'+(o.disp&&R.disp?' — '+R.disp+' tempos':''),h('span',{class:'text-xs opacity-60'},'(só onde ainda não há)')),
