@@ -1,5 +1,4 @@
-# Não editar esta pasta
+# EPISJ 360 mudou
 
-A EPISJ 360 mudou para o repositório **EPISJ/episj360** (https://github.com/EPISJ/episj360), publicado em https://episj360.episj.com.
-
-Esta pasta ficou congelada na versão 0.9.125 e vai ser substituída por um reencaminhamento para https://episj360.episj.com depois de confirmado o login no endereço novo.
+A app está em **EPISJ/episj360** (https://github.com/EPISJ/episj360), publicada em https://episj360.episj.com.
+Esta pasta só reencaminha os endereços antigos (eduspruce.github.io/boxdoc/…) para o novo, mantendo os parâmetros do endereço.

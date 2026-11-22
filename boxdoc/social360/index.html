@@ -2,28 +2,14 @@
 <html lang="pt-PT">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Social360 — EPISJ 360</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect x=%221%22 y=%221%22 width=%2230%22 height=%2230%22 rx=%229.5%22 fill=%22%23163269%22/%3E%3Ctext x=%2216%22 y=%2219.6%22 font-size=%2213%22 font-family=%22Poppins,Arial%22 font-weight=%22700%22 fill=%22white%22 text-anchor=%22middle%22 letter-spacing=%22-.5%22%3ESo%3C/text%3E%3Crect x=%2210%22 y=%2223.6%22 width=%2212%22 height=%222.4%22 rx=%221.2%22 fill=%22%23ff6f9e%22/%3E%3C/svg%3E">
-<link rel="preload" href="../fonts/poppins-latin-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="app.css?v=0.4">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>EPISJ 360 mudou de endereço</title>
+<link rel="canonical" href="https://episj360.episj.com/social360/">
+<script>location.replace("https://episj360.episj.com/social360/"+location.search+location.hash);</script>
+<meta http-equiv="refresh" content="0;url=https://episj360.episj.com/social360/">
 </head>
-<body>
-<script>if(window.parent!==window)document.body.classList.add("embed")</script>
-<div id="app"></div>
-<div id="comp-root"></div>
-<div id="toasts"></div>
-<script src="core.js?v=0.4"></script>
-<script src="app.js?v=0.4"></script>
-<script src="composer.js?v=0.4"></script>
-<script src="extra.js?v=0.4"></script>
-<script src="../lib/number-flow.js?v=1"></script>
-<script>/* números dos indicadores com o NumberFlow, como na EPISJ 360 */
-(()=>{const V=new Map();let h=0;const corre=()=>{h=0;if(!(window.customElements&&customElements.get("number-flow")))return;
-  document.querySelectorAll(".kpi .v").forEach(el=>{if(el.querySelector("number-flow"))return;const t=(el.textContent||"").trim().replace(/(\d)[\s\u00a0\u202f](?=\d{3}(?!\d))/g,"$1"),m=t.match(/^(\d+(?:[.,]\d+)?)\s?(%|k|M)?$/);if(!m)return;
-    const k=((el.parentElement.querySelector(".l")||{}).textContent||""),end=parseFloat(m[1].replace(",",".")),prev=V.get(k);V.set(k,end);
-    const f=document.createElement("number-flow");f.locales="pt-PT";if(m[2])f.numberSuffix=m[2];if(/[.,]/.test(m[1]))f.format={minimumFractionDigits:1,maximumFractionDigits:1};
-    el.textContent="";el.appendChild(f);f.update(prev==null?0:prev);if(prev!==end)requestAnimationFrame(()=>requestAnimationFrame(()=>f.update(end)))})};
-  new MutationObserver(()=>{if(!h)h=requestAnimationFrame(corre)}).observe(document.body,{childList:true,subtree:true})})();</script>
+<body style="font:15px/1.5 system-ui,sans-serif;text-align:center;padding:40px">
+<p>A EPISJ 360 mudou para <a href="https://episj360.episj.com/social360/">episj360.episj.com</a>.</p>
 </body>
 </html>
