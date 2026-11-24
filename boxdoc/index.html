@@ -6,10 +6,50 @@
 <meta name="robots" content="noindex">
 <title>EPISJ 360 mudou de endereço</title>
 <link rel="canonical" href="https://episj360.episj.com/">
-<script>location.replace("https://episj360.episj.com/"+location.search+location.hash);</script>
-<meta http-equiv="refresh" content="0;url=https://episj360.episj.com/">
+<noscript><meta http-equiv="refresh" content="0;url=https://episj360.episj.com/"></noscript>
+<style>
+body{font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif;color:#1f2733;background:#f4f6fa;margin:0;padding:48px 16px;text-align:center}
+.c{max-width:520px;margin:0 auto;background:#fff;border-radius:14px;box-shadow:0 2px 14px rgba(20,40,80,.08);padding:28px 26px}
+h1{font-size:19px;margin:0 0 8px}p{margin:8px 0}a.b{display:inline-block;margin-top:12px;background:#3d5c9e;color:#fff;text-decoration:none;padding:10px 18px;border-radius:8px;font-weight:600}
+.m{color:#5b6574;font-size:13.5px;text-align:left;background:#f4f6fa;border-radius:8px;padding:10px 14px;margin-top:16px}
+#erro{display:none}
+</style>
 </head>
-<body style="font:15px/1.5 system-ui,sans-serif;text-align:center;padding:40px">
-<p>A EPISJ 360 mudou para <a href="https://episj360.episj.com/">episj360.episj.com</a>.</p>
+<body>
+<div class="c">
+  <div id="ok">
+    <h1>A EPISJ 360 mudou de endereço</h1>
+    <p>A abrir <b>episj360.episj.com</b>…</p>
+  </div>
+  <div id="erro">
+    <h1>O endereço novo não abre neste computador</h1>
+    <p>A EPISJ 360 está agora em <b>episj360.episj.com</b>, mas esta rede (ou este computador) ainda não o consegue abrir.</p>
+    <a class="b" href="https://episj360.episj.com/">Tentar abrir episj360.episj.com</a>
+    <div class="m">
+      <p><b>O que fazer</b></p>
+      <p>1. Experimente noutra rede (por exemplo, os dados do telemóvel). Se aí abrir, o problema é desta rede.</p>
+      <p>2. Na rede da escola, peça para autorizar o endereço <b>episj360.episj.com</b> no filtro de Internet / firewall (é um endereço novo e alguns filtros bloqueiam endereços novos).</p>
+      <p>3. Se acabou de ser criado, a rede pode ainda guardar a resposta antiga: reinicie o computador ou espere algumas horas.</p>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var NOVO="https://episj360.episj.com/";
+  // Não leva os parâmetros da entrada da Microsoft (code, state, error…): esse código só vale no endereço onde a entrada começou
+  // e, no endereço novo, a entrada perdia-se. Abre o endereço novo «limpo» e entra-se lá.
+  var q=new URLSearchParams(location.search),limpo=new URLSearchParams();
+  q.forEach(function(v,k){if(!/^(code|state|error|error_code|error_description|access_token|refresh_token|provider_token|token_type|expires_in|expires_at|type)$/i.test(k))limpo.append(k,v)});
+  var h=location.hash;if(/access_token|refresh_token|error_description|[#&]code=/.test(h))h="";
+  var destino=NOVO+(limpo.toString()?"?"+limpo.toString():"")+h;
+  // Confirma primeiro que o endereço novo responde nesta rede; se não responder em 6 s, explica em vez de mostrar um erro do navegador.
+  var feito=false,img=new Image();
+  function ir(){if(feito)return;feito=true;location.replace(destino)}
+  function falhou(){if(feito)return;feito=true;document.getElementById("ok").style.display="none";document.getElementById("erro").style.display="block"}
+  img.onload=ir;img.onerror=falhou;
+  setTimeout(falhou,6000);
+  img.src=NOVO+"img/app/icon-192.png?t="+Date.now();
+})();
+</script>
 </body>
 </html>
