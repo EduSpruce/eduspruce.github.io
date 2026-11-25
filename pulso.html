@@ -2,7 +2,10 @@
 <html lang="pt-PT">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-SCnTV443XH+1c8juFqDCuNLMnUIWunmPeFAXhacAN60=' 'sha256-vszqH3f9a2Kwh7J5dEfJfMQXZX079gk1oF9tjudnpm8=' 'sha256-O8KoOQsAz39rU9+N43arwLfoq1TIPXpgz3JO1icfTlQ='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-0oxNhimuQzLNiJ0GroewBv1qRBH5FvUgAC1IyYqDAeI=' 'sha256-SCnTV443XH+1c8juFqDCuNLMnUIWunmPeFAXhacAN60=' 'sha256-Z3aLdi0mT66Q7AXo8ldTpXDFdNzEiXWLH/h/Vm8FiQo=' 'sha256-O8KoOQsAz39rU9+N43arwLfoq1TIPXpgz3JO1icfTlQ='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="robots" content="noindex,nofollow">
+<script>(function(){var h=location.hostname;if(location.protocol==='http:'&&h!=='localhost'&&h.indexOf('127.')!==0){location.replace('https:'+location.href.slice(5));return}if(top!==self){try{if(top.location.origin!==location.origin)throw 0}catch(e){document.documentElement.style.display='none';try{top.location.replace(location.href)}catch(_){}}}})();</script>
+
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0f6f96">
 <meta name="robots" content="noindex">
@@ -58,7 +61,7 @@ textarea{min-height:110px;resize:vertical}input:focus,textarea:focus{outline:3px
 </style>
 </head>
 <body>
-<div id="app"><div class="esp"><p class="mut">A abrir…</p></div></div>
+<main id="app"><div class="esp"><p class="mut">A abrir…</p></div></main>
 <script>/* nunca dentro de uma página de outro sítio (proteção contra cliques enganados) */try{if(top!==self){let m=false;try{m=top.location.origin===location.origin}catch(_){}if(!m)document.documentElement.style.display='none'}}catch(_){}
 window.__ES_SB={"ativo":true,"url":"https://ssuescpqyhuqkphauwde.supabase.co","anonKey":"sb_publishable_oNNwLRRXJmqDzBqQPlf9jw_N0L29FjV"};</script>
 <script>
@@ -359,6 +362,25 @@ AR.CUBOS=AR.CUBOS_DEF.map(x=>x[0]);
 AR.COMUNS=AR.PINHAS.filter(p=>p.rar==='c').map(p=>p.id);
 AR.svgC=(p,sz)=>{sz=sz||64;const [c1,c2,o]=p.cubo;return `<svg class="pinha cubo r-c" viewBox="0 0 60 60" width="${sz}" height="${sz}" role="img" aria-label="${p.nome}"><ellipse cx="30" cy="57" rx="17" ry="2.6" fill="#000" opacity=".15"/>${o==='o'?`<circle cx="14" cy="12" r="6" fill="${c1}" stroke="${c2}" stroke-width="3"/><circle cx="46" cy="12" r="6" fill="${c1}" stroke="${c2}" stroke-width="3"/>`:''}${o==='a'?`<path d="M22 12 L18 3 M38 12 L42 3" stroke="${c2}" stroke-width="3" stroke-linecap="round"/><circle cx="18" cy="3" r="2.4" fill="${c2}"/><circle cx="42" cy="3" r="2.4" fill="${c2}"/>`:''}<rect x="6" y="12" width="48" height="42" rx="12" fill="${c1}" stroke="${c2}" stroke-width="3"/><circle cx="22" cy="29" r="6" fill="#fff"/><circle cx="38" cy="29" r="6" fill="#fff"/><circle cx="23" cy="30" r="3" fill="#111827"/><circle cx="39" cy="30" r="3" fill="#111827"/><path d="M24 42 Q30 47 36 42" stroke="#111827" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`};
 {const _s=AR.svg;AR.svg=(id,sz)=>{const p=AR.PINHAS.find(x=>x.id===id);return p&&p.cubo?AR.svgC(p,sz):_s(id,sz)}}
+
+/* 1.178 · Spruce It! completo (comum ao professor e aos alunos): tipos de pergunta, modo Estudo, reações, marca e música do átrio.
+   Nomes, música e desenhos criados de raiz. */
+AR.TIPOS={mc:{n:'Escolha múltipla',ic:'🔘',g:1},vf:{n:'Verdadeiro / Falso',ic:'⚖️',g:1},multi:{n:'Várias certas',ic:'☑️',g:1},rc:{n:'Resposta escrita',ic:'⌨️',g:1},
+  slider:{n:'Deslizante',ic:'🎚️',g:1},ordem:{n:'Ordenar',ic:'🔢',g:1},pino:{n:'Pino na imagem',ic:'📍',g:1},sond:{n:'Sondagem',ic:'📊',g:0},escala:{n:'Escala de opinião',ic:'📏',g:0},
+  nuvem:{n:'Nuvem de palavras',ic:'☁️',g:0},aberta:{n:'Resposta aberta',ic:'💬',g:0},ideias:{n:'Ideias (com votação)',ic:'💡',g:0},slide:{n:'Diapositivo',ic:'🖼️',g:0}};
+AR.tpGrad=tp=>!tp||(AR.TIPOS[tp]||{}).g===1;
+AR.tpOps=tp=>!tp||['mc','vf','multi','sond'].includes(tp);
+AR.MODOS.estudo={nome:'Estudo',ic:'📚',cor:'#0f766e',ritmo:'livre',dur:false,obj:'',soTpc:true,tag:'Ao ritmo de cada um · sem pressa',desc:'Cartões, Aprender (as falhadas voltam até estarem dominadas), Pares e Teste. Os alunos estudam quando quiserem e o professor vê o progresso.'};
+AR.REACOES=['👍','❤️','😂','😮','👏','🤔'];
+AR.escala=p=>p.esc==='nps'?Array.from({length:11},(_,k)=>String(k)):p.esc==='estrelas'?['★','★★','★★★','★★★★','★★★★★']:['Discordo totalmente','Discordo','Neutro','Concordo','Concordo totalmente'];
+AR.marcaCss=m=>{if(!m||typeof m!=='object')return '';const ok=c=>/^#[0-9a-f]{6}$/i.test(c||'')?c:'';let s='';if(ok(m.cor))s+='--es-marca:'+m.cor+';';if(ok(m.fundo))s+='--es-fundo:'+m.fundo+';';return s};
+AR.yt=u=>{const m=String(u||'').match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/);return m?m[1]:/^[A-Za-z0-9_-]{11}$/.test(u||'')?u:''};
+/* música do átrio: um arpejo pentatónico que muda devagar (gerado no momento, sem ficheiros) */
+AR.musica=(()=>{let ac=null,t=null,g=null,k=0;const esc=[0,2,4,7,9,12,14,16];const base=[220,196,174.6,196];
+  const nota=(f,quando,d)=>{const o=ac.createOscillator(),e=ac.createGain();o.type='triangle';o.frequency.value=f;e.gain.setValueAtTime(0.0001,quando);e.gain.exponentialRampToValueAtTime(0.09,quando+0.02);e.gain.exponentialRampToValueAtTime(0.0001,quando+d);o.connect(e);e.connect(g);o.start(quando);o.stop(quando+d+0.05)};
+  const passo=()=>{if(!ac)return;const now=ac.currentTime;const b=base[Math.floor(k/16)%4];for(let i=0;i<8;i++){const st=esc[(i*3+k)%esc.length];nota(b*Math.pow(2,st/12),now+i*0.22,0.4);if(i%4===0)nota(b/2,now+i*0.22,0.8)}k+=8;t=setTimeout(passo,8*220)};
+  return {on:()=>!!ac,liga(){if(ac)return;try{ac=new (window.AudioContext||window.webkitAudioContext)();try{if(ac.state==='suspended')ac.resume()}catch(_){}g=ac.createGain();g.gain.value=0.6;g.connect(ac.destination);k=0;passo()}catch(_){ac=null}},
+    desliga(){clearTimeout(t);t=null;if(ac){try{ac.close()}catch(_){}}ac=null}}})();
 /*ARENA-EXTRA-FIM*/
 window.ARENA=AR;
 })();
