@@ -1673,3 +1673,22 @@ html body #d20f span{font-size:clamp(17px,2.2vw,22px);font-weight:600}
 html body #d20f small{color:var(--mut,#3d5a69);font-size:13.5px;margin-bottom:8px}
 @keyframes d20in{from{opacity:0}}@keyframes d20pop{from{transform:scale(.6);opacity:0}}
 @media (prefers-reduced-motion:reduce){html body .d20n,html body .d20n .d20i,html body #d20f .d20e,html body #d20f .d20m{animation:none}}
+/* ===================== menu-escola ===================== */
+html body .escmenu{position:fixed;z-index:9999;display:flex;flex-direction:column;gap:4px;padding:6px;max-width:min(460px,calc(100vw - 16px));background:var(--panel,#fff);color:var(--ink,#1a1a1a);border:1px solid color-mix(in srgb,var(--acc) 30%,var(--line,#ddd));border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,.18);animation:escmenuIn .12s ease-out}
+@keyframes escmenuIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+html body .escmenu .escop{display:flex;align-items:center;gap:12px;width:100%;padding:10px 14px 10px 10px;border:0;border-radius:10px;background:transparent;color:inherit;font:inherit;font-size:14px;font-weight:600;line-height:1.3;text-align:left;cursor:pointer;min-height:48px}
+html body .escmenu .escop:hover,html body .escmenu .escop:focus-visible{background:color-mix(in srgb,var(--acc) 10%,transparent);outline:none}
+html body .escmenu .escop.on{background:color-mix(in srgb,var(--acc) 16%,transparent);color:var(--acc)}
+html body .escmenu .escop-lg{flex-shrink:0;width:32px;height:32px;display:grid;place-items:center;color:var(--acc)}
+html body .escmenu .escop-lg img{width:32px;height:32px;object-fit:contain;border-radius:6px}
+html body.est-sge .escmenu,html body.est-sge .escmenu .escop{border-radius:0}
+/* Caixa «Adicionar uma tarefa»: sem caixa interior no campo, com espaço à volta */
+html body.est-sge.est-sge.est-sge.est-sge .xtadd,html body .xtadd{gap:12px;padding:6px 12px 6px 16px}
+html body.est-sge.est-sge.est-sge.est-sge .xtadd>input#td-new,html body.est-sge.est-sge.est-sge.est-sge .xtadd>input#td-new:is(:focus,:focus-visible,:hover),html body .xtadd>input#td-new,html body .xtadd>input#td-new:is(:focus,:focus-visible,:hover){border:0!important;box-shadow:none!important;outline:0!important;background:transparent!important;border-radius:0!important;padding:0 4px!important}
+html body .xtadd:focus-within{box-shadow:0 0 0 2px var(--acc),0 1px 2px rgba(0,0,0,.12)!important}
+html body.est-sge.est-sge.est-sge.est-sge .xtadd,html body .xtadd{padding-right:8px;min-height:56px}
+html body .xtadd .xtaddo{gap:8px}
+html body .xtadd .xtaddo>input[type=date]{height:36px!important;padding:0 10px!important}
+html body .xtadd .xtaddo>.btn{height:36px!important;min-height:36px!important;margin:0!important}
+html body .xtadd .xtaddo>.btn.ico{width:36px!important;padding:0!important}
+html body .xtadd .xtaddo>.btn.pri{padding:0 16px!important}

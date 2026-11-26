@@ -2,7 +2,7 @@
 <html lang="pt-PT">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-8AngoIcTKM9yZR5o59f8SU3A7lbJx4183F87YiWxxts='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-7hKVwjwpfokFBdeIokHbIMZYhaa6RE7Xa9HaCfouA04='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
@@ -59,7 +59,7 @@ async function chaves(code){const id=hex(await crypto.subtle.digest('SHA-256',te
   const k=await crypto.subtle.deriveKey({name:'PBKDF2',salt:te.encode('es-rv-k:'+id),iterations:150000,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);return {id,k}}
 async function cifrar(o,k){const iv=crypto.getRandomValues(new Uint8Array(12));const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},k,te.encode(JSON.stringify(o)));return 'A1.'+b64(iv)+'.'+b64(ct)}
 async function decifrar(s,k){const p=String(s).split('.');if(p[0]!=='A1')throw new Error('formato');const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(p[1])},k,unb64(p[2]));return JSON.parse(td.decode(pt))}
-const safeSrc=s=>/^(data:image\/(webp|jpeg|png);base64,|https:\/\/|review\/ref\/[\w-]+\.webp$)/.test(String(s||''))?String(s):'';
+const safeSrc=s=>/^(data:image\/(webp|jpeg|png);base64,|https:\/\/|review\/ref\/([\w-]+\/)?[\w-]+\.webp$)/.test(String(s||''))?String(s):'';
 const safeAud=s=>/^data:audio\/[\w.+-]+(;codecs=[\w.]+)?;base64,/.test(String(s||''))?String(s):'';
 function svgAnot(L){const X=v=>Math.round((+v||0)*1000);const cor=c=>/^#[0-9a-f]{3,6}$/i.test(c||'')?c:'#e11d48';
   return `<svg class="anot" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true"><defs><marker id="ah" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8z" fill="context-stroke"/></marker></defs>${(Array.isArray(L)?L:[]).map(a=>{const c=cor(a.c);
@@ -75,11 +75,11 @@ async function abrir(){const code=(location.hash||'').replace('#','').trim().toU
     if(!Array.isArray(L)||!L.length)return erro('Esta página já não está disponível (terminou o prazo ou o professor retirou-a).');
     const D=await decifrar(L[0].dados,k);S={id,k,D,exp:L[0].expira};desenhar()}catch(e){erro(e.message==='formato'||/decrypt|operation/i.test(e.message)?'Ligação inválida.':e.message)}}
 function desenhar(){const D=S.D;const fb=D.fb;const C=Array.isArray(D.crit)?D.crit:[];const doms=Array.isArray(D.doms)?D.doms:[];
-  let h=`<div class="card"><h1>${esc(D.t)}</h1><p class="mut" style="margin:0">${esc(D.nm)}${D.url?' · '+esc(D.url):''}${D.prof?' · Professor: '+esc(D.prof):''}</p>
+  let h=`<div class="card"><h1>${esc(D.t)}</h1><p class="mut" style="margin:0">Tecnologias da Informação e Comunicação · Módulo 03${D.cur?' · Curso Profissional de '+esc(D.cur):''}</p><p class="mut" style="margin:0">${esc(D.nm)}${D.url?' · '+esc(D.url):''}${D.prof?' · Professor: '+esc(D.prof):''}</p>
     ${fb?`<div class="nota" style="margin-top:12px"><b>${nf(fb.val)}</b><span>valores<br><span class="mut">${nf(fb.tot)} de ${nf(D.mx)} pontos</span></span></div>`:''}
     ${fb&&fb.g?`<div class="cm" style="margin-top:12px"><b>Apreciação geral:</b> ${esc(fb.g)}</div>`:''}${fb&&fb.aud&&safeAud(fb.aud._g)?`<audio controls src="${esc(safeAud(fb.aud._g))}"></audio>`:''}</div>`;
   doms.forEach((d,di)=>{const L=C.filter(c=>c.dom===di);if(!L.length)return;const s=fb?L.reduce((x,c)=>x+(+fb.pts[c.id]||0),0):null;const m=L.reduce((x,c)=>x+(+c.pts||0),0);
-    h+=`<div class="card"><h2>${esc(d)}<span class="sp"></span>${fb?`<span class="pt">${nf(s)} / ${nf(m)}</span>`:`<span class="mut">${nf(m)} pts</span>`}</h2>${L.map(c=>{const v=fb?fb.pts[c.id]:null;const nv=nivel(v,c.pts);const ref=c.ref&&/^[\w-]+$/.test(c.ref)?'review/ref/'+c.ref+'.webp':'';
+    h+=`<div class="card"><h2>${esc(d)}<span class="sp"></span>${fb?`<span class="pt">${nf(s)} / ${nf(m)}</span>`:`<span class="mut">${nf(m)} pts</span>`}</h2>${L.map(c=>{const v=fb?fb.pts[c.id]:null;const nv=nivel(v,c.pts);const ref=c.ref&&/^([\w-]+\/)?[\w-]+$/.test(c.ref)?'review/ref/'+(c.ref.includes('/')?'':'agro/')+c.ref+'.webp':'';
       const shots=fb?(fb.shots||[]).filter(s=>s.crit===c.id&&safeSrc(s.src)):[];const au=fb&&fb.aud?safeAud(fb.aud[c.id]):'';
       return `<div class="cr"><div class="ref">${ref?`<img src="${ref}" alt="Exemplo correto: ${esc(c.n)}" data-lupa="${ref}" loading="lazy"><div class="mut" style="font-size:11px">✓ exemplo correto</div>`:''}</div>
         <div><b>${esc(c.n)}</b><div class="mut" style="font-size:14px">${esc(c.desc)}</div>${fb&&fb.com&&fb.com[c.id]?`<div class="cm">${esc(fb.com[c.id])}</div>`:''}${au?`<audio controls src="${esc(au)}"></audio>`:''}
