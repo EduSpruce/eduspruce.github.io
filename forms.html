@@ -2,7 +2,7 @@
 <html lang="pt-PT">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-s6LKFMsIz4VIZLeDHGSDT+SKDojkjdtyb8mLYWPipFI=' 'sha256-0qWn3LIWmSDHl97szT5EMCQro/qOSebz7h/givbDDMk='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-s6LKFMsIz4VIZLeDHGSDT+SKDojkjdtyb8mLYWPipFI=' 'sha256-+Lqvxie54b/lyuQHW1j9BF7nEIfUvsZSmCisYf03ofE='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <script>(function(){var h=location.hostname;if(location.protocol==='http:'&&h!=='localhost'&&h.indexOf('127.')!==0)location.replace('https:'+location.href.slice(5))})();</script>
@@ -238,7 +238,7 @@ function pagina(){const p=R.P[R.pag];const ult=fimDaPag(true)==='fim';const F=S.
   app.querySelectorAll('.lkm input').forEach(i=>i.addEventListener('change',()=>{const n=i.name.slice(2);const t=app.querySelector(`input[name="${CSS.escape(n)}"][value="${i.value}"]`);if(t)t.checked=true}));
   app.querySelectorAll('.lk input').forEach(i=>i.addEventListener('change',()=>{const t=app.querySelector(`input[name="m-${CSS.escape(i.name)}"][value="${i.value}"]`);if(t)t.checked=true}));
   const an=$('#ant');if(an)an.onclick=()=>{guardarPag();R.pag=R.hist.pop();pagina();scrollTo(0,0)};
-  $('#f').onsubmit=ev=>{ev.preventDefault();guardarPag();if(!validar())return;const nx=fimDaPag();if(nx==='fim')return enviar();R.hist.push(R.pag);R.pag=nx;pagina();scrollTo(0,0)}}
+  $('#f').onsubmit=ev=>{ev.preventDefault();guardarPag();if(R.fim&&Date.now()>=R.fim)return enviar(true);if(!validar())return;const nx=fimDaPag();if(nx==='fim')return enviar();R.hist.push(R.pag);R.pag=nx;pagina();scrollTo(0,0)}}
 function ler(q){const nm='q-'+q.id;
   if(q.tipo==='escolha'){if(q.lista&&!q.multi){const s=app.querySelector(`select[name="${CSS.escape(nm)}"]`);if(!s)return;if(s.value==='__outra'){const o=app.querySelector(`[data-outra="${CSS.escape(q.id)}"]`);return 'outra:'+(o?o.value.trim():'')}return s.value||undefined}
     const A=[...app.querySelectorAll(`input[name="${CSS.escape(nm)}"]:checked`)].map(i=>i.value==='__outra'?'outra:'+((app.querySelector(`[data-outra="${CSS.escape(q.id)}"]`)||{}).value||'').trim():i.value);return q.multi?A:A[0]}
@@ -266,7 +266,7 @@ async function enviar(auto){const b=$('#b'),e=$('#e');if(b){b.disabled=true;b.in
   const o={fm:1,aid:S.aluno?S.aluno.id:'',chave:S.chave||'',nome:S.aluno?'':S.nome,t0:R.t0,t1:Date.now(),resp:R.resp,sai:R.sai||0,ecra:R.ecra||0};
   if(S.prev)return ecraOk(o,auto);
   try{let c=await cifrar(o,S.k);if(c.length>40000){Object.keys(o.resp).forEach(k=>{if(typeof o.resp[k]==='string')o.resp[k]=o.resp[k].slice(0,1500)});c=await cifrar(o,S.k)}
-    await rpc('eduspruce_autoav_enviar',{p_id:S.id,p_conteudo:c});ecraOk(o,auto)}
+    const ok=await rpc('eduspruce_autoav_enviar',{p_id:S.id,p_conteudo:c});if(ok===false)throw new Error('fechada');ecraOk(o,auto)}
   catch(x){console.warn(x);if(b){b.disabled=false;b.textContent='Enviar'}const m=/fechad|closed|expir|não está aberta|limite/i.test(x.message||'')?'O formulário já fechou ou atingiu o limite de respostas. Fala com o professor.':navigator.onLine?'Não foi possível enviar. Tenta outra vez.':'Sem internet. Liga-te e toca outra vez em Enviar (as tuas respostas continuam aqui).';
     if(e)e.textContent=m;else app.insertAdjacentHTML('beforeend',`<section class="card"><p class="err">${esc(m)}</p><button class="btn" id="re">Tentar de novo</button></section>`);const re=$('#re');if(re)re.onclick=()=>enviar(auto)}}
 function ecraOk(o,auto){const D=S.D,F=D.f;const nome=S.aluno?S.aluno.nm.split(' ')[0]:(S.nome||'').split(' ')[0];
@@ -281,7 +281,6 @@ function corrigir(q,v){if(!(+q.pts))return null;const P=+q.pts;
   if(q.tipo==='escolha'){const c=q.ops.filter(o=>o.certa).map(o=>o.id);if(!c.length)return null;const e=(Array.isArray(v)?v:[v]).filter(Boolean);if(!q.multi)return e.length===1&&c.includes(e[0])?P:0;return e.length===c.length&&e.every(x=>c.includes(x))?P:0}
   if(q.tipo==='texto'){if(q.longo)return null;const R_=(q.resp||[]).filter(x=>String(x).trim()!=='');if(!R_.length)return null;if(q.num){const n=parseFloat(String(v).replace(',','.'));return R_.some(r=>Math.abs(parseFloat(String(r).replace(',','.'))-n)<1e-9)?P:0}return R_.some(r=>nrm(r)===nrm(v))?P:0}
   if(q.tipo==='ordem'){if(!Array.isArray(v))return 0;return v.join('|')===q.ops.map(o=>o.id).join('|')?P:0}
-  const nrm=x=>String(x==null?'':x).trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ');
   if(q.tipo==='vf'){const L=q.linhas||[];if(!L.length||L.some(l=>l.v===undefined))return null;const ok=L.filter(l=>v&&v[l.id]===!!l.v).length;return Math.round(P*ok/L.length*100)/100}
   if(q.tipo==='lacunas'){if(q.texto==null)return null;const G=lacGaps(q);if(!G.length)return null;const a=Array.isArray(v)?v:[];const ok=G.filter((al,k)=>al.some(x=>nrm(x)===nrm(a[k]))).length;return Math.round(P*ok/G.length*100)/100}
   if(q.tipo==='ligar'){if(!q.pares)return null;const L=q.pares;const ok=L.filter(pp=>v&&v[pp.id]===pp.bid).length;return Math.round(P*ok/L.length*100)/100}

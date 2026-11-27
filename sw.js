@@ -27,6 +27,8 @@ self.addEventListener('fetch',e=>{const r=e.request;if(r.method!=='GET')return;c
     e.respondWith((async()=>{/* pedido novo, com um carimbo no endereço: nem o navegador nem a rede de distribuição devolvem uma página antiga */
       const fresco=()=>{if(r.mode!=='navigate'&&!/\/(index\.html)?$/.test(u.pathname))return fetch(r,{cache:'no-store'});const f=new URL(u.href);f.searchParams.set('_v',Date.now().toString(36));return fetch(f.href,{cache:'no-store',credentials:'same-origin',redirect:'follow'})};
       try{const res=await Promise.race([fresco(),new Promise((_,ko)=>setTimeout(()=>ko(new Error('lento')),8000))]);
+        /* o servidor reencaminhou (ex.: /live → /live/): uma resposta já reencaminhada não pode ser entregue a uma navegação (o navegador mostra erro) nem guardada — devolve-se o reencaminhamento, sem o carimbo */
+        if(res&&res.redirected&&r.mode==='navigate'){const d=new URL(res.url);d.searchParams.delete('_v');return Response.redirect(d.href,302)}
         if(res&&res.ok){const cp=res.clone();caches.open(CACHE).then(c=>c.put(chave,cp)).catch(()=>{})}return res}
       catch(_){const x=await caches.match(chave);if(x)return x;return fetch(r)}})())}});
 /* 1.035 · avisos com a app fechada: chegam da base de dados (função «eduspruce-avisos» do Supabase) */
