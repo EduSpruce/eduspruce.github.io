@@ -1692,3 +1692,14 @@ html body .xtadd .xtaddo>input[type=date]{height:36px!important;padding:0 10px!i
 html body .xtadd .xtaddo>.btn{height:36px!important;min-height:36px!important;margin:0!important}
 html body .xtadd .xtaddo>.btn.ico{width:36px!important;padding:0!important}
 html body .xtadd .xtaddo>.btn.pri{padding:0 16px!important}
+/* UFCD / módulos: sem períodos nem avaliação intercalar */
+html body.t-unid .seg:where(.eh-10):not(._h),html body.t-unid #perfilap .estps{display:none!important}
+html body.t-unid [data-v="intercalar"],html body.t-unid [data-goint]{display:none!important}
+/* Critérios: subdomínios indentados por baixo do domínio a que pertencem */
+html body tr.domsubr>td:first-child{padding-left:34px!important;position:relative}html body tr.domsubr>td:first-child::before{content:'';position:absolute;left:14px;top:0;bottom:0;border-left:3px solid var(--line,#d6e0e6)}html body tr.domsubr .hint{font-weight:600}
+/* critérios gerais */
+html body .dgerl{display:flex;gap:6px;align-items:center}html body .dgerl input{flex:1;min-width:0}html body .dgerl select{width:auto;flex:none}
+html body .cgbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+html body .cgt td,html body .cgt th{text-align:center}html body .cgt .cgin{width:64px;text-align:center}html body .cgt .cgin.ok{outline:2px solid #16a34a}
+html body tr.domgr>td{padding:10px 12px 4px!important;background:color-mix(in srgb,var(--acc,#1f6f8b) 7%,transparent)}html body .domgrn{font-weight:800;font-size:15px}html body .domgrw{margin-left:10px;font-weight:800;color:var(--acc,#1f6f8b)}html body .domgrs{margin-left:10px;font-size:12px}
+html body tr.relsub>td:first-child{padding-left:22px!important}html body tr.relgr>td{background:#f2f6f8}
