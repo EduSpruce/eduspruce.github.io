@@ -2,7 +2,7 @@
 <html lang="pt-PT">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-s6LKFMsIz4VIZLeDHGSDT+SKDojkjdtyb8mLYWPipFI=' 'sha256-BspGAN3e8XbhbEyVCy2wXBh6E+5SmYfISAGoeQBRzSY='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-s6LKFMsIz4VIZLeDHGSDT+SKDojkjdtyb8mLYWPipFI=' 'sha256-l+bYGdxrzMvP0RzxtpX5QhDiHINEjQCjZ1dK7BkK6Lo='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ssuescpqyhuqkphauwde.supabase.co wss://ssuescpqyhuqkphauwde.supabase.co; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <script>(function(){var h=location.hostname;if(location.protocol==='http:'&&h!=='localhost'&&h.indexOf('127.')!==0)location.replace('https:'+location.href.slice(5))})();</script>
@@ -41,6 +41,7 @@ button{font:inherit}
 .al input:checked+span{border-color:var(--acc);background:var(--acc2)}.al input:checked+span b{background:var(--acc);color:#fff}
 .dom{border-top:1px solid var(--line);padding:14px 0 4px}.dom:first-of-type{border-top:0}
 .dom h3{margin:0 0 8px;font-size:16px}
+.domg{margin:16px 0 2px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut)}.domsub{padding-left:12px!important;border-left:3px solid var(--line)!important}
 .niv{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
 .niv label{margin:0;font-weight:600}
 .niv input{position:absolute;opacity:0;width:1px;height:1px}
@@ -125,13 +126,13 @@ function ecraForm(R){const D=S.D,q=D.q||{},a=S.aluno;R=R||{dom:{},plano:{}};
   const campo=(id,l,ph,v,rows)=>`<label for="${id}">${esc(l)}</label><textarea id="${id}" rows="${rows||2}" maxlength="600" placeholder="${esc(ph)}">${esc(v||'')}</textarea>`;
   app.innerHTML=`<section class="card">${cab()}<p class="peq" style="margin-top:6px"><b>N.º ${esc(a.n)} · ${esc(a.nm)}</b> · <button type="button" id="troca" style="background:none;border:0;color:var(--acc);font-weight:700;padding:6px 2px;cursor:pointer">não sou eu</button></p></section>
   <form id="f" novalidate>
-  ${q.dom!==false&&D.dom.length?`<section class="card"><h2>Como te avalias em cada domínio?</h2><p class="mut peq">Toca no nível que mais se parece contigo neste ${esc(D.W||'período')}.</p>
-    ${D.dom.map(d=>`<fieldset class="dom" style="border:0;margin:0"><legend><h3>${esc(d.n)}</h3></legend><div class="niv">${NIV.map(([k,l,c])=>`<label style="--c:${c}"><input type="radio" name="d-${esc(d.id)}" value="${k}" ${String(R.dom[d.id])===k?'checked':''}><span><b>${k}</b>${esc(l)}</span></label>`).join('')}</div></fieldset>`).join('')}</section>`:''}
+  ${q.dom!==false&&D.dom.length?`<section class="card"><h2>Como te avalias em cada ${String(D.p||'').indexOf('u:')===0?'critério':'domínio'}?</h2><p class="mut peq">Toca no nível que mais se parece contigo ${esc(D.ne||('neste '+(D.W||'período')))}.</p>
+    ${D.dom.map((d,k)=>`${d.g&&(k===0||D.dom[k-1].g!==d.g)?`<h3 class="domg">${esc(d.g)}${(()=>{const w=D.dom.filter(x=>x.g===d.g).reduce((a,x)=>a+(+x.w||0),0);return w?` <small>${w}%</small>`:''})()}</h3>`:''}<fieldset class="dom${d.g?' domsub':''}" style="border:0;margin:0"><legend><h3>${esc(d.n)}${d.w?` <small class="mut">${d.w}%</small>`:''}</h3></legend><div class="niv">${NIV.map(([k,l,c])=>`<label style="--c:${c}"><input type="radio" name="d-${esc(d.id)}" value="${k}" ${String(R.dom[d.id])===k?'checked':''}><span><b>${k}</b>${esc(l)}</span></label>`).join('')}</div></fieldset>`).join('')}</section>`:''}
   ${q.nota!==false||q.forte!==false||q.melhorar!==false?`<section class="card"><h2>A minha reflexão</h2>
     ${q.nota!==false?`<label for="nota">Classificação que proponho</label><input id="nota" inputmode="decimal" maxlength="5" placeholder="${D.esc==='20'?'0 a 20':'1 a 5'}" value="${esc(R.nota||'')}">`:''}
     ${q.forte!==false?campo('forte','O que fiz bem','ex.: participei mais nas aulas',R.forte):''}
     ${q.melhorar!==false?campo('melhorar','O que posso melhorar','ex.: estudar com mais regularidade',R.melhorar):''}</section>`:''}
-  ${q.plano!==false?`<section class="card"><h2>Compromisso para o próximo ${esc((D.W||'período').toLowerCase())}</h2>
+  ${q.plano!==false?`<section class="card"><h2>Compromisso para ${esc(D.pr||('o próximo '+(D.W||'período').toLowerCase()))}</h2>
     ${campo('meta','A minha meta','ex.: subir um nível em Produção Escrita',R.plano.meta)}${campo('estr','Como vou lá chegar','ex.: rever a matéria todas as semanas',R.plano.estr)}${campo('apoio','O que preciso do professor','ex.: feedback nos textos escritos',R.plano.apoio)}</section>`:''}
   ${q.sug!==false?`<section class="card"><h2>Sugestões para as aulas</h2><p class="mut peq">O que podia tornar as aulas melhores para ti? O professor lê as sugestões <b>sem o teu nome</b>.</p>
     <label for="sug" class="sr">Sugestões para as aulas</label><textarea id="sug" rows="3" maxlength="800" placeholder="ex.: mais trabalhos em grupo, mais exemplos antes dos exercícios…">${esc(R.sug||'')}</textarea></section>`:''}
